@@ -61,6 +61,10 @@
     "prettier": "^3.0.3",
     "vite": "^4.4.5",
     "axios": "^1.6.5",
-    "react-router-dom": "^6.21.1"
+    "react-router-dom": "^6.21.1",
+    "@chakra-ui/react": "^2.8.2",
+    "framer-motion": "^10.18.0",
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0"
   }
 }
