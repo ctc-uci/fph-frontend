@@ -1,10 +1,13 @@
 import './App.css';
+import BusinessTable from './BusinessTable.jsx';
+
 
 const App = () => {
   return (
-    <>
-      <p>Hello World</p>
-    </>
+    <div>
+      <BusinessTable></BusinessTable>
+    </div>
+    
   );
 };
 
