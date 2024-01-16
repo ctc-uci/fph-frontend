@@ -2,17 +2,17 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 function Navbar({ isAdmin }) {
-    const adminList = [
-        {name: 'Dashboard', path: '/admin-dashboard'},
-        {name: 'All Businesses', path: '/all-businesses'},
-        {name: 'Manage Forms', path: '/manage-forms'},
-        {name: 'Team Management', path: '/team-management'},
-    ]
-
     const businessList = [
-        {name: 'Dashboard', path: '/business-dashboard'},
-        {name: 'Donation Tracking', path: '/donation-tracking'},
-    ]
+        {'name' : 'Dashboard', 'path' : '/BusinessDashboard'},
+        {'name' : 'Donation Tracking', 'path' : '/BusinessDonationTracking'},
+    ];
+
+    const adminList = [
+        {'name' : 'Dashboard', 'path': '/AdminDashboard'},
+        {'name' : 'All Businesses', 'path': '/AdminAllBusinesses'},
+        {'name' : 'Manage Forms', 'path' : '/AdminManageForms'},
+        {'name' : 'Team Management', 'path' : '/AdminTeamManagement'},
+    ];
 
     const navList = isAdmin ? adminList : businessList;
 
@@ -20,19 +20,19 @@ function Navbar({ isAdmin }) {
         <>
             <nav>
                 <ul>
-                    {navList.map((item) => (
-                        <li key={item.name}>
+                    {navList.map((item) => {
+                        <li>
                             <Link to={item.path}>{item.name}</Link>
                         </li>
-                    ))}
+                    })}
                 </ul>
             </nav>
         </>
-    )
+    );
 }
 
 Navbar.propTypes = {
-    isAdmin: PropTypes.bool,
+    isAdmin: PropTypes.bool.isRequired,
 }
 
 export default Navbar;
