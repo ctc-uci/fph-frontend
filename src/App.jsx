@@ -1,61 +1,53 @@
-import { useState } from 'react';
 import './App.css';
+import { useEffect, useState } from 'react';
+import { useBackend } from './contexts/BackendContext';
+import DonationForm from './DonationForm';
 
 const App = () => {
-  const [unit, setUnit] = useState('oz');
-  const handleUnitChange = event => {
-    setUnit(event.target.value);
+  const { backend } = useBackend();
+  var max_id = -1;
+
+  const [formData, setFormData] = useState({
+    business_id: null, // Since there's no business_id in the form and the database requires a business id (foreign key), the default for now is the maximum business id in the database (9)
+    canned_cat_food_quantity: null,
+    canned_dog_food_quantity: null,
+    date: null,
+    donation_id: null,
+    dry_cat_food_quantity: null,
+    dry_dog_food_quantity: null,
+    email: null,
+    food_bank_donation: null,
+    misc_items: null,
+    reporter: null,
+    volunteer_hours: null,
+  });
+
+  const getData = async () => {
+    try {
+      const response = await backend.get('/donation');
+      for (let i = 0; i < response.data.length; ++i) {
+        if (response.data[i].business_id > max_id) {
+          max_id = response.data[i].business_id;
+        }
+      }
+      console.log(response.data);
+      setFormData(prevState => ({
+        ...prevState,
+        business_id: max_id,
+        donation_id: max_id,
+        food_bank_donation: 'NULL',
+        email: 'NULL',
+      }));
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   };
-  return (
-    <>
-      <h1>Submit your Donation Totals</h1>
-      <form>
-        <label htmlFor="personName"> Name of Person Reporting </label>
-        <input type="text" placeholder="Enter your name" id="personName" />
 
-        <label htmlFor="date"> Date </label>
-        <input type="date" id="date" />
+  useEffect(() => {
+    getData();
+  }, []);
 
-        <h2> Amounts </h2>
-        <label htmlFor="cannedDogFoodAmt"> Canned Dog Food </label>
-        <input type="text" placeholder={unit} id="cannedDogFoodAmt" />
-
-        <label htmlFor="dryDogFoodAmt"> Dry Dog Food </label>
-        <input type="text" placeholder={unit} id="dryDogFoodAmt" />
-
-        <label htmlFor="cannedCatFoodAmt"> Canned Cat Food </label>
-        <input type="text" placeholder={unit} id="cannedCatFoodAmt" />
-
-        <label htmlFor="dryCatFoodAmt"> Canned Dog Food </label>
-        <input type="text" placeholder={unit} id="dryCatFoodAmt" />
-
-        <label htmlFor="miscFood">Misc</label>
-        <input type="text" id="miscFood" />
-
-        <label> Unit of Measure </label>
-        <select id="unit" name="dab" defaultValue={unit} onChange={handleUnitChange}>
-          <option value="oz"> ounces (oz) </option>
-          <option value="c"> cups (c) </option>
-          <option value="g"> grams (g) </option>
-        </select>
-
-        <h2> Volunteer Hours </h2>
-        <label htmlFor="volunteerHrsWorked"> Number of Volunteer Hours Worked </label>
-        <input type="text" placeholder="hrs" name="volunteerHrsWorked" />
-
-        <label htmlFor="volunteerName"> Who </label>
-        <input type="text" placeholder="Enter volunteer name" id="volunteerName" />
-
-        <label htmlFor="volunteerActivities"> Briefly describe volunteer activities </label>
-        <input type="text" />
-
-        <label htmlFor="photoUpload"> Upload photo </label>
-        <input type="file" id="photoUpload" accept="image/*" multiple />
-
-        <button type="button"> Submit </button>
-      </form>
-    </>
-  );
+  return <DonationForm data={formData} changeData={setFormData}/>;
 };
 
 export default App;

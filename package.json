@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "lint-staged": "^14.0.1",
+    "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -48,23 +49,23 @@
     ]
   },
   "devDependencies": {
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@vitejs/plugin-react": "^4.0.3",
+    "axios": "^1.6.5",
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "framer-motion": "^10.18.0",
     "husky": "^8.0.3",
     "prettier": "^3.0.3",
-    "vite": "^4.4.5",
-    "axios": "^1.6.5",
     "react-router-dom": "^6.21.1",
-    "@chakra-ui/react": "^2.8.2",
-    "framer-motion": "^10.18.0",
-    "@emotion/react": "^11.11.3",
-    "@emotion/styled": "^11.11.0"
+    "vite": "^4.4.5"
   }
 }
