@@ -20,6 +20,10 @@ const DonationForm = ({ data, changeData}) => {
   const handleChange = event => {
     const name = event.target.name;
     var value = event.target.value;
+    console.log(typeof value);
+    if (event.target.type === 'number') {
+        value = value ? parseInt(value, 10) : '';
+      }
     changeData(prevState => ({ ...prevState, [name]: value }));
     console.log({ ...data, [name]: value });
   };
