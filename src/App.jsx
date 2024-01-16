@@ -1,9 +1,11 @@
 import './App.css';
+import BusinessDashboard from './components/BusinessDashboard/BusinessDashboard';
 
 const App = () => {
   return (
     <>
-      <p>Hello World</p>
+      <BusinessDashboard />
+      <h1> FART!!!!-kevin liu </h1>
     </>
   );
 };
