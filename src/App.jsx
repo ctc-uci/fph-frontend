@@ -1,11 +1,13 @@
 import './App.css';
-import { Route, Routes, BrowserRouter} from 'react-router-dom'
+import { Route, Routes} from 'react-router-dom'
+import Navbar from './Navbar.jsx'
 
 const App = () => {
   return (
-    <BrowserRouter>
+    <>
+      <Navbar isAdmin={false} />
       <Routes>
-        <Route exact path="/" />
+        <Route exact path="/" element={<div>Welcome to the App</div>}/>
         <Route exact path="/AdminDashboard" />
         <Route exact path="/AdminAllBusinesses" />
         <Route exact path="/AdminManageForms" />
@@ -13,7 +15,7 @@ const App = () => {
         <Route exact path="/BusinessDashboard" />
         <Route exact path="/BusinessDonationTracking" />
       </Routes>
-    </BrowserRouter>
+    </>
   );
 };
 
