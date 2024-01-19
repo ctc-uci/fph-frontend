@@ -57,24 +57,28 @@ const BusinessDashboard = () => {
     // this function will break
     // ***********************************************************************
     return (
-      donationData['canned_dog_food_quantity'] * priceData[0]['price'] +
-      donationData['dry_dog_food_quantity'] * priceData[1]['price'] +
-      donationData['canned_cat_food_quantity'] * priceData[2]['price'] +
-      donationData['dry_cat_food_quantity'] * priceData[3]['price']
-    );
+      donationData['canned_dog_food_quantity'] && priceData.length > 0 ? (
+        donationData['canned_dog_food_quantity'] * priceData[0]['price'] +
+        donationData['dry_dog_food_quantity'] * priceData[1]['price'] +
+        donationData['canned_cat_food_quantity'] * priceData[2]['price'] +
+        donationData['dry_cat_food_quantity'] * priceData[3]['price']
+      ) : 0
+    );    
   };
 
   return (
     <div>
       <h1>Welcome back!</h1>
-
+  
       <h2>Your Impact</h2>
       <div>
-        <Box>$ {calculateTotalWorth()} worth of donations</Box>
-        <Box>0 pets helped</Box>
-        <Box>{calculateTotalPounds()} pounds of pet food donated</Box>
+          <>
+            <Box>${calculateTotalWorth()} worth of donations</Box>
+            <Box>0 pets helped</Box>
+            <Box>{calculateTotalPounds()} pounds of pet food donated</Box>
+          </>
       </div>
-
+  
       <Table>
         <Thead>
           <Tr>
@@ -90,7 +94,7 @@ const BusinessDashboard = () => {
         </Tbody>
       </Table>
     </div>
-  );
+  );  
 };
 
 export default BusinessDashboard;

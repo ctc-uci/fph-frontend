@@ -5,7 +5,6 @@ const App = () => {
   return (
     <>
       <BusinessDashboard />
-      <h1> FART!!!!-kevin liu </h1>
     </>
   );
 };
