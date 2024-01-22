@@ -3,7 +3,8 @@ import { BackendProvider } from './contexts/BackendContext';
 import Navbar from './Navbar.jsx';
 import BusinessTable from './components/BusinessTable/BusinessTable';
 import BusinessDashboard from './components/BusinessDashboard/BusinessDashboard';
-import RegisterBusinessForm from './components/RegisterBusinessForm/RegisterBusinessForm.jsx';
+import RegisterBusinessForm from './components/RegisterBusinessForm/RegisterBusinessForm';
+import DonationForm from './components/DonationForm/DonationForm'
 import './App.css';
 
 const App = () => {
@@ -17,7 +18,7 @@ const App = () => {
         <Route exact path="/AdminManageForms" />
         <Route exact path="/AdminTeamManagement" />
         <Route exact path="/BusinessDashboard" element={<BusinessDashboard />} />
-        <Route exact path="/BusinessDonationTracking" />
+        <Route exact path="/BusinessDonationTrackingForm" element={<DonationForm />}/>
         <Route exact path="/BusinessOnboardingForm" element={<RegisterBusinessForm />}></Route>
       </Routes>
     </BackendProvider>
