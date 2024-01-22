@@ -62,7 +62,7 @@ const BusinessTable = () => {
     'Created Date',
     'City',
   ];
-  
+
   const tableHeaders = TABLE_HEADERS.map(tableHeader => <th key={tableHeader}>{tableHeader}</th>);
   useEffect(() => {
     const getData = async () => {
