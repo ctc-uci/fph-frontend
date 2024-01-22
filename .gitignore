@@ -1,5 +1,6 @@
 .env
 yarn.lock
+*.lock
 # Logs
 logs
 *.log

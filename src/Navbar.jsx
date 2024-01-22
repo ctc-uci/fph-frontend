@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 function Navbar({ isAdmin }) {
     const businessList = [
         {'name' : 'Dashboard', 'path' : '/BusinessDashboard'},
-        {'name' : 'Donation Tracking', 'path' : '/BusinessDonationTracking'},
+        {'name' : 'Donation Tracking', 'path' : '/AdminAllBusinesses'},
     ];
 
     const adminList = [
