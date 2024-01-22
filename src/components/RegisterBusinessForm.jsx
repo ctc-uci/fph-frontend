@@ -110,19 +110,71 @@ const RegisterBusinessForm = () => {
   const handleSubmit = async e => {
     e.preventDefault();
 
+    const DUMMY_STRING = "STRING";
+    const DUMMY_DATE = new Date().toISOString().split('T')[0]
+    const DUMMY_BOOL = false;
+
     const businessData = {
-      businessName,
-      owner: { firstName, lastName },
-      address: { line1: addressLine1, line2: addressLine2, city, state, zip, country },
-      website,
-      businessHours,
-      contact: { phone, email },
-      howHeard,
-    };
+      name: businessName,
+      contactName: firstName + " " + lastName,
+      street: addressLine1 + " " + addressLine2,
+      zipCode: zip,
+      state: state,
+      city: city,
+      website: website,
+      businessHours: JSON.stringify(businessHours),
+      primaryPhone: phone,
+      primaryEmail: email,
+      findOut: howHeard,
+      type: DUMMY_STRING,
+      qbVendorName: DUMMY_STRING,
+      qbCityStateZip: DUMMY_STRING,
+      backupPhone: DUMMY_STRING,
+      comments: DUMMY_STRING,
+      faxPhone: DUMMY_STRING,
+      onboardingStatus: DUMMY_STRING,
+      joinDate: DUMMY_DATE,
+      inputTypeStatus: DUMMY_STRING,
+      vendorType: DUMMY_STRING,
+      status: DUMMY_STRING,
+      petsOfTheHomelessDiscount: DUMMY_BOOL,
+      updatedBy: DUMMY_STRING,
+      updatedDateTime: DUMMY_DATE,
+      syncToQb: DUMMY_BOOL,
+      veterinary: DUMMY_BOOL,
+      resource: DUMMY_BOOL,
+      food: DUMMY_BOOL,
+      donation: DUMMY_BOOL,
+      familyShelter: DUMMY_BOOL,
+      wellness: DUMMY_BOOL,
+      spayNeuter: DUMMY_BOOL,
+      financial: DUMMY_BOOL,
+      reHome: DUMMY_BOOL,
+      erBoarding: DUMMY_BOOL,
+      senior: DUMMY_BOOL,
+      cancer: DUMMY_BOOL,
+      dog: DUMMY_BOOL,
+      cat: DUMMY_BOOL,
+      fphPhone: DUMMY_STRING,
+      contactPhone: DUMMY_STRING,
+      webNotes: DUMMY_STRING,
+      internalNotes: DUMMY_STRING,
+      published: DUMMY_BOOL,
+      shelter: DUMMY_BOOL,
+      domesticViolence: DUMMY_BOOL,
+      webDateInit: DUMMY_DATE,
+      entQb: DUMMY_BOOL,
+      serviceRequest: DUMMY_BOOL,
+      inactive: DUMMY_BOOL,
+      finalCheck: DUMMY_BOOL,
+      createdBy: DUMMY_DATE,
+      createdDate: DUMMY_DATE
+    };        
+
+    console.log(businessData);
 
     try {
-      const response = await backend.post('/business', businessData);
-      console.log('Business registration successful:', response.data);
+      await backend.post('/business', businessData);
       setRegistrationSuccess(true);
     } catch (error) {
       console.error('Error in business registration:', error);
