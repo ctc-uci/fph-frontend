@@ -1,4 +1,3 @@
-import './App.css';
 import { useEffect, useState } from 'react';
 import { useBackend } from '../../contexts/BackendContext';
 import { Table, Thead, Tbody, Tr, Td } from '@chakra-ui/react';
