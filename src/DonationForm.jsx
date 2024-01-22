@@ -1,32 +1,41 @@
-import {
-  FormControl,
-  FormLabel,
-  Input,
-  Select,
-  Button,
-} from '@chakra-ui/react';
+import { FormControl, FormLabel, Input, Select, Button } from '@chakra-ui/react';
 import { useBackend } from './contexts/BackendContext';
-import PropTypes from 'prop-types';
+import { useState } from 'react';
 
-const DonationForm = ({ data, changeData}) => {
+const DonationForm = () => {
   const { backend } = useBackend();
+  const MAX_ID = 9; // This is the maximum business id in the database. This is a temporary solution since the Figma design does not include a business id in the form.
+
+  const [formData, setFormData] = useState({
+    business_id: MAX_ID, // Since there's no business_id in the form and the database requires a business id (foreign key), the default for now is the maximum business id in the database (9)
+    canned_cat_food_quantity: null,
+    canned_dog_food_quantity: null,
+    date: null,
+    donation_id: MAX_ID,
+    dry_cat_food_quantity: null,
+    dry_dog_food_quantity: null,
+    email: 'NULL',
+    food_bank_donation: 'NULL',
+    misc_items: null,
+    reporter: null,
+    volunteer_hours: null,
+  });
+
   const submitForm = async event => {
-    console.log('poop');
     event.preventDefault();
-    console.log(data);
-    await backend.post('/donation', data);
+    await backend.post('/donation', formData);
   };
 
   const handleChange = event => {
     const name = event.target.name;
     var value = event.target.value;
-    console.log(typeof value);
+
     if (event.target.type === 'number') {
-        value = value ? parseInt(value, 10) : '';
-      }
-    changeData(prevState => ({ ...prevState, [name]: value }));
-    console.log({ ...data, [name]: value });
+      value = value ? parseInt(value, 10) : '';
+    }
+    setFormData(prevState => ({ ...prevState, [name]: value }));
   };
+
   return (
     <>
       <h1>Submit your Donation Totals</h1>
@@ -115,12 +124,6 @@ const DonationForm = ({ data, changeData}) => {
     </>
   );
 };
-
-DonationForm.propTypes = {
-    data: PropTypes.object,
-    changeData: PropTypes.func,
-  }
-
 // Note that unit of measure, food bank donation, volunteer description, photo upload, and volunteer name is NOT tracked in the backend database, however it is detailed in the Figma design.
 // Unused data points: business_id, donation_id, email, food_bank_donation
 // Quantities look discrete in the backend, however it seems from the design that they are measured in ounces, cups, and grams. I'm not sure how to handle this discrepency. Will keep as an int to stay consistent w/ backend for now.
