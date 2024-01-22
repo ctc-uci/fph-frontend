@@ -1,9 +1,10 @@
 import './App.css';
+import BusinessDashboard from './components/BusinessDashboard/BusinessDashboard';
 
 const App = () => {
   return (
     <>
-      <p>Hello World</p>
+      <BusinessDashboard />
     </>
   );
 };
