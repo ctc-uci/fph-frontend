@@ -1,9 +1,10 @@
 import './App.css';
+import BusinessNotificationCenter from './components/BusinessNotificationCenter';'./components/BusinessNotificationCenter'
 
 const App = () => {
   return (
     <>
-      <p>Hello World</p>
+      <BusinessNotificationCenter />
     </>
   );
 };
