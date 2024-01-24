@@ -6,6 +6,7 @@ function Navbar({ isAdmin }) {
     { name: 'Dashboard', path: '/BusinessDashboard' },
     { name: 'Donation Tracking Form', path: '/BusinessDonationTrackingForm' },
     { name: 'Business Onboarding', path: '/BusinessOnboardingForm' },
+    { name: 'Business Notification Center', path: '/BusinessNotificationCenter' },
   ];
 
   const adminList = [
