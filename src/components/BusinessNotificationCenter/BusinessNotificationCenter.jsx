@@ -1,6 +1,5 @@
-import './App.css';
 import { useEffect, useState } from 'react';
-import { useBackend } from './contexts/BackendContext';
+import { useBackend } from '../../contexts/BackendContext';
 import { SearchIcon, PlusSquareIcon, BellIcon, HamburgerIcon } from '@chakra-ui/icons';
 import {
   Text,

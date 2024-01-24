@@ -23,7 +23,7 @@ const App = () => {
         <Route
           exact
           path="/BusinessNotificationCenter"
-          eleemnt={<BusinessNotificationCenter />}
+          element={<BusinessNotificationCenter />}
         ></Route>
       </Routes>
     </BackendProvider>
