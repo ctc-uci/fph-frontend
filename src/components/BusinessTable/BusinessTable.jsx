@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useBackend } from '../../contexts/BackendContext';
 import { Table, Thead, Tbody, Tr, Td } from '@chakra-ui/react';
+import ViewBusiness from '../ViewBusiness/ViewBusiness';
 
 const BusinessTable = () => {
   const { backend } = useBackend();
   const [data, setData] = useState([]);
+  const [selectedBusinessId, setBusinessId] = useState(null);
   const TABLE_HEADERS = [
-    'Id',
+    'id',
     'Type',
     'Name',
     'Street',
@@ -63,6 +65,10 @@ const BusinessTable = () => {
     'City',
   ];
 
+  // in our handle row click, set our selected business id to 'id' of the business
+
+  // create a conditioanl that will return our viewbusiness page based on the id that we have selected.
+
   const tableHeaders = TABLE_HEADERS.map(tableHeader => <th key={tableHeader}>{tableHeader}</th>);
   useEffect(() => {
     const getData = async () => {
@@ -76,6 +82,20 @@ const BusinessTable = () => {
     getData();
   }, []);
 
+  const handleRowClick = async id => {
+    try {
+      setBusinessId(id);
+      const response = await backend.get(`/business/${id}`);
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error while fetching business', error);
+    }
+  };
+
+  if (selectedBusinessId) {
+    return <ViewBusiness id={selectedBusinessId} />;
+  }
+
   return (
     <div>
       <Table variant="striped" colorScheme="teal">
@@ -84,7 +104,7 @@ const BusinessTable = () => {
         </Thead>
         <Tbody>
           {data.map((item, index) => (
-            <Tr key={index}>
+            <Tr key={index} onClick={() => handleRowClick(item.id)}>
               {Object.keys(item).map(key => (
                 <Td key={key}>
                   {typeof item[key] === 'boolean' ? (item[key] ? 'True' : 'False') : item[key]}
