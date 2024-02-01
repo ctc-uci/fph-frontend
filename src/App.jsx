@@ -6,14 +6,15 @@ import BusinessDashboard from './components/BusinessDashboard/BusinessDashboard'
 import RegisterBusinessForm from './components/RegisterBusinessForm/RegisterBusinessForm';
 import DonationForm from './components/DonationForm/DonationForm';
 import BusinessNotificationCenter from './components/BusinessNotificationCenter/BusinessNotificationCenter';
+import AdminDashboard from './components/AdminDashboard/AdminDashboard';
 
 const App = () => {
   return (
     <BackendProvider>
-      <Navbar isAdmin={false} />
+      <Navbar isAdmin={true} />
       <Routes>
         <Route exact path="/" element={<div>Welcome to the App</div>} />
-        <Route exact path="/AdminDashboard" />
+        <Route exact path="/AdminDashboard" element={<AdminDashboard />} />
         <Route exact path="/AdminAllBusinesses" element={<BusinessTable />} />
         <Route exact path="/AdminManageForms" />
         <Route exact path="/AdminTeamManagement" />
