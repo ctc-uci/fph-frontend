@@ -1,36 +1,36 @@
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Button } from '@chakra-ui/react';
+
+// Navbar is a container with a single button for Contact Us
 
 function Navbar({ isAdmin }) {
   const businessList = [
-    { name: 'Dashboard', path: '/BusinessDashboard' },
-    { name: 'Donation Tracking Form', path: '/BusinessDonationTrackingForm' },
-    { name: 'Business Onboarding', path: '/BusinessOnboardingForm' },
-    { name: 'Business Notification Center', path: '/BusinessNotificationCenter' },
+    { name: 'Contact Us', path: '/ContactUs' },
   ];
 
-  const adminList = [
-    { name: 'Dashboard', path: '/AdminDashboard' },
-    { name: 'All Businesses', path: '/AdminAllBusinesses' },
-    { name: 'Manage Forms', path: '/AdminManageForms' },
-    { name: 'Team Management', path: '/AdminTeamManagement' },
-  ];
+  const adminList = [ ];
 
   const navList = isAdmin ? adminList : businessList;
   console.log(navList);
   return (
     <>
       <nav>
-        <ul>
+        <Button>
+          <Link to={businessList[ 0 ].path}>{businessList[ 0 ].name}</Link>
+        </Button>
+
+        {/* <ul>
           {navList.map(item => {
             console.log(item);
             return (
               <li key={item.path}>
                 <Link to={item.path}>{item.name}</Link>
-              </li>
+              </li> //uh oh
             );
           })}
-        </ul>
+        </ul> */}
+
       </nav>
     </>
   );
