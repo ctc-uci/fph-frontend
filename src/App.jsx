@@ -6,6 +6,7 @@ import BusinessDashboard from './components/BusinessDashboard/BusinessDashboard'
 import RegisterBusinessForm from './components/RegisterBusinessForm/RegisterBusinessForm';
 import DonationForm from './components/DonationForm/DonationForm';
 import BusinessNotificationCenter from './components/BusinessNotificationCenter/BusinessNotificationCenter';
+import EditContactInformation from './components/EditContactInformation';
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
           path="/BusinessNotificationCenter"
           element={<BusinessNotificationCenter />}
         ></Route>
+        <Route exact path="/EditContactInformation" element={<EditContactInformation />}></Route>
       </Routes>
     </BackendProvider>
   );
