@@ -63,9 +63,8 @@ const ContactUs = () => {
     console.log(result);
    }
 
-   const updateForm = () => { // how do you make this run first before submit?
-    const message = setMessage();
-
+   const updateForm = (inputValue) => { // how do you make this run first before submit?
+    const message = setMessage(inputValue);
     setFormData({
       business_id: 0,
       message: message,
@@ -76,11 +75,11 @@ const ContactUs = () => {
 
    const handleInputChange = (e) => {
     let inputValue = e.target.value;
+    updateForm(inputValue);
     setText(inputValue);
-    updateForm();
   }
 
-  const setMessage = () => {
+  const setMessage = (text) => {
     const textCopy = text;
     const checkedThingies = ['Stickers', 'Posters', 'Business', 'Something', 'Joshua Lipton'];
 

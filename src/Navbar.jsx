@@ -4,33 +4,22 @@ import { Button } from '@chakra-ui/react';
 
 // Navbar is a container with a single button for Contact Us
 
-function Navbar({ isAdmin }) {
+function Navbar({ showContactUs, title, showSettings, excelDownload, backButton}) {
   const businessList = [
     { name: 'Contact Us', path: '/ContactUs' },
+    { name: 'Settings', path: '/EditContactInformation'},
+    { name: 'Excel Download', path: '/Download'}, // Download not made yet
+    { name: 'Back Button', path: '/Home'},
   ];
 
-  const adminList = [ ];
-
-  const navList = isAdmin ? adminList : businessList;
-  console.log(navList);
+  //const navList = isAdmin ? adminList : businessList;
+  //console.log(navList);
   return (
     <>
       <nav>
         <Button>
           <Link to={businessList[ 0 ].path}>{businessList[ 0 ].name}</Link>
         </Button>
-
-        {/* <ul>
-          {navList.map(item => {
-            console.log(item);
-            return (
-              <li key={item.path}>
-                <Link to={item.path}>{item.name}</Link>
-              </li> //uh oh
-            );
-          })}
-        </ul> */}
-
       </nav>
     </>
   );
