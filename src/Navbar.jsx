@@ -12,7 +12,7 @@ function Navbar({ showContactUs, title, showSettings, excelDownload, backButton}
     { name: 'Contact Us', path: '/ContactUs' },
     { name: 'Settings', path: '/EditContactInformation'},
     { name: 'Excel Download', path: '/Download'}, // Download not made yet
-    { name: 'Back Button', path: '/Home'},
+    { name: 'Back Button', path: '/'},
   ];
 
   //const navList = isAdmin ? adminList : businessList;
@@ -30,12 +30,12 @@ function Navbar({ showContactUs, title, showSettings, excelDownload, backButton}
     return false;
   });
 
-    console.log(navList);
+    //console.log(navList);
 
   return (
     <>
       <nav>
-      <IconButton aria-label='Back button' icon={<ChevronLeftIcon />} onClick={() => navigate('/Home')} />
+      <IconButton aria-label='Back button' icon={<ChevronLeftIcon />} onClick={() => navigate('/')} />
         <Button>
           <Link to={businessList[ 0 ].path}>{businessList[ 0 ].name}</Link>
         </Button>

@@ -8,6 +8,7 @@ import DonationForm from './components/DonationForm/DonationForm';
 import BusinessNotificationCenter from './components/BusinessNotificationCenter/BusinessNotificationCenter';
 import ContactUs from './components/ContactUsForm/ContactUs';
 import Navbar from './Navbar';
+import EditContactInformation from './components/EditContactInformation/EditContactInformation';
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
         <Route exact path="/AdminAllBusinesses" element={<BusinessTable />} />
         <Route exact path="/AdminManageForms" />
         <Route exact path="/AdminTeamManagement" />
+        <Route exact path="/EditContactInformation" element={<EditContactInformation />} />
         <Route exact path="/BusinessDashboard" element={<BusinessDashboard />} />
         <Route exact path="/BusinessDonationTrackingForm" element={<DonationForm />} />
         <Route exact path="/BusinessOnboardingForm" element={<RegisterBusinessForm />}></Route>

@@ -7,6 +7,7 @@ function Sidebar({ isAdmin }) {
     { name: 'Donation Tracking Form', path: '/BusinessDonationTrackingForm' },
     { name: 'Business Onboarding', path: '/BusinessOnboardingForm' },
     { name: 'Business Notification Center', path: '/BusinessNotificationCenter' },
+    { name: 'Settings', path: '/EditContactInformation' },
   ];
 
   const adminList = [
@@ -14,6 +15,7 @@ function Sidebar({ isAdmin }) {
     { name: 'All Businesses', path: '/AdminAllBusinesses' },
     { name: 'Manage Forms', path: '/AdminManageForms' },
     { name: 'Team Management', path: '/AdminTeamManagement' },
+    { name: 'Settings', path: '/EditContactInformation' },
   ];
 
   const navList = isAdmin ? adminList : businessList;

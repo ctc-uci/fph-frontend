@@ -47,6 +47,7 @@ const ContactUs = () => {
     been_dismissed: false,
   });
 
+
   const handleCheck = (index, newValue) => {
     setCheckedItems((checkedItems) => {
       const newArray = [...checkedItems];
@@ -59,7 +60,7 @@ const ContactUs = () => {
 
    const SubmitForm = async event => {
     event.preventDefault();
-    console.log(formData);
+    //console.log(formData);
     const result = await backend.post('/notification/', formData);
     console.log(result);
    }
