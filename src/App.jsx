@@ -12,7 +12,7 @@ import Navbar from './Navbar';
 const App = () => {
   return (
     <BackendProvider>
-      <Navbar showContactUs={true} settings={false} excelDownload={false} backButton={true}/>
+      <Navbar showContactUs={true} title={""} showSettings={false} excelDownload={false} backButton={true}/>
       <Sidebar isAdmin={false} />
       <Routes>
         <Route exact path="/" element={<div>Welcome to the App</div>} />

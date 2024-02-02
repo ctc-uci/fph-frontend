@@ -37,6 +37,7 @@ Box
 const ContactUs = () => {
   const { backend } = useBackend();
   const [ID, setID] = useState(0);
+  const [name, setName] = useState("business?"); // name of business
   const [text, setText] = useState("");
   const [checkedItems, setCheckedItems] = useState([false, false, false, false, false]);
   const [formData, setFormData] = useState({ // idk whats in the form data
@@ -81,12 +82,12 @@ const ContactUs = () => {
 
   const setMessage = (text) => {
     const textCopy = text;
-    const checkedThingies = ['Stickers', 'Posters', 'Business', 'Something', 'Joshua Lipton'];
-
+    const checkedThingies = ['Stickers', 'Posters', 'Business Cards', 'Something', 'Joshua Lipton'];
+    const preMessage = `${name} is requesting: \n`; // business name... hard-coded right now
     const updatedMessage = checkedThingies
       .filter((_, index) => checkedItems[index])
-      .join(', ');
-    return `${updatedMessage} + ${textCopy}`;
+      .join('\n-');
+    return `${preMessage}-${updatedMessage}\nNotes:\n${textCopy}`;
   };
 
    return (
