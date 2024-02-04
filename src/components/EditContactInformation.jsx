@@ -43,16 +43,12 @@ const EditContactInformation = () => {
         const name = businessContact.contact_name.split(' ');
         const firstName = name[0];
         const lastName = name[1];
-        const phoneNumber = businessContact.contact_phone;
-        const email = businessContact.primary_email;
-        const website = businessContact.website;
-        const street = businessContact.street;
 
         setBusinessContactInfo({
-          phoneNumber: phoneNumber,
-          email: email,
-          website: website,
-          street: street,
+          phoneNumber: businessContact.contact_phone,
+          email: businessContact.primary_email,
+          website: businessContact.website,
+          street: businessContact.street,
           firstName: firstName,
           lastName: lastName,
         });
