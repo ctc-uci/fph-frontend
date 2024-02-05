@@ -12,7 +12,6 @@ const App = () => {
   return (
     <BackendProvider>
       <Navbar isAdmin={true} />
-      <Navbar isAdmin={true} />
       <Routes>
         <Route exact path="/" element={<div>Welcome to the App</div>} />
         <Route exact path="/AdminDashboard" element={<AdminDashboard />} />
