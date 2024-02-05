@@ -27,24 +27,7 @@ const AdminAllBusinesses = () => {
 
   let contents = (
     <div>
-      {!formFlag ? (
-        !pendingFlag ? (
-          <>
-            <Button colorScheme="teal" variant="outline" onClick={handleClickPending}>
-              Pending Applications
-            </Button>
-          </>
-        ) : (
-          <>
-            <Text>
-              <Link onClick={handleClickAll} color="teal.500">
-                Businesses
-              </Link>{' '}
-              &gt; Pending Applications
-            </Text>
-          </>
-        )
-      ) : (
+      {formFlag && (
         <>
           <Text>
             <Link onClick={handleClickAll} color="teal.500">
@@ -54,14 +37,29 @@ const AdminAllBusinesses = () => {
             <Link onClick={handleClickPending}>Pending Applications</Link> &gt;
             {formItem.name}
           </Text>
+          <BusinessForm pending={true} pendingData={formItem} />
         </>
       )}
-      {formFlag ? (
-        <BusinessForm pending={true} pendingData={formItem} />
-      ) : !pendingFlag ? (
-        <BusinessTable />
-      ) : (
-        <PendingBusinessTable goToBusinessForm={item => goToBusinessForm(item)} />
+
+      {(!formFlag && !pendingFlag) && (
+        <>
+          <Button colorScheme="teal" variant="outline" onClick={handleClickPending}>
+            Pending Applications
+          </Button>
+          <BusinessTable />
+        </> 
+      )}
+
+      {(!formFlag && pendingFlag) && (
+        <>
+          <Text>
+            <Link onClick={handleClickAll} color="teal.500">
+              Businesses
+            </Link>{' '}
+            &gt; Pending Applications
+          </Text>
+          <PendingBusinessTable goToBusinessForm={item => goToBusinessForm(item)} />
+        </>
       )}
     </div>
   );
