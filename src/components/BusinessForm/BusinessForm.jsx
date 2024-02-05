@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Box,
@@ -15,17 +15,18 @@ import {
   ListItem,
 } from '@chakra-ui/react';
 import { useBackend } from '../../contexts/BackendContext';
-import RegisterSuccessPage from './RegisterSuccessPage';
+import RegisterSuccessPage from '../RegisterBusinessForm/RegisterSuccessPage';
 
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-const TimeInput = ({ label, value, onChange }) => (
+const TimeInput = ({ label, value, onChange, isReadOnly }) => (
   <Stack direction="row" align="center">
     <FormLabel mb="0">{label}</FormLabel>
     <Select
       value={value.hour}
       onChange={e => onChange({ ...value, hour: e.target.value })}
       w="auto"
+      disabled={isReadOnly}
     >
       {[...Array(12).keys()].map(h => (
         <option key={h} value={h + 1}>
@@ -37,6 +38,7 @@ const TimeInput = ({ label, value, onChange }) => (
       value={value.minute}
       onChange={e => onChange({ ...value, minute: e.target.value })}
       w="auto"
+      disabled={isReadOnly}
     >
       {['00', '15', '30', '45'].map(m => (
         <option key={m} value={m}>
@@ -48,6 +50,7 @@ const TimeInput = ({ label, value, onChange }) => (
       value={value.ampm}
       onChange={e => onChange({ ...value, ampm: e.target.value })}
       w="auto"
+      disabled={isReadOnly}
     >
       {['AM', 'PM'].map(ampm => (
         <option key={ampm} value={ampm}>
@@ -66,9 +69,10 @@ TimeInput.propTypes = {
     ampm: PropTypes.string.isRequired,
   }).isRequired,
   onChange: PropTypes.func.isRequired,
+  isReadOnly: PropTypes.bool.isRequired,
 };
 
-const RegisterBusinessForm = () => {
+const BusinessForm = ({ pending, pendingData }) => {
   // State for each form field
   const [businessName, setBusinessName] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -97,6 +101,12 @@ const RegisterBusinessForm = () => {
       {},
     ),
   );
+
+  useEffect(() => {
+    if (pending) {
+      fillOutPendingData();
+    }
+  });
 
   const handleTimeChange = (day, period, value) => {
     setBusinessHours({ ...businessHours, [day]: { ...businessHours[day], [period]: value } });
@@ -171,8 +181,6 @@ const RegisterBusinessForm = () => {
       createdDate: DUMMY_DATE,
     };
 
-    console.log(businessData);
-
     try {
       await backend.post('/business', businessData);
       setRegistrationSuccess(true);
@@ -182,31 +190,73 @@ const RegisterBusinessForm = () => {
     setRegistrationSuccess(true);
   };
 
-  if (registrationSuccess) {
+  if (!pending && registrationSuccess) {
     return <RegisterSuccessPage />;
   }
+
+  const fillOutPendingData = () => {
+    setBusinessName(pendingData.name ? pendingData.name : '');
+    if (pendingData.contact_name === null) {
+      setFirstName('');
+      setLastName('');
+    } else {
+      setFirstName(pendingData.contact_name.split(' ')[0]);
+      setLastName(
+        pendingData.contact_name.split(' ')[1] ? pendingData.contact_name.split(' ')[1] : '',
+      );
+    }
+    if (pendingData.street === null) {
+      setAddressLine1('');
+      setAddressLine2('');
+    } else {
+      setAddressLine1(pendingData.street.split(' ')[0]);
+      setAddressLine2(pendingData.street.split(' ')[1] ? pendingData.street.split(' ')[1] : '');
+    }
+
+    setCity(pendingData.city ? pendingData.city : '');
+    setState(pendingData.state ? pendingData.state : '');
+    setZip(pendingData.zip_code ? pendingData.zip_code : '');
+    setCountry('USA');
+    setWebsite(pendingData.website ? pendingData.website : '');
+    setPhone(pendingData.primary_phone ? pendingData.primary_phone : '');
+    setEmail(pendingData.primary_email ? pendingData.primary_email : '');
+    setHowHeard(pendingData.find_out ? pendingData.find_out : '');
+  };
 
   return (
     <Box p={5}>
       <Flex direction="column" align="stretch" gap={5}>
-        <Flex justifyContent="space-between">
-          <Heading as="h1" size="lg" textAlign="center">
-            BUSINESS DONOR
-          </Heading>
-        </Flex>
-        <Box textAlign="left" paddingLeft={8}>
-          <Text fontSize="2xl">FPH</Text>
-        </Box>
-        <Box>
-          <Heading as="h2" size="lg" textAlign="center" paddingBottom={4}>
-            WHY JOIN?
-          </Heading>
-          <UnorderedList textAlign="center" paddingLeft={40} paddingRight={40}>
-            <ListItem>Some inspiring reason to join the platform...</ListItem>
-            <ListItem>Another compelling argument...</ListItem>
-            <ListItem>More information about benefits...</ListItem>
-          </UnorderedList>
-        </Box>
+        {pending ? (
+          <>
+            <Flex justifyContent="space-between">
+              <Heading as="h1" size="lg" textAlign="center">
+                BUSINESS NAME
+              </Heading>
+            </Flex>
+          </>
+        ) : (
+          <>
+            <Flex justifyContent="space-between">
+              <Heading as="h1" size="lg" textAlign="center">
+                BUSINESS DONOR
+              </Heading>
+            </Flex>
+            <Box textAlign="left" paddingLeft={8}>
+              <Text fontSize="2xl">FPH</Text>
+            </Box>
+            <Box>
+              <Heading as="h2" size="lg" textAlign="center" paddingBottom={4}>
+                WHY JOIN?
+              </Heading>
+              <UnorderedList textAlign="center" paddingLeft={40} paddingRight={40}>
+                <ListItem>Some inspiring reason to join the platform...</ListItem>
+                <ListItem>Another compelling argument...</ListItem>
+                <ListItem>More information about benefits...</ListItem>
+              </UnorderedList>
+            </Box>
+          </>
+        )}
+
         <form onSubmit={handleSubmit}>
           <Flex direction="column" gap={4}>
             <FormControl id="business-name">
@@ -215,16 +265,27 @@ const RegisterBusinessForm = () => {
                 type="text"
                 value={businessName}
                 onChange={e => setBusinessName(e.target.value)}
+                isReadOnly={pending}
               />
             </FormControl>
             <Flex gap={4}>
               <FormControl id="first-name" flex="1">
                 <FormLabel>First Name</FormLabel>
-                <Input type="text" value={firstName} onChange={e => setFirstName(e.target.value)} />
+                <Input
+                  type="text"
+                  value={firstName}
+                  onChange={e => setFirstName(e.target.value)}
+                  isReadOnly={pending}
+                />
               </FormControl>
               <FormControl id="last-name" flex="1">
                 <FormLabel>Last Name</FormLabel>
-                <Input type="text" value={lastName} onChange={e => setLastName(e.target.value)} />
+                <Input
+                  type="text"
+                  value={lastName}
+                  onChange={e => setLastName(e.target.value)}
+                  isReadOnly={pending}
+                />
               </FormControl>
             </Flex>
             <FormControl id="address-line1">
@@ -233,6 +294,7 @@ const RegisterBusinessForm = () => {
                 type="text"
                 value={addressLine1}
                 onChange={e => setAddressLine1(e.target.value)}
+                isReadOnly={pending}
               />
             </FormControl>
             <FormControl id="address-line2">
@@ -241,31 +303,52 @@ const RegisterBusinessForm = () => {
                 type="text"
                 value={addressLine2}
                 onChange={e => setAddressLine2(e.target.value)}
+                isReadOnly={pending}
               />
             </FormControl>
             <Flex gap={4}>
               <FormControl id="city" flex="1">
                 <FormLabel>City</FormLabel>
-                <Input type="text" value={city} onChange={e => setCity(e.target.value)} />
+                <Input
+                  type="text"
+                  value={city}
+                  onChange={e => setCity(e.target.value)}
+                  isReadOnly={pending}
+                />
               </FormControl>
               <FormControl id="state" flex="1">
                 <FormLabel>State</FormLabel>
-                <Input type="text" value={state} onChange={e => setState(e.target.value)} />
+                <Input
+                  type="text"
+                  value={state}
+                  onChange={e => setState(e.target.value)}
+                  isReadOnly={pending}
+                />
               </FormControl>
             </Flex>
             <Flex gap={4}>
               <FormControl id="zip_code" flex="1">
                 <FormLabel>Zip Code</FormLabel>
-                <Input type="text" value={zip} onChange={handleZipChange} />
+                <Input type="text" value={zip} onChange={handleZipChange} isReadOnly={pending} />
               </FormControl>
               <FormControl id="country" flex="1">
                 <FormLabel>Country</FormLabel>
-                <Input type="text" value={country} onChange={e => setCountry(e.target.value)} />
+                <Input
+                  type="text"
+                  value={country}
+                  onChange={e => setCountry(e.target.value)}
+                  isReadOnly={pending}
+                />
               </FormControl>
             </Flex>
             <FormControl id="website">
               <FormLabel>Website</FormLabel>
-              <Input type="url" value={website} onChange={e => setWebsite(e.target.value)} />
+              <Input
+                type="url"
+                value={website}
+                onChange={e => setWebsite(e.target.value)}
+                isReadOnly={pending}
+              />
             </FormControl>
             <FormControl id="business-hours">
               <FormLabel>Business Hours</FormLabel>
@@ -276,22 +359,34 @@ const RegisterBusinessForm = () => {
                     label="From"
                     value={businessHours[day].start}
                     onChange={value => handleTimeChange(day, 'start', value)}
+                    isReadOnly={pending}
                   />
                   <TimeInput
                     label="To"
                     value={businessHours[day].end}
                     onChange={value => handleTimeChange(day, 'end', value)}
+                    isReadOnly={pending}
                   />
                 </Flex>
               ))}
             </FormControl>
             <FormControl id="phone">
               <FormLabel>Phone</FormLabel>
-              <Input type="tel" value={phone} onChange={e => setPhone(e.target.value)} />
+              <Input
+                type="tel"
+                value={phone}
+                onChange={e => setPhone(e.target.value)}
+                isReadOnly={pending}
+              />
             </FormControl>
             <FormControl id="email">
               <FormLabel>Email</FormLabel>
-              <Input type="email" value={email} onChange={e => setEmail(e.target.value)} />
+              <Input
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                isReadOnly={pending}
+              />
             </FormControl>
             <FormControl id="how-heard">
               <FormLabel>How did you hear about us?</FormLabel>
@@ -302,9 +397,20 @@ const RegisterBusinessForm = () => {
                 <option value="other">Other</option>
               </Select>
             </FormControl>
-            <Button type="submit" colorScheme="blue">
-              Register
-            </Button>
+            {pending ? (
+              <>
+                <Button onClick={null} colorScheme="blue">
+                  Approve
+                </Button>
+                <Button onClick={null} colorScheme="blue">
+                  Deny
+                </Button>
+              </>
+            ) : (
+              <Button type="submit" colorScheme="blue">
+                Register
+              </Button>
+            )}
           </Flex>
         </form>
       </Flex>
@@ -312,4 +418,9 @@ const RegisterBusinessForm = () => {
   );
 };
 
-export default RegisterBusinessForm;
+BusinessForm.propTypes = {
+  pending: PropTypes.bool.isRequired,
+  pendingData: PropTypes.object,
+};
+
+export default BusinessForm;
