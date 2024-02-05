@@ -181,8 +181,6 @@ const BusinessForm = ({ pending, pendingData }) => {
       createdDate: DUMMY_DATE,
     };
 
-    console.log(businessData);
-
     try {
       await backend.post('/business', businessData);
       setRegistrationSuccess(true);
@@ -197,59 +195,68 @@ const BusinessForm = ({ pending, pendingData }) => {
   }
 
   const fillOutPendingData = () => {
-    setBusinessName(pendingData.name);
-    setFirstName(pendingData.contactName.split(' ')[0]);
-    setLastName(pendingData.contactName.split(' ')[1]);
-    setAddressLine1(pendingData.street.split(' ')[0]);
-    setAddressLine2(pendingData.street.split(' ')[1]);
-    setCity(pendingData.city);
-    setState(pendingData.state);
-    setZip(pendingData.zipCode);
-    setCountry('USA');
-    setWebsite(pendingData.website);
-    setPhone(pendingData.primaryPhone);
-    setEmail(pendingData.primaryEmail);
-    setHowHeard(pendingData.findOut);
-  }
+    setBusinessName(pendingData.name ? pendingData.name : '');
+    if (pendingData.contact_name === null) {
+      setFirstName('');
+      setLastName('');
+    } else {
+      setFirstName(pendingData.contact_name.split(' ')[0]);
+      setLastName(
+        pendingData.contact_name.split(' ')[1] ? pendingData.contact_name.split(' ')[1] : '',
+      );
+    }
+    if (pendingData.street === null) {
+      setAddressLine1('');
+      setAddressLine2('');
+    } else {
+      setAddressLine1(pendingData.street.split(' ')[0]);
+      setAddressLine2(pendingData.street.split(' ')[1] ? pendingData.street.split(' ')[1] : '');
+    }
 
-  
+    setCity(pendingData.city ? pendingData.city : '');
+    setState(pendingData.state ? pendingData.state : '');
+    setZip(pendingData.zip_code ? pendingData.zip_code : '');
+    setCountry('USA');
+    setWebsite(pendingData.website ? pendingData.website : '');
+    setPhone(pendingData.primary_phone ? pendingData.primary_phone : '');
+    setEmail(pendingData.primary_email ? pendingData.primary_email : '');
+    setHowHeard(pendingData.find_out ? pendingData.find_out : '');
+  };
 
   return (
     <Box p={5}>
       <Flex direction="column" align="stretch" gap={5}>
-        {pending
-            ?
-                <>
-                    <Flex justifyContent="space-between">
-                        <Heading as="h1" size="lg" textAlign="center">
-                        BUSINESS NAME
-                        </Heading>
-                    </Flex>
-                </>
-            :
-                <>
-                    <Flex justifyContent="space-between">
-                        <Heading as="h1" size="lg" textAlign="center">
-                        BUSINESS DONOR
-                        </Heading>
-                    </Flex>
-                    <Box textAlign="left" paddingLeft={8}>
-                        <Text fontSize="2xl">FPH</Text>
-                    </Box>
-                    <Box>
-                        <Heading as="h2" size="lg" textAlign="center" paddingBottom={4}>
-                        WHY JOIN?
-                        </Heading>
-                        <UnorderedList textAlign="center" paddingLeft={40} paddingRight={40}>
-                            <ListItem>Some inspiring reason to join the platform...</ListItem>
-                            <ListItem>Another compelling argument...</ListItem>
-                            <ListItem>More information about benefits...</ListItem>
-                        </UnorderedList>
-                    </Box>
-                </>
-           
-        }
-        
+        {pending ? (
+          <>
+            <Flex justifyContent="space-between">
+              <Heading as="h1" size="lg" textAlign="center">
+                BUSINESS NAME
+              </Heading>
+            </Flex>
+          </>
+        ) : (
+          <>
+            <Flex justifyContent="space-between">
+              <Heading as="h1" size="lg" textAlign="center">
+                BUSINESS DONOR
+              </Heading>
+            </Flex>
+            <Box textAlign="left" paddingLeft={8}>
+              <Text fontSize="2xl">FPH</Text>
+            </Box>
+            <Box>
+              <Heading as="h2" size="lg" textAlign="center" paddingBottom={4}>
+                WHY JOIN?
+              </Heading>
+              <UnorderedList textAlign="center" paddingLeft={40} paddingRight={40}>
+                <ListItem>Some inspiring reason to join the platform...</ListItem>
+                <ListItem>Another compelling argument...</ListItem>
+                <ListItem>More information about benefits...</ListItem>
+              </UnorderedList>
+            </Box>
+          </>
+        )}
+
         <form onSubmit={handleSubmit}>
           <Flex direction="column" gap={4}>
             <FormControl id="business-name">
@@ -264,11 +271,21 @@ const BusinessForm = ({ pending, pendingData }) => {
             <Flex gap={4}>
               <FormControl id="first-name" flex="1">
                 <FormLabel>First Name</FormLabel>
-                <Input type="text" value={firstName} onChange={e => setFirstName(e.target.value)} isReadOnly={pending}/>
+                <Input
+                  type="text"
+                  value={firstName}
+                  onChange={e => setFirstName(e.target.value)}
+                  isReadOnly={pending}
+                />
               </FormControl>
               <FormControl id="last-name" flex="1">
                 <FormLabel>Last Name</FormLabel>
-                <Input type="text" value={lastName} onChange={e => setLastName(e.target.value)} isReadOnly={pending}/>
+                <Input
+                  type="text"
+                  value={lastName}
+                  onChange={e => setLastName(e.target.value)}
+                  isReadOnly={pending}
+                />
               </FormControl>
             </Flex>
             <FormControl id="address-line1">
@@ -292,11 +309,21 @@ const BusinessForm = ({ pending, pendingData }) => {
             <Flex gap={4}>
               <FormControl id="city" flex="1">
                 <FormLabel>City</FormLabel>
-                <Input type="text" value={city} onChange={e => setCity(e.target.value)} isReadOnly={pending} />
+                <Input
+                  type="text"
+                  value={city}
+                  onChange={e => setCity(e.target.value)}
+                  isReadOnly={pending}
+                />
               </FormControl>
               <FormControl id="state" flex="1">
                 <FormLabel>State</FormLabel>
-                <Input type="text" value={state} onChange={e => setState(e.target.value)} isReadOnly={pending} />
+                <Input
+                  type="text"
+                  value={state}
+                  onChange={e => setState(e.target.value)}
+                  isReadOnly={pending}
+                />
               </FormControl>
             </Flex>
             <Flex gap={4}>
@@ -306,12 +333,22 @@ const BusinessForm = ({ pending, pendingData }) => {
               </FormControl>
               <FormControl id="country" flex="1">
                 <FormLabel>Country</FormLabel>
-                <Input type="text" value={country} onChange={e => setCountry(e.target.value)} isReadOnly={pending} />
+                <Input
+                  type="text"
+                  value={country}
+                  onChange={e => setCountry(e.target.value)}
+                  isReadOnly={pending}
+                />
               </FormControl>
             </Flex>
             <FormControl id="website">
               <FormLabel>Website</FormLabel>
-              <Input type="url" value={website} onChange={e => setWebsite(e.target.value)} isReadOnly={pending} />
+              <Input
+                type="url"
+                value={website}
+                onChange={e => setWebsite(e.target.value)}
+                isReadOnly={pending}
+              />
             </FormControl>
             <FormControl id="business-hours">
               <FormLabel>Business Hours</FormLabel>
@@ -335,11 +372,21 @@ const BusinessForm = ({ pending, pendingData }) => {
             </FormControl>
             <FormControl id="phone">
               <FormLabel>Phone</FormLabel>
-              <Input type="tel" value={phone} onChange={e => setPhone(e.target.value)} isReadOnly={pending} />
+              <Input
+                type="tel"
+                value={phone}
+                onChange={e => setPhone(e.target.value)}
+                isReadOnly={pending}
+              />
             </FormControl>
             <FormControl id="email">
               <FormLabel>Email</FormLabel>
-              <Input type="email" value={email} onChange={e => setEmail(e.target.value)} isReadOnly={pending} />
+              <Input
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                isReadOnly={pending}
+              />
             </FormControl>
             <FormControl id="how-heard">
               <FormLabel>How did you hear about us?</FormLabel>
@@ -350,13 +397,13 @@ const BusinessForm = ({ pending, pendingData }) => {
                 <option value="other">Other</option>
               </Select>
             </FormControl>
-            {
-                pending ? <></> :
-                <Button type="submit" colorScheme="blue">
-                    Register
-                </Button>
-            }
-            
+            {pending ? (
+              <></>
+            ) : (
+              <Button type="submit" colorScheme="blue">
+                Register
+              </Button>
+            )}
           </Flex>
         </form>
       </Flex>
@@ -365,9 +412,8 @@ const BusinessForm = ({ pending, pendingData }) => {
 };
 
 BusinessForm.propTypes = {
-    pending: PropTypes.bool.isRequired,
-    pendingData: PropTypes.object,
-
+  pending: PropTypes.bool.isRequired,
+  pendingData: PropTypes.object,
 };
 
 export default BusinessForm;

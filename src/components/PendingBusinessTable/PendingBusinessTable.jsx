@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useBackend } from '../../contexts/BackendContext';
-import { Table, Thead, Tbody, Tr, Td } from '@chakra-ui/react';
+import { Button, Table, Thead, Tbody, Tr, Td } from '@chakra-ui/react';
+import propTypes from 'prop-types';
 
-const PendingBusinessTable = () => {
+const PendingBusinessTable = ({ goToBusinessForm }) => {
   const { backend } = useBackend();
   const [data, setData] = useState([]);
   const TABLE_HEADERS = [
@@ -61,13 +62,14 @@ const PendingBusinessTable = () => {
     'Created By',
     'Created Date',
     'City',
+    'Application',
   ];
 
   const tableHeaders = TABLE_HEADERS.map(tableHeader => <th key={tableHeader}>{tableHeader}</th>);
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await backend.get('/business');
+        const response = await backend.get('/business/order/status/desc');
         setData(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -78,25 +80,32 @@ const PendingBusinessTable = () => {
 
   return (
     <div>
-    <h1>HEHE</h1>
-    <Table variant="striped" colorScheme="teal">
+      <h1>HEHE</h1>
+      <Table variant="striped" colorScheme="teal">
         <Thead>
-        <Tr>{tableHeaders}</Tr>
+          <Tr>{tableHeaders}</Tr>
         </Thead>
         <Tbody>
-        {data.map((item, index) => (
+          {data.map((item, index) => (
             <Tr key={index}>
-            {Object.keys(item).map(key => (
+              {Object.keys(item).map(key => (
                 <Td key={key}>
-                {typeof item[key] === 'boolean' ? (item[key] ? 'True' : 'False') : item[key]}
+                  {typeof item[key] === 'boolean' ? (item[key] ? 'True' : 'False') : item[key]}
                 </Td>
-            ))}
+              ))}
+              <Td key="Application">
+                <Button onClick={() => goToBusinessForm(item)}>View Application</Button>
+              </Td>
             </Tr>
-        ))}
+          ))}
         </Tbody>
-    </Table>
+      </Table>
     </div>
   );
+};
+
+PendingBusinessTable.propTypes = {
+  goToBusinessForm: propTypes.func.isRequired,
 };
 
 export default PendingBusinessTable;
