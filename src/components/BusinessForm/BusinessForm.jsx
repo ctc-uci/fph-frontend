@@ -398,7 +398,14 @@ const BusinessForm = ({ pending, pendingData }) => {
               </Select>
             </FormControl>
             {pending ? (
-              <></>
+              <>
+                <Button onClick={null} colorScheme="blue">
+                  Approve
+                </Button>
+                <Button onClick={null} colorScheme="blue">
+                  Deny
+                </Button>
+              </>
             ) : (
               <Button type="submit" colorScheme="blue">
                 Register
