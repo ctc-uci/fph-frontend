@@ -39,11 +39,6 @@ function Navbar({ showContactUs, title, showSettings, excelDownload, backButton 
             <Link to={businessList[2].path}>{businessList[2].name}</Link>
           </Button>
         )}
-        {backButton && (
-          <Button>
-            <Link to={businessList[3].path}>{businessList[3].name}</Link>
-          </Button>
-        )}
       </nav>
     </>
   );
