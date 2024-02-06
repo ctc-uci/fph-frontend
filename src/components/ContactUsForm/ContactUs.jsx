@@ -32,7 +32,6 @@ const ContactUs = () => {
       been_dismissed: false,
     };
     const result = await backend.post('/notification/', updatedFormData);
-    console.log(result);
   };
 
   const handleInputChange = e => {
