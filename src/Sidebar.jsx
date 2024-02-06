@@ -19,13 +19,11 @@ function Sidebar({ isAdmin }) {
   ];
 
   const navList = isAdmin ? adminList : businessList;
-  console.log(navList);
   return (
     <>
       <nav>
         <ul>
           {navList.map(item => {
-            console.log(item);
             return (
               <li key={item.path}>
                 <Link to={item.path}>{item.name}</Link>
