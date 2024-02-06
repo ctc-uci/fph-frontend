@@ -72,44 +72,58 @@ const BusinessTable = () => {
     'City',
   ];
   const tableHeaders = TABLE_HEADERS.map(tableHeader => <th key={tableHeader}>{tableHeader}</th>);
-  const [checkedItems, setCheckedItems] = useState(new Array(TABLE_HEADERS.length).fill(false));
+  const [selectedBusinessIds, setSelectedBusinessIds] = useState(new Set());
 
-  const handleCheckboxChange = index => {
-    setCheckedItems(prev => {
-      const newCheckedItems = [...prev];
-      newCheckedItems[index] = !newCheckedItems[index];
-      return newCheckedItems;
+  const handleCheckboxChange = (businessId) => {
+    setSelectedBusinessIds((prevSelectedIds) => {
+      const newSelectedIds = new Set(prevSelectedIds);
+      if (newSelectedIds.has(businessId)) {
+        newSelectedIds.delete(businessId);
+      } else {
+        newSelectedIds.add(businessId);
+      }
+      return newSelectedIds;
     });
   };
 
   const handleSelectAllChange = () => {
-    setCheckedItems(prev => {
-      const allChecked = prev.every(Boolean);
-      return prev.map(() => !allChecked);
+    setSelectedBusinessIds((prevSelectedIds) => {
+      const newSelectedIds = new Set(prevSelectedIds);
+      const allBusinessIds = data.map((business) => business.id);
+
+      if (newSelectedIds.size === allBusinessIds.length) {
+        // If all are selected, unselect all
+        newSelectedIds.clear();
+      } else {
+        // Otherwise, select all
+        allBusinessIds.forEach((id) => newSelectedIds.add(id));
+      }
+
+      return newSelectedIds;
     });
   };
 
-  const handleSendReminders = async () => {
-    const selectedBusinessIds = data.filter((_, index) => checkedItems[index]).map(item => item.id);
 
-    for (let i = 0; i < selectedBusinessIds.length; i++) {
+
+
+  
+  const handleSendReminders = async () => {
+    for (const businessId of selectedBusinessIds) {
       try {
         const requestData = {
-          business_id: selectedBusinessIds[i],
-          message: 'Message', 
+          business_id: businessId,
+          message: 'Message',
           timestamp: new Date().toISOString(),
           been_dismissed: false,
         };
 
         await backend.post('/notification', requestData);
-
-        const response = await backend.get('/business');
-        setData(response.data);
       } catch (error) {
         console.error('Error sending reminders:', error);
       }
     }
   };
+
 
   useEffect(() => {
     const getData = async () => {
@@ -121,7 +135,7 @@ const BusinessTable = () => {
       }
     };
     getData();
-  }, []);
+  },);
 
   return (
     <div>
@@ -134,7 +148,7 @@ const BusinessTable = () => {
             {/* Add an empty header for the checkbox column */}
             <Th key="checkbox">
               <Checkbox
-                isChecked={checkedItems.every(Boolean)}
+                isChecked={selectedBusinessIds.size > 0 && selectedBusinessIds.size === data.length}
                 onChange={handleSelectAllChange}
               ></Checkbox>
             </Th>
@@ -149,9 +163,8 @@ const BusinessTable = () => {
               {/* Add a Checkbox for each row in the checkbox column */}
               <Td key="checkbox">
                 <Checkbox
-                  key={index}
-                  isChecked={checkedItems[index]}
-                  onChange={() => handleCheckboxChange(index)}
+                  isChecked={selectedBusinessIds.has(item.id)}
+                  onChange={() => handleCheckboxChange(item.id)} // .append, .add
                 ></Checkbox>
               </Td>
               {Object.keys(item).map(key => (
