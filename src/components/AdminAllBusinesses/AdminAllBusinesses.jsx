@@ -41,16 +41,16 @@ const AdminAllBusinesses = () => {
         </>
       )}
 
-      {(!formFlag && !pendingFlag) && (
+      {!formFlag && !pendingFlag && (
         <>
           <Button colorScheme="teal" variant="outline" onClick={handleClickPending}>
             Pending Applications
           </Button>
           <BusinessTable />
-        </> 
+        </>
       )}
 
-      {(!formFlag && pendingFlag) && (
+      {!formFlag && pendingFlag && (
         <>
           <Text>
             <Link onClick={handleClickAll} color="teal.500">
