@@ -1,36 +1,46 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { IconButton, Button } from '@chakra-ui/react';
+import { ChevronLeftIcon } from '@chakra-ui/icons';
+import { useNavigate } from 'react-router-dom';
 
-function Navbar({ isAdmin }) {
+// Navbar is a container with a single button for Contact Us
+
+function Navbar({ showContactUs, title, showSettings, excelDownload, backButton }) {
+  // what is title
+  const navigate = useNavigate();
   const businessList = [
-    { name: 'Dashboard', path: '/BusinessDashboard' },
-    { name: 'Donation Tracking Form', path: '/BusinessDonationTrackingForm' },
-    { name: 'Business Onboarding', path: '/BusinessOnboardingForm' },
-    { name: 'Business Notification Center', path: '/BusinessNotificationCenter' },
+    { name: 'Contact Us', path: '/ContactUs' },
+    { name: 'Settings', path: '/EditContactInformation' },
+    { name: 'Excel Download', path: '/Download' }, // Download not made yet
+    { name: 'Back Button', path: '/' },
   ];
 
-  const adminList = [
-    { name: 'Dashboard', path: '/AdminDashboard' },
-    { name: 'All Businesses', path: '/AdminAllBusinesses' },
-    { name: 'Manage Forms', path: '/AdminManageForms' },
-    { name: 'Team Management', path: '/AdminTeamManagement' },
-  ];
-
-  const navList = isAdmin ? adminList : businessList;
-  console.log(navList);
   return (
     <>
       <nav>
-        <ul>
-          {navList.map(item => {
-            console.log(item);
-            return (
-              <li key={item.path}>
-                <Link to={item.path}>{item.name}</Link>
-              </li>
-            );
-          })}
-        </ul>
+        <IconButton
+          aria-label="Back button"
+          icon={<ChevronLeftIcon />}
+          onClick={() => navigate('/')}
+        />
+        {showContactUs && (
+          <Button>
+            <Link to={businessList[0].path}>{businessList[0].name}</Link>
+          </Button>
+        )}
+        {showSettings && (
+          <Button>
+            <Link to={businessList[1].path}>{businessList[1].name}</Link>
+          </Button>
+        )}
+        {excelDownload && (
+          <Button>
+            <Link to={businessList[2].path}>{businessList[2].name}</Link>
+          </Button>
+        )}
       </nav>
     </>
   );
