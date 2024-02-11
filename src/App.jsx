@@ -14,17 +14,17 @@ const App = () => {
   return (
     <BackendProvider>
       <Sidebar isAdmin={false} />
-      <Navbar
+      {/* <Navbar
         showContactUs={true}
         title={''}
         showSettings={false}
         excelDownload={false}
         backButton={true}
-      />
+      /> */}
       <Routes>
         <Route exact path="/" element={<div>Welcome to the App</div>} />
         <Route exact path="/ContactUs" element={<ContactUs />} />
-        <Route exact path="/AdminDashboard"  element={<AdminDashboard/>} />
+        <Route exact path="/AdminDashboard" element={<AdminDashboard />} />
         <Route exact path="/AdminAllBusinesses" element={<AdminAllBusinesses />} />
         <Route exact path="/AdminManageForms" />
         <Route exact path="/AdminTeamManagement" />
