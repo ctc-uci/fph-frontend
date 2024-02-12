@@ -33,7 +33,7 @@ const EditContactInformation = () => {
     } catch (error) {
       console.error('Error updating data:', error);
     }
-  }
+  };
 
   useEffect(() => {
     const getBusinessContactResponse = async () => {

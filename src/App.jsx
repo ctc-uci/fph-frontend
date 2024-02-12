@@ -7,11 +7,12 @@ import DonationForm from './components/DonationForm/DonationForm';
 import BusinessNotificationCenter from './components/BusinessNotificationCenter/BusinessNotificationCenter';
 import AdminDashboard from './components/AdminDashboard/AdminDashboard';
 import EditContactInformation from './components/EditContactInformation';
+import BusinessDonationHistory from './components/BusinessDonationHistory/BusinessDonationHistory.jsx';
 
 const App = () => {
   return (
     <BackendProvider>
-      <Navbar isAdmin={true} />
+      <Navbar isAdmin={false} />
       <Routes>
         <Route exact path="/" element={<div>Welcome to the App</div>} />
         <Route exact path="/AdminDashboard" element={<AdminDashboard />} />
@@ -26,6 +27,7 @@ const App = () => {
           element={<BusinessNotificationCenter />}
         ></Route>
         <Route exact path="/EditContactInformation" element={<EditContactInformation />}></Route>
+        <Route exact path="/BusinessDonationHistory" element={<BusinessDonationHistory />}></Route>
       </Routes>
     </BackendProvider>
   );

@@ -8,7 +8,9 @@ const PendingBusinessTable = ({ goToBusinessForm }) => {
   const { backend } = useBackend();
   const [data, setData] = useState([]);
 
-  const tableHeaders = PENDING_TABLE_HEADERS.map(tableHeader => <th key={tableHeader}>{tableHeader}</th>);
+  const tableHeaders = PENDING_TABLE_HEADERS.map(tableHeader => (
+    <th key={tableHeader}>{tableHeader}</th>
+  ));
   useEffect(() => {
     const getData = async () => {
       try {

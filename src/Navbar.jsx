@@ -7,6 +7,7 @@ function Navbar({ isAdmin }) {
     { name: 'Donation Tracking Form', path: '/BusinessDonationTrackingForm' },
     { name: 'Business Onboarding', path: '/BusinessOnboardingForm' },
     { name: 'Business Notification Center', path: '/BusinessNotificationCenter' },
+    { name: 'Business Donation History', path: '/BusinessDonationHistory' },
   ];
 
   const adminList = [
