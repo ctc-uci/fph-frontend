@@ -20,7 +20,7 @@ const DonationSite = ({donation_site, checkSet, setCheck, topCheckBox}) => {
             })
         }
     }
-
+    
     return (
         <Tr>
             <Checkbox defaultChecked={topCheckBox ? true : false} onChange={handleClick}/>
