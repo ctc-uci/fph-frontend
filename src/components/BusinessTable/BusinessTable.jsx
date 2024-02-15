@@ -1,15 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useBackend } from '../../contexts/BackendContext';
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Td,
-  Checkbox,
-  Button,
-  Th,
-} from '@chakra-ui/react';
+import { Table, Thead, Tbody, Tr, Td, Checkbox, Button, Th } from '@chakra-ui/react';
 
 const BusinessTable = () => {
   const { backend } = useBackend();
@@ -74,8 +65,8 @@ const BusinessTable = () => {
   const tableHeaders = TABLE_HEADERS.map(tableHeader => <th key={tableHeader}>{tableHeader}</th>);
   const [selectedBusinessIds, setSelectedBusinessIds] = useState(new Set());
 
-  const handleCheckboxChange = (businessId) => {
-    setSelectedBusinessIds((prevSelectedIds) => {
+  const handleCheckboxChange = businessId => {
+    setSelectedBusinessIds(prevSelectedIds => {
       const newSelectedIds = new Set(prevSelectedIds);
       if (newSelectedIds.has(businessId)) {
         newSelectedIds.delete(businessId);
@@ -87,26 +78,22 @@ const BusinessTable = () => {
   };
 
   const handleSelectAllChange = () => {
-    setSelectedBusinessIds((prevSelectedIds) => {
+    setSelectedBusinessIds(prevSelectedIds => {
       const newSelectedIds = new Set(prevSelectedIds);
-      const allBusinessIds = data.map((business) => business.id);
+      const allBusinessIds = data.map(business => business.id);
 
       if (newSelectedIds.size === allBusinessIds.length) {
         // If all are selected, unselect all
         newSelectedIds.clear();
       } else {
         // Otherwise, select all
-        allBusinessIds.forEach((id) => newSelectedIds.add(id));
+        allBusinessIds.forEach(id => newSelectedIds.add(id));
       }
 
       return newSelectedIds;
     });
   };
 
-
-
-
-  
   const handleSendReminders = async () => {
     for (const businessId of selectedBusinessIds) {
       try {
@@ -124,7 +111,6 @@ const BusinessTable = () => {
     }
   };
 
-
   useEffect(() => {
     const getData = async () => {
       try {
@@ -135,7 +121,7 @@ const BusinessTable = () => {
       }
     };
     getData();
-  },);
+  });
 
   return (
     <div>
