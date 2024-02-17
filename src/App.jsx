@@ -1,13 +1,13 @@
 import { Route, Routes } from 'react-router-dom';
 import { BackendProvider } from './contexts/BackendContext';
-import Sidebar from './Sidebar.jsx';
+import Sidebar from './components/Sidebar/Sidebar.jsx';
 import BusinessTable from './components/BusinessTable/BusinessTable';
 import BusinessDashboard from './components/BusinessDashboard/BusinessDashboard';
 import RegisterBusinessForm from './components/RegisterBusinessForm/RegisterBusinessForm';
 import DonationForm from './components/DonationForm/DonationForm';
 import BusinessNotificationCenter from './components/BusinessNotificationCenter/BusinessNotificationCenter';
 import ContactUs from './components/ContactUsForm/ContactUs';
-import Navbar from './Navbar';
+import Navbar from './components/Navbar/Navbar';
 import EditContactInformation from './components/EditContactInformation/EditContactInformation';
 
 const App = () => {
@@ -20,9 +20,9 @@ const App = () => {
         excelDownload={false}
         backButton={true}
       />
-      <Sidebar isAdmin={false} />
+      <Sidebar isAdmin={true} />
       <Routes>
-        <Route exact path="/" element={<div>Welcome to the App</div>} />
+        <Route exact path="/" element={<></>} />
         <Route exact path="/ContactUs" element={<ContactUs />} />
         <Route exact path="/AdminDashboard" />
         <Route exact path="/AdminAllBusinesses" element={<BusinessTable />} />
