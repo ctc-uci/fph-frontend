@@ -10,7 +10,6 @@ import {
   Tbody,
   Tr,
   Th,
-  TableCaption,
   TableContainer,
   Checkbox,
 } from '@chakra-ui/react';
@@ -21,35 +20,37 @@ const DonationTrackingTable = () => {
   const [donationTrackingTableData, setDonationTrackingTableData] = useState([]);
   const [checkedSet, setCheckedSet] = useState(new Set());
   const [topCheckBox, setTopCheckBox] = useState(false);
+  var filter = 'month';
+  const headers = [
+    'Donation Site',
+    'Donation ID',
+    'Food Bank',
+    'Person Reporting',
+    'Email',
+    'Date',
+    'Canned Dog Food',
+    'Dry Dog Food',
+    'Canned Cat Food',
+    'Dry Cat Food',
+    'Misc Items',
+    'Volunteer Hours',
+  ];
+
+  const tabHeaders = ['month', 'quarter', 'year', 'all'];
 
   const getDonationTrackingTableData = async filter => {
     const response = await backend.get(`/donation/filter/${filter}`);
     const data = response.data;
-    const donation_list = [];
 
     for (let i = 0; i < data.length; ++i) {
-      var donation_site = {
-        donationSite: null,
-        donationId: data[i].donation_id,
-        foodBank: data[i].food_bank_donation,
-        reporter: data[i].reporter,
-        email: data[i].email,
-        date: data[i].date,
-        cannedDogFoodQuantity: data[i].canned_dog_food_quantity,
-        dryDogFoodQuantity: data[i].dry_dog_food_quantity,
-        cannedCatFoodQuantity: data[i].canned_cat_food_quantity,
-        dryCatFoodQuantity: data[i].dry_cat_food_quantity,
-        miscItems: data[i].misc_items,
-        volunteerHours: data[i].volunteer_hours,
-      };
-
-      donation_list.push(donation_site);
+      data[i] = { donation_site: 'NULL', ...data[i] };
     }
-    setDonationTrackingTableData(donation_list);
+
+    setDonationTrackingTableData(data);
   };
   useEffect(() => {
-    getDonationTrackingTableData('month');
-  });
+    getDonationTrackingTableData(filter);
+  }, []);
 
   const renderDonationTrackingTableData = () => {
     return donationTrackingTableData.map((element, index) => {
@@ -89,61 +90,36 @@ const DonationTrackingTable = () => {
           console.log(checkedSet);
         }}
       >
-        <ArrowDownIcon/>
+        <ArrowDownIcon />
         Download CSV
       </Button>
       <Tabs variant="enclosed">
         <TabList>
-          <Tab
-            onClick={() => {
-              updateFilter('month');
-            }}
-          >
-            This Month
-          </Tab>
-          <Tab
-            onClick={() => {
-              updateFilter('quarter');
-            }}
-          >
-            This Quarter
-          </Tab>
-          <Tab
-            onClick={() => {
-              updateFilter('year');
-            }}
-          >
-            This Year
-          </Tab>
-          <Tab
-            onClick={() => {
-              updateFilter('all');
-            }}
-          >
-            All
-          </Tab>
+          {tabHeaders.map((header, index) => {
+            if (header != 'all')
+              return (
+                <Tab onClick={() => updateFilter(header)} key={index}>
+                  This {header.substring(0, 1).toUpperCase() + header.substring(1)}
+                </Tab>
+              );
+            else {
+              return (
+                <Tab onClick={() => updateFilter('all')} key={index}>
+                  All
+                </Tab>
+              );
+            }
+          })}
         </TabList>
       </Tabs>
       <TableContainer>
         <Table variant="striped" colorScheme="teal">
-          <TableCaption>Imperial to metric conversion factors</TableCaption>
           <Thead>
             <Tr>
               <Checkbox onChange={handleCheckBoxes} />
-              <Th>Donation Site</Th>
-              <Th>Donation ID</Th>
-              <Th>Food Bank</Th>
-              <Th>Person Reporting</Th>
-              <Th>Email</Th>
-              <Th>Date</Th>
-              <Th>Canned Dog Food</Th>
-              <Th>Dry Dog Food</Th>
-              <Th>Canned Cat Food</Th>
-              <Th>Dry Cat Food</Th>
-              <Th>Misc Items</Th>
-              <Th>Volunteer Hours</Th>
-              <Th>Description</Th>
-              <Th isNumeric>multiply by</Th>
+              {headers.map((header, index) => {
+                return <Th key={index}>{header}</Th>;
+              })}
             </Tr>
           </Thead>
           <Tbody>{renderDonationTrackingTableData()}</Tbody>
