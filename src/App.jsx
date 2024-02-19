@@ -9,6 +9,7 @@ import BusinessNotificationCenter from './components/BusinessNotificationCenter/
 import ContactUs from './components/ContactUsForm/ContactUs';
 import Navbar from './components/Navbar/Navbar';
 import EditContactInformation from './components/EditContactInformation/EditContactInformation';
+import styles from './App.module.css';
 
 const App = () => {
   return (
@@ -20,24 +21,26 @@ const App = () => {
         excelDownload={false}
         backButton={true}
       />
-      <Sidebar isAdmin={true} />
-      <Routes>
-        <Route exact path="/" element={<></>} />
-        <Route exact path="/ContactUs" element={<ContactUs />} />
-        <Route exact path="/AdminDashboard" />
-        <Route exact path="/AdminAllBusinesses" element={<BusinessTable />} />
-        <Route exact path="/AdminManageForms" />
-        <Route exact path="/AdminTeamManagement" />
-        <Route exact path="/EditContactInformation" element={<EditContactInformation />} />
-        <Route exact path="/BusinessDashboard" element={<BusinessDashboard />} />
-        <Route exact path="/BusinessDonationTrackingForm" element={<DonationForm />} />
-        <Route exact path="/BusinessOnboardingForm" element={<RegisterBusinessForm />}></Route>
-        <Route
-          exact
-          path="/BusinessNotificationCenter"
-          element={<BusinessNotificationCenter />}
-        ></Route>
-      </Routes>
+      <div className={styles.appLayout}>
+        <Sidebar isAdmin={false} />
+        <Routes>
+          <Route exact path="/" element={<></>} />
+          <Route exact path="/ContactUs" element={<ContactUs />} />
+          <Route exact path="/AdminDashboard" />
+          <Route exact path="/AdminAllBusinesses" element={<BusinessTable />} />
+          <Route exact path="/AdminManageForms" />
+          <Route exact path="/AdminTeamManagement" />
+          <Route exact path="/EditContactInformation" element={<EditContactInformation />} />
+          <Route exact path="/BusinessDashboard" element={<BusinessDashboard />} />
+          <Route exact path="/BusinessDonationTrackingForm" element={<DonationForm />} />
+          <Route exact path="/BusinessOnboardingForm" element={<RegisterBusinessForm />}></Route>
+          <Route
+            exact
+            path="/BusinessNotificationCenter"
+            element={<BusinessNotificationCenter />}
+          ></Route>
+        </Routes>
+      </div>
     </BackendProvider>
   );
 };
