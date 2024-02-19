@@ -9,7 +9,7 @@ const BusinessDonationHistory = () => {
   const { backend } = useBackend();
   const [data, setData] = useState([]);
   const [selectedDonationId, setSelectedDonationId] = useState(null);
-  const TABLE_HEADERS = ['reporter', 'food_bank_donation', 'date', 'action'];
+  const TABLE_HEADERS = ['Submitted By', 'Food Bank', 'Date', 'Action'];
 
   useEffect(() => {
     const getData = async () => {
@@ -26,8 +26,7 @@ const BusinessDonationHistory = () => {
   const handleButtonClick = async id => {
     try {
       setSelectedDonationId(id);
-      const response = await backend.get(`/donation/${id}`);
-      console.log(response.data);
+      await backend.get(`/donation/${id}`);
     } catch (error) {
       console.error('Error while fetching donation data', error);
     }

@@ -10,18 +10,12 @@ const ViewDonationHistory = ({ id }) => {
 
   const fetchDonation = async () => {
     try {
-      console.log(`Fetching donation details for ID: ${id}`);
       const response = await backend.get(`/donation/${id}`);
       setData(response.data);
-      console.log('Response received:', response);
     } catch (error) {
       console.error('Error:', error);
     }
   };
-
-  // ViewBusiness.PropTypes = {
-  //   id: PropTypes.number.isRequired,
-  // }
 
   useEffect(() => {
     if (id) {
