@@ -9,6 +9,7 @@ import BusinessNotificationCenter from './components/BusinessNotificationCenter/
 import AdminDashboard from './components/AdminDashboard/AdminDashboard';
 import EditContactInformation from './components/EditContactInformation';
 import ContactUs from './components/ContactUsForm/ContactUs';
+import DonationItemsTable from './components/DonationItemsTable/DonationItemsTable.jsx';
 
 const App = () => {
   return (
@@ -37,6 +38,7 @@ const App = () => {
           element={<BusinessNotificationCenter />}
         ></Route>
         <Route exact path="/EditContactInformation" element={<EditContactInformation />}></Route>
+        <Route exact path="/DonationItemsTable" element={<DonationItemsTable />} />
       </Routes>
     </BackendProvider>
   );
