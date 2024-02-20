@@ -9,6 +9,7 @@ import AdminDashboard from './components/AdminDashboard/AdminDashboard';
 import EditContactInformation from './components/EditContactInformation';
 import BusinessDonationHistory from './components/BusinessDonationHistory/BusinessDonationHistory.jsx';
 import ContactUs from './components/ContactUsForm/ContactUs';
+import DonationTrackingTable from './components/DonationTrackingTable/DonationTrackingTable.jsx';
 import Navbar from './components/Navbar/Navbar';
 import styles from './App.module.css';
 import DonationItemsTable from './components/DonationItemsTable/DonationItemsTable.jsx';
@@ -47,6 +48,7 @@ const App = () => {
           ></Route>
           <Route exact path="/EditContactInformation" element={<EditContactInformation />}></Route>
           <Route exact path="/DonationItemsTable" element={<DonationItemsTable />} />
+          <Route exact path="/DonationTrackingTable" element={<DonationTrackingTable />} />
         </Routes>
       </div>
     </BackendProvider>
