@@ -3,7 +3,6 @@ import './AdminDashboard.module.css';
 import { useBackend } from '../../contexts/BackendContext';
 import { useEffect, useState } from 'react';
 import { Box } from '@chakra-ui/react';
-//import { ChevronRightIcon, ChevronLeftIcon } from '@chakra-ui/icons';
 import AdminFilterBusinesses from '../AdminFilterBusinesses/AdminFilterBusinesses.jsx';
 
 const AdminDashboard = () => {
@@ -31,7 +30,7 @@ const AdminDashboard = () => {
   // Counts number of donation forms submitted by unique businesses
   const calculateTotalDonationForms = () => {
     const uniqueBusiness = [];
-    for (const [key, value] of Object.entries(donationData)) {
+    for (const [value] of Object.entries(donationData)) {
       const businessId = value['business_id'];
       if (uniqueBusiness.includes(businessId) == false) {
         uniqueBusiness.push(businessId);
@@ -48,7 +47,7 @@ const AdminDashboard = () => {
 
   const calculatePendingBusinesses = () => {
     var pendingBusinesses = 0;
-    for (const [key, value] of Object.entries(businessDictionary)) {
+    for (const [value] of Object.entries(businessDictionary)) {
       const pendingStatus = value['status'];
       if (pendingStatus == 'Pending') {
         pendingBusinesses += 1;

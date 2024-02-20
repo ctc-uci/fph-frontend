@@ -35,8 +35,6 @@ const AdminFilterBusinesses = () => {
   };
 
   const loadInfo = async (tab) => {
-    // const businessResponse = await backend.get(`/business/?businessLimit=10&pageNum=${currentPageNum}&tab=${tab}`);
-    // setBusinessDictionary(businessResponse.data);
     changePage();
     const businessNumResponse = await backend.get(`/business/totalBusinesses/?tab=${tab}`);
     setCurrentBusinessNum(businessNumResponse.data[0]["count"])

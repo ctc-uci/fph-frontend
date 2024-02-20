@@ -1,6 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
 import { BackendProvider } from './contexts/BackendContext';
-import Navbar from './Navbar.jsx';
 import AdminAllBusinesses from './components/AdminAllBusinesses/AdminAllBusinesses.jsx';
 import Sidebar from './Sidebar.jsx';
 import BusinessDashboard from './components/BusinessDashboard/BusinessDashboard';
@@ -14,13 +13,6 @@ const App = () => {
   return (
     <BackendProvider>
       <Sidebar isAdmin={false} />
-      {/* <Navbar
-        showContactUs={true}
-        title={''}
-        showSettings={false}
-        excelDownload={false}
-        backButton={true}
-      /> */}
       <Routes>
         <Route exact path="/" element={<div>Welcome to the App</div>} />
         <Route exact path="/ContactUs" element={<ContactUs />} />

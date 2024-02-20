@@ -116,8 +116,6 @@ const BusinessTable = (businessData) => {
   useEffect(() => {
     const getData = async () => {
       try {
-        //const response = await backend.get('/business');
-        //setData(response.data);
         setData(businessData["businessData"]);
       } catch (error) {
         console.error('Error fetching data:', error);
