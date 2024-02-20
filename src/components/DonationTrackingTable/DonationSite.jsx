@@ -18,14 +18,14 @@ const DonationSite = ({ donation_site, checkSet, setCheck, topCheckBox }) => {
   ];
 
   const handleClick = () => {
-    if (checkSet.has(donation_site.donationId)) {
+    if (checkSet.has(donation_site.donation_id)) {
       setCheck(prevState => {
-        prevState.delete(donation_site.donationId);
+        prevState.delete(donation_site.donation_id);
         return prevState;
       });
     } else {
       setCheck(prevState => {
-        prevState.add(donation_site.donationId);
+        prevState.add(donation_site.donation_id);
         return prevState;
       });
     }
