@@ -112,7 +112,6 @@ const BusinessTable = () => {
       }
     }
   };
-
   useEffect(() => {
     const getData = async () => {
       try {
@@ -124,7 +123,6 @@ const BusinessTable = () => {
     };
     getData();
   });
-
   const handleRowClick = async id => {
     try {
       setBusinessId(id);
@@ -138,7 +136,6 @@ const BusinessTable = () => {
   if (selectedBusinessId) {
     return <ViewBusiness id={selectedBusinessId} />;
   }
-
   return (
     <div>
       <Button colorScheme="blue" onClick={handleSendReminders}>

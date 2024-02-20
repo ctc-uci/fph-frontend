@@ -1,10 +1,10 @@
 .appLayout {
-    display: flex;
-    flex-direction: row;
-    height: 100vh; /* Full height of the viewport */
+  display: flex;
+  flex-direction: row;
+  height: 100vh; /* Full height of the viewport */
 }
-  
+
 .mainContent {
-    flex: 1; /* Takes up the remaining space */
-    overflow: auto; /* Adds scroll to the main content if needed */
+  flex: 1; /* Takes up the remaining space */
+  overflow: auto; /* Adds scroll to the main content if needed */
 }
