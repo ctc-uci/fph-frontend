@@ -138,7 +138,6 @@ const BusinessTable = () => {
   if (selectedBusinessId) {
     return <ViewBusiness id={selectedBusinessId} />;
   }
-
   return (
     <div>
       <Button colorScheme="blue" onClick={handleSendReminders}>
