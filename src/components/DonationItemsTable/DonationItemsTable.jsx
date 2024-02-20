@@ -44,7 +44,7 @@ const DonationItemsTable = () => {
 const DonationItems = ({ category }) => {
   const [data, setData] = useState([]);
   const { backend } = useBackend();
-  const TABLE_HEADERS = ['Category', 'Id', 'Name', 'Quantity Type', 'Price'];
+  const TABLE_HEADERS = ['Id', 'Name', 'Quantity Type', 'Price', 'Category'];
   useEffect(() => {
     const getData = async () => {
       try {
