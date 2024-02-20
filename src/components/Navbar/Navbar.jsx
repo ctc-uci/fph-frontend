@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { IconButton, Button } from '@chakra-ui/react';

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useBackend } from '../../contexts/BackendContext';
 import { useState } from 'react';
 import { Flex, Text, Textarea, Stack, Box, Button, Checkbox } from '@chakra-ui/react';
