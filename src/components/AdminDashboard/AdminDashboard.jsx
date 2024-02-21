@@ -4,8 +4,9 @@ import { useBackend } from '../../contexts/BackendContext';
 import NotificationsDrawer from './NotificationsDrawer';
 import { useEffect, useState } from 'react';
 import { Box } from '@chakra-ui/react';
+import AdminFilterBusinesses from '../AdminFilterBusinesses/AdminFilterBusinesses.jsx';
 
-const BusinessDashboard = () => {
+const AdminDashboard = () => {
   // Created the use states
   const { backend } = useBackend();
   const [donationData, setDonationData] = useState([]);
@@ -18,7 +19,6 @@ const BusinessDashboard = () => {
         // fetches the business table to be used in pending &total #
         const businessResponse = await backend.get('/business');
         setBusinessDictionary(businessResponse.data);
-
         // fetches donation table data
         const donationResponse = await backend.get('/donation/');
         setDonationData(donationResponse.data);
@@ -36,9 +36,8 @@ const BusinessDashboard = () => {
   // Counts number of donation forms submitted by unique businesses
   const calculateTotalDonationForms = () => {
     const uniqueBusiness = [];
-    for (const [key, value] of Object.entries(donationData)) {
+    for (const [value] of Object.entries(donationData)) {
       const businessId = value['business_id'];
-      console.log(key);
       if (uniqueBusiness.includes(businessId) == false) {
         uniqueBusiness.push(businessId);
       }
@@ -54,8 +53,7 @@ const BusinessDashboard = () => {
 
   const calculatePendingBusinesses = () => {
     var pendingBusinesses = 0;
-    for (const [key, value] of Object.entries(businessDictionary)) {
-      console.log(key);
+    for (const [value] of Object.entries(businessDictionary)) {
       const pendingStatus = value['status'];
       if (pendingStatus == 'Pending') {
         pendingBusinesses += 1;
@@ -70,13 +68,14 @@ const BusinessDashboard = () => {
 
       <div>
         <>
-          <Box>{calculateTotalDonationSites()} Current donation sites</Box>
+           <Box>{calculateTotalDonationSites()} Current donation sites</Box>
           <Box>{calculateTotalDonationForms()} donation forms submitted</Box>
           <Box>
             {calculateTotalDonationSites() - calculateTotalDonationForms()} donation forms not
             submitted
           </Box>
           <Box>{calculatePendingBusinesses()} applications pending </Box>
+          <AdminFilterBusinesses/>
           <NotificationsDrawer notificationsData={notification} />
         </>
       </div>
@@ -84,4 +83,4 @@ const BusinessDashboard = () => {
   );
 };
 
-export default BusinessDashboard;
+export default AdminDashboard;

@@ -3,7 +3,7 @@ import { useBackend } from '../../contexts/BackendContext';
 import ViewBusiness from '../ViewBusiness/ViewBusiness';
 import { Table, Thead, Tbody, Tr, Td, Checkbox, Button, Th } from '@chakra-ui/react';
 
-const BusinessTable = () => {
+const BusinessTable = (businessData) => {
   const { backend } = useBackend();
   const [data, setData] = useState([]);
   const [selectedBusinessId, setBusinessId] = useState(null);
@@ -116,14 +116,13 @@ const BusinessTable = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await backend.get('/business');
-        setData(response.data);
+        setData(businessData["businessData"]);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
     getData();
-  });
+  }, [businessData]);
 
   const handleRowClick = async id => {
     try {
@@ -139,6 +138,7 @@ const BusinessTable = () => {
     return <ViewBusiness id={selectedBusinessId} />;
   }
   return (
+    businessData["businessData"].length == 0 ? <h1>Loading ...</h1> : (
     <div>
       <Button colorScheme="blue" onClick={handleSendReminders}>
         Send Reminders
@@ -178,7 +178,8 @@ const BusinessTable = () => {
         </Tbody>
       </Table>
     </div>
-  );
+    )
+    );
 };
 
 export default BusinessTable;
