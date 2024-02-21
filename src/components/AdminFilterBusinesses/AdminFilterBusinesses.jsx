@@ -28,21 +28,23 @@ const AdminFilterBusinesses = () => {
     getData();
   }, [currentTab, currentPageNum]);
 
-  const changeTab = async (tab) => {
+  const changeTab = async tab => {
     setCurrentTab(tab);
     setCurrentPageNum(1);
     //loadInfo(tab);
   };
 
-  const loadInfo = async (tab) => {
+  const loadInfo = async tab => {
     changePage();
     const businessNumResponse = await backend.get(`/business/totalBusinesses/?tab=${tab}`);
-    setCurrentBusinessNum(businessNumResponse.data[0]["count"])
-    setPageLimit(Math.ceil(businessNumResponse.data[0]["count"] / 10));
+    setCurrentBusinessNum(businessNumResponse.data[0]['count']);
+    setPageLimit(Math.ceil(businessNumResponse.data[0]['count'] / 10));
   };
 
   const changePage = async () => {
-    const businessResponse = await backend.get(`/business/?businessLimit=10&pageNum=${currentPageNum}&tab=${currentTab}`);
+    const businessResponse = await backend.get(
+      `/business/?businessLimit=10&pageNum=${currentPageNum}&tab=${currentTab}`,
+    );
     setBusinessDictionary(businessResponse.data);
   };
 
@@ -50,14 +52,39 @@ const AdminFilterBusinesses = () => {
     <div>
       <Tabs>
         <TabList>
-          <Tab onClick={() => {changeTab('Active')}}>Submitted</Tab>
-          <Tab onClick={() => {changeTab('Pending')}}>Not Submitted</Tab>
+          <Tab
+            onClick={() => {
+              changeTab('Active');
+            }}
+          >
+            Submitted
+          </Tab>
+          <Tab
+            onClick={() => {
+              changeTab('Pending');
+            }}
+          >
+            Not Submitted
+          </Tab>
         </TabList>
       </Tabs>
-      <BusinessTable businessData={businessDictionary}/>
-      <Box>{(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentBusinessNum)} of {currentBusinessNum}</Box>
-      <IconButton aria-label='Back button' isDisabled={currentPageNum <= 1} icon={<ChevronLeftIcon/>} onClick={() => setCurrentPageNum(currentPageNum - 1)}/>
-      <IconButton aria-label='Next button' isDisabled={currentPageNum >= pageLimit} icon={<ChevronRightIcon/>} onClick={() => setCurrentPageNum(currentPageNum + 1)}/>
+      <BusinessTable businessData={businessDictionary} />
+      <Box>
+        {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentBusinessNum)} of{' '}
+        {currentBusinessNum}
+      </Box>
+      <IconButton
+        aria-label="Back button"
+        isDisabled={currentPageNum <= 1}
+        icon={<ChevronLeftIcon />}
+        onClick={() => setCurrentPageNum(currentPageNum - 1)}
+      />
+      <IconButton
+        aria-label="Next button"
+        isDisabled={currentPageNum >= pageLimit}
+        icon={<ChevronRightIcon />}
+        onClick={() => setCurrentPageNum(currentPageNum + 1)}
+      />
     </div>
   );
 };

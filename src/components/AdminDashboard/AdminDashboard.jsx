@@ -68,14 +68,14 @@ const AdminDashboard = () => {
 
       <div>
         <>
-           <Box>{calculateTotalDonationSites()} Current donation sites</Box>
+          <Box>{calculateTotalDonationSites()} Current donation sites</Box>
           <Box>{calculateTotalDonationForms()} donation forms submitted</Box>
           <Box>
             {calculateTotalDonationSites() - calculateTotalDonationForms()} donation forms not
             submitted
           </Box>
           <Box>{calculatePendingBusinesses()} applications pending </Box>
-          <AdminFilterBusinesses/>
+          <AdminFilterBusinesses />
           <NotificationsDrawer notificationsData={notification} />
         </>
       </div>

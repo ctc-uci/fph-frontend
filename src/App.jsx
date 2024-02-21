@@ -39,7 +39,11 @@ const App = () => {
               path="/BusinessNotificationCenter"
               element={<BusinessNotificationCenter />}
             ></Route>
-            <Route exact path="/EditContactInformation" element={<EditContactInformation />}></Route>
+            <Route
+              exact
+              path="/EditContactInformation"
+              element={<EditContactInformation />}
+            ></Route>
             <Route exact path="/DonationItemsTable" element={<DonationItemsTable />} />
             <Route exact path="/DonationTrackingTable" element={<DonationTrackingTable />} />
           </Routes>

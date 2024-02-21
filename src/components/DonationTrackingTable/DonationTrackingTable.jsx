@@ -4,15 +4,7 @@ import DonationSite from './DonationSite';
 import { Tabs, TabList, Tab, Button } from '@chakra-ui/react';
 import { ArrowDownIcon } from '@chakra-ui/icons';
 
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  TableContainer,
-  Checkbox,
-} from '@chakra-ui/react';
+import { Table, Thead, Tbody, Tr, Th, TableContainer, Checkbox } from '@chakra-ui/react';
 
 const DonationTrackingTable = () => {
   const { backend } = useBackend();
