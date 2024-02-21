@@ -137,7 +137,6 @@ const BusinessTable = (businessData) => {
   if (selectedBusinessId) {
     return <ViewBusiness id={selectedBusinessId} />;
   }
-
   return (
     businessData["businessData"].length == 0 ? <h1>Loading ...</h1> : (
     <div>

@@ -1,6 +1,7 @@
 import './AdminDashboard.module.css';
 
 import { useBackend } from '../../contexts/BackendContext';
+import NotificationsDrawer from './NotificationsDrawer';
 import { useEffect, useState } from 'react';
 import { Box } from '@chakra-ui/react';
 import AdminFilterBusinesses from '../AdminFilterBusinesses/AdminFilterBusinesses.jsx';
@@ -10,6 +11,7 @@ const AdminDashboard = () => {
   const { backend } = useBackend();
   const [donationData, setDonationData] = useState([]);
   const [businessDictionary, setBusinessDictionary] = useState([]);
+  const [notification, setNotifications] = useState([]);
 
   useEffect(() => {
     const getData = async () => {
@@ -20,6 +22,10 @@ const AdminDashboard = () => {
         // fetches donation table data
         const donationResponse = await backend.get('/donation/');
         setDonationData(donationResponse.data);
+
+        const notificationResponse = await backend.get(`/notification/0`);
+        setNotifications(notificationResponse.data);
+        console.log(notificationResponse.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -70,6 +76,7 @@ const AdminDashboard = () => {
           </Box>
           <Box>{calculatePendingBusinesses()} applications pending </Box>
           <AdminFilterBusinesses/>
+          <NotificationsDrawer notificationsData={notification} />
         </>
       </div>
     </div>
