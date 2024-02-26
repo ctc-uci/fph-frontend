@@ -1,10 +1,10 @@
 import { useBackend } from '../../contexts/BackendContext';
 import { useState, useEffect } from 'react';
 import DonationSite from './DonationSite';
-import { Tabs, TabList, Tab, Button } from '@chakra-ui/react';
-import { ArrowDownIcon } from '@chakra-ui/icons';
-
-import { Table, Thead, Tbody, Tr, Th, TableContainer, Checkbox } from '@chakra-ui/react';
+import { Tabs, TabList, Tab, Button, Box, IconButton } from '@chakra-ui/react';
+import { ArrowDownIcon, ChevronRightIcon, ChevronLeftIcon } from '@chakra-ui/icons';
+import './DonationTrackingTable.module.css';
+import { Table, Thead, Tbody, Tr, Th, TableContainer, Checkbox, Text } from '@chakra-ui/react';
 
 const DonationTrackingTable = () => {
   const { backend } = useBackend();
@@ -29,9 +29,12 @@ const DonationTrackingTable = () => {
   ];
 
   const tabHeaders = ['month', 'quarter', 'year', 'all'];
+  const [currentPageNum, setCurrentPageNum] = useState(1);
+  const [currentDonationsNum, setCurrentDonationsNum] = useState(0);
+  const [pageLimit, setPageLimit] = useState(1);
 
-  const getDonationTrackingTableData = async filter => {
-    const response = await backend.get(`/donation/filter/${filter}`);
+  const getDonationTrackingTableData = async () => {
+    const response = await backend.get(`/donation/filter/pageNum=${currentPageNum}&filter=${filter}`);
     const data = response.data;
 
     for (let i = 0; i < data.length; ++i) {
@@ -40,9 +43,18 @@ const DonationTrackingTable = () => {
 
     setDonationTrackingTableData(data);
   };
+
+  const setValues = () => {
+    setCurrentDonationsNum(donationTrackingTableData.length);
+    setPageLimit(Math.ceil(currentDonationsNum / 10));
+  }
+
   useEffect(() => {
-    getDonationTrackingTableData(filter);
-  }, []);
+    getDonationTrackingTableData(filter, currentPageNum);
+    setValues();
+    console.log(currentDonationsNum);
+    console.log(pageLimit);
+  }, [currentPageNum]);
 
   const renderDonationTrackingTableData = () => {
     return donationTrackingTableData.map((element, index) => {
@@ -76,6 +88,21 @@ const DonationTrackingTable = () => {
 
   return (
     <>
+      <div className='dtt-title-container'>
+        <Text sx={{
+            'color': 'var(--gray-700, #2D3748)',
+
+            /* text-3xl/lineHeight-9/font-bold */
+            'font-family': 'Inter',
+            'font-size': '30px',
+            'font-style' : 'normal',
+            'font-weight': '700',
+            'line-height': '36px' /* 120% */
+          }}
+        >
+          Donation Tracking
+        </Text>
+      </div>
       <Button
         colorScheme="teal"
         onClick={() => {
@@ -85,7 +112,7 @@ const DonationTrackingTable = () => {
         <ArrowDownIcon />
         Download CSV
       </Button>
-      <Tabs variant="enclosed">
+      <Tabs>
         <TabList>
           {tabHeaders.map((header, index) => {
             if (header != 'all')
@@ -117,6 +144,22 @@ const DonationTrackingTable = () => {
           <Tbody>{renderDonationTrackingTableData()}</Tbody>
         </Table>
       </TableContainer>
+      <Box>
+        {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentDonationsNum)} of{' '}
+        {currentDonationsNum}
+      </Box>
+      <IconButton
+        aria-label="Back button"
+        isDisabled={currentPageNum <= 1}
+        icon={<ChevronLeftIcon />}
+        onClick={() => setCurrentPageNum(currentPageNum - 1)}
+      />
+      <IconButton
+        aria-label="Next button"
+        isDisabled={currentPageNum >= pageLimit}
+        icon={<ChevronRightIcon />}
+        onClick={() => setCurrentPageNum(currentPageNum + 1)}
+      />
     </>
   );
 };

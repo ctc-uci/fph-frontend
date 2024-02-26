@@ -1,0 +1,10 @@
+.dtt-title-container{
+    color: var(--gray-700, #2D3748);
+
+    /* text-3xl/lineHeight-9/font-bold */
+    font-family: Inter;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 36px; /* 120% */
+}
