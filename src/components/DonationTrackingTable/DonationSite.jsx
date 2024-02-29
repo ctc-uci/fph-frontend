@@ -7,7 +7,7 @@ const DonationSite = ({ donation_site, checkSet, setCheck, topCheckBox }) => {
 
   useEffect(() => {
     setIndividualCheckBox(topCheckBox);
-  }, [topCheckBox]); // Synchronize individualCheckBox with topCheckBox
+  }, [topCheckBox]);
 
   const headers = [
     'NULL',
