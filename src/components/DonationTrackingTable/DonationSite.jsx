@@ -8,7 +8,7 @@ const DonationSite = ({ donation_site, checkSet, setCheck, topCheckBox }) => {
     donation_site.food_bank_donation,
     donation_site.reporter,
     donation_site.email,
-    donation_site.date,
+    new Date(donation_site.date).toLocaleDateString(),
     donation_site.canned_dog_food_quantity,
     donation_site.dry_dog_food_quantity,
     donation_site.canned_cat_food_quantity,
@@ -33,7 +33,7 @@ const DonationSite = ({ donation_site, checkSet, setCheck, topCheckBox }) => {
 
   return (
     <Tr>
-      <Checkbox defaultChecked={topCheckBox ? true : false} onChange={handleClick} />
+      <Checkbox isChecked={topCheckBox} onChange={handleClick} sx={{top: "15px", padding: "0 10px"}} />
       {headers.map((header, index) => (
         <Td key={index}>{header}</Td>
       ))}

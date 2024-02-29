@@ -2,9 +2,15 @@ import { useBackend } from '../../contexts/BackendContext';
 import { useState, useEffect } from 'react';
 import DonationSite from './DonationSite';
 import { Tabs, TabList, Tab, Button, Box, IconButton, Input } from '@chakra-ui/react';
-import { ArrowDownIcon, ChevronRightIcon, ChevronLeftIcon } from '@chakra-ui/icons';
+import {
+  ArrowDownIcon,
+  ChevronRightIcon,
+  ChevronLeftIcon,
+  ChevronDownIcon,
+} from '@chakra-ui/icons';
 import './DonationTrackingTable.module.css';
 import { Table, Thead, Tbody, Tr, Th, TableContainer, Checkbox, Text } from '@chakra-ui/react';
+import classes from './DonationTrackingTable.module.css';
 
 const DonationTrackingTable = () => {
   const { backend } = useBackend();
@@ -36,15 +42,19 @@ const DonationTrackingTable = () => {
 
   const loadInfo = async () => {
     changePage();
-    const donationNumResponse = await backend.get(`/donation/totalDonations/${currentTab}/?searchTerm=${searchTerm}`);
+    const donationNumResponse = await backend.get(
+      `/donation/totalDonations/${currentTab}/?searchTerm=${searchTerm}`,
+    );
     setCurrentDonationsNum(donationNumResponse.data[0]['count']);
     setPageLimit(Math.ceil(donationNumResponse.data[0]['count'] / 10));
-    console.log(donationNumResponse.data.length);
-  }
+    // console.log(donationNumResponse.data.length);
+  };
 
-  const changeTab = async ( tab ) => {
+  const changeTab = async tab => {
     setCurrentTab(tab);
     setCurrentPageNum(1);
+    setCheckedSet(new Set());
+    setTopCheckBox(false);
   };
 
   const changePage = async () => {
@@ -56,7 +66,7 @@ const DonationTrackingTable = () => {
 
   useEffect(() => {
     const getData = async () => {
-      try{
+      try {
         loadInfo(currentTab);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -83,7 +93,7 @@ const DonationTrackingTable = () => {
     const newCheckboxValue = !topCheckBox;
     setTopCheckBox(newCheckboxValue);
     if (newCheckboxValue) {
-      const newCheckedSet = new Set(donationTrackingTableData.map(element => element.donationId));
+      const newCheckedSet = new Set(donationTrackingTableData.map(element => element.donation_id));
       setCheckedSet(newCheckedSet);
     } else {
       const newCheckedSet = new Set();
@@ -91,85 +101,85 @@ const DonationTrackingTable = () => {
     }
   };
 
-  const handleSearch = (event) => {
+  const handleSearch = event => {
     setSearchTerm(event.target.value.split(' ').join('+'));
-  }
+  };
 
   return (
     <>
-      <div className='dtt-title-container'>
-        <Text sx={{
-            'color': 'var(--gray-700, #2D3748)',
-
-            /* text-3xl/lineHeight-9/font-bold */
-            'font-family': 'Inter',
-            'font-size': '30px',
-            'font-style' : 'normal',
-            'font-weight': '700',
-            'line-height': '36px' /* 120% */
-          }}
-        >
-          Donation Tracking
-        </Text>
-      </div>
-      <Button
-        colorScheme="teal"
-        onClick={() => {
-          console.log(checkedSet);
-        }}
-      >
-        <ArrowDownIcon />
-        Download CSV
-      </Button>
-      <Tabs>
-        <TabList>
-          {tabHeaders.map((header, index) => {
-            if (header != 'all')
-              return (
-                <Tab onClick={() => changeTab(header)} key={index}>
-                  This {header.substring(0, 1).toUpperCase() + header.substring(1)}
-                </Tab>
-              );
-            else {
-              return (
-                <Tab onClick={() => changeTab('all')} key={index}>
-                  All
-                </Tab>
-              );
-            }
-          })}
-        </TabList>
-      </Tabs>
-      <Input placeholder='Search' onChange={handleSearch}/>
-      <TableContainer>
-        <Table variant="striped" colorScheme="teal">
-          <Thead>
-            <Tr>
-              <Checkbox onChange={handleCheckBoxes} />
-              {headers.map((header, index) => {
-                return <Th key={index}>{header}</Th>;
+      <div className={classes.container}>
+        <div className={classes.dttTitleContainer}>
+          <Text>Donation Tracking</Text>
+        </div>
+        <div className={classes.tabs}>
+          <Tabs isFitted="true">
+            <TabList>
+              {tabHeaders.map((header, index) => {
+                if (header != 'all')
+                  return (
+                    <Tab onClick={() => changeTab(header)} key={index}>
+                      This {header.substring(0, 1).toUpperCase() + header.substring(1)}
+                    </Tab>
+                  );
+                else {
+                  return (
+                    <Tab onClick={() => changeTab('all')} key={index}>
+                      All
+                    </Tab>
+                  );
+                }
               })}
-            </Tr>
-          </Thead>
-          <Tbody>{renderDonationTrackingTableData()}</Tbody>
-        </Table>
-      </TableContainer>
-      <Box>
-        {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentDonationsNum)} of{' '}
-        {currentDonationsNum}
-      </Box>
-      <IconButton
-        aria-label="Back button"
-        isDisabled={currentPageNum <= 1}
-        icon={<ChevronLeftIcon />}
-        onClick={() => setCurrentPageNum(currentPageNum - 1)}
-      />
-      <IconButton
-        aria-label="Next button"
-        isDisabled={currentPageNum >= pageLimit}
-        icon={<ChevronRightIcon />}
-        onClick={() => setCurrentPageNum(currentPageNum + 1)}
-      />
+            </TabList>
+          </Tabs>
+        </div>
+        <div className={classes.searchAndCSVContainer}>
+          <Input placeholder="Search" onChange={handleSearch} sx={{ width: '222px' }} />
+          <Button
+            colorScheme="teal"
+            onClick={() => {
+              console.log(checkedSet);
+            }}
+            sx={{ width: '172px' }}
+          >
+            <ArrowDownIcon sx={{ marginRight: '5px' }} />
+            Download CSV
+          </Button>
+        </div>
+        <TableContainer>
+          <Table variant="striped" colorScheme="whiteAlpha">
+            <Thead>
+              <Tr>
+                <div className={classes.checkBoxHeader}>
+                  <Checkbox isChecked={topCheckBox} onChange={handleCheckBoxes} />
+                  <ChevronDownIcon />
+                </div>
+                {headers.map((header, index) => {
+                  return <Th key={index}>{header}</Th>;
+                })}
+              </Tr>
+            </Thead>
+            <Tbody>{renderDonationTrackingTableData()}</Tbody>
+          </Table>
+        </TableContainer>
+        <div className={classes.resultNavigation}>
+          <Box sx={{ marginRight: '50px' }}>
+            {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentDonationsNum)}{' '}
+            of {currentDonationsNum}
+          </Box>
+          <IconButton
+            aria-label="Back button"
+            isDisabled={currentPageNum <= 1}
+            icon={<ChevronLeftIcon />}
+            onClick={() => setCurrentPageNum(currentPageNum - 1)}
+          />
+          <IconButton
+            aria-label="Next button"
+            isDisabled={currentPageNum >= pageLimit}
+            icon={<ChevronRightIcon />}
+            onClick={() => setCurrentPageNum(currentPageNum + 1)}
+          />
+        </div>
+      </div>
     </>
   );
 };
