@@ -1,7 +1,7 @@
 import { useBackend } from '../../contexts/BackendContext';
 import { useState, useEffect } from 'react';
 import DonationSite from './DonationSite';
-import { Tabs, TabList, Tab, Button, Box, IconButton } from '@chakra-ui/react';
+import { Tabs, TabList, Tab, Button, Box, IconButton, Input } from '@chakra-ui/react';
 import { ArrowDownIcon, ChevronRightIcon, ChevronLeftIcon } from '@chakra-ui/icons';
 import './DonationTrackingTable.module.css';
 import { Table, Thead, Tbody, Tr, Th, TableContainer, Checkbox, Text } from '@chakra-ui/react';
@@ -12,7 +12,6 @@ const DonationTrackingTable = () => {
   const [donationTrackingTableData, setDonationTrackingTableData] = useState([]);
   const [checkedSet, setCheckedSet] = useState(new Set());
   const [topCheckBox, setTopCheckBox] = useState(false);
-  var filter = 'month';
   const headers = [
     'Donation Site',
     'Donation ID',
@@ -29,32 +28,42 @@ const DonationTrackingTable = () => {
   ];
 
   const tabHeaders = ['month', 'quarter', 'year', 'all'];
+  const [currentTab, setCurrentTab] = useState('month'); //change to all once all page is implemented
   const [currentPageNum, setCurrentPageNum] = useState(1);
   const [currentDonationsNum, setCurrentDonationsNum] = useState(0);
   const [pageLimit, setPageLimit] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const getDonationTrackingTableData = async () => {
-    const response = await backend.get(`/donation/filter/pageNum=${currentPageNum}&filter=${filter}`);
-    const data = response.data;
-
-    for (let i = 0; i < data.length; ++i) {
-      data[i] = { donation_site: 'NULL', ...data[i] };
-    }
-
-    setDonationTrackingTableData(data);
-  };
-
-  const setValues = () => {
-    setCurrentDonationsNum(donationTrackingTableData.length);
-    setPageLimit(Math.ceil(currentDonationsNum / 10));
+  const loadInfo = async () => {
+    changePage();
+    const donationNumResponse = await backend.get(`/donation/totalDonations/${currentTab}/?searchTerm=${searchTerm}`);
+    setCurrentDonationsNum(donationNumResponse.data[0]['count']);
+    setPageLimit(Math.ceil(donationNumResponse.data[0]['count'] / 10));
+    console.log(donationNumResponse.data.length);
   }
 
+  const changeTab = async ( tab ) => {
+    setCurrentTab(tab);
+    setCurrentPageNum(1);
+  };
+
+  const changePage = async () => {
+    const donationResponse = await backend.get(
+      `/donation/filter/${currentTab}/?pageNum=${currentPageNum}&searchTerm=${searchTerm}`,
+    );
+    setDonationTrackingTableData(donationResponse.data);
+  };
+
   useEffect(() => {
-    getDonationTrackingTableData(filter, currentPageNum);
-    setValues();
-    console.log(currentDonationsNum);
-    console.log(pageLimit);
-  }, [currentPageNum]);
+    const getData = async () => {
+      try{
+        loadInfo(currentTab);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    getData();
+  }, [currentTab, currentPageNum, searchTerm]);
 
   const renderDonationTrackingTableData = () => {
     return donationTrackingTableData.map((element, index) => {
@@ -70,10 +79,6 @@ const DonationTrackingTable = () => {
     });
   };
 
-  const updateFilter = filter => {
-    getDonationTrackingTableData(filter);
-  };
-
   const handleCheckBoxes = () => {
     const newCheckboxValue = !topCheckBox;
     setTopCheckBox(newCheckboxValue);
@@ -85,6 +90,10 @@ const DonationTrackingTable = () => {
       setCheckedSet(newCheckedSet);
     }
   };
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value.split(' ').join('+'));
+  }
 
   return (
     <>
@@ -117,13 +126,13 @@ const DonationTrackingTable = () => {
           {tabHeaders.map((header, index) => {
             if (header != 'all')
               return (
-                <Tab onClick={() => updateFilter(header)} key={index}>
+                <Tab onClick={() => changeTab(header)} key={index}>
                   This {header.substring(0, 1).toUpperCase() + header.substring(1)}
                 </Tab>
               );
             else {
               return (
-                <Tab onClick={() => updateFilter('all')} key={index}>
+                <Tab onClick={() => changeTab('all')} key={index}>
                   All
                 </Tab>
               );
@@ -131,6 +140,7 @@ const DonationTrackingTable = () => {
           })}
         </TabList>
       </Tabs>
+      <Input placeholder='Search' onChange={handleSearch}/>
       <TableContainer>
         <Table variant="striped" colorScheme="teal">
           <Thead>
