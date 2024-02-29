@@ -7,4 +7,5 @@
 .mainContent {
   flex: 1; /* Takes up the remaining space */
   overflow: auto; /* Adds scroll to the main content if needed */
+  background-color: var(--fph-gray-50, #F9F8F7);
 }

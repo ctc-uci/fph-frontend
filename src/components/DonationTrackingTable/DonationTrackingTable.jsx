@@ -133,7 +133,7 @@ const DonationTrackingTable = () => {
           </Tabs>
         </div>
         <div className={classes.searchAndCSVContainer}>
-          <Input placeholder="Search" onChange={handleSearch} sx={{ width: '222px' }} />
+          <Input placeholder="Search" onChange={handleSearch} sx={{ width: '222px', backgroundColor: '#FFFFFF' }} />
           <Button
             colorScheme="teal"
             onClick={() => {
@@ -145,7 +145,7 @@ const DonationTrackingTable = () => {
             Download CSV
           </Button>
         </div>
-        <TableContainer>
+        <TableContainer sx={{backgroundColor:'#FFFFFF'}}>
           <Table variant="striped" colorScheme="whiteAlpha">
             <Thead>
               <Tr>
