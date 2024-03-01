@@ -107,8 +107,8 @@ const BusinessFormMaster = () => {
     };
 
     try {
-      console.log('hi');
-      await backend.post('/business', businessData);
+      if (formData['termsAndConditionsAccepted'] === false)
+        await backend.post('/business', businessData);
       nextStep();
     } catch (error) {
       console.log(error);
