@@ -16,7 +16,7 @@ const App = () => {
   return (
     <BackendProvider>
       <div className={styles.appLayout}>
-        <Sidebar isAdmin={true} />
+        <Sidebar isAdmin={false} />
         <div className={styles.mainContent}>
           <Routes>
             <Route exact path="/" element={<div>Welcome to the App</div>} />
