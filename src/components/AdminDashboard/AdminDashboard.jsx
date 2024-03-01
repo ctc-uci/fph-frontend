@@ -54,7 +54,7 @@ const AdminDashboard = () => {
   const calculatePendingBusinesses = () => {
     var pendingBusinesses = 0;
     for (const [value] of Object.entries(businessDictionary)) {
-      const pendingStatus = value['status'];
+      const pendingStatus = businessDictionary[value].status;
       if (pendingStatus == 'Pending') {
         pendingBusinesses += 1;
       }
