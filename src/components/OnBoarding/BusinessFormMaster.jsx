@@ -1,25 +1,10 @@
-// houses components like components 1,2 ,3 ,4
-// pass setters as props to components 1,2,3,4
 import { useState } from 'react';
 import FirstForm from './FirstForm';
 import SecondForm from './SecondForm';
 import ThirdForm from './ThirdForm';
 import FourthForm from './FourthForm';
 import { useBackend } from '../../contexts/BackendContext';
-import {
-  Box,
-  FormControl,
-  FormLabel,
-  Input,
-  Button,
-  Flex,
-  Select,
-  Stack,
-  Heading,
-  Text,
-  UnorderedList,
-  ListItem,
-} from '@chakra-ui/react';
+import { Box, Text, SimpleGrid } from '@chakra-ui/react';
 
 const BusinessFormMaster = () => {
   const { backend } = useBackend();
@@ -111,7 +96,6 @@ const BusinessFormMaster = () => {
         await backend.post('/business', businessData);
       nextStep();
     } catch (error) {
-      console.log(error);
       console.error('Error in business registration:', error);
     }
   };
@@ -124,69 +108,89 @@ const BusinessFormMaster = () => {
     setFormData(prevState => ({ ...prevState, [name]: value }));
   };
 
-  // Next step
-
   const nextStep = () => {
     setStep(prevState => prevState + 1);
   };
-
-  // previous step
 
   const prevStep = () => {
     setStep(prevState => prevState - 1);
   };
 
-  // Map steps to components
-
   const stepsComponents = [
-    <FirstForm key={0} formData={formData} handleChange={handleChange} nextStep={nextStep} />,
-    <SecondForm
-      key={1}
-      formData={formData}
-      handleChange={handleChange}
-      nextStep={nextStep}
-      prevStep={prevStep}
-    />,
+    <FirstForm key={0} handleChange={handleChange} nextStep={nextStep} />,
+    <SecondForm key={1} handleChange={handleChange} nextStep={nextStep} prevStep={prevStep} />,
     <ThirdForm
       key={2}
-      formData={formData}
       handleChange={handleChange}
       nextStep={nextStep}
       prevStep={prevStep}
       handleSubmit={handleSubmit}
     />,
-    <FourthForm
-      key={3}
-      formData={formData}
-      handleChange={handleChange}
-      nextStep={nextStep}
-      prevStep={prevStep}
-    />,
+    <FourthForm key={3} handleChange={handleChange} nextStep={nextStep} prevStep={prevStep} />,
   ];
 
   return (
     <div>
       {step < 4 ? (
         <>
-          <Flex justifyContent="space-between">
-            <Heading as="h1" size="lg" textAlign="center">
-              BUSINESS DONOR
-            </Heading>
-          </Flex>
-          <Box textAlign="left" paddingLeft={8}>
-            <Text fontSize="2xl">FPH</Text>
-          </Box>
-          <Box>
-            <Heading as="h2" size="lg" textAlign="center" paddingBottom={4}>
-              WHY JOIN?
-            </Heading>
-            <UnorderedList textAlign="center" paddingLeft={40} paddingRight={40}>
-              <ListItem>Some inspiring reason to join the platform...</ListItem>
-              <ListItem>Another compelling argument...</ListItem>
-              <ListItem>More information about benefits...</ListItem>
-            </UnorderedList>
-          </Box>
-          <div>{stepsComponents[step]}</div>
+          <SimpleGrid columns={2}>
+            <Box bg={'#F9F8F7'} height={'100vh'}>
+              <Text
+                fontSize="3xl"
+                fontWeight="bold"
+                color="#359797"
+                marginTop={'20vh'}
+                marginLeft={'24vh'}
+                justifyContent={'center'}
+              >
+                Make an Impact
+              </Text>
+              <SimpleGrid columns={2} flexDirection={'column'} spacing={5} marginTop={'5vh'}>
+                <Box
+                  borderRadius="lg"
+                  borderWidth="2px"
+                  display={'flex'}
+                  bg="white"
+                  height="20vh"
+                  marginLeft={'5vh'}
+                  justifyContent={'center'}
+                >
+                  <Text></Text>
+                </Box>
+                <Box
+                  borderRadius="lg"
+                  borderWidth="2px"
+                  bg="white"
+                  height="20vh"
+                  marginRight={'5vh'}
+                >
+                  <Text></Text>
+                </Box>
+                <Box
+                  borderRadius="lg"
+                  borderWidth="2px"
+                  bg="white"
+                  height="20vh"
+                  marginLeft={'5vh'}
+                >
+                  <Text></Text>
+                </Box>
+                <Box
+                  borderRadius="lg"
+                  borderWidth="2px"
+                  borderColor="#E2E8F0"
+                  bg="white"
+                  height="20vh"
+                  marginRight={'5vh'}
+                >
+                  <Text></Text>
+                </Box>
+              </SimpleGrid>
+            </Box>
+            <Box>
+              <div>{stepsComponents[step]}</div>
+            </Box>
+          </SimpleGrid>
         </>
       ) : (
         <>{stepsComponents[3]}</>
