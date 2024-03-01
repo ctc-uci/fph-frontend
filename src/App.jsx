@@ -11,7 +11,7 @@ import ContactUs from './components/ContactUsForm/ContactUs';
 import DonationTrackingTable from './components/DonationTrackingTable/DonationTrackingTable.jsx';
 import styles from './App.module.css';
 import DonationItemsTable from './components/DonationItemsTable/DonationItemsTable.jsx';
-// import BusinessForm from './components/BusinessForm/BusinessForm';
+import BusinessFormMaster from './components/OnBoarding/BusinessFormMaster';
 
 const App = () => {
   return (
@@ -45,7 +45,7 @@ const App = () => {
             ></Route>
             <Route exact path="/DonationItemsTable" element={<DonationItemsTable />} />
             <Route exact path="/DonationTrackingTable" element={<DonationTrackingTable />} />
-            {/* <Route exact path="/BusinessForm" element={< />} /> */}
+            <Route exact path="/BusinessForm" element={<BusinessFormMaster />} />
           </Routes>
         </div>
       </div>
