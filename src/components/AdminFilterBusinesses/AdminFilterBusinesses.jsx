@@ -1,5 +1,6 @@
 import './AdminFilterBusinesses.module.css';
 import BusinessTable from '../BusinessTable/BusinessTable.jsx';
+import BusinessTablePending from '../BusinessTablePending/BusinessTablePending.jsx';
 
 import { useBackend } from '../../contexts/BackendContext';
 import { useEffect, useState } from 'react';
@@ -66,9 +67,20 @@ const AdminFilterBusinesses = () => {
           >
             Not Submitted
           </Tab>
+          <Tab
+            onClick={() => {
+              changeTab('Pending');
+            }}
+          >
+            Pending
+          </Tab>
         </TabList>
       </Tabs>
-      <BusinessTable businessData={businessDictionary} />
+      {currentTab !== 'Pending' ? (
+        <BusinessTable businessData={businessDictionary} />
+      ) : (
+        <BusinessTablePending businessData={businessDictionary} />
+      )}
       <Box>
         {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentBusinessNum)} of{' '}
         {currentBusinessNum}

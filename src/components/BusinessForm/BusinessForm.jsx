@@ -195,6 +195,7 @@ const BusinessForm = ({ pending, pendingData }) => {
   }
 
   const fillOutPendingData = () => {
+    console.log('Pending Check', pendingData);
     setBusinessName(pendingData.name ? pendingData.name : '');
     if (pendingData.contact_name === null) {
       setFirstName('');

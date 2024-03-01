@@ -25,7 +25,6 @@ const AdminDashboard = () => {
 
         const notificationResponse = await backend.get(`/notification/0`);
         setNotifications(notificationResponse.data);
-        console.log(notificationResponse.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }

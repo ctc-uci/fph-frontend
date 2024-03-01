@@ -1,4 +1,3 @@
-import BusinessTable from '../BusinessTable/BusinessTable';
 import PendingBusinessTable from '../PendingBusinessTable/PendingBusinessTable';
 import { useState } from 'react';
 import { Button, Text } from '@chakra-ui/react';
@@ -46,7 +45,7 @@ const AdminAllBusinesses = () => {
           <Button colorScheme="teal" variant="outline" onClick={handleClickPending}>
             Pending Applications
           </Button>
-          <BusinessTable />
+          {/* <BusinessTable /> */}
         </>
       )}
 
