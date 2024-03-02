@@ -1,24 +1,23 @@
 ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+  width: 10px;
+  height: 10px;
 }
-::-webkit-scrollbar:horizontal{
-    height: 10px;
-    width: 25%;
+::-webkit-scrollbar:horizontal {
+  height: 10px;
+  width: 25%;
 }
-::-webkit-scrollbar:vertical{
-    width: 10px;
-    height: 25%;
+::-webkit-scrollbar:vertical {
+  width: 10px;
+  height: 25%;
 }
-  
+
 /* Track */
 ::-webkit-scrollbar-track {
-background: var(--fph-gray-50, #F9F8F7);
+  background: var(--fph-gray-50, #f9f8f7);
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-background: var(--gray-300, #CBD5E0);
-border-radius: 10px;
-
+  background: var(--gray-300, #cbd5e0);
+  border-radius: 10px;
 }

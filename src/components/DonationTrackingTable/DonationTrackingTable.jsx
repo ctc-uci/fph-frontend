@@ -47,7 +47,6 @@ const DonationTrackingTable = () => {
     );
     setCurrentDonationsNum(donationNumResponse.data[0]['count']);
     setPageLimit(Math.ceil(donationNumResponse.data[0]['count'] / 10));
-    // console.log(donationNumResponse.data.length);
   };
 
   const changeTab = async tab => {
@@ -103,6 +102,7 @@ const DonationTrackingTable = () => {
 
   const handleSearch = event => {
     setSearchTerm(event.target.value.split(' ').join('+'));
+    setCurrentPageNum(1);
   };
 
   return (
@@ -133,7 +133,11 @@ const DonationTrackingTable = () => {
           </Tabs>
         </div>
         <div className={classes.searchAndCSVContainer}>
-          <Input placeholder="Search" onChange={handleSearch} sx={{ width: '222px', backgroundColor: '#FFFFFF' }} />
+          <Input
+            placeholder="Search"
+            onChange={handleSearch}
+            sx={{ width: '222px', backgroundColor: '#FFFFFF' }}
+          />
           <Button
             colorScheme="teal"
             onClick={() => {
@@ -145,7 +149,7 @@ const DonationTrackingTable = () => {
             Download CSV
           </Button>
         </div>
-        <TableContainer sx={{backgroundColor:'#FFFFFF'}}>
+        <TableContainer sx={{ backgroundColor: '#FFFFFF' }}>
           <Table variant="striped" colorScheme="whiteAlpha">
             <Thead>
               <Tr>
@@ -163,8 +167,8 @@ const DonationTrackingTable = () => {
         </TableContainer>
         <div className={classes.resultNavigation}>
           <Box sx={{ marginRight: '50px' }}>
-            {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentDonationsNum)}{' '}
-            of {currentDonationsNum}
+            {currentDonationsNum > 0 ? (currentPageNum - 1) * 10 + 1 : 0} to{' '}
+            {Math.min(currentPageNum * 10, currentDonationsNum)} of {currentDonationsNum}
           </Box>
           <IconButton
             aria-label="Back button"

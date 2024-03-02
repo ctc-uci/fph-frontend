@@ -50,7 +50,6 @@ const AdminFilterBusinesses = () => {
 
   return (
     <div>
-      
       <Tabs>
         <TabList>
           <Tab
