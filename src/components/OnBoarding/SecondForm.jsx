@@ -80,12 +80,15 @@ const SecondForm = ({ formData, handleChange, prevStep, nextStep }) => {
             <FormControl paddingRight="10vh" id="state" flex="1">
               <FormLabel fontSize="small">State</FormLabel>
               <Input
+                maxLength="2"
+                style={{ textTransform: 'uppercase' }}
                 width="95%"
                 name="state"
                 type="text"
                 value={formData['state']}
                 onChange={e => {
-                  handleChange(e);
+                  const upperCaseValue = e.target.value.toUpperCase();
+                  handleChange({ ...e, target: { name: e.target.name, value: upperCaseValue } });
                 }}
               />
             </FormControl>
@@ -94,6 +97,7 @@ const SecondForm = ({ formData, handleChange, prevStep, nextStep }) => {
                 Postal Code
               </FormLabel>
               <Input
+                maxLength="6"
                 width="95%"
                 name="postalCode"
                 type="text"

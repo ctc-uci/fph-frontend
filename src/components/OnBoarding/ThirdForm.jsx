@@ -220,6 +220,7 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit }) => {
                   >
                     <FormLabel fontSize="small">Phone Number</FormLabel>
                     <Input
+                      maxLength="10"
                       name="phoneNumber"
                       type="text"
                       value={formData['phoneNumber']}
