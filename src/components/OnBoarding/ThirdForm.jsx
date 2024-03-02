@@ -109,6 +109,7 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit }) => {
   const [termsAndConditionsIsOpened, changeTermsAndConditionsIsOpened] = useState(false);
   const [termsAndConditionsAccepted, changeTermsAndConditionsAccepted] = useState(false);
   const [submitAndAcceptedFalse, changeSubmitAndAcceptedFalse] = useState(false);
+
   return (
     <>
       <Box p={5}>
@@ -301,7 +302,13 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit }) => {
                     type="submit"
                     background="#319795"
                     width="9vh"
-                    onClick={handleSubmit}
+                    onClick={async e => {
+                      if (!termsAndConditionsAccepted) {
+                        changeSubmitAndAcceptedFalse(true);
+                      } else {
+                        await handleSubmit(e);
+                      }
+                    }}
                     colorScheme="blue"
                   >
                     Submit
@@ -309,15 +316,23 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit }) => {
                 </Box>
               </HStack>
               <>
-                {submitAndAcceptedFalse ? (
-                  <>
-                    <Alert status="error">
-                      <AlertIcon />
-                      <AlertTitle>You haven't accepted the Terms and Conditions</AlertTitle>
-                      <Button onClick={() => changeSubmitAndAcceptedFalse(false)}>Close</Button>
-                    </Alert>
-                  </>
-                ) : null}
+                <Box paddingLeft="10vh" paddingRight="10vh">
+                  {submitAndAcceptedFalse ? (
+                    <>
+                      <Alert borderRadius="2vh" status="error">
+                        <Flex align="center" justify="space-between" width="100%">
+                          <Box>
+                            <HStack>
+                              <AlertIcon />
+                              <AlertTitle>You haven't accepted the Terms and Conditions</AlertTitle>
+                            </HStack>
+                          </Box>
+                          <Button onClick={() => changeSubmitAndAcceptedFalse(false)}>Close</Button>
+                        </Flex>
+                      </Alert>
+                    </>
+                  ) : null}
+                </Box>
               </>
             </Flex>
           </Stack>
