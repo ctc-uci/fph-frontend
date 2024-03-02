@@ -12,12 +12,17 @@ import DonationTrackingTable from './components/DonationTrackingTable/DonationTr
 import styles from './App.module.css';
 import DonationItemsTable from './components/DonationItemsTable/DonationItemsTable.jsx';
 import BusinessFormMaster from './components/OnBoarding/BusinessFormMaster';
+import {useState} from 'react';
+
 
 const App = () => {
+  const [formOpen, setFormOpen] = useState(true); // set this to false. also, there needs to be a way to set this to true via whever form is called.
   return (
     <BackendProvider>
       <div className={styles.appLayout}>
-        <Sidebar isAdmin={true} />
+        {(!formOpen) ? (
+          <Sidebar isAdmin={true} />
+        ) : null}
         <div className={styles.mainContent}>
           <Routes>
             <Route exact path="/" element={<div>Welcome to the App</div>} />
@@ -45,7 +50,7 @@ const App = () => {
             ></Route>
             <Route exact path="/DonationItemsTable" element={<DonationItemsTable />} />
             <Route exact path="/DonationTrackingTable" element={<DonationTrackingTable />} />
-            <Route exact path="/BusinessForm" element={<BusinessFormMaster />} />
+            <Route exact path="/BusinessForm" element={<BusinessFormMaster setFormOpen={setFormOpen}/> } />
           </Routes>
         </div>
       </div>

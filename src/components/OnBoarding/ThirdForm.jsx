@@ -28,7 +28,9 @@ import {
   PopoverArrow,
   PopoverCloseButton,
   HStack,
+  Image,
 } from '@chakra-ui/react';
+import FPH_LOGO from './fph_logo.png';
 
 const ThirdForm = ({ handleChange, prevStep, handleSubmit }) => {
   const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -109,7 +111,9 @@ const ThirdForm = ({ handleChange, prevStep, handleSubmit }) => {
   const [submitAndAcceptedFalse, changeSubmitAndAcceptedFalse] = useState(false);
   console.log(submitAndAcceptedFalse);
   return (
+
     <>
+     <Image boxSize='8vh' src={FPH_LOGO}/>
       {termsAndConditionsIsOpened ? (
         <Modal isOpen={true} size="3xl" isCentered>
           <ModalOverlay>
@@ -161,6 +165,8 @@ const ThirdForm = ({ handleChange, prevStep, handleSubmit }) => {
       ) : (
         <Stack direction="row">
           <Box p={5}>
+
+
             <Flex direction="column" align="stretch" gap={5}>
               <Flex direction="column" gap={4}>
                 <Box textAlign="left" paddingLeft={8}>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import propTypes from 'prop-types';
-import { Box, FormControl, FormLabel, Input, Button, Flex, Text, HStack } from '@chakra-ui/react';
+import { Box, FormControl, FormLabel, Input, Button, Flex, Text, HStack, Image, Stack, SimpleGrid } from '@chakra-ui/react';
+import FPH_LOGO from './fph_logo.png';
 
 const SecondForm = ({ handleChange, prevStep, nextStep }) => {
   const [businessAddress1, changeBusinessAddress1] = useState('');
@@ -12,12 +13,19 @@ const SecondForm = ({ handleChange, prevStep, nextStep }) => {
 
   return (
     <Box p={5}>
+      <Image boxSize='8vh' src={FPH_LOGO} />
+      <Text fontSize="xl" as="b" color="#359797">
+        Become a Donation Site
+      </Text>
+      <Text fontSize="sm">To get started, fill out the form below.</Text>
+      <Stack direction='column'>
+      <Box>
       <Flex direction="column" align="stretch" gap={5}>
         <Flex direction="column" gap={4}>
-          <Box textAlign="left" paddingLeft={8}>
+          <Box marginTop='3vh' padding='1vh' textAlign="left" >
             <Text fontSize="2xl">Business Address</Text>
           </Box>
-          <FormControl id="business-address-1">
+          <FormControl padding='1vh' marginTop='-2vh' id="business-address-1">
             <FormLabel>Address Line 1</FormLabel>
             <Input
               name="businessAddress1"
@@ -30,7 +38,7 @@ const SecondForm = ({ handleChange, prevStep, nextStep }) => {
             />
           </FormControl>
           <Flex gap={4}>
-            <FormControl id="business-address-2" flex="1">
+            <FormControl marginTop='-2vh' padding='1vh' id="business-address-2" flex="1">
               <FormLabel>Address Line 2</FormLabel>
               <Input
                 name="businessAddress2"
@@ -42,7 +50,13 @@ const SecondForm = ({ handleChange, prevStep, nextStep }) => {
                 }}
               />
             </FormControl>
-            <FormControl id="city" flex="1">
+            </Flex>
+          </Flex>
+          </Flex>
+      </Box>
+      <Box>
+        <SimpleGrid rows='2' columns='2'>
+            <FormControl padding='1vh' id="city" flex="1">
               <FormLabel>City</FormLabel>
               <Input
                 name="city"
@@ -54,7 +68,7 @@ const SecondForm = ({ handleChange, prevStep, nextStep }) => {
                 }}
               />
             </FormControl>
-            <FormControl id="state" flex="1">
+            <FormControl padding='1vh' id="state" flex="1">
               <FormLabel>State</FormLabel>
               <Input
                 name="state"
@@ -66,7 +80,7 @@ const SecondForm = ({ handleChange, prevStep, nextStep }) => {
                 }}
               />
             </FormControl>
-            <FormControl id="postal-code" flex="1">
+            <FormControl padding='1vh' id="postal-code" flex="1">
               <FormLabel>Postal Code</FormLabel>
               <Input
                 name="postalCode"
@@ -78,7 +92,7 @@ const SecondForm = ({ handleChange, prevStep, nextStep }) => {
                 }}
               />
             </FormControl>
-            <FormControl id="country" flex="1">
+            <FormControl padding='1vh' id="country" flex="1">
               <FormLabel>Country</FormLabel>
               <Input
                 name="country"
@@ -90,22 +104,23 @@ const SecondForm = ({ handleChange, prevStep, nextStep }) => {
                 }}
               />
             </FormControl>
-          </Flex>
-        </Flex>
-        <HStack>
+            </SimpleGrid>
+
+        <HStack marignTop='1vh' padding='1vh' width='auto' justifyContent={'space-between'}>
           {' '}
           <Box>
-            <Button type="submit" onClick={prevStep} colorScheme="blue">
+            <Button color='#319795' variant='outline' width='9vh' type="submit" onClick={prevStep} colorScheme="blue">
               Back
             </Button>
           </Box>{' '}
           <Box>
-            <Button type="submit" onClick={nextStep} colorScheme="blue">
+            <Button background='#319795' width='9vh' type="submit" onClick={nextStep} colorScheme="blue">
               Next
             </Button>
           </Box>
         </HStack>
-      </Flex>
+        </Box>
+      </Stack>
     </Box>
   );
 };

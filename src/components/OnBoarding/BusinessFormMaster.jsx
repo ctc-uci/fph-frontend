@@ -4,9 +4,14 @@ import SecondForm from './SecondForm';
 import ThirdForm from './ThirdForm';
 import FourthForm from './FourthForm';
 import { useBackend } from '../../contexts/BackendContext';
-import { Box, Text, SimpleGrid } from '@chakra-ui/react';
+import { Box, Text, SimpleGrid, Stack, Image } from '@chakra-ui/react';
+import propTypes from 'prop-types';
+import ICON1 from './icon1.png';
+import ICON2 from './icon2.png';
+import ICON3 from './icon3.png';
+import ICON4 from './icon4.png';
 
-const BusinessFormMaster = () => {
+const BusinessFormMaster = ({setFormOpen}) => {
   const { backend } = useBackend();
   const [formData, setFormData] = useState({
     businessName: '',
@@ -126,7 +131,7 @@ const BusinessFormMaster = () => {
       prevStep={prevStep}
       handleSubmit={handleSubmit}
     />,
-    <FourthForm key={3} handleChange={handleChange} nextStep={nextStep} prevStep={prevStep} />,
+    <FourthForm key={3} handleChange={handleChange} nextStep={nextStep} prevStep={prevStep} setFormOpen={setFormOpen} />,
   ];
 
   return (
@@ -140,50 +145,70 @@ const BusinessFormMaster = () => {
                 fontWeight="bold"
                 color="#359797"
                 marginTop={'20vh'}
-                marginLeft={'24vh'}
+                marginLeft={'34.5vh'}
                 justifyContent={'center'}
               >
                 Make an Impact
               </Text>
-              <SimpleGrid columns={2} flexDirection={'column'} spacing={5} marginTop={'5vh'}>
+              <SimpleGrid columns={2} flexDirection={'column'} spacing={'6vh'} marginTop={'5vh'}>
                 <Box
+                  width='25vh'
                   borderRadius="lg"
                   borderWidth="2px"
                   display={'flex'}
                   bg="white"
-                  height="20vh"
-                  marginLeft={'5vh'}
+                  height="22vh"
+                  marginLeft={'18vh'}
                   justifyContent={'center'}
                 >
-                  <Text></Text>
+                  <Stack alignItems='center' direction='column'>
+                    <Box marginTop='3.5vh'> <Image boxSize='8vh' src={ICON1} /></Box>
+                   <Box><Text fontSize='xl' color='#2D3748' fontWeight='bold'>28,344</Text></Box>
+                   <Box><Text marginTop={'-1vh'} fontSize='sm'>pets helped</Text></Box>
+                  </Stack>
                 </Box>
                 <Box
+                width='25vh'
                   borderRadius="lg"
                   borderWidth="2px"
                   bg="white"
-                  height="20vh"
-                  marginRight={'5vh'}
+                  height="22vh"
+                  marginLeft={'2vh'}
                 >
-                  <Text></Text>
+                  <Stack alignItems='center' direction='column'>
+                    <Box marginTop='3.5vh'> <Image boxSize='8vh' src={ICON2} /></Box>
+                   <Box><Text fontSize='xl' color='#2D3748' fontWeight='bold'>$4,685,177</Text></Box>
+                   <Box width='15vh'><Text textAlign='center' marginTop={'-1vh'} fontSize='sm'>to veterinary care, pet food, & crates</Text></Box>
+                  </Stack>
                 </Box>
                 <Box
+                width='25vh'
                   borderRadius="lg"
                   borderWidth="2px"
                   bg="white"
-                  height="20vh"
-                  marginLeft={'5vh'}
+                  height="22vh"
+                  marginLeft={'18vh'}
                 >
-                  <Text></Text>
+                  <Stack alignItems='center' direction='column'>
+                    <Box marginTop='3.5vh'> <Image boxSize='8vh' src={ICON3} /></Box>
+                   <Box><Text fontSize='xl' color='#2D3748' fontWeight='bold'>2,088,364 lbs</Text></Box>
+                   <Box><Text marginTop={'-1vh'} fontSize='sm'>pet food collected</Text></Box>
+                  </Stack>
                 </Box>
                 <Box
+                width='25vh'
                   borderRadius="lg"
                   borderWidth="2px"
                   borderColor="#E2E8F0"
                   bg="white"
-                  height="20vh"
-                  marginRight={'5vh'}
+                  height="22vh"
+                  marginLeft={'2vh'}
                 >
-                  <Text></Text>
+                  <Stack alignItems='center' direction='column'>
+                    <Box marginTop='3.5vh'> <Image boxSize='8vh' src={ICON4} /></Box>
+                   <Box><Text fontSize='xl' color='#2D3748' fontWeight='bold'>194</Text></Box>
+                   <Box><Text marginTop={'-1vh'} fontSize='sm'>donation sites nationwide</Text></Box>
+                  </Stack>
                 </Box>
               </SimpleGrid>
             </Box>
@@ -197,6 +222,10 @@ const BusinessFormMaster = () => {
       )}
     </div>
   );
+};
+
+BusinessFormMaster.propTypes = {
+  setFormOpen: propTypes.func.isRequired,
 };
 
 export default BusinessFormMaster;
