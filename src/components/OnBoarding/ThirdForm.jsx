@@ -29,11 +29,13 @@ import {
   PopoverCloseButton,
   HStack,
   Image,
+  Textarea,
 } from '@chakra-ui/react';
 import FPH_LOGO from './fph_logo.png';
 
-const ThirdForm = ({ handleChange, prevStep, handleSubmit }) => {
+const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit }) => {
   const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
   const [businessHours, changeBusinessHours] = useState(
     daysOfWeek.reduce(
       (acc, day) => ({
@@ -104,76 +106,74 @@ const ThirdForm = ({ handleChange, prevStep, handleSubmit }) => {
     changeBusinessHours({ ...businessHours, [day]: { ...businessHours[day], [period]: value } });
   };
 
-  const [phoneNumber, changePhoneNumber] = useState('');
-  const [heardAbout, changeHeardAbout] = useState('');
   const [termsAndConditionsIsOpened, changeTermsAndConditionsIsOpened] = useState(false);
   const [termsAndConditionsAccepted, changeTermsAndConditionsAccepted] = useState(false);
   const [submitAndAcceptedFalse, changeSubmitAndAcceptedFalse] = useState(false);
-  console.log(submitAndAcceptedFalse);
   return (
-
     <>
-     <Image boxSize='8vh' src={FPH_LOGO}/>
-      {termsAndConditionsIsOpened ? (
-        <Modal isOpen={true} size="3xl" isCentered>
-          <ModalOverlay>
-            <ModalContent alignItems="center">
-              <ModalHeader>
-                {' '}
-                <Text marginLeft="1vh" fontSize="2xl">
-                  Terms and Conditions{' '}
-                </Text>
-              </ModalHeader>
-              <ModalBody>
-                <Text fontWeight="bold" fontSize="sm">
-                  I hereby acknowledge and agree to serve as a member/volunteer for Feeding Pets of
-                  the Homeless, 710 West Washington Street, Carson City, NV 89703. I give my consent
-                  and agree to release, indemnify and hold harmless Feeding Pets of the Homeless
-                  (DBA: Pets of the Homeless) and all personnel, including but not limited to its
-                  officers, agents and/or employees, other participants, sponsors, advertisers, I
-                  hereby assume all of the risks of participating as a volunteer, with respect to
-                  any and all injury, disability, death or loss or damage of person or property,
-                  whether arising from negligence of the releases or otherwise, to the fullest
-                  extent permitted by law. I agree to comply with the guidelines and conditions for
-                  participation. See Fundraising Policies here:
-                  http://www.petsofthehomeless.org/fundraising-policy-for-pets-of-the-homeless/ Pets
-                  of the Homeless reserves the right to terminate this agreement at any time. I also
-                  grant Feeding Pets of the Homeless the right to use photographs of me at events
-                  and activities and use the photographs in future advertising including online
-                  webpage. I acknowledge that all information regarding Pets of the Homeless'
-                  operations, procedures, contacts, volunteers, recipients and donors is of a
-                  proprietary nature and should not be disclosed or used for any purposes other than
-                  the direct benefit of the organization. I acknowledge that I am not authorized to
-                  speak to the media. I agree to refer all media inquiries to Headquarters,
-                  775-841-7463.
-                </Text>
-                <Text fontsize="sm" marginTop="5vh">
-                  By checking the "I Accept the Terms and Conditions" box and clicking the "Submit"
-                  button on this page, you acknowledge you have read and agree to the above.
-                </Text>
-              </ModalBody>
-              <Button
-                onClick={() => {
-                  changeTermsAndConditionsIsOpened(false);
-                }}
-              >
-                Close
-              </Button>
-            </ModalContent>
-          </ModalOverlay>
-        </Modal>
-      ) : (
-        <Stack direction="row">
-          <Box p={5}>
-
-
+      <Box p={5}>
+        <Image boxSize="8vh" src={FPH_LOGO} />
+        <Text paddingLeft="10vh" marginTop="5vh" fontSize="3xl" fontWeight="bold" color="#359797">
+          Become a Donation Site
+        </Text>
+        <Text paddingLeft="10vh" fontSize="sm">
+          To get started, fill out the form below.
+        </Text>
+        {termsAndConditionsIsOpened ? (
+          <Modal isOpen={true} size="3xl" isCentered>
+            <ModalOverlay>
+              <ModalContent paddingBottom="1vh" alignItems="center">
+                <ModalHeader>
+                  {' '}
+                  <Text marginLeft="1vh" fontSize="2xl">
+                    Terms and Conditions{' '}
+                  </Text>
+                </ModalHeader>
+                <ModalBody>
+                  <Text fontWeight="bold" fontSize="sm">
+                    I hereby acknowledge and agree to serve as a member/volunteer for Feeding Pets
+                    of the Homeless, 710 West Washington Street, Carson City, NV 89703. I give my
+                    consent and agree to release, indemnify and hold harmless Feeding Pets of the
+                    Homeless (DBA: Pets of the Homeless) and all personnel, including but not
+                    limited to its officers, agents and/or employees, other participants, sponsors,
+                    advertisers, I hereby assume all of the risks of participating as a volunteer,
+                    with respect to any and all injury, disability, death or loss or damage of
+                    person or property, whether arising from negligence of the releases or
+                    otherwise, to the fullest extent permitted by law. I agree to comply with the
+                    guidelines and conditions for participation. See Fundraising Policies here:
+                    http://www.petsofthehomeless.org/fundraising-policy-for-pets-of-the-homeless/
+                    Pets of the Homeless reserves the right to terminate this agreement at any time.
+                    I also grant Feeding Pets of the Homeless the right to use photographs of me at
+                    events and activities and use the photographs in future advertising including
+                    online webpage. I acknowledge that all information regarding Pets of the
+                    Homeless' operations, procedures, contacts, volunteers, recipients and donors is
+                    of a proprietary nature and should not be disclosed or used for any purposes
+                    other than the direct benefit of the organization. I acknowledge that I am not
+                    authorized to speak to the media. I agree to refer all media inquiries to
+                    Headquarters, 775-841-7463.
+                  </Text>
+                  <Text fontsize="sm" marginTop="5vh">
+                    By checking the "I Accept the Terms and Conditions" box and clicking the
+                    "Submit" button on this page, you acknowledge you have read and agree to the
+                    above.
+                  </Text>
+                </ModalBody>
+                <Button
+                  onClick={() => {
+                    changeTermsAndConditionsIsOpened(false);
+                  }}
+                >
+                  Close
+                </Button>
+              </ModalContent>
+            </ModalOverlay>
+          </Modal>
+        ) : (
+          <Stack direction="column">
             <Flex direction="column" align="stretch" gap={5}>
-              <Flex direction="column" gap={4}>
-                <Box textAlign="left" paddingLeft={8}>
-                  <Text fontSize="2xl">Business Address</Text>
-                </Box>
+              <Flex direction="column">
                 <Box>
-                  <FormControl id="business-hours">
+                  <FormControl marginTop="8vh" paddingLeft="10vh" id="business-hours">
                     <FormLabel>Business Hours</FormLabel>
                     <Popover width="auto">
                       <PopoverTrigger>
@@ -209,43 +209,62 @@ const ThirdForm = ({ handleChange, prevStep, handleSubmit }) => {
                   </FormControl>
                 </Box>
 
-                <Flex gap={4}>
-                  <Box>
-                    <FormControl id="phone-number" flex="1">
-                      <FormLabel>Phone Number</FormLabel>
-                      <Input
-                        name="phoneNumber"
-                        type="text"
-                        value={phoneNumber}
-                        onChange={e => {
-                          changePhoneNumber(e.target.value);
-                          handleChange(e);
-                        }}
-                      />
-                    </FormControl>
-                  </Box>
-                  <Box>
-                    <FormControl id="heard-about" flex="1">
-                      <FormLabel>How Did You Hear About Us?</FormLabel>
-                      <Input
-                        name="heardAbout"
-                        type="text"
-                        value={heardAbout}
-                        onChange={e => {
-                          changeHeardAbout(e.target.value);
-                          handleChange(e);
-                        }}
-                      />
-                    </FormControl>
-                  </Box>
-                </Flex>
+                <Box>
+                  <FormControl
+                    marginTop="2vh"
+                    paddingLeft="10vh"
+                    paddingRight="10vh"
+                    width="80vh"
+                    id="phone-number"
+                    flex="1"
+                  >
+                    <FormLabel fontSize="small">Phone Number</FormLabel>
+                    <Input
+                      name="phoneNumber"
+                      type="text"
+                      value={formData['phoneNumber']}
+                      onChange={e => {
+                        handleChange(e);
+                      }}
+                    />
+                  </FormControl>
+                </Box>
+                <Box>
+                  <FormControl
+                    marginTop="3vh"
+                    paddingLeft="10vh"
+                    paddingRight="10vh"
+                    id="heard-about"
+                    flex="1"
+                  >
+                    <FormLabel fontSize="small">How Did You Hear About Us?</FormLabel>
+                    <Textarea
+                      height="12vh"
+                      name="heardAbout"
+                      value={formData['heardAbout']}
+                      onChange={e => {
+                        handleChange(e);
+                      }}
+                      // Additional properties like resizing and styling can be added here
+                    />
+                  </FormControl>
+                </Box>
               </Flex>
-              <Box>
+              <Box paddingLeft="10vh">
                 <Checkbox
-                  defaultChecked={false}
+                  name="termsAndConditionsAccepted"
+                  defaultChecked={formData['termsAndConditionsAccepted']}
+                  value={termsAndConditionsAccepted}
                   onChange={e => {
-                    changeTermsAndConditionsAccepted(e.target.checked);
-                    handleChange(e);
+                    const checked = e.target.checked;
+                    const syntheticEvent = {
+                      target: {
+                        name: e.target.name,
+                        value: checked,
+                      },
+                    };
+                    handleChange(syntheticEvent);
+                    changeTermsAndConditionsAccepted(checked);
                   }}
                 >
                   <Text fontSize="xs">
@@ -263,24 +282,25 @@ const ThirdForm = ({ handleChange, prevStep, handleSubmit }) => {
                   </Text>
                 </Checkbox>
               </Box>
-              <HStack>
+              <HStack paddingLeft="10vh" paddingRight="10vh" justifyContent="space-between">
                 <Box>
-                  <Button type="submit" onClick={prevStep} colorScheme="blue">
+                  <Button
+                    variant="outline"
+                    borderColor="#319795"
+                    color="#319795"
+                    width="9vh"
+                    type="submit"
+                    onClick={prevStep}
+                  >
                     Back
                   </Button>
                 </Box>
                 <Box>
                   <Button
                     type="submit"
-                    onClick={() => {
-                      if (termsAndConditionsAccepted === false) {
-                        (function () {
-                          changeSubmitAndAcceptedFalse(true);
-                        })();
-                      } else {
-                        handleSubmit();
-                      }
-                    }}
+                    background="#319795"
+                    width="9vh"
+                    onClick={handleSubmit}
                     colorScheme="blue"
                   >
                     Submit
@@ -299,9 +319,9 @@ const ThirdForm = ({ handleChange, prevStep, handleSubmit }) => {
                 ) : null}
               </>
             </Flex>
-          </Box>
-        </Stack>
-      )}
+          </Stack>
+        )}
+      </Box>
     </>
   );
 };
@@ -311,6 +331,7 @@ ThirdForm.propTypes = {
   nextStep: propTypes.func.isRequired,
   prevStep: propTypes.func.isRequired,
   handleSubmit: propTypes.func.isRequired,
+  formData: propTypes.func.isRequired,
 };
 
 export default ThirdForm;

@@ -11,7 +11,7 @@ import ICON2 from './icon2.png';
 import ICON3 from './icon3.png';
 import ICON4 from './icon4.png';
 
-const BusinessFormMaster = ({setFormOpen}) => {
+const BusinessFormMaster = ({ setFormOpen }) => {
   const { backend } = useBackend();
   const [formData, setFormData] = useState({
     businessName: '',
@@ -97,9 +97,10 @@ const BusinessFormMaster = ({setFormOpen}) => {
     };
 
     try {
-      if (formData['termsAndConditionsAccepted'] === false)
+      if (formData['termsAndConditionsAccepted'] === true) {
         await backend.post('/business', businessData);
-      nextStep();
+        nextStep();
+      }
     } catch (error) {
       console.error('Error in business registration:', error);
     }
@@ -122,16 +123,29 @@ const BusinessFormMaster = ({setFormOpen}) => {
   };
 
   const stepsComponents = [
-    <FirstForm key={0} handleChange={handleChange} nextStep={nextStep} />,
-    <SecondForm key={1} handleChange={handleChange} nextStep={nextStep} prevStep={prevStep} />,
+    <FirstForm key={0} formData={formData} handleChange={handleChange} nextStep={nextStep} />,
+    <SecondForm
+      key={1}
+      formData={formData}
+      handleChange={handleChange}
+      nextStep={nextStep}
+      prevStep={prevStep}
+    />,
     <ThirdForm
       key={2}
+      formData={formData}
       handleChange={handleChange}
       nextStep={nextStep}
       prevStep={prevStep}
       handleSubmit={handleSubmit}
     />,
-    <FourthForm key={3} handleChange={handleChange} nextStep={nextStep} prevStep={prevStep} setFormOpen={setFormOpen} />,
+    <FourthForm
+      key={3}
+      handleChange={handleChange}
+      nextStep={nextStep}
+      prevStep={prevStep}
+      setFormOpen={setFormOpen}
+    />,
   ];
 
   return (
@@ -152,7 +166,7 @@ const BusinessFormMaster = ({setFormOpen}) => {
               </Text>
               <SimpleGrid columns={2} flexDirection={'column'} spacing={'6vh'} marginTop={'5vh'}>
                 <Box
-                  width='25vh'
+                  width="25vh"
                   borderRadius="lg"
                   borderWidth="2px"
                   display={'flex'}
@@ -161,42 +175,75 @@ const BusinessFormMaster = ({setFormOpen}) => {
                   marginLeft={'18vh'}
                   justifyContent={'center'}
                 >
-                  <Stack alignItems='center' direction='column'>
-                    <Box marginTop='3.5vh'> <Image boxSize='8vh' src={ICON1} /></Box>
-                   <Box><Text fontSize='xl' color='#2D3748' fontWeight='bold'>28,344</Text></Box>
-                   <Box><Text marginTop={'-1vh'} fontSize='sm'>pets helped</Text></Box>
+                  <Stack alignItems="center" direction="column">
+                    <Box marginTop="3.5vh">
+                      {' '}
+                      <Image boxSize="8vh" src={ICON1} />
+                    </Box>
+                    <Box>
+                      <Text fontSize="xl" color="#2D3748" fontWeight="bold">
+                        28,344
+                      </Text>
+                    </Box>
+                    <Box>
+                      <Text marginTop={'-1vh'} fontSize="sm">
+                        pets helped
+                      </Text>
+                    </Box>
                   </Stack>
                 </Box>
                 <Box
-                width='25vh'
+                  width="25vh"
                   borderRadius="lg"
                   borderWidth="2px"
                   bg="white"
                   height="22vh"
                   marginLeft={'2vh'}
                 >
-                  <Stack alignItems='center' direction='column'>
-                    <Box marginTop='3.5vh'> <Image boxSize='8vh' src={ICON2} /></Box>
-                   <Box><Text fontSize='xl' color='#2D3748' fontWeight='bold'>$4,685,177</Text></Box>
-                   <Box width='15vh'><Text textAlign='center' marginTop={'-1vh'} fontSize='sm'>to veterinary care, pet food, & crates</Text></Box>
+                  <Stack alignItems="center" direction="column">
+                    <Box marginTop="3.5vh">
+                      {' '}
+                      <Image boxSize="8vh" src={ICON2} />
+                    </Box>
+                    <Box>
+                      <Text fontSize="xl" color="#2D3748" fontWeight="bold">
+                        $4,685,177
+                      </Text>
+                    </Box>
+                    <Box width="15vh">
+                      <Text textAlign="center" marginTop={'-1vh'} fontSize="sm">
+                        to veterinary care, pet food, & crates
+                      </Text>
+                    </Box>
                   </Stack>
                 </Box>
                 <Box
-                width='25vh'
+                  width="25vh"
                   borderRadius="lg"
                   borderWidth="2px"
                   bg="white"
                   height="22vh"
                   marginLeft={'18vh'}
                 >
-                  <Stack alignItems='center' direction='column'>
-                    <Box marginTop='3.5vh'> <Image boxSize='8vh' src={ICON3} /></Box>
-                   <Box><Text fontSize='xl' color='#2D3748' fontWeight='bold'>2,088,364 lbs</Text></Box>
-                   <Box><Text marginTop={'-1vh'} fontSize='sm'>pet food collected</Text></Box>
+                  <Stack alignItems="center" direction="column">
+                    <Box marginTop="3.5vh">
+                      {' '}
+                      <Image boxSize="8vh" src={ICON3} />
+                    </Box>
+                    <Box>
+                      <Text fontSize="xl" color="#2D3748" fontWeight="bold">
+                        2,088,364 lbs
+                      </Text>
+                    </Box>
+                    <Box>
+                      <Text marginTop={'-1vh'} fontSize="sm">
+                        pet food collected
+                      </Text>
+                    </Box>
                   </Stack>
                 </Box>
                 <Box
-                width='25vh'
+                  width="25vh"
                   borderRadius="lg"
                   borderWidth="2px"
                   borderColor="#E2E8F0"
@@ -204,10 +251,21 @@ const BusinessFormMaster = ({setFormOpen}) => {
                   height="22vh"
                   marginLeft={'2vh'}
                 >
-                  <Stack alignItems='center' direction='column'>
-                    <Box marginTop='3.5vh'> <Image boxSize='8vh' src={ICON4} /></Box>
-                   <Box><Text fontSize='xl' color='#2D3748' fontWeight='bold'>194</Text></Box>
-                   <Box><Text marginTop={'-1vh'} fontSize='sm'>donation sites nationwide</Text></Box>
+                  <Stack alignItems="center" direction="column">
+                    <Box marginTop="3.5vh">
+                      {' '}
+                      <Image boxSize="8vh" src={ICON4} />
+                    </Box>
+                    <Box>
+                      <Text fontSize="xl" color="#2D3748" fontWeight="bold">
+                        194
+                      </Text>
+                    </Box>
+                    <Box>
+                      <Text marginTop={'-1vh'} fontSize="sm">
+                        donation sites nationwide
+                      </Text>
+                    </Box>
                   </Stack>
                 </Box>
               </SimpleGrid>

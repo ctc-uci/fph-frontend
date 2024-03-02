@@ -1,124 +1,150 @@
-import { useState } from 'react';
 import propTypes from 'prop-types';
-import { Box, FormControl, FormLabel, Input, Button, Flex, Text, HStack, Image, Stack, SimpleGrid } from '@chakra-ui/react';
+import {
+  Box,
+  FormControl,
+  FormLabel,
+  Input,
+  Button,
+  Flex,
+  Text,
+  HStack,
+  Image,
+  Stack,
+  SimpleGrid,
+} from '@chakra-ui/react';
 import FPH_LOGO from './fph_logo.png';
 
-const SecondForm = ({ handleChange, prevStep, nextStep }) => {
-  const [businessAddress1, changeBusinessAddress1] = useState('');
-  const [businessAddress2, changeBusinessAddress2] = useState('');
-  const [city, changeCity] = useState('');
-  const [state, changeState] = useState('');
-  const [postalCode, changePostalCode] = useState('');
-  const [country, changeCountry] = useState('');
-
+const SecondForm = ({ formData, handleChange, prevStep, nextStep }) => {
   return (
     <Box p={5}>
-      <Image boxSize='8vh' src={FPH_LOGO} />
-      <Text fontSize="xl" as="b" color="#359797">
+      <Image boxSize="8vh" src={FPH_LOGO} />
+      <Text paddingLeft="10vh" marginTop="5vh" fontSize="3xl" fontWeight="bold" color="#359797">
         Become a Donation Site
       </Text>
-      <Text fontSize="sm">To get started, fill out the form below.</Text>
-      <Stack direction='column'>
-      <Box>
-      <Flex direction="column" align="stretch" gap={5}>
-        <Flex direction="column" gap={4}>
-          <Box marginTop='3vh' padding='1vh' textAlign="left" >
-            <Text fontSize="2xl">Business Address</Text>
-          </Box>
-          <FormControl padding='1vh' marginTop='-2vh' id="business-address-1">
-            <FormLabel>Address Line 1</FormLabel>
-            <Input
-              name="businessAddress1"
-              type="text"
-              value={businessAddress1}
-              onChange={e => {
-                changeBusinessAddress1(e.target.value);
-                handleChange(e);
-              }}
-            />
-          </FormControl>
-          <Flex gap={4}>
-            <FormControl marginTop='-2vh' padding='1vh' id="business-address-2" flex="1">
-              <FormLabel>Address Line 2</FormLabel>
-              <Input
-                name="businessAddress2"
-                type="text"
-                value={businessAddress2}
-                onChange={e => {
-                  changeBusinessAddress2(e.target.value);
-                  handleChange(e);
-                }}
-              />
-            </FormControl>
+      <Text paddingLeft="10vh" fontSize="sm">
+        To get started, fill out the form below.
+      </Text>
+      <Stack direction="column">
+        <Box>
+          <Flex direction="column" align="stretch" gap={5}>
+            <Flex direction="column" gap={4}>
+              <Box paddingLeft="10vh" marginTop="8vh" textAlign="left">
+                <Text fontSize="2xl">Business Address</Text>
+              </Box>
+              <FormControl paddingLeft="10vh" paddingRight="10vh" id="business-address-1">
+                <FormLabel fontSize="small">Address Line 1</FormLabel>
+                <Input
+                  name="businessAddress1"
+                  type="text"
+                  value={formData['businessAddress1']}
+                  onChange={e => {
+                    handleChange(e);
+                  }}
+                />
+              </FormControl>
+              <Flex gap={4}>
+                <FormControl
+                  paddingLeft="10vh"
+                  paddingRight="10vh"
+                  id="business-address-2"
+                  flex="1"
+                >
+                  <FormLabel fontSize="small">Address Line 2</FormLabel>
+                  <Input
+                    name="businessAddress2"
+                    type="text"
+                    value={formData['businessAddress2']}
+                    onChange={e => {
+                      handleChange(e);
+                    }}
+                  />
+                </FormControl>
+              </Flex>
             </Flex>
           </Flex>
-          </Flex>
-      </Box>
-      <Box>
-        <SimpleGrid rows='2' columns='2'>
-            <FormControl padding='1vh' id="city" flex="1">
-              <FormLabel>City</FormLabel>
+        </Box>
+        <Box>
+          <SimpleGrid rows="2" columns="2">
+            <FormControl paddingLeft="10vh" id="city" flex="1">
+              <FormLabel fontSize="small">City</FormLabel>
               <Input
+                width="95%"
                 name="city"
                 type="text"
-                value={city}
+                value={formData['city']}
                 onChange={e => {
-                  changeCity(e.target.value);
                   handleChange(e);
                 }}
               />
             </FormControl>
-            <FormControl padding='1vh' id="state" flex="1">
-              <FormLabel>State</FormLabel>
+            <FormControl paddingRight="10vh" id="state" flex="1">
+              <FormLabel fontSize="small">State</FormLabel>
               <Input
+                width="95%"
                 name="state"
                 type="text"
-                value={state}
+                value={formData['state']}
                 onChange={e => {
-                  changeState(e.target.value);
                   handleChange(e);
                 }}
               />
             </FormControl>
-            <FormControl padding='1vh' id="postal-code" flex="1">
-              <FormLabel>Postal Code</FormLabel>
+            <FormControl paddingLeft="10vh" id="postal-code" flex="1">
+              <FormLabel marginTop="2vh" fontSize="small">
+                Postal Code
+              </FormLabel>
               <Input
+                width="95%"
                 name="postalCode"
                 type="text"
-                value={postalCode}
+                value={formData['postalCode']}
                 onChange={e => {
-                  changePostalCode(e.target.value);
                   handleChange(e);
                 }}
               />
             </FormControl>
-            <FormControl padding='1vh' id="country" flex="1">
-              <FormLabel>Country</FormLabel>
+            <FormControl paddingRight="10vh" id="country" flex="1">
+              <FormLabel fontSize="small" marginTop="2vh">
+                Country
+              </FormLabel>
               <Input
+                width="95%"
                 name="country"
                 type="text"
-                value={country}
+                value={formData['country']}
                 onChange={e => {
-                  changeCountry(e.target.value);
                   handleChange(e);
                 }}
               />
             </FormControl>
-            </SimpleGrid>
+          </SimpleGrid>
 
-        <HStack marignTop='1vh' padding='1vh' width='auto' justifyContent={'space-between'}>
-          {' '}
-          <Box>
-            <Button color='#319795' variant='outline' width='9vh' type="submit" onClick={prevStep} colorScheme="blue">
-              Back
-            </Button>
-          </Box>{' '}
-          <Box>
-            <Button background='#319795' width='9vh' type="submit" onClick={nextStep} colorScheme="blue">
-              Next
-            </Button>
-          </Box>
-        </HStack>
+          <HStack marginTop="2vh" width="auto" justifyContent={'space-between'}>
+            {' '}
+            <Box paddingLeft="10vh">
+              <Button
+                color="#319795"
+                variant="outline"
+                width="9vh"
+                type="submit"
+                onClick={prevStep}
+                colorScheme="blue"
+              >
+                Back
+              </Button>
+            </Box>{' '}
+            <Box paddingRight="10vh">
+              <Button
+                background="#319795"
+                width="9vh"
+                type="submit"
+                onClick={nextStep}
+                colorScheme="blue"
+              >
+                Next
+              </Button>
+            </Box>
+          </HStack>
         </Box>
       </Stack>
     </Box>
@@ -129,6 +155,7 @@ SecondForm.propTypes = {
   handleChange: propTypes.func.isRequired,
   nextStep: propTypes.func.isRequired,
   prevStep: propTypes.func.isRequired,
+  formData: propTypes.func.isRequired,
 };
 
 export default SecondForm;
