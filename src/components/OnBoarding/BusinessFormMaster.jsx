@@ -157,7 +157,7 @@ const BusinessFormMaster = ({ setFormOpen }) => {
               <Stack flex="100%" bg={'#F9F8F7'} height={'100vh'} justifyContent="center">
                 <Box>
                   <Flex width="100%" justifyContent="center" alignItems="center">
-                    <Text fontSize="3xl" fontWeight="bold" color="#359797" marginTop={'20vh'}>
+                    <Text fontSize="3xl" fontWeight="bold" color="#359797">
                       Make an Impact
                     </Text>
                   </Flex>

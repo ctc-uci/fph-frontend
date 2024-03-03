@@ -18,7 +18,7 @@ const SecondForm = ({ formData, handleChange, prevStep, nextStep }) => {
   return (
     <Box p={5}>
       <Image boxSize="8vh" src={FPH_LOGO} />
-      <Text paddingLeft="10vh" marginTop="5vh" fontSize="3xl" fontWeight="bold" color="#359797">
+      <Text paddingLeft="10vh" marginTop="10vh" fontSize="3xl" fontWeight="bold" color="#359797">
         Become a Donation Site
       </Text>
       <Text paddingLeft="10vh" fontSize="sm">
