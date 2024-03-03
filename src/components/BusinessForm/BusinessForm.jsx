@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import {useNavigate} from 'react-router-dom';
 import {
   Box,
   FormControl,
@@ -13,6 +14,7 @@ import {
   Text,
   UnorderedList,
   ListItem,
+  useToast
 } from '@chakra-ui/react';
 import { useBackend } from '../../contexts/BackendContext';
 import RegisterSuccessPage from '../RegisterBusinessForm/RegisterSuccessPage';
@@ -88,7 +90,8 @@ const BusinessForm = ({ pending, pendingData }) => {
   const [email, setEmail] = useState('');
   const [howHeard, setHowHeard] = useState('');
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
-
+  const navigate = useNavigate()
+  const toast = useToast();
   const [businessHours, setBusinessHours] = useState(
     daysOfWeek.reduce(
       (acc, day) => ({
@@ -193,6 +196,50 @@ const BusinessForm = ({ pending, pendingData }) => {
   if (!pending && registrationSuccess) {
     return <RegisterSuccessPage />;
   }
+  
+  const handleApprove = async () => {
+    const updatedData = {
+      ...pendingData,
+      status: 'Active',
+  };
+  console.log({businessId: pendingData.id});
+  try {
+    await backend.put(`/business/${pendingData.id}`, updatedData);
+    setRegistrationSuccess(true);
+    navigate('/AdminDashboard');
+    toast({
+      title: 'Business form has been approved',
+      status: 'warning',
+      duration: 3000,
+      isClosable: true,
+      position: 'bottom-right',
+    });
+  } catch (error) {
+    console.log('Error in approving business: error')
+  }
+};
+
+const handleDeny = async () => {
+  const updatedData = {
+    ...pendingData,
+    status: 'Denied',
+};
+console.log({businessId: pendingData.id});
+try {
+  await backend.put(`/business/${pendingData.id}`, updatedData);
+  setRegistrationSuccess(true);
+  navigate('/AdminDashboard');
+  toast({
+    title: 'Business form has been denied',
+    status: 'warning',
+    duration: 3000,
+    isClosable: true,
+    position: 'bottom-right',
+  });
+} catch (error) {
+  console.error('Error in approving business:', error);
+}
+};
 
   const fillOutPendingData = () => {
     console.log('Pending Check', pendingData);
@@ -400,10 +447,10 @@ const BusinessForm = ({ pending, pendingData }) => {
             </FormControl>
             {pending ? (
               <>
-                <Button onClick={null} colorScheme="blue">
+                <Button onClick= {() => handleApprove()} colorScheme="blue">
                   Approve
                 </Button>
-                <Button onClick={null} colorScheme="blue">
+                <Button onClick={() => handleDeny()} colorScheme="blue">
                   Deny
                 </Button>
               </>
