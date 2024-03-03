@@ -4,7 +4,7 @@ import SecondForm from './SecondForm';
 import ThirdForm from './ThirdForm';
 import FourthForm from './FourthForm';
 import { useBackend } from '../../contexts/BackendContext';
-import { Box, Text, SimpleGrid, Stack, Image } from '@chakra-ui/react';
+import { Box, Text, SimpleGrid, Stack, Image, Flex } from '@chakra-ui/react';
 import propTypes from 'prop-types';
 import ICON1 from './icon1.png';
 import ICON2 from './icon2.png';
@@ -152,128 +152,134 @@ const BusinessFormMaster = ({ setFormOpen }) => {
     <div>
       {step < 4 ? (
         <>
-          <SimpleGrid columns={2}>
-            <Box bg={'#F9F8F7'} height={'100vh'}>
-              <Text
-                fontSize="3xl"
-                fontWeight="bold"
-                color="#359797"
-                marginTop={'20vh'}
-                marginLeft={'34.5vh'}
-                justifyContent={'center'}
-              >
-                Make an Impact
-              </Text>
-              <SimpleGrid columns={2} flexDirection={'column'} spacing={'6vh'} marginTop={'5vh'}>
-                <Box
-                  width="25vh"
-                  borderRadius="lg"
-                  borderWidth="2px"
-                  display={'flex'}
-                  bg="white"
-                  height="22vh"
-                  marginLeft={'18vh'}
-                  justifyContent={'center'}
-                >
-                  <Stack alignItems="center" direction="column">
-                    <Box marginTop="3.5vh">
-                      {' '}
-                      <Image boxSize="8vh" src={ICON1} />
-                    </Box>
-                    <Box>
-                      <Text fontSize="xl" color="#2D3748" fontWeight="bold">
-                        28,344
-                      </Text>
-                    </Box>
-                    <Box>
-                      <Text marginTop={'-1vh'} fontSize="sm">
-                        pets helped
-                      </Text>
-                    </Box>
-                  </Stack>
+          <Box>
+            <SimpleGrid columns={2}>
+              <Stack flex="100%" bg={'#F9F8F7'} height={'100vh'} justifyContent="center">
+                <Box>
+                  <Flex width="100%" justifyContent="center" alignItems="center">
+                    <Text fontSize="3xl" fontWeight="bold" color="#359797" marginTop={'20vh'}>
+                      Make an Impact
+                    </Text>
+                  </Flex>
                 </Box>
-                <Box
-                  width="25vh"
-                  borderRadius="lg"
-                  borderWidth="2px"
-                  bg="white"
-                  height="22vh"
-                  marginLeft={'2vh'}
-                >
-                  <Stack alignItems="center" direction="column">
-                    <Box marginTop="3.5vh">
-                      {' '}
-                      <Image boxSize="8vh" src={ICON2} />
+                <Box>
+                  <SimpleGrid
+                    columns={2}
+                    flexDirection={'column'}
+                    spacing={'6vh'}
+                    marginTop={'5vh'}
+                  >
+                    <Box
+                      width="25vh"
+                      borderRadius="lg"
+                      borderWidth="2px"
+                      display={'flex'}
+                      bg="white"
+                      height="22vh"
+                      marginLeft={'18vh'}
+                      justifyContent={'center'}
+                    >
+                      <Stack alignItems="center" direction="column">
+                        <Box marginTop="3.5vh">
+                          {' '}
+                          <Image boxSize="8vh" src={ICON1} />
+                        </Box>
+                        <Box>
+                          <Text fontSize="xl" color="#2D3748" fontWeight="bold">
+                            28,344
+                          </Text>
+                        </Box>
+                        <Box>
+                          <Text marginTop={'-1vh'} fontSize="sm">
+                            pets helped
+                          </Text>
+                        </Box>
+                      </Stack>
                     </Box>
-                    <Box>
-                      <Text fontSize="xl" color="#2D3748" fontWeight="bold">
-                        $4,685,177
-                      </Text>
+                    <Box
+                      width="25vh"
+                      borderRadius="lg"
+                      borderWidth="2px"
+                      bg="white"
+                      height="22vh"
+                      marginLeft={'2vh'}
+                    >
+                      <Stack alignItems="center" direction="column">
+                        <Box marginTop="3.5vh">
+                          {' '}
+                          <Image boxSize="8vh" src={ICON2} />
+                        </Box>
+                        <Box>
+                          <Text fontSize="xl" color="#2D3748" fontWeight="bold">
+                            $4,685,177
+                          </Text>
+                        </Box>
+                        <Box width="15vh">
+                          <Text textAlign="center" marginTop={'-1vh'} fontSize="sm">
+                            to veterinary care, pet food, & crates
+                          </Text>
+                        </Box>
+                      </Stack>
                     </Box>
-                    <Box width="15vh">
-                      <Text textAlign="center" marginTop={'-1vh'} fontSize="sm">
-                        to veterinary care, pet food, & crates
-                      </Text>
+                    <Box
+                      width="25vh"
+                      borderRadius="lg"
+                      borderWidth="2px"
+                      bg="white"
+                      height="22vh"
+                      marginLeft={'18vh'}
+                    >
+                      <Stack alignItems="center" direction="column">
+                        <Box marginTop="3.5vh">
+                          {' '}
+                          <Image boxSize="8vh" src={ICON3} />
+                        </Box>
+                        <Box>
+                          <Text fontSize="xl" color="#2D3748" fontWeight="bold">
+                            2,088,364 lbs
+                          </Text>
+                        </Box>
+                        <Box>
+                          <Text marginTop={'-1vh'} fontSize="sm">
+                            pet food collected
+                          </Text>
+                        </Box>
+                      </Stack>
                     </Box>
-                  </Stack>
+                    <Box
+                      width="25vh"
+                      borderRadius="lg"
+                      borderWidth="2px"
+                      borderColor="#E2E8F0"
+                      bg="white"
+                      height="22vh"
+                      marginLeft={'2vh'}
+                    >
+                      <Stack alignItems="center" direction="column">
+                        <Box marginTop="3.5vh">
+                          {' '}
+                          <Image boxSize="8vh" src={ICON4} />
+                        </Box>
+                        <Box>
+                          <Text fontSize="xl" color="#2D3748" fontWeight="bold">
+                            194
+                          </Text>
+                        </Box>
+                        <Box>
+                          <Text marginTop={'-1vh'} fontSize="sm">
+                            donation sites nationwide
+                          </Text>
+                        </Box>
+                      </Stack>
+                    </Box>
+                  </SimpleGrid>
                 </Box>
-                <Box
-                  width="25vh"
-                  borderRadius="lg"
-                  borderWidth="2px"
-                  bg="white"
-                  height="22vh"
-                  marginLeft={'18vh'}
-                >
-                  <Stack alignItems="center" direction="column">
-                    <Box marginTop="3.5vh">
-                      {' '}
-                      <Image boxSize="8vh" src={ICON3} />
-                    </Box>
-                    <Box>
-                      <Text fontSize="xl" color="#2D3748" fontWeight="bold">
-                        2,088,364 lbs
-                      </Text>
-                    </Box>
-                    <Box>
-                      <Text marginTop={'-1vh'} fontSize="sm">
-                        pet food collected
-                      </Text>
-                    </Box>
-                  </Stack>
-                </Box>
-                <Box
-                  width="25vh"
-                  borderRadius="lg"
-                  borderWidth="2px"
-                  borderColor="#E2E8F0"
-                  bg="white"
-                  height="22vh"
-                  marginLeft={'2vh'}
-                >
-                  <Stack alignItems="center" direction="column">
-                    <Box marginTop="3.5vh">
-                      {' '}
-                      <Image boxSize="8vh" src={ICON4} />
-                    </Box>
-                    <Box>
-                      <Text fontSize="xl" color="#2D3748" fontWeight="bold">
-                        194
-                      </Text>
-                    </Box>
-                    <Box>
-                      <Text marginTop={'-1vh'} fontSize="sm">
-                        donation sites nationwide
-                      </Text>
-                    </Box>
-                  </Stack>
-                </Box>
-              </SimpleGrid>
-            </Box>
-            <Box>
-              <div>{stepsComponents[step]}</div>
-            </Box>
-          </SimpleGrid>
+              </Stack>
+              <Box>
+                <div>{stepsComponents[step]}</div>
+              </Box>
+            </SimpleGrid>
+          </Box>
         </>
       ) : (
         <>{stepsComponents[3]}</>
