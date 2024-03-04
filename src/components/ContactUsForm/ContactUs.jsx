@@ -1,6 +1,7 @@
 import { useBackend } from '../../contexts/BackendContext';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 import {
   Flex,
   Text,
@@ -11,7 +12,6 @@ import {
   HStack,
   Card,
   Spacer,
-  Link,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -30,7 +30,7 @@ import {
 const ContactUs = () => {
   const business_ID = 0;
   const { backend } = useBackend();
-  // const [name, setName] = useState('business?'); // name of business
+  const navigate = useNavigate();
   const [text, setText] = useState('');
   const [checkedItems, setCheckedItems] = useState([0, 0, 0, 0, 0, 0, 0]);
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -42,14 +42,6 @@ const ContactUs = () => {
     timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }),
     been_dismissed: false,
   };
-
-  // const handleCheck = (index, newValue) => {
-  //   setCheckedItems(checkedItems => {
-  //     const newArray = [...checkedItems];
-  //     newArray[index] = newValue;
-  //     return newArray;
-  //   });
-  // };
 
   const ConfirmationDialog = ({ isOpen, onClose }) => (
     <Modal size="5xl" isOpen={isOpen} onClose={onClose}>
@@ -70,9 +62,8 @@ const ContactUs = () => {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+            <Button colorScheme="blue" mr={3} onClick={handleCancelButtonClick}>
               Back to Home
-              <Link to={'/BusinessDonationTrackingForm'} />
             </Button>
           </ModalFooter>
         </Stack>
@@ -93,8 +84,7 @@ const ContactUs = () => {
       timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }),
       been_dismissed: false,
     };
-    const result = await backend.post('/notification/', updatedFormData);
-    console.log(result);
+    await backend.post('/notification/', updatedFormData);
     setShowConfirmation(true);
   };
 
@@ -104,14 +94,12 @@ const ContactUs = () => {
     // Update the state with the new array
     setCheckedItems(checkedItems);
     isFormFilled();
-    setIsFormValid(checkedItems.some(value => value !== 0) && text.length > 0);
-    console.log(checkedItems);
+    setIsFormValid(checkedItems.some(value => value !== 0) || text.length > 0);
   };
 
   const isFormFilled = () => {
     // Check if all form fields are filled
-    console.log(checkedItems.some(value => value !== 0) && text.length > 0);
-    return checkedItems.some(value => value !== 0) && text.length > 0;
+    return checkedItems.some(value => value !== 0) || text.length > 0;
   };
 
   const setMessage = text => {
@@ -134,7 +122,7 @@ const ContactUs = () => {
     const newText = e.target.value;
     setText(newText);
     isFormFilled();
-    setIsFormValid(checkedItems.some(value => value !== 0) && text.length > 0);
+    setIsFormValid(checkedItems.some(value => value !== 0) || text.length > 0);
   };
 
   const buttonStyles = {
@@ -144,6 +132,10 @@ const ContactUs = () => {
           backgroundColor: 'blackAlpha.300',
           color: 'white',
         }),
+  };
+
+  const handleCancelButtonClick = () => {
+    navigate('/BusinessDashboard');
   };
 
   return (
@@ -297,11 +289,20 @@ const ContactUs = () => {
               </Box>
               <Spacer p={'6%'}></Spacer>
               <HStack justify="flex-end" marginEnd={'5%'}>
-                <Button colorScheme="teal" variant="outline" width="130px">
+                <Button
+                  colorScheme="teal"
+                  variant="outline"
+                  width="130px"
+                  onClick={handleCancelButtonClick}
+                >
                   Cancel
-                  <Link to="/BusinessDashboard"></Link>
                 </Button>
-                <Button {...buttonStyles} disabled={isFormValid} width="130px" onClick={SubmitForm}>
+                <Button
+                  {...buttonStyles}
+                  isDisabled={!isFormValid}
+                  width="130px"
+                  onClick={SubmitForm}
+                >
                   Send
                 </Button>
               </HStack>
@@ -313,21 +314,6 @@ const ContactUs = () => {
             />
           </Box>
         </Box>
-        {/* <Box>
-          Feeding Pets of the Homeless Information
-          <Box>
-            <Text>Address</Text>
-            <Text>123 Address Blvd.</Text>
-          </Box>
-          <Box>
-            <Text>Phone</Text>
-            <Text>(123) 456-7890</Text>
-          </Box>
-          <Box>
-            <Text>Email</Text>
-            <Text>kaicenatGYATT@gyattmail.com</Text>
-          </Box>
-        </Box> */}
       </Flex>
     </>
   );
