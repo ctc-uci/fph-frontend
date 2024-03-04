@@ -32,13 +32,13 @@ const DonationItemsTable = () => {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <DonationItems category="all"/>
+            <DonationItems category="all" />
           </TabPanel>
           <TabPanel>
-            <DonationItems category="Food"/>
+            <DonationItems category="Food" />
           </TabPanel>
           <TabPanel>
-            <DonationItems category="Misc."/>
+            <DonationItems category="Misc." />
           </TabPanel>
         </TabPanels>
       </Tabs>
@@ -57,103 +57,103 @@ const DonationItems = ({ category }) => {
 
   const TABLE_HEADERS = ['Id', 'Name', 'Quantity Type', 'Price', 'Category'];
 
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     try {
-  //       const response = await backend.get(`/value/filter/${category}`);
-  //       setData(response.data);
-  //       console.log(response.data);
-  //     } catch (error) {
-  //       console.error('Error getting donation items:', error);
-  //       setData([]);
-  //     }
-  //   };
-  //   getData();
-  // }, [backend]);
-
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        loadInfo();
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-    loadData();
-  }, [backend, category, currentPageNum, data]);
+    loadInfo();
+  }, [currentPageNum, category]);
 
   const loadInfo = async () => {
-    changePage();
-    const itemsNumResponse = await backend.get(`/value/totalValues`);
+    // Loads pages
+    try {
+      const formResponse = await backend.get(
+        `/value/paginate?itemsLimit=10&pageNum=${currentPageNum}&category=${category}`,
+      );
+      setData(formResponse.data);
+    } catch (error) {
+      console.log(error.message);
+    }
+
+    const itemsNumResponse = await backend.get(`/value/totalValues?category=${category}`);
     setCurrentItemNum(itemsNumResponse.data[0]['count']);
     setPageLimit(Math.ceil(itemsNumResponse.data[0]['count'] / 10));
   };
 
-  const changePage = async () => {
-    const formResponse = await backend.get(
-      `/value/?itemsLimit=10&pageNum=${currentPageNum}`,
-    );
-    setData(formResponse.data);
+  const deleteItem = async item => {
+    await backend.delete(`/value/${item['item_id']}`);
+    loadInfo();
   };
-
-  const deleteItem = async (item) => {
-    await backend.delete(`/value/${item["item_id"]}`);
-  };
-
 
   return (
     <>
-    <Button onClick={onOpen}>Add Item<AddIcon/></Button>
-    <DonationsModal isOpen={isOpen} onClose={onClose} setData={setData} currentPageNum={currentPageNum}/>
-    <Table variant="striped">
-      <Thead>
-        <Tr>
-          {TABLE_HEADERS.map((header, index) => (
-            <Th key={index}>{header}</Th>
-          ))}
-        </Tr>
-      </Thead>
-      <Tbody>
-        {data.map((item, index) => (
-          <Tr key={index}>
-            {Object.keys(item).map(key => (
-              <Td key={key}>
-                {typeof item[key] === 'boolean' ? (item[key] ? 'True' : 'False') : item[key]}
-              </Td>
+      <DonationsModal
+        isOpen={isOpen}
+        onClose={onClose}
+        data={selectedItem}
+        setCurrentPageNum={setCurrentPageNum}
+        loadInfo={loadInfo}
+      />
+      <Button onClick={onOpen}>
+        Add Item
+        <AddIcon />
+      </Button>
+      <Table variant="striped">
+        <Thead>
+          <Tr>
+            {TABLE_HEADERS.map((header, index) => (
+              <Th key={index}>{header}</Th>
             ))}
-            <Td>
-              {/* TODO */}
-              {/* When we onClick EditIcon, setData(item), and then set isOpen to True to open the modal */}
-              <Button onClick={() => {onOpen(); setSelectedItem(item);}}><EditIcon/></Button>
-              <Button onClick={() => {deleteItem(item);}}><DeleteIcon color="red"/></Button>
-            </Td>
           </Tr>
-        ))}
-      </Tbody>
-    </Table>
-    <DonationsModal isOpen={isOpen} onClose={onClose} data={selectedItem}/>
-    <Box>
-    {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentItemNum)} of{' '}
-    {currentItemNum}
-    </Box>
-    <IconButton
-      aria-label="Back button"
-      isDisabled={currentPageNum <= 1}
-      icon={<ChevronLeftIcon />}
-      onClick={() => setCurrentPageNum(currentPageNum - 1)}
-    />
-    <IconButton
-      aria-label="Next button"
-      isDisabled={currentPageNum >= pageLimit}
-      icon={<ChevronRightIcon />}
-      onClick={() => setCurrentPageNum(currentPageNum + 1)}
-    />
+        </Thead>
+        <Tbody>
+          {data.map((item, index) => (
+            <Tr key={index}>
+              {Object.keys(item).map(key => (
+                <Td key={key}>
+                  {typeof item[key] === 'boolean' ? (item[key] ? 'True' : 'False') : item[key]}
+                </Td>
+              ))}
+              <Td>
+                <Button
+                  onClick={() => {
+                    onOpen();
+                    setSelectedItem(item);
+                  }}
+                >
+                  <EditIcon />
+                </Button>
+                <Button
+                  onClick={() => {
+                    deleteItem(item);
+                  }}
+                >
+                  <DeleteIcon color="red" />
+                </Button>
+              </Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
+      <Box>
+        {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentItemNum)} of{' '}
+        {currentItemNum}
+      </Box>
+      <IconButton
+        aria-label="Back button"
+        isDisabled={currentPageNum <= 1}
+        icon={<ChevronLeftIcon />}
+        onClick={() => setCurrentPageNum(currentPageNum - 1)}
+      />
+      <IconButton
+        aria-label="Next button"
+        isDisabled={currentPageNum >= pageLimit}
+        icon={<ChevronRightIcon />}
+        onClick={() => setCurrentPageNum(currentPageNum + 1)}
+      />
     </>
   );
 };
 
 DonationItems.propTypes = {
-  category: PropTypes.string
+  category: PropTypes.string.isRequired,
 };
 
 export default DonationItemsTable;

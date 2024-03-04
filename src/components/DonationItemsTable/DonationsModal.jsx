@@ -1,15 +1,31 @@
 import { useEffect, useState } from 'react';
 import { useBackend } from '../../contexts/BackendContext';
 import PropTypes from 'prop-types';
-import { Input, Text, Modal, ModalContent, ModalHeader, ModalBody, ModalOverlay, ModalFooter, IconButton, Button} from '@chakra-ui/react';
-import {CloseIcon} from '@chakra-ui/icons';
+import {
+  Input,
+  Text,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalOverlay,
+  ModalFooter,
+  IconButton,
+  Button,
+  Alert,
+  AlertTitle,
+  AlertDescription,
+} from '@chakra-ui/react';
+import { CloseIcon } from '@chakra-ui/icons';
 
-const DonationsModal = ({ isOpen, onClose, data, setData, currentPageNum }) => {
+// TODO: Refactor states such that its a nested state
+const DonationsModal = ({ isOpen, onClose, data, setCurrentPageNum, loadInfo }) => {
   const { backend } = useBackend();
   const [categoryData, setCategoryData] = useState('');
   const [typeData, setTypeData] = useState('');
   const [weightData, setWeightData] = useState('');
   const [priceData, setPriceData] = useState('');
+  const [alertVisible, setAlertVisible] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
@@ -27,36 +43,47 @@ const DonationsModal = ({ isOpen, onClose, data, setData, currentPageNum }) => {
     getData();
   }, [isOpen]);
 
+  const closeAndReset = () => {
+    setTypeData('');
+    setWeightData('');
+    setPriceData('');
+    setCategoryData('');
+    setAlertVisible(false);
+    onClose();
+    setCurrentPageNum(1);
+    loadInfo();
+  };
+
   const submitForm = async event => {
     event.preventDefault();
-    if (!data){
-      await backend.post(`/value`, {
-        'itemName': typeData,
-        'quantityType': weightData,
-        'price': priceData,
-        'category': categoryData,
-      });
-    } else{
-      await backend.put(`/value/${data["item_id"]}`, {
-        'itemName': typeData,
-        'quantityType': weightData,
-        'price': priceData,
-        'category': categoryData,
-      });
+
+    const body = {
+      itemName: typeData,
+      quantityType: weightData,
+      price: priceData,
+      category: categoryData,
+    };
+
+    if (typeData == '' || weightData == '' || priceData == '' || categoryData == '') {
+      setAlertVisible(true);
+      return;
+    } else {
+      if (data == null) {
+        await backend.post(`/value`, body);
+      } else {
+        await backend.put(`/value/${data['item_id']}`, body);
+      }
+      closeAndReset();
     }
-    const dataResponse = backend.get(
-      `/value/?itemsLimit=10&pageNum=${currentPageNum}`,
-    );
-    setData(dataResponse.data);
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} size={'md'}>
       <ModalOverlay>
         <ModalContent>
           <ModalHeader>
             {data ? 'Edit Item' : 'Add Item'}
-            <IconButton aria-label="Close" icon ={<CloseIcon/>} onClick={onClose}/>
+            <IconButton aria-label="Close" icon={<CloseIcon />} onClick={onClose} />
           </ModalHeader>
           <ModalBody>
             <Text>Category</Text>
@@ -96,9 +123,21 @@ const DonationsModal = ({ isOpen, onClose, data, setData, currentPageNum }) => {
               onChange={e => setPriceData(e.target.value)}
             />
           </ModalBody>
+          {alertVisible && (
+            <Alert>
+              <AlertTitle>Missing necessary data!</AlertTitle>
+              <AlertDescription>Please make sure all textboxes are filed out</AlertDescription>
+            </Alert>
+          )}
           <ModalFooter justifyContent="flex-end">
             <Button onClick={onClose}>Cancel</Button>
-            <Button onClick={(event) => {submitForm(event); onClose();}}>Save</Button>
+            <Button
+              onClick={event => {
+                submitForm(event);
+              }}
+            >
+              Save
+            </Button>
           </ModalFooter>
         </ModalContent>
       </ModalOverlay>
@@ -111,7 +150,8 @@ DonationsModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   data: PropTypes.object,
   setData: PropTypes.func,
-  currentPageNum: PropTypes.int
+  setCurrentPageNum: PropTypes.func,
+  loadInfo: PropTypes.func,
 };
 
 export default DonationsModal;
