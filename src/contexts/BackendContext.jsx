@@ -4,7 +4,7 @@ import { createContext, useContext } from 'react';
 // import { useNavigate } from 'react-router-dom';
 // import { useAuth } from './AuthContext';
 
-const baseURL = 'http://localhost:3001/';
+const baseURL = import.meta.env.VITE_BACKEND_HOSTNAME;
 
 const BackendContext = createContext();
 const useBackend = () => useContext(BackendContext);
