@@ -113,7 +113,14 @@ const ContactUs = () => {
       'Bin Decals',
       'DS Decals',
     ];
-    const preMessage = `Business is requesting: \n`; // business name... hard-coded right now
+    const preMessage = `Business is requesting: 
+    ${checkedThingies[0]}: ${checkedItems[0]}
+    ${checkedThingies[1]}: ${checkedItems[1]}
+    ${checkedThingies[2]}: ${checkedItems[2]}
+    ${checkedThingies[3]}: ${checkedItems[3]}
+    ${checkedThingies[4]}: ${checkedItems[4]}
+    ${checkedThingies[5]}: ${checkedItems[5]}
+    ${checkedThingies[6]}: ${checkedItems[6]}\n`; // business name... hard-coded right now
     const updatedMessage = checkedThingies.filter((_, index) => checkedItems[index]).join('\n-');
     return `${preMessage}-${updatedMessage}\nNotes:\n${textCopy}`;
   };
