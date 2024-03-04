@@ -36,6 +36,7 @@ const BusinessFormMaster = ({ setFormOpen }) => {
     e.preventDefault();
 
     const DUMMY_STRING = 'STRING';
+    const PENDING_STATUS = 'Pending';
     const DUMMY_DATE = new Date().toISOString().split('T')[0];
     const DUMMY_BOOL = false;
 
@@ -57,11 +58,11 @@ const BusinessFormMaster = ({ setFormOpen }) => {
       backupPhone: DUMMY_STRING,
       comments: DUMMY_STRING,
       faxPhone: DUMMY_STRING,
-      onboardingStatus: DUMMY_STRING,
+      onboardingStatus: PENDING_STATUS,
       joinDate: DUMMY_DATE,
       inputTypeStatus: DUMMY_STRING,
       vendorType: DUMMY_STRING,
-      status: DUMMY_STRING,
+      status: PENDING_STATUS,
       petsOfTheHomelessDiscount: DUMMY_BOOL,
       updatedBy: DUMMY_STRING,
       updatedDateTime: DUMMY_DATE,
@@ -138,6 +139,7 @@ const BusinessFormMaster = ({ setFormOpen }) => {
       nextStep={nextStep}
       prevStep={prevStep}
       handleSubmit={handleSubmit}
+      setFormData={setFormData}
     />,
     <FourthForm
       key={3}
@@ -150,7 +152,7 @@ const BusinessFormMaster = ({ setFormOpen }) => {
 
   return (
     <div>
-      {step < 4 ? (
+      {step < 3 ? (
         <>
           <Box>
             <SimpleGrid columns={2}>

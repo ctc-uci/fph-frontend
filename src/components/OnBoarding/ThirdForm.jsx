@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import propTypes from 'prop-types';
 import {
   Modal,
@@ -34,7 +34,7 @@ import {
 } from '@chakra-ui/react';
 import FPH_LOGO from './fph_logo.png';
 
-const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit }) => {
+const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit, setFormData }) => {
   const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   const [businessHours, changeBusinessHours] = useState(
@@ -49,6 +49,9 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit }) => {
       {},
     ),
   );
+  useEffect(() => {
+    setFormData({ ...formData, businessHours });
+  }, [businessHours]);
 
   const TimeInput = ({ label, value, onChange, isReadOnly }) => (
     <Stack direction="row" align="center">
@@ -162,7 +165,7 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit }) => {
                   grant Feeding Pets of the Homeless the right to use photographs of me at events
                   and activities and use the photographs in future advertising including online
                   webpage. <br />
-                  <br />I acknowledge that all information regarding Pets of the Homeless'
+                  <br />I acknowledge that all information regarding Pets of the Homeless&apos;
                   operations, procedures, contacts, volunteers, recipients and donors is of a
                   proprietary nature and should not be disclosed or used for any purposes other than
                   the direct benefit of the organization
@@ -174,8 +177,9 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit }) => {
                   refer all media inquiries to Headquarters, 775-841-7463.
                 </Text>
                 <Text fontsize="sm" marginTop="5vh">
-                  By checking the "I Accept the Terms and Conditions" box and clicking the "Submit"
-                  button on this page, you acknowledge you have read and agree to the above.
+                  By checking the &quot;I Accept the Terms and Conditions&quot; box and clicking the
+                  &quot;Submit&quot; button on this page, you acknowledge you have read and agree to
+                  the above.
                 </Text>
               </ModalBody>
             </ModalContent>
@@ -340,7 +344,9 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit }) => {
                         <Box>
                           <HStack>
                             <AlertIcon />
-                            <AlertTitle>You haven't accepted the Terms and Conditions</AlertTitle>
+                            <AlertTitle>
+                              You haven&apos;t accepted the Terms and Conditions
+                            </AlertTitle>
                           </HStack>
                         </Box>
                         <Button onClick={() => changeSubmitAndAcceptedFalse(false)}>Close</Button>
@@ -363,6 +369,7 @@ ThirdForm.propTypes = {
   prevStep: propTypes.func.isRequired,
   handleSubmit: propTypes.func.isRequired,
   formData: propTypes.func.isRequired,
+  setFormData: propTypes.func.isRequired,
 };
 
 export default ThirdForm;
