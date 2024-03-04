@@ -150,7 +150,7 @@ const BusinessFormMaster = ({ setFormOpen }) => {
 
   return (
     <div>
-      {step < 4 ? (
+      {step < 3 ? (
         <>
           <Box>
             <SimpleGrid columns={2}>
