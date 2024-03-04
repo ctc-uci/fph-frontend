@@ -47,7 +47,7 @@ function Sidebar({ isAdmin }) {
                 Feeding Pets of the Homeless
               </Text>
             </HStack>
-            <Divider marginLeft="1vh" marginTop="1vh" marginBttom="1vh" borderColor={'#CAC6BE'} />
+            <Divider marginLeft="1vh" marginTop="1vh" marginBottom="1vh" borderColor={'#CAC6BE'} />
 
             {navList.map(item => {
               return (

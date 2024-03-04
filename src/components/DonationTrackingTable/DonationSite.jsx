@@ -1,14 +1,21 @@
 /* eslint react/prop-types: 0 */
 import { Tr, Td, Checkbox } from '@chakra-ui/react';
+import { useState, useEffect } from 'react';
 
 const DonationSite = ({ donation_site, checkSet, setCheck, topCheckBox }) => {
+  const [individualCheckBox, setIndividualCheckBox] = useState(topCheckBox);
+
+  useEffect(() => {
+    setIndividualCheckBox(topCheckBox);
+  }, [topCheckBox]);
+
   const headers = [
     'NULL',
     donation_site.donation_id,
     donation_site.food_bank_donation,
     donation_site.reporter,
     donation_site.email,
-    donation_site.date,
+    new Date(donation_site.date).toLocaleDateString(),
     donation_site.canned_dog_food_quantity,
     donation_site.dry_dog_food_quantity,
     donation_site.canned_cat_food_quantity,
@@ -18,6 +25,8 @@ const DonationSite = ({ donation_site, checkSet, setCheck, topCheckBox }) => {
   ];
 
   const handleClick = () => {
+    const newCheckedState = !individualCheckBox;
+    setIndividualCheckBox(newCheckedState);
     if (checkSet.has(donation_site.donation_id)) {
       setCheck(prevState => {
         prevState.delete(donation_site.donation_id);
@@ -33,7 +42,11 @@ const DonationSite = ({ donation_site, checkSet, setCheck, topCheckBox }) => {
 
   return (
     <Tr>
-      <Checkbox defaultChecked={topCheckBox ? true : false} onChange={handleClick} />
+      <Checkbox
+        isChecked={individualCheckBox}
+        onChange={handleClick}
+        sx={{ top: '15px', padding: '0 10px' }}
+      />
       {headers.map((header, index) => (
         <Td key={index}>{header}</Td>
       ))}
