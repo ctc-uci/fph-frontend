@@ -30,6 +30,7 @@ import {
   HStack,
   Image,
   Textarea,
+  ModalCloseButton,
 } from '@chakra-ui/react';
 import FPH_LOGO from './fph_logo.png';
 
@@ -120,18 +121,30 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit }) => {
         <Text paddingLeft="10vh" fontSize="sm">
           To get started, fill out the form below.
         </Text>
-        {termsAndConditionsIsOpened ? (
-          <Modal isOpen={true} size="3xl" isCentered>
+        <Modal isOpen={termsAndConditionsIsOpened} isCentered>
             <ModalOverlay>
-              <ModalContent paddingBottom="1vh" alignItems="center">
+              <ModalContent paddingBottom="1vh"
+ 
+  position="fixed"
+  maxWidth="40%"
+  height='90%'
+  left="55%"
+  transform="translateY(-50%)"
+>
                 <ModalHeader>
-                  {' '}
-                  <Text marginLeft="1vh" fontSize="2xl">
+                  {' '} <Stack direction='row' justifyContent='space-between'><Text fontWeight='bold' fontSize="2xl">
                     Terms and Conditions{' '}
-                  </Text>
+                  </Text> 
+                  
+                 <ModalCloseButton onClick={() => {changeTermsAndConditionsIsOpened(false)}}> </ModalCloseButton>
+                
+                  
+               
+                  
+                  </Stack>
                 </ModalHeader>
-                <ModalBody>
-                  <Text fontWeight="bold" fontSize="sm">
+                <ModalBody alignItems="center">
+                  <Text fontSize="xl">
                     I hereby acknowledge and agree to serve as a member/volunteer for Feeding Pets
                     of the Homeless, 710 West Washington Street, Carson City, NV 89703. I give my
                     consent and agree to release, indemnify and hold harmless Feeding Pets of the
@@ -146,10 +159,10 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit }) => {
                     Pets of the Homeless reserves the right to terminate this agreement at any time.
                     I also grant Feeding Pets of the Homeless the right to use photographs of me at
                     events and activities and use the photographs in future advertising including
-                    online webpage. I acknowledge that all information regarding Pets of the
+                    online webpage. <br /><br />I acknowledge that all information regarding Pets of the
                     Homeless' operations, procedures, contacts, volunteers, recipients and donors is
                     of a proprietary nature and should not be disclosed or used for any purposes
-                    other than the direct benefit of the organization. I acknowledge that I am not
+                    other than the direct benefit of the organization<br /><br />I HAVE READ THIS RELEASE OF LIABILITY AND FULLY UNDERSTAND ITS TERMS AND CONDITIONS.<br /><br />I acknowledge that I am not
                     authorized to speak to the media. I agree to refer all media inquiries to
                     Headquarters, 775-841-7463.
                   </Text>
@@ -159,16 +172,11 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit }) => {
                     above.
                   </Text>
                 </ModalBody>
-                <Button
-                  onClick={() => {
-                    changeTermsAndConditionsIsOpened(false);
-                  }}
-                >
-                  Close
-                </Button>
+                
               </ModalContent>
             </ModalOverlay>
           </Modal>
+         
         ) : (
           <Stack direction="column">
             <Flex direction="column" align="stretch" gap={5}>
@@ -176,13 +184,13 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit }) => {
                 <Box>
                   <FormControl marginTop="8vh" paddingLeft="10vh" id="business-hours">
                     <FormLabel>Business Hours</FormLabel>
-                    <Popover width="auto">
+                    <Popover placement='right' width="auto">
                       <PopoverTrigger>
                         <Button bg="none" borderColor="#E2E8F0" borderWidth="1px">
                           Select Hours
                         </Button>
                       </PopoverTrigger>
-                      <PopoverContent width="full">
+                      <PopoverContent padding='2vh' width="full">
                         <PopoverArrow />
                         <PopoverCloseButton />
                         <PopoverHeader>Hours</PopoverHeader>
@@ -247,12 +255,13 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit }) => {
                       onChange={e => {
                         handleChange(e);
                       }}
-                      // Additional properties like resizing and styling can be added here
                     />
                   </FormControl>
                 </Box>
               </Flex>
               <Box paddingLeft="10vh">
+                <HStack alignItems='center' justifyContent='left'>
+                  <Box justifyContent={'center'}>
                 <Checkbox
                   name="termsAndConditionsAccepted"
                   defaultChecked={formData['termsAndConditionsAccepted']}
@@ -268,9 +277,11 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit }) => {
                     handleChange(syntheticEvent);
                     changeTermsAndConditionsAccepted(checked);
                   }}
-                >
+                ></Checkbox>
+                </Box>
+                <Box marginBottom='0.6vh'>
                   <Text fontSize="xs">
-                    I HAVE READ THIS RELEASE OF LIABILITY AND FULLY UNDERSTAND ITS{' '}
+                    I accept the{' '}
                     {
                       <Link
                         textDecoration="underline"
@@ -278,11 +289,13 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit }) => {
                           changeTermsAndConditionsIsOpened(true);
                         }}
                       >
-                        TERMS AND CONDITIONS.
+                        Terms and Conditions.
                       </Link>
                     }
                   </Text>
-                </Checkbox>
+                  </Box>
+                  </HStack>
+                
               </Box>
               <HStack paddingLeft="10vh" paddingRight="10vh" justifyContent="space-between">
                 <Box>
