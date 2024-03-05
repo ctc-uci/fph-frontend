@@ -120,7 +120,6 @@ const BusinessDonationHistory = () => {
                   })}
                 </Td>
                 <Td textAlign="right">
-                  {/* <Button onClick={() => handleButtonClick(item.donation_id)}>Details</Button> */}
                   <Button
                     variant="ghost"
                     color="gray.700"
