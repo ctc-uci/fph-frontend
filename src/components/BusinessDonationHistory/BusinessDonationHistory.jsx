@@ -13,17 +13,20 @@ import {
   Box,
   IconButton,
   InputGroup,
-  InputLeftElement,
   Input,
+  Heading,
+  Flex,
+  Spacer,
+  TableContainer,
 } from '@chakra-ui/react';
-import { ChevronRightIcon, ChevronLeftIcon, Search2Icon } from '@chakra-ui/icons';
+import { ChevronRightIcon, ChevronLeftIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 import ViewDonationHistory from './ViewDonationHistory/ViewDonationHistory';
+import './BusinessDonationHistory.module.css';
 
 const BusinessDonationHistory = () => {
   const { backend } = useBackend();
   const [data, setData] = useState([]);
   const [selectedDonationId, setSelectedDonationId] = useState(null);
-  const TABLE_HEADERS = ['Submitted By', 'Food Bank', 'Date', 'Action'];
 
   // for pagination
   const [currentTotalDonationNum, setCurrentTotalDonationNum] = useState(0);
@@ -33,29 +36,19 @@ const BusinessDonationHistory = () => {
   // for search
   const [searchInput, setSearchInput] = useState('');
 
-  // TEMPORARY DISABLE LINE SO THAT IN THE FUTURE IF YOU WANT TO ADD
-  // A DROP DOWN TO CHANGE PAGINATION NUMBER JUST USE THE SET FUNCTION
-  // AND REMOVE THE COMMENT
   // eslint-disable-next-line no-unused-vars
-  const [paginationNumber, setPaginationNumber] = useState(13);
+  const [paginationNumber, setPaginationNumber] = useState(6);
 
   useEffect(() => {
     const getData = async () => {
       try {
-        const response =
-          searchInput === ''
-            ? await backend.get(
-                `/donation/?donationsLimit=${paginationNumber}&pageNum=${currentPageNum}`,
-              )
-            : await backend.get(
-                `/donation/search/${searchInput}?donationsLimit=${paginationNumber}&pageNum=${currentPageNum}`,
-              );
+        const response = await backend.get(
+          `/donation/search/${searchInput}?donationsLimit=${paginationNumber}&pageNum=${currentPageNum}`,
+        );
 
         setData(response.data);
 
-        const donationNumResponse = await backend.get(
-          `/donation/totalDonations/${searchInput === '' ? '' : searchInput}`,
-        );
+        const donationNumResponse = await backend.get(`/donation/totalDonations/${searchInput}`);
         setCurrentTotalDonationNum(donationNumResponse.data[0]['count']);
         setPageLimit(Math.ceil(donationNumResponse.data[0]['count'] / paginationNumber));
       } catch (error) {
@@ -63,7 +56,7 @@ const BusinessDonationHistory = () => {
       }
     };
     getData();
-  }, [backend, currentPageNum, searchInput]);
+  }, [backend, currentPageNum, searchInput, paginationNumber]);
 
   const handleButtonClick = async id => {
     try {
@@ -84,19 +77,11 @@ const BusinessDonationHistory = () => {
   };
 
   return (
-    <div>
-      <Box flex={3} display="flex" alignItems="center" marginTop="auto" gap="15px">
-        <InputGroup size="sm" margin="auto">
-          <InputLeftElement
-            margin="auto"
-            pointerEvents="none"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            top="12%"
-          >
-            <Search2Icon color="gray.300" />
-          </InputLeftElement>
+    <Box margin="0px 32px 0px 32px">
+      <Flex alignItems="center" margin="48px 0px 37px 0px">
+        <Heading size="md"> Donations History </Heading>
+        <Spacer></Spacer>
+        <InputGroup size="sm" margin="auto" width="222px" height="32px">
           <Input
             type="text"
             placeholder="Search"
@@ -107,47 +92,82 @@ const BusinessDonationHistory = () => {
             borderRadius="md"
           />
         </InputGroup>
-      </Box>
-
-      <Table variant="striped" colorScheme="teal">
-        <Thead>
-          <Tr>
-            {TABLE_HEADERS.map(header => (
-              <Th key={header}>{header}</Th>
-            ))}
-          </Tr>
-        </Thead>
-        <Tbody>
-          {data.map((item, index) => (
-            <Tr key={index}>
-              <Td>{item.reporter}</Td>
-              <Td>{item.food_bank_donation}</Td>
-              <Td>{item.date}</Td>
-              <Td>
-                <Button onClick={() => handleButtonClick(item.donation_id)}>Details</Button>
-              </Td>
+      </Flex>
+      <TableContainer border="1px" borderRadius="12px" borderColor="#E2E8F0" width="100%">
+        <Table>
+          <Thead>
+            <Tr>
+              <Th color="gray.600">Submitted By</Th>
+              <Th color="gray.600">Food Bank</Th>
+              <Th color="gray.600" textAlign="right">
+                Date
+              </Th>
+              <Th color="gray.600" textAlign="right" paddingRight="42px">
+                Action
+              </Th>
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
-      <Box>
-        {(currentPageNum - 1) * paginationNumber + 1} to{' '}
-        {Math.min(currentPageNum * paginationNumber, currentTotalDonationNum)} of{' '}
-        {currentTotalDonationNum}
-      </Box>
-      <IconButton
-        aria-label="Back button"
-        isDisabled={currentPageNum <= 1}
-        icon={<ChevronLeftIcon />}
-        onClick={() => setCurrentPageNum(currentPageNum - 1)}
-      />
-      <IconButton
-        aria-label="Next button"
-        isDisabled={currentPageNum >= pageLimit}
-        icon={<ChevronRightIcon />}
-        onClick={() => setCurrentPageNum(currentPageNum + 1)}
-      />
-    </div>
+          </Thead>
+          <Tbody>
+            {data.map((item, index) => (
+              <Tr key={index} color="gray.700">
+                <Td>{item.reporter}</Td>
+                <Td>{item.food_bank_donation}</Td>
+                <Td textAlign="right">
+                  {new Date(item.date).toLocaleDateString(undefined, {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </Td>
+                <Td textAlign="right">
+                  {/* <Button onClick={() => handleButtonClick(item.donation_id)}>Details</Button> */}
+                  <Button
+                    variant="ghost"
+                    color="gray.700"
+                    onClick={() => handleButtonClick(item.donation_id)}
+                    rightIcon={<ArrowForwardIcon />}
+                  >
+                    Details
+                  </Button>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
+      <Flex justifyContent="flex-end">
+        <Box
+          padding="4px 16px 4px 16px"
+          w="108px"
+          h="28px"
+          top="50px"
+          fontSize="14px"
+          position="relative"
+        >
+          {(currentPageNum - 1) * paginationNumber + 1} -{' '}
+          {Math.min(currentPageNum * paginationNumber, currentTotalDonationNum)} of{' '}
+          {currentTotalDonationNum}
+        </Box>
+        <IconButton
+          variant="ghost"
+          aria-label="Back button"
+          isDisabled={currentPageNum <= 1}
+          icon={<ChevronLeftIcon />}
+          onClick={() => setCurrentPageNum(currentPageNum - 1)}
+          top="45px"
+          position="relative"
+        />
+        <IconButton
+          variant="ghost"
+          aria-label="Next button"
+          isDisabled={currentPageNum >= pageLimit}
+          icon={<ChevronRightIcon />}
+          onClick={() => setCurrentPageNum(currentPageNum + 1)}
+          top="45px"
+          position="relative"
+        />
+      </Flex>
+    </Box>
   );
 };
 
