@@ -123,6 +123,7 @@ const BusinessDonationHistory = () => {
                   <Button
                     variant="ghost"
                     color="gray.700"
+                    fontWeight="normal"
                     onClick={() => handleButtonClick(item.donation_id)}
                     rightIcon={<ArrowForwardIcon />}
                   >
