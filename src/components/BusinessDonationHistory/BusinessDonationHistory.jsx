@@ -37,7 +37,7 @@ const BusinessDonationHistory = () => {
   const [searchInput, setSearchInput] = useState('');
 
   // eslint-disable-next-line no-unused-vars
-  const [paginationNumber, setPaginationNumber] = useState(6);
+  const [paginationNumber, setPaginationNumber] = useState(10);
 
   useEffect(() => {
     const getData = async () => {
@@ -110,16 +110,20 @@ const BusinessDonationHistory = () => {
           <Tbody>
             {data.map((item, index) => (
               <Tr key={index} color="gray.700">
-                <Td>{item.reporter}</Td>
-                <Td>{item.food_bank_donation}</Td>
-                <Td textAlign="right">
+                <Td paddingTop="6px" paddingBottom="6px">
+                  {item.reporter}
+                </Td>
+                <Td paddingTop="6px" paddingBottom="6px">
+                  {item.food_bank_donation}
+                </Td>
+                <Td textAlign="right" paddingTop="6px" paddingBottom="6px">
                   {new Date(item.date).toLocaleDateString(undefined, {
                     year: 'numeric',
                     month: 'short',
                     day: 'numeric',
                   })}
                 </Td>
-                <Td textAlign="right">
+                <Td textAlign="right" paddingTop="6px" paddingBottom="6px">
                   <Button
                     variant="ghost"
                     color="gray.700"
@@ -135,15 +139,8 @@ const BusinessDonationHistory = () => {
           </Tbody>
         </Table>
       </TableContainer>
-      <Flex justifyContent="flex-end">
-        <Box
-          padding="4px 16px 4px 16px"
-          w="108px"
-          h="28px"
-          top="50px"
-          fontSize="14px"
-          position="relative"
-        >
+      <Flex justifyContent="flex-end" alignItems="center" marginTop="10px">
+        <Box padding="4px 16px 4px 16px" h="28px" fontSize="14px" position="relative">
           {(currentPageNum - 1) * paginationNumber + 1} -{' '}
           {Math.min(currentPageNum * paginationNumber, currentTotalDonationNum)} of{' '}
           {currentTotalDonationNum}
@@ -154,7 +151,6 @@ const BusinessDonationHistory = () => {
           isDisabled={currentPageNum <= 1}
           icon={<ChevronLeftIcon />}
           onClick={() => setCurrentPageNum(currentPageNum - 1)}
-          top="45px"
           position="relative"
         />
         <IconButton
@@ -163,7 +159,6 @@ const BusinessDonationHistory = () => {
           isDisabled={currentPageNum >= pageLimit}
           icon={<ChevronRightIcon />}
           onClick={() => setCurrentPageNum(currentPageNum + 1)}
-          top="45px"
           position="relative"
         />
       </Flex>
