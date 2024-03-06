@@ -25,7 +25,6 @@ const AdminDashboard = () => {
 
         const notificationResponse = await backend.get(`/notification/0`);
         setNotifications(notificationResponse.data);
-        console.log(notificationResponse.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -54,7 +53,7 @@ const AdminDashboard = () => {
   const calculatePendingBusinesses = () => {
     var pendingBusinesses = 0;
     for (const [value] of Object.entries(businessDictionary)) {
-      const pendingStatus = value['status'];
+      const pendingStatus = businessDictionary[value].status;
       if (pendingStatus == 'Pending') {
         pendingBusinesses += 1;
       }
