@@ -51,13 +51,9 @@ const ForgotPassword = () => {
         <Button colorScheme="blue" w="full" disabled={loading} onClick={e => handleSubmit(e)}>
           Reset Password
         </Button>
-        <Link
-            to={'/LoginBusiness'}
-            color="blue.500"
-            fontWeight="semibold"
-          >
-            Log In
-          </Link>
+        <Link to={'/LoginBusiness'} color="blue.500" fontWeight="semibold">
+          Log In
+        </Link>
       </VStack>
     </Box>
   );

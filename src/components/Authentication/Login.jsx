@@ -72,13 +72,9 @@ const Login = ({ isAdmin }) => {
             Sign Up
           </Link>
         </Text>
-        <Link
-            to={'/ForgotPassword'}
-            color="blue.500"
-            fontWeight="semibold"
-          >
-            Forgot Password?
-          </Link>
+        <Link to={'/ForgotPassword'} color="blue.500" fontWeight="semibold">
+          Forgot Password?
+        </Link>
       </VStack>
     </Box>
   );

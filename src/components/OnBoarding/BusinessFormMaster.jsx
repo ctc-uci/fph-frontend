@@ -277,9 +277,7 @@ const BusinessFormMaster = ({ setFormOpen }) => {
                   </SimpleGrid>
                 </Box>
               </Stack>
-              <Box sx={{backgroundColor: 'white'}}>
-                {stepsComponents[step]}
-              </Box>
+              <Box sx={{ backgroundColor: 'white' }}>{stepsComponents[step]}</Box>
             </SimpleGrid>
           </Box>
         </>

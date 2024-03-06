@@ -32,13 +32,29 @@ const App = () => {
               <Route exact path="/LoginAdmin" element={<Login isAdmin={true} />} />
               <Route exact path="/LoginBusiness" element={<Login isAdmin={false} />} />
               <Route exact path="/ForgotPassword" element={<ForgotPassword />} />
-              <Route exact path="/ContactUs" element={<ProtectedRoute Component={ContactUs}/>} />
-              <Route exact path="/AdminDashboard" element={<ProtectedRoute Component={AdminDashboard}/>} />
+              <Route exact path="/ContactUs" element={<ProtectedRoute Component={ContactUs} />} />
+              <Route
+                exact
+                path="/AdminDashboard"
+                element={<ProtectedRoute Component={AdminDashboard} />}
+              />
               <Route exact path="/AdminManageForms" />
               <Route exact path="/AdminTeamManagement" />
-              <Route exact path="/EditContactInformation" element={<ProtectedRoute Component={EditContactInformation} />} />
-              <Route exact path="/BusinessDashboard" element={<ProtectedRoute Component={BusinessDashboard}/>} />
-              <Route exact path="/BusinessDonationTrackingForm" element={<ProtectedRoute Component={DonationForm}/>} />
+              <Route
+                exact
+                path="/EditContactInformation"
+                element={<ProtectedRoute Component={EditContactInformation} />}
+              />
+              <Route
+                exact
+                path="/BusinessDashboard"
+                element={<ProtectedRoute Component={BusinessDashboard} />}
+              />
+              <Route
+                exact
+                path="/BusinessDonationTrackingForm"
+                element={<ProtectedRoute Component={DonationForm} />}
+              />
               <Route
                 exact
                 path="/BusinessDonationHistory"
@@ -47,16 +63,28 @@ const App = () => {
               <Route
                 exact
                 path="/BusinessNotificationCenter"
-                element={<ProtectedRoute Component={BusinessNotificationCenter}/>}
+                element={<ProtectedRoute Component={BusinessNotificationCenter} />}
               ></Route>
               <Route
                 exact
                 path="/EditContactInformation"
                 element={<ProtectedRoute Component={EditContactInformation} />}
               ></Route>
-              <Route exact path="/DonationItemsTable" element={<ProtectedRoute Component={DonationItemsTable} />} />
-              <Route exact path="/DonationTrackingTable" element={<ProtectedRoute Component={DonationTrackingTable}/>} />
-              <Route exact path="/BusinessForm" element={<ProtectedRoute Component={BusinessFormMaster}/>} />
+              <Route
+                exact
+                path="/DonationItemsTable"
+                element={<ProtectedRoute Component={DonationItemsTable} />}
+              />
+              <Route
+                exact
+                path="/DonationTrackingTable"
+                element={<ProtectedRoute Component={DonationTrackingTable} />}
+              />
+              <Route
+                exact
+                path="/BusinessForm"
+                element={<ProtectedRoute Component={BusinessFormMaster} />}
+              />
             </Routes>
           </div>
         </div>

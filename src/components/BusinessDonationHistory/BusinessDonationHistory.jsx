@@ -43,7 +43,7 @@ const BusinessDonationHistory = () => {
     const getData = async () => {
       try {
         const response = await backend.get(
-          `/donation/search/${searchInput}?donationsLimit=${paginationNumber}&pageNum=${currentPageNum}`,
+          `/donation/filter/search/?searchTerm=${searchInput}&donationsLimit=${paginationNumber}&pageNum=${currentPageNum}`,
         );
 
         setData(response.data);
