@@ -13,6 +13,7 @@ import styles from './App.module.css';
 import DonationItemsTable from './components/DonationItemsTable/DonationItemsTable.jsx';
 import Signup from './components/Authentication/Signup.jsx';
 import Login from './components/Authentication/Login.jsx';
+import BusinessFormMaster from './components/OnBoarding/BusinessFormMaster.jsx';
 import ForgotPassword from './components/Authentication/ForgotPassword.jsx';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './utils/ProtectedRoute.jsx';
@@ -55,6 +56,7 @@ const App = () => {
               ></Route>
               <Route exact path="/DonationItemsTable" element={<ProtectedRoute Component={DonationItemsTable} />} />
               <Route exact path="/DonationTrackingTable" element={<ProtectedRoute Component={DonationTrackingTable}/>} />
+              <Route exact path="/BusinessForm" element={<ProtectedRoute Component={BusinessFormMaster}/>} />
             </Routes>
           </div>
         </div>

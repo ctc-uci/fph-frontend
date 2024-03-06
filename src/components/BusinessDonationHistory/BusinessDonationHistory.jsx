@@ -2,26 +2,61 @@
 
 import { useEffect, useState } from 'react';
 import { useBackend } from '../../contexts/BackendContext';
-import { Table, Thead, Tbody, Tr, Td, Button, Th } from '@chakra-ui/react';
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Td,
+  Button,
+  Th,
+  Box,
+  IconButton,
+  InputGroup,
+  Input,
+  Heading,
+  Flex,
+  Spacer,
+  TableContainer,
+} from '@chakra-ui/react';
+import { ChevronRightIcon, ChevronLeftIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 import ViewDonationHistory from './ViewDonationHistory/ViewDonationHistory';
+import './BusinessDonationHistory.module.css';
 
 const BusinessDonationHistory = () => {
   const { backend } = useBackend();
   const [data, setData] = useState([]);
   const [selectedDonationId, setSelectedDonationId] = useState(null);
-  const TABLE_HEADERS = ['Submitted By', 'Food Bank', 'Date', 'Action'];
+
+  // for pagination
+  const [currentTotalDonationNum, setCurrentTotalDonationNum] = useState(0);
+  const [currentPageNum, setCurrentPageNum] = useState(1);
+  const [pageLimit, setPageLimit] = useState(1);
+
+  // for search
+  const [searchInput, setSearchInput] = useState('');
+
+  // eslint-disable-next-line no-unused-vars
+  const [paginationNumber, setPaginationNumber] = useState(10);
 
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await backend.get('/donation');
+        const response = await backend.get(
+          `/donation/search/${searchInput}?donationsLimit=${paginationNumber}&pageNum=${currentPageNum}`,
+        );
+
         setData(response.data);
+
+        const donationNumResponse = await backend.get(`/donation/totalDonations/${searchInput}`);
+        setCurrentTotalDonationNum(donationNumResponse.data[0]['count']);
+        setPageLimit(Math.ceil(donationNumResponse.data[0]['count'] / paginationNumber));
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
     getData();
-  }, []);
+  }, [backend, currentPageNum, searchInput, paginationNumber]);
 
   const handleButtonClick = async id => {
     try {
@@ -36,30 +71,98 @@ const BusinessDonationHistory = () => {
     return <ViewDonationHistory id={selectedDonationId} />;
   }
 
+  const handleSearch = e => {
+    setSearchInput(e.target.value);
+    setCurrentPageNum(1);
+  };
+
   return (
-    <div>
-      <Table variant="striped" colorScheme="teal">
-        <Thead>
-          <Tr>
-            {TABLE_HEADERS.map(header => (
-              <Th key={header}>{header}</Th>
-            ))}
-          </Tr>
-        </Thead>
-        <Tbody>
-          {data.map((item, index) => (
-            <Tr key={index}>
-              <Td>{item.reporter}</Td>
-              <Td>{item.food_bank_donation}</Td>
-              <Td>{item.date}</Td>
-              <Td>
-                <Button onClick={() => handleButtonClick(item.donation_id)}>Details</Button>
-              </Td>
+    <Box margin="0px 32px 0px 32px">
+      <Flex alignItems="center" margin="48px 0px 37px 0px">
+        <Heading size="md"> Donations History </Heading>
+        <Spacer></Spacer>
+        <InputGroup size="sm" margin="auto" width="222px" height="32px">
+          <Input
+            type="text"
+            placeholder="Search"
+            size="sm"
+            value={searchInput}
+            onChange={e => handleSearch(e)}
+            height="40px"
+            borderRadius="md"
+          />
+        </InputGroup>
+      </Flex>
+      <TableContainer border="1px" borderRadius="12px" borderColor="#E2E8F0" width="100%">
+        <Table>
+          <Thead>
+            <Tr>
+              <Th color="gray.600">Submitted By</Th>
+              <Th color="gray.600">Food Bank</Th>
+              <Th color="gray.600" textAlign="right">
+                Date
+              </Th>
+              <Th color="gray.600" textAlign="right" paddingRight="42px">
+                Action
+              </Th>
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
-    </div>
+          </Thead>
+          <Tbody>
+            {data.map((item, index) => (
+              <Tr key={index} color="gray.700">
+                <Td paddingTop="6px" paddingBottom="6px">
+                  {item.reporter}
+                </Td>
+                <Td paddingTop="6px" paddingBottom="6px">
+                  {item.food_bank_donation}
+                </Td>
+                <Td textAlign="right" paddingTop="6px" paddingBottom="6px">
+                  {new Date(item.date).toLocaleDateString(undefined, {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </Td>
+                <Td textAlign="right" paddingTop="6px" paddingBottom="6px">
+                  <Button
+                    variant="ghost"
+                    color="gray.700"
+                    fontWeight="normal"
+                    onClick={() => handleButtonClick(item.donation_id)}
+                    rightIcon={<ArrowForwardIcon />}
+                  >
+                    Details
+                  </Button>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
+      <Flex justifyContent="flex-end" alignItems="center" marginTop="10px">
+        <Box padding="4px 16px 4px 16px" h="28px" fontSize="14px" position="relative">
+          {(currentPageNum - 1) * paginationNumber + 1} -{' '}
+          {Math.min(currentPageNum * paginationNumber, currentTotalDonationNum)} of{' '}
+          {currentTotalDonationNum}
+        </Box>
+        <IconButton
+          variant="ghost"
+          aria-label="Back button"
+          isDisabled={currentPageNum <= 1}
+          icon={<ChevronLeftIcon />}
+          onClick={() => setCurrentPageNum(currentPageNum - 1)}
+          position="relative"
+        />
+        <IconButton
+          variant="ghost"
+          aria-label="Next button"
+          isDisabled={currentPageNum >= pageLimit}
+          icon={<ChevronRightIcon />}
+          onClick={() => setCurrentPageNum(currentPageNum + 1)}
+          position="relative"
+        />
+      </Flex>
+    </Box>
   );
 };
 
