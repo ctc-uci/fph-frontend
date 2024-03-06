@@ -48,7 +48,9 @@ const BusinessDonationHistory = () => {
 
         setData(response.data);
 
-        const donationNumResponse = await backend.get(`/donation/totalDonations/${searchInput}`);
+        const donationNumResponse = await backend.get(
+          `/donation/filter/searchCount/?searchTerm=${searchInput}`,
+        );
         setCurrentTotalDonationNum(donationNumResponse.data[0]['count']);
         setPageLimit(Math.ceil(donationNumResponse.data[0]['count'] / paginationNumber));
       } catch (error) {
