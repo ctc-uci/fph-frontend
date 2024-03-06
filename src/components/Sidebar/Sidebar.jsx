@@ -13,6 +13,8 @@ import {
 } from '@chakra-ui/react';
 import 'boxicons';
 import fphLogo from './fph-logo.png.png';
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 function Sidebar({ isAdmin }) {
   const businessList = [
@@ -28,6 +30,22 @@ function Sidebar({ isAdmin }) {
     { name: 'Donation Items', path: '/DonationItemsTable', icon: 'heart-circle' },
     { name: 'Settings', path: '/EditContactInformation', icon: 'cog' },
   ];
+
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  const authLogout = async () => {
+    try {
+      logout();
+      if (isAdmin) {
+        navigate('/LoginAdmin');
+      } else {
+        navigate('/LoginBusiness');
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   const navList = isAdmin ? adminList : businessList;
   return (
@@ -49,24 +67,27 @@ function Sidebar({ isAdmin }) {
             </HStack>
             <Divider marginLeft="1vh" marginTop="1vh" marginBottom="1vh" borderColor={'#CAC6BE'} />
 
-            {navList.map(item => {
-              return (
-                <Button key={item.path} width="full" justifyContent="left" variant="ghost">
+            {navList.map(item => (
+              <Link to={item.path} key={item.name} style={{ width: '100%', display: 'block' }}>
+                <Button width="full" justifyContent="flex-start" variant="ghost">
+                  {/* Make sure box-icon is a valid component */}
                   <box-icon
                     type="regular"
-                    style={{ marginRight: '1vh' }}
                     name={item.icon}
+                    style={{ marginRight: '1vh' }}
                   ></box-icon>
-                  <Link to={item.path}>{item.name}</Link>
+                  {item.name}
                 </Button>
-              );
-            })}
+              </Link>
+            ))}
 
             {!isAdmin && (
-              <Button key={'contact'} width="full" justifyContent="left" variant="ghost">
-                <box-icon type="regular" name="help-circle"></box-icon>
-                <Link to={'/ContactUs'}>Contact Us</Link>
-              </Button>
+              <Link to={'/ContactUs'} style={{ width: '100%', display: 'block' }}>
+                <Button width="full" justifyContent="flex-start" variant="ghost">
+                  <box-icon type="regular" name="help-circle"></box-icon>
+                  Contact Us
+                </Button>
+              </Link>
             )}
 
             <Box
@@ -88,8 +109,9 @@ function Sidebar({ isAdmin }) {
               <box-icon
                 type="regular"
                 color={'#857A6D'}
-                style={{ marginLeft: '30vh' }}
+                style={{ marginLeft: '30vh', cursor: 'pointer' }}
                 name="log-out"
+                onClick={authLogout}
               ></box-icon>
             </Box>
           </VStack>
