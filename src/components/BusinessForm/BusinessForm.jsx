@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   Box,
   FormControl,
@@ -21,61 +21,63 @@ import RegisterSuccessPage from '../RegisterBusinessForm/RegisterSuccessPage';
 
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-const TimeInput = ({ label, value, onChange, isReadOnly }) => (
-  <Stack direction="row" align="center">
-    <FormLabel mb="0">{label}</FormLabel>
-    <Select
-      value={value.hour}
-      onChange={e => onChange({ ...value, hour: e.target.value })}
-      w="auto"
-      disabled={isReadOnly}
-    >
-      {[...Array(12).keys()].map(h => (
-        <option key={h} value={h + 1}>
-          {h + 1}
-        </option>
-      ))}
-    </Select>
-    <Select
-      value={value.minute}
-      onChange={e => onChange({ ...value, minute: e.target.value })}
-      w="auto"
-      disabled={isReadOnly}
-    >
-      {['00', '15', '30', '45'].map(m => (
-        <option key={m} value={m}>
-          {m}
-        </option>
-      ))}
-    </Select>
-    <Select
-      value={value.ampm}
-      onChange={e => onChange({ ...value, ampm: e.target.value })}
-      w="auto"
-      disabled={isReadOnly}
-    >
-      {['AM', 'PM'].map(ampm => (
-        <option key={ampm} value={ampm}>
-          {ampm}
-        </option>
-      ))}
-    </Select>
-  </Stack>
-);
+// const TimeInput = ({ label, value, onChange, isReadOnly }) => (
+//   <Stack direction="row" align="center">
+//     <FormLabel mb="0">{label}</FormLabel>
+//     <Select
+//       value={value.hour}
+//       onChange={e => onChange({ ...value, hour: e.target.value })}
+//       w="auto"
+//       disabled={isReadOnly}
+//     >
+//       {[...Array(12).keys()].map(h => (
+//         <option key={h} value={h + 1}>
+//           {h + 1}
+//         </option>
+//       ))}
+//     </Select>
+//     <Select
+//       value={value.minute}
+//       onChange={e => onChange({ ...value, minute: e.target.value })}
+//       w="auto"
+//       disabled={isReadOnly}
+//     >
+//       {['00', '15', '30', '45'].map(m => (
+//         <option key={m} value={m}>
+//           {m}
+//         </option>
+//       ))}
+//     </Select>
+//     <Select
+//       value={value.ampm}
+//       onChange={e => onChange({ ...value, ampm: e.target.value })}
+//       w="auto"
+//       disabled={isReadOnly}
+//     >
+//       {['AM', 'PM'].map(ampm => (
+//         <option key={ampm} value={ampm}>
+//           {ampm}
+//         </option>
+//       ))}
+//     </Select>
+//   </Stack>
+// );
 
-TimeInput.propTypes = {
-  label: PropTypes.string.isRequired,
-  value: PropTypes.shape({
-    hour: PropTypes.string.isRequired,
-    minute: PropTypes.string.isRequired,
-    ampm: PropTypes.string.isRequired,
-  }).isRequired,
-  onChange: PropTypes.func.isRequired,
-  isReadOnly: PropTypes.bool.isRequired,
-};
+// TimeInput.propTypes = {
+//   label: PropTypes.string.isRequired,
+//   value: PropTypes.shape({
+//     hour: PropTypes.string.isRequired,
+//     minute: PropTypes.string.isRequired,
+//     ampm: PropTypes.string.isRequired,
+//   }).isRequired,
+//   onChange: PropTypes.func.isRequired,
+//   isReadOnly: PropTypes.bool.isRequired,
+// };
 
-const BusinessForm = ({ pending, pendingData }) => {
+const BusinessForm = ({ edit=true }) => {
   // State for each form field
+  const { id } = useParams();
+  const [businessData, setBusinessData] = useState({});
   const [businessName, setBusinessName] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -92,42 +94,27 @@ const BusinessForm = ({ pending, pendingData }) => {
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const navigate = useNavigate()
   const toast = useToast();
-  const [businessHours, setBusinessHours] = useState(
-    daysOfWeek.reduce(
-      (acc, day) => ({
-        ...acc,
-        [day]: {
-          start: { hour: '9', minute: '00', ampm: 'AM' },
-          end: { hour: '5', minute: '00', ampm: 'PM' },
-        },
-      }),
-      {},
-    ),
-  );
+  const [businessHours, setBusinessHours] = useState('');
 
   useEffect(() => {
-    if (pending) {
+    if (edit) {
       fillOutPendingData();
     }
   });
 
-  const handleTimeChange = (day, period, value) => {
-    setBusinessHours({ ...businessHours, [day]: { ...businessHours[day], [period]: value } });
-  };
+  // const handleTimeChange = (day, period, value) => {
+  //   setBusinessHours({ ...businessHours, [day]: { ...businessHours[day], [period]: value } });
+  // };
 
   const handleZipChange = e => {
     setZip(e.target.value);
   };
 
-  const { backend } = useBackend();
-  const handleSubmit = async e => {
-    e.preventDefault();
-
+  const updateBusinessData = () => {
     const DUMMY_STRING = 'STRING';
     const DUMMY_DATE = new Date().toISOString().split('T')[0];
     const DUMMY_BOOL = false;
-
-    const businessData = {
+    setBusinessData({
       name: businessName,
       contactName: firstName + ' ' + lastName,
       street: addressLine1 + ' ' + addressLine2,
@@ -182,29 +169,40 @@ const BusinessForm = ({ pending, pendingData }) => {
       finalCheck: DUMMY_BOOL,
       createdBy: DUMMY_DATE,
       createdDate: DUMMY_DATE,
-    };
+    });
+  }
+
+  const { backend } = useBackend();
+  const handleSubmit = async e => {
+    e.preventDefault();
+
+    updateBusinessData();
 
     try {
-      await backend.post('/business', businessData);
-      setRegistrationSuccess(true);
+      if(edit){
+        await backend.put(`/business/${id}`, businessData)
+      }
+      else{
+        await backend.post('/business', businessData);
+      }
+      navigate('/AdminDashboard');
     } catch (error) {
       console.error('Error in business registration:', error);
     }
     setRegistrationSuccess(true);
   };
 
-  if (!pending && registrationSuccess) {
+  if (registrationSuccess) {
     return <RegisterSuccessPage />;
   }
   
   const handleApprove = async () => {
     const updatedData = {
-      ...pendingData,
+      ...businessData,
       status: 'Active',
   };
-  console.log({businessId: pendingData.id});
   try {
-    await backend.put(`/business/${pendingData.id}`, updatedData);
+    await backend.put(`/business/${id}`, updatedData);
     setRegistrationSuccess(true);
     navigate('/AdminDashboard');
     toast({
@@ -221,12 +219,11 @@ const BusinessForm = ({ pending, pendingData }) => {
 
 const handleDeny = async () => {
   const updatedData = {
-    ...pendingData,
+    ...businessData,
     status: 'Denied',
 };
-console.log({businessId: pendingData.id});
 try {
-  await backend.put(`/business/${pendingData.id}`, updatedData);
+  await backend.put(`/business/${id}`, updatedData);
   setRegistrationSuccess(true);
   navigate('/AdminDashboard');
   toast({
@@ -241,48 +238,40 @@ try {
 }
 };
 
-  const fillOutPendingData = () => {
-    console.log('Pending Check', pendingData);
-    setBusinessName(pendingData.name ? pendingData.name : '');
-    if (pendingData.contact_name === null) {
+  const fillOutPendingData = async () => {
+    const business = await backend.get(`/business/${id}`);
+    const business_data = business.data[0];
+    setBusinessName(business_data.name ? business_data.name : '');
+    if (business_data.contact_name === null) {
       setFirstName('');
       setLastName('');
     } else {
-      setFirstName(pendingData.contact_name.split(' ')[0]);
+      setFirstName(business_data.contact_name.split(' ')[0]);
       setLastName(
-        pendingData.contact_name.split(' ')[1] ? pendingData.contact_name.split(' ')[1] : '',
+        business_data.contact_name.split(' ')[1] ? business_data.contact_name.split(' ')[1] : '',
       );
     }
-    if (pendingData.street === null) {
+    if (business_data.street === null) {
       setAddressLine1('');
       setAddressLine2('');
     } else {
-      setAddressLine1(pendingData.street.split(' ')[0]);
-      setAddressLine2(pendingData.street.split(' ')[1] ? pendingData.street.split(' ')[1] : '');
+      setAddressLine1(business_data.street.split(' ')[0]);
+      setAddressLine2(business_data.street.split(' ')[1] ? business_data.street.split(' ')[1] : '');
     }
 
-    setCity(pendingData.city ? pendingData.city : '');
-    setState(pendingData.state ? pendingData.state : '');
-    setZip(pendingData.zip_code ? pendingData.zip_code : '');
+    setCity(business_data.city ? business_data.city : '');
+    setState(business_data.state ? business_data.state : '');
+    setZip(business_data.zip_code ? business_data.zip_code : '');
     setCountry('USA');
-    setWebsite(pendingData.website ? pendingData.website : '');
-    setPhone(pendingData.primary_phone ? pendingData.primary_phone : '');
-    setEmail(pendingData.primary_email ? pendingData.primary_email : '');
-    setHowHeard(pendingData.find_out ? pendingData.find_out : '');
+    setWebsite(business_data.website ? business_data.website : '');
+    setPhone(business_data.primary_phone ? business_data.primary_phone : '');
+    setEmail(business_data.primary_email ? business_data.primary_email : '');
+    setHowHeard(business_data.find_out ? business_data.find_out : '');
   };
 
   return (
     <Box p={5}>
       <Flex direction="column" align="stretch" gap={5}>
-        {pending ? (
-          <>
-            <Flex justifyContent="space-between">
-              <Heading as="h1" size="lg" textAlign="center">
-                BUSINESS NAME
-              </Heading>
-            </Flex>
-          </>
-        ) : (
           <>
             <Flex justifyContent="space-between">
               <Heading as="h1" size="lg" textAlign="center">
@@ -303,7 +292,6 @@ try {
               </UnorderedList>
             </Box>
           </>
-        )}
 
         <form onSubmit={handleSubmit}>
           <Flex direction="column" gap={4}>
@@ -313,7 +301,7 @@ try {
                 type="text"
                 value={businessName}
                 onChange={e => setBusinessName(e.target.value)}
-                isReadOnly={pending}
+                
               />
             </FormControl>
             <Flex gap={4}>
@@ -323,7 +311,7 @@ try {
                   type="text"
                   value={firstName}
                   onChange={e => setFirstName(e.target.value)}
-                  isReadOnly={pending}
+                  
                 />
               </FormControl>
               <FormControl id="last-name" flex="1">
@@ -332,7 +320,7 @@ try {
                   type="text"
                   value={lastName}
                   onChange={e => setLastName(e.target.value)}
-                  isReadOnly={pending}
+                  
                 />
               </FormControl>
             </Flex>
@@ -342,7 +330,7 @@ try {
                 type="text"
                 value={addressLine1}
                 onChange={e => setAddressLine1(e.target.value)}
-                isReadOnly={pending}
+                
               />
             </FormControl>
             <FormControl id="address-line2">
@@ -351,7 +339,7 @@ try {
                 type="text"
                 value={addressLine2}
                 onChange={e => setAddressLine2(e.target.value)}
-                isReadOnly={pending}
+                
               />
             </FormControl>
             <Flex gap={4}>
@@ -361,7 +349,7 @@ try {
                   type="text"
                   value={city}
                   onChange={e => setCity(e.target.value)}
-                  isReadOnly={pending}
+                  
                 />
               </FormControl>
               <FormControl id="state" flex="1">
@@ -370,14 +358,14 @@ try {
                   type="text"
                   value={state}
                   onChange={e => setState(e.target.value)}
-                  isReadOnly={pending}
+                  
                 />
               </FormControl>
             </Flex>
             <Flex gap={4}>
               <FormControl id="zip_code" flex="1">
                 <FormLabel>Zip Code</FormLabel>
-                <Input type="text" value={zip} onChange={handleZipChange} isReadOnly={pending} />
+                <Input type="text" value={zip} onChange={handleZipChange}  />
               </FormControl>
               <FormControl id="country" flex="1">
                 <FormLabel>Country</FormLabel>
@@ -385,7 +373,7 @@ try {
                   type="text"
                   value={country}
                   onChange={e => setCountry(e.target.value)}
-                  isReadOnly={pending}
+                  
                 />
               </FormControl>
             </Flex>
@@ -395,10 +383,10 @@ try {
                 type="url"
                 value={website}
                 onChange={e => setWebsite(e.target.value)}
-                isReadOnly={pending}
+                
               />
             </FormControl>
-            <FormControl id="business-hours">
+            {/* <FormControl id="business-hours">
               <FormLabel>Business Hours</FormLabel>
               {daysOfWeek.map(day => (
                 <Flex key={day} justify="space-between" align="center">
@@ -407,24 +395,24 @@ try {
                     label="From"
                     value={businessHours[day].start}
                     onChange={value => handleTimeChange(day, 'start', value)}
-                    isReadOnly={pending}
+                    
                   />
                   <TimeInput
                     label="To"
                     value={businessHours[day].end}
                     onChange={value => handleTimeChange(day, 'end', value)}
-                    isReadOnly={pending}
+                    
                   />
                 </Flex>
               ))}
-            </FormControl>
+            </FormControl> */}
             <FormControl id="phone">
               <FormLabel>Phone</FormLabel>
               <Input
                 type="tel"
                 value={phone}
                 onChange={e => setPhone(e.target.value)}
-                isReadOnly={pending}
+                
               />
             </FormControl>
             <FormControl id="email">
@@ -433,7 +421,7 @@ try {
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                isReadOnly={pending}
+                
               />
             </FormControl>
             <FormControl id="how-heard">
@@ -445,18 +433,24 @@ try {
                 <option value="other">Other</option>
               </Select>
             </FormControl>
-            {pending ? (
+            <Button onClick= {() => {navigate('/AdminDashboard');}} colorScheme="gray">
+              Cancel
+            </Button>
+            {edit ? (
               <>
-                <Button onClick= {() => handleApprove()} colorScheme="blue">
+                {/* <Button onClick= {() => handleApprove()} colorScheme="blue">
                   Approve
                 </Button>
                 <Button onClick={() => handleDeny()} colorScheme="blue">
                   Deny
+                </Button> */}
+                <Button type="submit" colorScheme="blue">
+                  Save
                 </Button>
               </>
             ) : (
               <Button type="submit" colorScheme="blue">
-                Register
+                Submit
               </Button>
             )}
           </Flex>
@@ -467,8 +461,7 @@ try {
 };
 
 BusinessForm.propTypes = {
-  pending: PropTypes.bool.isRequired,
-  pendingData: PropTypes.object,
+  edit: PropTypes.bool,
 };
 
 export default BusinessForm;

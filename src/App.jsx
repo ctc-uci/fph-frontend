@@ -17,13 +17,15 @@ import BusinessFormMaster from './components/OnBoarding/BusinessFormMaster.jsx';
 import ForgotPassword from './components/Authentication/ForgotPassword.jsx';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './utils/ProtectedRoute.jsx';
+import ViewBusiness from './components/ViewBusiness/ViewBusiness.jsx';
+import BusinessForm from './components/BusinessForm/BusinessForm.jsx';
 
 const App = () => {
   return (
     <BackendProvider>
       <AuthProvider>
         <div className={styles.appLayout}>
-          <Sidebar isAdmin={true} />
+          <Sidebar isAdmin={false} />
           <div className={styles.mainContent}>
             <Routes>
               <Route exact path="/" element={<div>Welcome to the App</div>} />
@@ -84,6 +86,16 @@ const App = () => {
                 exact
                 path="/BusinessForm"
                 element={<ProtectedRoute Component={BusinessFormMaster} />}
+              />
+              <Route
+                exact
+                path='/ViewBusiness/:id'
+                element={<ProtectedRoute Component={ViewBusiness} />}
+              />
+              <Route
+                exact
+                path='/EditBusiness/:id'
+                element={<ProtectedRoute Component={BusinessForm} />}
               />
             </Routes>
           </div>
