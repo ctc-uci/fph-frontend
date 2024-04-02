@@ -36,8 +36,13 @@ const App = () => {
               <Route
                 exact
                 path="/AdminDashboard"
-                element={<ProtectedRoute Component={AdminDashboard} />}
-              />
+                element={<ProtectedRoute Component={AdminDashboard}
+                 />}
+              >
+                <Route exact path=":status">
+                  <Route exact path=":businessId" />
+                </Route>
+              </Route>
               <Route exact path="/AdminManageForms" />
               <Route exact path="/AdminTeamManagement" />
               <Route

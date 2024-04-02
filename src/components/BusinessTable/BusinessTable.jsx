@@ -7,6 +7,7 @@ const BusinessTable = businessData => {
   const { backend } = useBackend();
   const [data, setData] = useState([]);
   const [selectedBusinessId, setBusinessId] = useState(null);
+  const [backButtonClicked, setBackButtonClicked] = useState(false);
   const TABLE_HEADERS = [
     'id',
     'Type',
@@ -64,6 +65,8 @@ const BusinessTable = businessData => {
     'Created Date',
     'City',
   ];
+
+
   const tableHeaders = TABLE_HEADERS.map(tableHeader => <th key={tableHeader}>{tableHeader}</th>);
   const [selectedBusinessIds, setSelectedBusinessIds] = useState(new Set());
 
@@ -127,6 +130,8 @@ const BusinessTable = businessData => {
   const handleRowClick = async id => {
     try {
       setBusinessId(id);
+      setBackButtonClicked(false);
+      console.log("row clicked");
       const response = await backend.get(`/business/${id}`);
       console.log(response.data);
     } catch (error) {
@@ -134,9 +139,10 @@ const BusinessTable = businessData => {
     }
   };
 
-  if (selectedBusinessId) {
-    return <ViewBusiness id={selectedBusinessId} />;
+  if (selectedBusinessId && !backButtonClicked) {
+    return <ViewBusiness id={selectedBusinessId} setBackButtonClicked={setBackButtonClicked}/>;
   }
+
   return businessData['businessData'].length == 0 ? (
     <h1>Loading ...</h1>
   ) : (
@@ -161,7 +167,7 @@ const BusinessTable = businessData => {
         </Thead>
         <Tbody>
           {data.map((item, index) => (
-            <Tr key={index}>
+            <Tr key={index} sx={{cursor: 'pointer'}}>
               {/* Add a Checkbox for each row in the checkbox column */}
               <Td key="checkbox">
                 <Checkbox

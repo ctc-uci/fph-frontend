@@ -23,15 +23,24 @@ import {
   Stack,
   Divider,
 } from '@chakra-ui/react';
-import { DeleteIcon, EditIcon, DownloadIcon, CalendarIcon } from '@chakra-ui/icons';
+import {
+  DeleteIcon,
+  EditIcon,
+  DownloadIcon,
+  CalendarIcon,
+  ChevronLeftIcon,
+} from '@chakra-ui/icons';
 import { useBackend } from '../../contexts/BackendContext';
 import kevinLiu from './kevinLiu.jpg';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const ViewBusiness = ({ id }) => {
+const ViewBusiness = ({ id, setBackButtonClicked }) => {
   const [business, setBusiness] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [data, setData] = useState([]);
+  const navigate = useNavigate();
+  const { status } = useParams();
 
   const { backend } = useBackend();
 
@@ -63,6 +72,7 @@ const ViewBusiness = ({ id }) => {
   useEffect(() => {
     if (id) {
       fetchBusiness();
+      navigate(`/AdminDashboard/${status}/${id}`);
     }
   }, [id]);
 
@@ -79,6 +89,15 @@ const ViewBusiness = ({ id }) => {
       <Flex justify="flex-end" wrap="nowrap" maxW="80%" mx="auto">
         <Card maxW="75%" w="780px" h="auto" p={8} ml="80">
           <CardHeader>
+            <IconButton
+              icon={<ChevronLeftIcon />}
+              boxSize="8"
+              sx={{ backgroundColor: 'rgb(225,225,225)', borderRadius: '5px' }}
+              onClick={() => {
+                setBackButtonClicked(true);
+                navigate(`/AdminDashboard/${status}`);
+              }}
+            />
             <Flex justify="space-between" align="center" w="full">
               <Flex align="center" gap="4">
                 <Avatar

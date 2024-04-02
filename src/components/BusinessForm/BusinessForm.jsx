@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   Box,
   FormControl,
@@ -14,8 +14,10 @@ import {
   Text,
   UnorderedList,
   ListItem,
-  useToast
+  useToast,
+  IconButton,
 } from '@chakra-ui/react';
+import { ChevronLeftIcon } from '@chakra-ui/icons';
 import { useBackend } from '../../contexts/BackendContext';
 import RegisterSuccessPage from '../RegisterBusinessForm/RegisterSuccessPage';
 
@@ -74,8 +76,9 @@ TimeInput.propTypes = {
   isReadOnly: PropTypes.bool.isRequired,
 };
 
-const BusinessForm = ({ pending, pendingData }) => {
+const BusinessForm = ({ pending, pendingData, setBackButtonClicked }) => {
   // State for each form field
+  const { status } = useParams();
   const [businessName, setBusinessName] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -90,7 +93,7 @@ const BusinessForm = ({ pending, pendingData }) => {
   const [email, setEmail] = useState('');
   const [howHeard, setHowHeard] = useState('');
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const toast = useToast();
   const [businessHours, setBusinessHours] = useState(
     daysOfWeek.reduce(
@@ -108,6 +111,7 @@ const BusinessForm = ({ pending, pendingData }) => {
   useEffect(() => {
     if (pending) {
       fillOutPendingData();
+      navigate(`/AdminDashboard/${status}/${pendingData.id}`);
     }
   });
 
@@ -196,50 +200,50 @@ const BusinessForm = ({ pending, pendingData }) => {
   if (!pending && registrationSuccess) {
     return <RegisterSuccessPage />;
   }
-  
+
   const handleApprove = async () => {
     const updatedData = {
       ...pendingData,
       status: 'Active',
+    };
+    console.log({ businessId: pendingData.id });
+    try {
+      await backend.put(`/business/${pendingData.id}`, updatedData);
+      setRegistrationSuccess(true);
+      navigate('/AdminDashboard');
+      toast({
+        title: 'Business form has been approved',
+        status: 'warning',
+        duration: 3000,
+        isClosable: true,
+        position: 'bottom-right',
+      });
+    } catch (error) {
+      console.log('Error in approving business: error');
+    }
   };
-  console.log({businessId: pendingData.id});
-  try {
-    await backend.put(`/business/${pendingData.id}`, updatedData);
-    setRegistrationSuccess(true);
-    navigate('/AdminDashboard');
-    toast({
-      title: 'Business form has been approved',
-      status: 'warning',
-      duration: 3000,
-      isClosable: true,
-      position: 'bottom-right',
-    });
-  } catch (error) {
-    console.log('Error in approving business: error')
-  }
-};
 
-const handleDeny = async () => {
-  const updatedData = {
-    ...pendingData,
-    status: 'Denied',
-};
-console.log({businessId: pendingData.id});
-try {
-  await backend.put(`/business/${pendingData.id}`, updatedData);
-  setRegistrationSuccess(true);
-  navigate('/AdminDashboard');
-  toast({
-    title: 'Business form has been denied',
-    status: 'warning',
-    duration: 3000,
-    isClosable: true,
-    position: 'bottom-right',
-  });
-} catch (error) {
-  console.error('Error in approving business:', error);
-}
-};
+  const handleDeny = async () => {
+    const updatedData = {
+      ...pendingData,
+      status: 'Denied',
+    };
+    console.log({ businessId: pendingData.id });
+    try {
+      await backend.put(`/business/${pendingData.id}`, updatedData);
+      setRegistrationSuccess(true);
+      navigate('/AdminDashboard');
+      toast({
+        title: 'Business form has been denied',
+        status: 'warning',
+        duration: 3000,
+        isClosable: true,
+        position: 'bottom-right',
+      });
+    } catch (error) {
+      console.error('Error in approving business:', error);
+    }
+  };
 
   const fillOutPendingData = () => {
     console.log('Pending Check', pendingData);
@@ -276,6 +280,15 @@ try {
       <Flex direction="column" align="stretch" gap={5}>
         {pending ? (
           <>
+            <IconButton
+              icon={<ChevronLeftIcon />}
+              boxSize="8"
+              sx={{ backgroundColor: 'rgb(225,225,225)', borderRadius: '5px' }}
+              onClick={() => {
+                setBackButtonClicked(true);
+                navigate(`/AdminDashboard/${status}`);
+              }}
+            />
             <Flex justifyContent="space-between">
               <Heading as="h1" size="lg" textAlign="center">
                 BUSINESS NAME
@@ -304,7 +317,6 @@ try {
             </Box>
           </>
         )}
-
         <form onSubmit={handleSubmit}>
           <Flex direction="column" gap={4}>
             <FormControl id="business-name">
@@ -447,7 +459,7 @@ try {
             </FormControl>
             {pending ? (
               <>
-                <Button onClick= {() => handleApprove()} colorScheme="blue">
+                <Button onClick={() => handleApprove()} colorScheme="blue">
                   Approve
                 </Button>
                 <Button onClick={() => handleDeny()} colorScheme="blue">
@@ -469,6 +481,7 @@ try {
 BusinessForm.propTypes = {
   pending: PropTypes.bool.isRequired,
   pendingData: PropTypes.object,
+  setBackButtonClicked: PropTypes.func.isRequired,
 };
 
 export default BusinessForm;
