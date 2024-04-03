@@ -62,13 +62,11 @@ const AdminFilterBusinesses = () => {
         `/business/?businessLimit=10&pageNum=${currentPageNum}&tab=Pending`,
       );
       setBusinessDictionary([...businessResponseActive.data, ...businessResponsePending.data]);
-      console.log(businessDictionary);
-      console.log(businessResponseActive.data);
-      console.log(businessResponsePending.data);
-      setCurrentBusinessNum(businessResponseActive.data.length + businessResponsePending.data.length);
-      setPageLimit(1);
-    }
-    else {
+      setCurrentBusinessNum(
+        businessResponseActive.data.length + businessResponsePending.data.length,
+      );
+      setPageLimit(currentBusinessNum);
+    } else {
       const businessResponse = await backend.get(
         `/business/?businessLimit=10&pageNum=${currentPageNum}&tab=${tab}`,
       );
@@ -98,13 +96,12 @@ const AdminFilterBusinesses = () => {
       </Tabs>
 
       {currentTab == 'Active' ? (
-        <BusinessTable businessData={businessDictionary}/>
+        <BusinessTable businessData={businessDictionary} />
       ) : (
-        <BusinessTablePending businessData={businessDictionary}/>
+        <BusinessTablePending businessData={businessDictionary} />
       )}
       <Box>
-        {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentBusinessNum)} of{' '}
-        {currentBusinessNum}
+        {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, pageLimit)} of {pageLimit}
       </Box>
       <IconButton
         aria-label="Back button"

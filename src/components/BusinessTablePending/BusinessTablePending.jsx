@@ -154,7 +154,13 @@ const BusinessTablePending = businessData => {
   if (selectedBusinessId && !backButtonClicked) {
     return <ViewBusiness id={selectedBusinessId} setBackButtonClicked={setBackButtonClicked} />;
   } else if (pendingData.length !== 0 && !backButtonClicked) {
-    return <BusinessForm pending={true} pendingData={pendingData.data[0]} setBackButtonClicked={setBackButtonClicked}/>;
+    return (
+      <BusinessForm
+        pending={true}
+        pendingData={pendingData.data[0]}
+        setBackButtonClicked={setBackButtonClicked}
+      />
+    );
   }
   return businessData['businessData'].length == 0 ? (
     <h1>Loading ...</h1>
@@ -180,7 +186,7 @@ const BusinessTablePending = businessData => {
         </Thead>
         <Tbody>
           {data.map((item, index) => (
-            <Tr key={index} sx={{cursor: 'pointer'}}>
+            <Tr key={index} sx={{ cursor: 'pointer' }}>
               {/* Add a Checkbox for each row in the checkbox column */}
               <Td key="checkbox">
                 <Checkbox
