@@ -28,7 +28,7 @@ import {
 } from '@chakra-ui/react';
 
 const ContactUs = () => {
-  const business_ID = 0;
+  const business_ID = 1;
   const { backend } = useBackend();
   const navigate = useNavigate();
   const [text, setText] = useState('');
@@ -83,6 +83,7 @@ const ContactUs = () => {
       message: message,
       timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }),
       been_dismissed: false,
+      type: 'Supply Request Received',
     };
     await backend.post('/notification/', updatedFormData);
     setShowConfirmation(true);
@@ -113,7 +114,7 @@ const ContactUs = () => {
       'Bin Decals',
       'DS Decals',
     ];
-    const preMessage = `Business is requesting: 
+    const preMessage = `Business is requesting:
     ${checkedThingies[0]}: ${checkedItems[0]}
     ${checkedThingies[1]}: ${checkedItems[1]}
     ${checkedThingies[2]}: ${checkedItems[2]}
