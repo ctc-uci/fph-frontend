@@ -50,7 +50,7 @@ const ViewBusiness = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [data, setData] = useState([]);
-  // const [donationFormsData, setDonationData] = useState([]);
+  const [donationFormsData, setDonationData] = useState([]);
   // const navigate = useNavigate();
 
   const { backend } = useBackend();
@@ -61,6 +61,11 @@ const ViewBusiness = () => {
       const response = await backend.get(`/business/${id}`);
       setData(response.data[0]);
       console.log('Response received:', response);
+
+      console.log(`Fetching business donation forms for ID: ${id}`);
+      const donationForms = await backend.get(`/donation/business/${id}`);
+      setDonationData(donationForms.data);
+      console.log('Response received:', donationForms);
 
       setBusiness({
         name: response.data.Name,
@@ -73,27 +78,6 @@ const ViewBusiness = () => {
       setIsLoading(false);
     }
   };
-
-  // const fetchDonationForms = async () => {
-  //   try {
-  //     console.log(`Fetching business donation forms for ID: ${id}`);
-  //     const donationForms = await backend.get(`/donation/business/${id}`);
-  //     setDonationData(donationForms.data);
-  //     console.log('Response received:', donationForms);
-  //   } catch (error) {
-  //     console.error('Error fetching data:', error);
-  //   }
-  // };
-
-  // const donationFormDates = () => {
-  //   const dates = [];
-  //   for (const [value] of Object.entries(donationFormsData)) {
-  //     const date = value.date;
-  //     formatDate(date);
-  //     dates.push(date);
-  //   }
-  //   return dates;
-  // }
 
   // const handleEditClick = () => {
   //   navigate(`/EditBusiness/${id}`);
@@ -437,19 +421,15 @@ const ViewBusiness = () => {
                         DONATION FORM HISTORY
                       </Text>
                       <CardBody>
-                        <Divider />
-                        <Box>
-                          <Text pt="2" fontSize="md" mb={5}>
-                            [Insert Date Here]
-                          </Text>
-                          <Divider />
-                        </Box>
-                        <Box>
-                          <Text pt="2" fontSize="md" mb={5}>
-                            1/28/2024
-                          </Text>
-                          <Divider />
-                        </Box>
+                        <div>
+                          {donationFormsData.map((item, index) => (
+                              <div key={index} style={{marginBottom: '15px'}}>
+                              {/* Render the date property of each object */}
+                              <p style={{ fontSize: 'small' }}>{formatDate(item.date)}</p>
+                              {index !== data.length - 1 && <Divider height="20px" width="150%"/>}
+                              </div>
+                            ))}
+                        </div>
                     </CardBody>
                     </Box>
 
