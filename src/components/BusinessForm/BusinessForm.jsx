@@ -23,6 +23,7 @@ import {
   Textarea,
   Select,
   Checkbox,
+  Link as ChakraLink
 } from '@chakra-ui/react';
 
 import 'boxicons';
@@ -246,6 +247,10 @@ const BusinessForm = ({ edit = true }) => {
     }
   };
 
+  const handleHome = () => {
+    navigate(`/AdminDashboard`);
+  }
+
   if (registrationSuccess) {
     return <RegisterSuccessPage />;
   }
@@ -357,7 +362,16 @@ const BusinessForm = ({ edit = true }) => {
 
   return (
     <ChakraProvider>
-      <Flex justify="flex-end" wrap="nowrap" maxW="80%" mx="auto">
+      <Flex justify="flex-end" wrap="nowrap" maxW="80%" mx="auto" flexDirection={'column'}>
+        <Flex justifyContent={'space-between'} mr="auto" w="1089px" marginTop={4}>
+          <Flex gap={1}>
+            <ChakraLink onClick={handleHome} color='blue.500' decoration='underline'>Home </ChakraLink><Text>/ {businessName}</Text>
+          </Flex>
+           
+           <IconButton 
+            icon={<box-icon type='solid' name='bell'></box-icon>}
+           />
+        </Flex>
         <Card maxW="100%" w="1089px" h="auto" p={6} mt="10">
           <CardHeader>
             <Flex justify="space-between" align="center" w="full">

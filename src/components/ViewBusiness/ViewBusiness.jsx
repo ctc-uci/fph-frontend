@@ -25,6 +25,7 @@ import {
   MenuButton,
   Button,
   Checkbox,
+  Link as ChakraLink,
 } from '@chakra-ui/react';
 import { ChevronDownIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 import { useBackend } from '../../contexts/BackendContext';
@@ -75,6 +76,10 @@ const ViewBusiness = () => {
     navigate(`/EditBusiness/${id}`);
   };
 
+  const handleHome = () => {
+    navigate(`/AdminDashboard`);
+  }
+
   // ViewBusiness.PropTypes = {
   //   id: PropTypes.number.isRequired,
   // }
@@ -95,7 +100,16 @@ const ViewBusiness = () => {
 
   return (
     <ChakraProvider>
-      <Flex justify="flex-end" wrap="nowrap" maxW="80%" mx="auto">
+      <Flex justify="flex-end" wrap="nowrap" maxW="80%" mx="auto" flexDirection={'column'}>
+        <Flex justifyContent={'space-between'} mr="auto" w="1089px" marginTop={4}>
+          <Flex gap={1}>
+            <ChakraLink onClick={handleHome} color='blue.500' decoration='underline'>Home </ChakraLink><Text>/ {data.name}</Text>
+          </Flex>
+           
+           <IconButton 
+            icon={<box-icon type='solid' name='bell'></box-icon>}
+           />
+        </Flex>
         <Card maxW="100%" w="1089px" h="auto" p={6} mt="10">
           <CardHeader>
             <Flex justify="space-between" align="center" w="full">
