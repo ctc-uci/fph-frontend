@@ -25,12 +25,9 @@ import {
   MenuButton,
   Button,
 } from '@chakra-ui/react';
-import {
-  ChevronDownIcon,
-  ArrowForwardIcon,
-} from '@chakra-ui/icons';
+import { ChevronDownIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 import { useBackend } from '../../contexts/BackendContext';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import 'boxicons';
 
 const ViewBusiness = () => {
@@ -39,16 +36,14 @@ const ViewBusiness = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [data, setData] = useState([]);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const { backend } = useBackend();
 
   const fetchBusiness = async () => {
     try {
-      console.log(`Fetching business details for ID: ${id}`);
       const response = await backend.get(`/business/${id}`);
       setData(response.data[0]);
-      console.log('Response received:', response);
 
       setBusiness({
         name: response.data.Name,
@@ -62,16 +57,15 @@ const ViewBusiness = () => {
     }
   };
 
-  // const handleEditClick = () => {
-  //   navigate(`/EditBusiness/${id}`);
-  // };
+  const handleEditClick = () => {
+    navigate(`/EditBusiness/${id}`);
+  };
 
   // ViewBusiness.PropTypes = {
   //   id: PropTypes.number.isRequired,
   // }
 
   useEffect(() => {
-    console.log(id);
     if (id) {
       fetchBusiness();
     }
@@ -103,13 +97,14 @@ const ViewBusiness = () => {
                   variant="ghost"
                   colorScheme="gray"
                   aria-label="Edit menu"
-                  icon={<box-icon name='pencil'></box-icon>}
+                  onClick={handleEditClick}
+                  icon={<box-icon name="pencil"></box-icon>}
                 />
                 <IconButton
                   variant="regular"
                   colorScheme="red"
                   aria-label="Delete menu"
-                  icon={<box-icon name='trash' color='#d30000' ></box-icon>}
+                  icon={<box-icon name="trash" color="#d30000"></box-icon>}
                 />
               </Flex>
             </Flex>
@@ -309,18 +304,28 @@ const ViewBusiness = () => {
                 <Card ml="6">
                   <Flex direction="row" align="left" w="full">
                     <Box mt="3" ml="6" mb="4" mr="3">
-                      <Text fontSize="xs" as="b">DONATION FORM STATUS</Text>
+                      <Text fontSize="xs" as="b">
+                        DONATION FORM STATUS
+                      </Text>
                       <HStack spacing={4} mt={15}>
                         <Button size="sm" variant="solid" colorScheme="teal">
                           <box-icon name="envelope" size="14px" color="#ffffff"></box-icon>
-                          <Text fontSize="sm" ml="2">Send reminder</Text>
+                          <Text fontSize="sm" ml="2">
+                            Send reminder
+                          </Text>
                         </Button>
                       </HStack>
-                      <Text fontSize="10px" mt="1">Last reminder sent on 12/3/2023</Text>
+                      <Text fontSize="10px" mt="1">
+                        Last reminder sent on 12/3/2023
+                      </Text>
                       <Divider w="225px" mt="2"></Divider>
                       <Flex direction="row">
-                        <Text fontSize="xs" as="b" mt="3">OR</Text>
-                        <Button size="xs" colorScheme="teal" variant="link" ml="3" mt="3" as="b">Manually submit form <ArrowForwardIcon/></Button>
+                        <Text fontSize="xs" as="b" mt="3">
+                          OR
+                        </Text>
+                        <Button size="xs" colorScheme="teal" variant="link" ml="3" mt="3" as="b">
+                          Manually submit form <ArrowForwardIcon />
+                        </Button>
                       </Flex>
                     </Box>
                   </Flex>
@@ -328,27 +333,35 @@ const ViewBusiness = () => {
                 <Card ml="6" mt="6">
                   <Flex direction="row" align="left" w="full">
                     <Box mt="3" ml="6" mb="4" mr="3">
-                      <Text fontSize="xs" as="b">SUPPLY REQUEST</Text>
+                      <Text fontSize="xs" as="b">
+                        SUPPLY REQUEST
+                      </Text>
                       <HStack spacing={4} mt={15}>
                         <Button size="sm" variant="solid" colorScheme="teal">
                           <box-icon name="package" size="14px" color="#ffffff"></box-icon>
-                          <Text fontSize="sm" ml="2">View request</Text>
+                          <Text fontSize="sm" ml="2">
+                            View request
+                          </Text>
                         </Button>
                       </HStack>
-                      <Text fontSize="10px" mt="1">Requested on 1/15/2024</Text>
+                      <Text fontSize="10px" mt="1">
+                        Requested on 1/15/2024
+                      </Text>
                       <Divider w="225px" mt="2"></Divider>
                       <Flex direction="row">
-                        <Text fontSize="xs" as="b" mt="3">STATUS</Text>
+                        <Text fontSize="xs" as="b" mt="3">
+                          STATUS
+                        </Text>
                         <Box mt="2" ml="3">
-                        <Menu>
-                          <MenuButton as={Button} rightIcon={<ChevronDownIcon/>} size="xs">
-                            Status
-                          </MenuButton>
-                          <MenuList>
-                            <MenuItem>Pending</MenuItem>
-                            <MenuItem>Sent</MenuItem>
-                          </MenuList>
-                        </Menu>
+                          <Menu>
+                            <MenuButton as={Button} rightIcon={<ChevronDownIcon />} size="xs">
+                              Status
+                            </MenuButton>
+                            <MenuList>
+                              <MenuItem>Pending</MenuItem>
+                              <MenuItem>Sent</MenuItem>
+                            </MenuList>
+                          </Menu>
                         </Box>
                       </Flex>
                     </Box>
@@ -361,7 +374,6 @@ const ViewBusiness = () => {
                         DONATION FORM HISTORY
                       </Text>
                       <CardBody>
-
                         <Divider />
                         <Box>
                           <Text pt="2" fontSize="md" mb={5}>
@@ -375,10 +387,8 @@ const ViewBusiness = () => {
                           </Text>
                           <Divider />
                         </Box>
-
-                    </CardBody>
+                      </CardBody>
                     </Box>
-
                   </Flex>
                 </Card>
               </Box>
@@ -392,8 +402,7 @@ const ViewBusiness = () => {
                 minW: '136px',
               },
             }}
-          >
-          </CardFooter>
+          ></CardFooter>
         </Card>
       </Flex>
     </ChakraProvider>

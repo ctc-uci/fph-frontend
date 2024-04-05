@@ -89,12 +89,12 @@ const App = () => {
               />
               <Route
                 exact
-                path='/ViewBusiness/:id'
+                path="/ViewBusiness/:id"
                 element={<ProtectedRoute Component={ViewBusiness} />}
               />
               <Route
                 exact
-                path='/EditBusiness/:id'
+                path="/EditBusiness/:id"
                 element={<ProtectedRoute Component={BusinessForm} />}
               />
             </Routes>
