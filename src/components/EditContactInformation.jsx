@@ -21,12 +21,17 @@ const EditContactInformation = () => {
   const { backend } = useBackend();
 
   const [businessContactInfo, setBusinessContactInfo] = useState({
+    businessName: '',
     phoneNumber: '',
     email: '',
     website: '',
     street: '',
     firstName: '',
     lastName: '',
+    zip: '',
+    state: '',
+    city: '',
+    business_hours: '',
   });
 
   const handleChange = event => {
@@ -39,11 +44,16 @@ const EditContactInformation = () => {
   const updateContactInfo = async () => {
     try {
       await backend.put(`/business/${BUSINESS_ID}`, {
+        business_name: businessContactInfo.businessName,
         contact_name: `${businessContactInfo.firstName} ${businessContactInfo.lastName}`,
         contact_phone: businessContactInfo.phoneNumber,
         primary_email: businessContactInfo.email,
         website: businessContactInfo.website,
         street: businessContactInfo.street,
+        zip: businessContactInfo.zip,
+        city: businessContactInfo.city,
+        state: businessContactInfo.state,
+        business_hours: businessContactInfo.business_hours,
       });
     } catch (error) {
       console.error('Error updating data:', error);
@@ -57,15 +67,20 @@ const EditContactInformation = () => {
         const businessContact = businessContactResponse.data[0];
         const name = businessContact.contact_name.split(' ');
         const firstName = name[0];
-        const lastName = name[1];
+        const lastName = name[1]; 
 
         setBusinessContactInfo({
+          businessName: businessContact.name,
           phoneNumber: businessContact.contact_phone,
           email: businessContact.primary_email,
           website: businessContact.website,
           street: businessContact.street,
           firstName: firstName,
           lastName: lastName,
+          city: businessContact.city,
+          state: businessContact.state,
+          zip: businessContact.zip_code,
+          business_hours: businessContact.business_hours,
         });
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -102,7 +117,13 @@ const EditContactInformation = () => {
                 >
                   BUSINESS NAME
                 </FormLabel>
-                <Input type="text" placeholder="Enter Business Name" width={'70%'} />
+                <Input
+                  type="text"
+                  placeholder="Enter Business Name"
+                  width={'70%'}
+                  value={businessContactInfo.businessName}
+                  onChange={(e) => {setBusinessContactInfo({...businessContactInfo, businessName: e.target.value})}}
+                />
               </HStack>
               <HStack marginBottom={'3%'}>
                 <FormLabel
@@ -196,9 +217,27 @@ const EditContactInformation = () => {
                   width={'26%'}
                   alignItems={'center'}
                 ></FormLabel>
-                <Input type="text" placeholder="City" width={'28%'} />
-                <Input type="text" placeholder="State" width={'18%'} />
-                <Input type="text" placeholder="Zip Code" width={'21.5%'} />
+                <Input
+                  type="text"
+                  placeholder="City"
+                  width={'28%'}
+                  value={businessContactInfo.city}
+                  onChange={(e) => {setBusinessContactInfo({...businessContactInfo, city: e.target.value})}}
+                />
+                <Input
+                  type="text" 
+                  placeholder="State"
+                  width={'18%'}
+                  value={businessContactInfo.state}
+                  onChange={(e) => {setBusinessContactInfo({...businessContactInfo, state: e.target.value})}}
+                />
+                <Input
+                  type="text"
+                  placeholder="Zip Code"
+                  width={'21.5%'}
+                  value={businessContactInfo.zip}
+                  onChange={(e) => {setBusinessContactInfo({...businessContactInfo, zip: e.target.value})}}
+                />
               </HStack>
               <HStack marginBottom={'3%'}>
                 <FormLabel
@@ -229,7 +268,13 @@ const EditContactInformation = () => {
                 >
                   BUSINESS HOURS
                 </FormLabel>
-                <Input type="text" placeholder="M-F 8:00 am - 10:00 pm" width={'70%'} />
+                <Input
+                  type="text"
+                  placeholder="M-F 8:00 am - 10:00 pm"
+                  width={'70%'}
+                  value={businessContactInfo.business_hours}
+                  onChange={(e) => {setBusinessContactInfo({...businessContactInfo, business_hours: e.target.value})}}
+                />
               </HStack>
             </FormControl>
           </Card>
