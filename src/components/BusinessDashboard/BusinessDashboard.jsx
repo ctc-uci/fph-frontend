@@ -1,5 +1,4 @@
 import './BusinessDashboard.module.css';
-import React from 'react';
 import { useBackend } from '../../contexts/BackendContext';
 import { useEffect, useState } from 'react';
 import {
@@ -20,13 +19,10 @@ import {
   Center,
   Drawer,
   DrawerBody,
-  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-  useDisclosure,
-  VStack,
 } from '@chakra-ui/react';
 import { BiDonateHeart, BiMoney, BiPackage } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
@@ -184,6 +180,7 @@ const BusinessDashboard = () => {
 
   // Bruh naw what is this CHANGE LATER
   const calculateTotalWorth = () => {
+    console.log(priceData);
     return 99;
   };
 
@@ -328,7 +325,7 @@ const BusinessDashboard = () => {
               <div style={{ marginLeft: '12px' }}>
                 <Box>
                   <Text fontSize={25} fontWeight={500}>
-                    {calculateTotalWorth()}
+                    ${calculateTotalWorth()}
                   </Text>
                 </Box>
                 <Box>
@@ -352,7 +349,7 @@ const BusinessDashboard = () => {
               <div style={{ marginLeft: '12px' }}>
                 <Box>
                   <Text fontSize={25} fontWeight={500}>
-                    0
+                    {calculateTotalPounds()}
                   </Text>
                 </Box>
                 <Box>
@@ -376,7 +373,7 @@ const BusinessDashboard = () => {
               <div style={{ marginLeft: '12px' }}>
                 <Box>
                   <Text fontSize={25} fontWeight={500}>
-                    {calculateTotalPounds()}
+                    
                   </Text>
                 </Box>
                 <Text color="gray" mt={-2}>
