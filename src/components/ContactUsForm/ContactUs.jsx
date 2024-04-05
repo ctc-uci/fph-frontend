@@ -84,6 +84,7 @@ const ContactUs = () => {
       message: message,
       timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }),
       been_dismissed: false,
+      type: 'Supply Request Received',
     };
     await backend.post('/notification/', updatedFormData);
     setShowConfirmation(true);
