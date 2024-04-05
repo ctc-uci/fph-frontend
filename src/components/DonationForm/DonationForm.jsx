@@ -44,9 +44,25 @@ const DonationForm = () => {
     volunteer_hours: null,
   });
 
+  const businessID = 1;
+
   const submitForm = async event => {
     event.preventDefault();
     await backend.post('/donation', formData);
+    const fphNotificationData = {
+      message: `Business ID: ${businessID} Donation Form Submission`,
+      timestamp: new Date().toLocaleString('en-US', { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone }),
+      been_dismissed: false,
+      type: 'Donation Form Submitted',
+    };
+    await backend.post('/notification', fphNotificationData);
+    const businessNotificationData = {
+      message: 'Donation Form Submitted Successfully',
+      timestamp: new Date().toLocaleString('en-US', { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone }),
+      been_dismissed: false,
+      type: 'Donation Form Submitted',
+    };
+    await backend.post('/notification', businessNotificationData);
   };
 
   const handleChange = event => {
@@ -279,7 +295,7 @@ const DonationForm = () => {
                 <CustomInput id="countryCode" placeholder="+1" name="countryCode" width="187.5px" />
                 <CustomInput
                   id="phoneNumber"
-                  placeholder="0000-0000-0000"
+                  placeholder="000-000-0000"
                   name="phoneNumber"
                   flex="1"
                 />
