@@ -28,6 +28,9 @@ import {
   Link as ChakraLink,
 } from '@chakra-ui/react';
 import { ChevronDownIcon, ArrowForwardIcon } from '@chakra-ui/icons';
+import {
+  ChevronLeftIcon,
+} from '@chakra-ui/icons';
 import { useBackend } from '../../contexts/BackendContext';
 import { useParams, useNavigate } from 'react-router-dom';
 import 'boxicons';
@@ -42,7 +45,7 @@ function formatDateDFH(dateTimeString) {
   return date.toLocaleDateString('en-US', options);
 }
 
-const ViewBusiness = () => {
+const ViewBusiness = ({ setBackButtonClicked }) => {
   const { id } = useParams();
   const [business, setBusiness] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -107,6 +110,7 @@ const ViewBusiness = () => {
   useEffect(() => {
     if (id) {
       fetchBusiness();
+      navigate(`/AdminDashboard/${status}/${id}`);
     }
   }, [id]);
 
@@ -133,6 +137,15 @@ const ViewBusiness = () => {
         </Flex>
         <Card maxW="100%" w="1089px" h="auto" p={6} mt="10">
           <CardHeader>
+            <IconButton
+              icon={<ChevronLeftIcon />}
+              boxSize="8"
+              sx={{ backgroundColor: 'rgb(225,225,225)', borderRadius: '5px' }}
+              onClick={() => {
+                setBackButtonClicked(true);
+                navigate(`/AdminDashboard/${status}`);
+              }}
+            />
             <Flex justify="space-between" align="center" w="full">
               <Flex align="center" gap="4">
                 <Box>

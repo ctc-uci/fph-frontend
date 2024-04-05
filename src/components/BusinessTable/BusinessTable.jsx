@@ -65,6 +65,7 @@ const BusinessTable = businessData => {
     'Created Date',
     'City',
   ];
+
   const tableHeaders = TABLE_HEADERS.map(tableHeader => <th key={tableHeader}>{tableHeader}</th>);
   const [selectedBusinessIds, setSelectedBusinessIds] = useState(new Set());
 
@@ -152,7 +153,7 @@ const BusinessTable = businessData => {
         </Thead>
         <Tbody>
           {data.map((item, index) => (
-            <Tr key={index}>
+            <Tr key={index} sx={{ cursor: 'pointer' }}>
               {/* Add a Checkbox for each row in the checkbox column */}
               <Td key="checkbox">
                 <Checkbox

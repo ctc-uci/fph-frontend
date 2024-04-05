@@ -5,8 +5,6 @@ import {
   Box,
   Button,
   Flex,
-  Text,
-  IconButton,
   ChakraProvider,
   Card,
   CardHeader,
@@ -22,6 +20,8 @@ import {
   Spacer,
   Textarea,
   Select,
+  Text,
+  IconButton,
   Checkbox,
   Link as ChakraLink
 } from '@chakra-ui/react';

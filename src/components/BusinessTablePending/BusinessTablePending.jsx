@@ -8,6 +8,7 @@ const BusinessTablePending = businessData => {
   const { backend } = useBackend();
   const [data, setData] = useState([]);
   const [selectedBusinessId, setBusinessId] = useState(null);
+  const [backButtonClicked, setBackButtonClicked] = useState(false);
   const [pendingData, setPendingData] = useState([]);
   //   const [selectedApplication, setSelectedApplication] = useState(new Set());
   const TABLE_HEADERS = [
@@ -121,6 +122,7 @@ const BusinessTablePending = businessData => {
     try {
       const response = await backend.get(`/business/${businessId}`);
       setPendingData(response);
+      setBackButtonClicked(false);
       // setSelectedApplication(businessId);
     } catch (error) {
       console.error('Error while fetching  application', error);
@@ -141,6 +143,7 @@ const BusinessTablePending = businessData => {
   const handleRowClick = async id => {
     try {
       setBusinessId(id);
+      setBackButtonClicked(false);
       const response = await backend.get(`/business/${id}`);
       console.log(response.data);
     } catch (error) {
@@ -148,10 +151,16 @@ const BusinessTablePending = businessData => {
     }
   };
 
-  if (selectedBusinessId) {
-    return <ViewBusiness id={selectedBusinessId} />;
-  } else if (pendingData.length !== 0) {
-    return <BusinessForm pending={true} pendingData={pendingData.data[0]} />;
+  if (selectedBusinessId && !backButtonClicked) {
+    return <ViewBusiness id={selectedBusinessId} setBackButtonClicked={setBackButtonClicked} />;
+  } else if (pendingData.length !== 0 && !backButtonClicked) {
+    return (
+      <BusinessForm
+        pending={true}
+        pendingData={pendingData.data[0]}
+        setBackButtonClicked={setBackButtonClicked}
+      />
+    );
   }
   return businessData['businessData'].length == 0 ? (
     <h1>Loading ...</h1>
@@ -177,7 +186,7 @@ const BusinessTablePending = businessData => {
         </Thead>
         <Tbody>
           {data.map((item, index) => (
-            <Tr key={index}>
+            <Tr key={index} sx={{ cursor: 'pointer' }}>
               {/* Add a Checkbox for each row in the checkbox column */}
               <Td key="checkbox">
                 <Checkbox
@@ -190,9 +199,11 @@ const BusinessTablePending = businessData => {
                   {typeof item[key] === 'boolean' ? (item[key] ? 'True' : 'False') : item[key]}
                 </Td>
               ))}
-              <Td key="Application">
-                <Button onClick={() => handleViewApplication(item.id)}>View Application</Button>
-              </Td>
+              {item.status === 'Pending' ? (
+                <Td key="Application">
+                  <Button onClick={() => handleViewApplication(item.id)}>View Application</Button>
+                </Td>
+              ) : null}
             </Tr>
           ))}
         </Tbody>
