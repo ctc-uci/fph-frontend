@@ -24,11 +24,22 @@ import {
   MenuItem,
   MenuButton,
   Button,
+  Checkbox,
 } from '@chakra-ui/react';
 import { ChevronDownIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 import { useBackend } from '../../contexts/BackendContext';
 import { useParams, useNavigate } from 'react-router-dom';
 import 'boxicons';
+
+function formatDate(dateTimeString) {
+  const date = new Date(dateTimeString);
+  const options = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  };
+  return date.toLocaleDateString('en-US', options);
+}
 
 const ViewBusiness = () => {
   const { id } = useParams();
@@ -37,6 +48,7 @@ const ViewBusiness = () => {
   const [error, setError] = useState(null);
   const [data, setData] = useState([]);
   const navigate = useNavigate();
+  const [donationFormsData, setDonationData] = useState([]);
 
   const { backend } = useBackend();
 
@@ -44,6 +56,8 @@ const ViewBusiness = () => {
     try {
       const response = await backend.get(`/business/${id}`);
       setData(response.data[0]);
+      const donationForms = await backend.get(`/donation/business/${id}`);
+      setDonationData(donationForms.data);
 
       setBusiness({
         name: response.data.Name,
@@ -167,6 +181,30 @@ const ViewBusiness = () => {
                               </Text>
                             </Td>
                           </Tr>
+                          <Tr>
+                            <Td>
+                              <Text fontSize="xs" color="500" as="b">
+                                PHONE
+                              </Text>
+                            </Td>
+                            <Td>
+                              <Text fontSize="xs" color="500">
+                                {data.primary_phone.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')}
+                              </Text>
+                            </Td>
+                          </Tr>
+                          <Tr>
+                            <Td>
+                              <Text fontSize="xs" color="500" as="b">
+                                BUSINESS HOURS
+                              </Text>
+                            </Td>
+                            <Td>
+                              <Text fontSize="xs" color="500">
+                                {data.business_hours}
+                              </Text>
+                            </Td>
+                          </Tr>
                         </Tbody>
                       </Table>
                     </TableContainer>
@@ -188,7 +226,7 @@ const ViewBusiness = () => {
                                 Phone for FPOTH Website
                               </Text>
                               <Text fontSize="xs" color="500">
-                                775-841-7463
+                                {data.fph_phone.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')}
                               </Text>
                             </Td>
                           </Tr>
@@ -198,7 +236,7 @@ const ViewBusiness = () => {
                                 Notes for Website
                               </Text>
                               <Text fontSize="xs" color="500" whiteSpace="normal">
-                                This is our main website, we have several other websites.
+                                {data.web_notes}
                               </Text>
                             </Td>
                           </Tr>
@@ -214,7 +252,7 @@ const ViewBusiness = () => {
                                 Publish Status
                               </Text>
                               <Text fontSize="xs" color="500">
-                                Published
+                                {data.published ? "Published" : "Not Published"}
                               </Text>
                             </Td>
                           </Tr>
@@ -224,7 +262,7 @@ const ViewBusiness = () => {
                                 Added to Website (Date & Initials)
                               </Text>
                               <Text fontSize="xs" color="500" whiteSpace="normal">
-                                A.B. 1/1/24
+                                {formatDate(data.web_date_init)}
                               </Text>
                             </Td>
                           </Tr>
@@ -244,7 +282,22 @@ const ViewBusiness = () => {
                                 ADDITIONAL INFORMATION
                               </Text>
                               <Text fontSize="xs" color="500" whiteSpace="normal">
-                                Pet Food Provider Site
+                                {data.food && <p>Pet Food Donation Site</p>}
+                                {data.donation && <p>Donation Site</p>}
+                                {data.shelter && <p>Shelter</p>}
+                                {data.family_shelter && <p>Families Only Shelter</p>}
+                                {data.wellness && <p>Wellness Clinics</p>}
+                                {data.spay_neuter && <p>Spay Neuter</p>}
+                                {data.financial && <p>Financial Assistance</p>}
+                                {data.re_home && <p>Rehome Foster</p>}
+                                {data.sync_to_qb && <p>Entered in QB</p>}
+                                {data.inactive && <p>Inactive</p>}
+                                {data.final_check && <p>Final Check</p>}
+                                {data.er_boarding && <p>ER Boarding</p>}
+                                {data.senior && <p>Senior Citizens Only</p>}
+                                {data.cancer && <p>Cancer Specific</p>}
+                                {data.dog && <p>Dog Specific</p>}
+                                {data.cat && <p>Cat Specific</p>}
                               </Text>
                             </Td>
                           </Tr>
@@ -254,7 +307,7 @@ const ViewBusiness = () => {
                                 Internal Notes
                               </Text>
                               <Text fontSize="xs" color="500" whiteSpace="normal">
-                                Remember Justine prefers to be called Justy.
+                                {data.internal_notes}
                               </Text>
                             </Td>
                           </Tr>
@@ -269,9 +322,13 @@ const ViewBusiness = () => {
                               <Text fontSize="xs" color="500" as="b">
                                 TYPE
                               </Text>
-                              <Text fontSize="xs" color="500">
-                                Valid for Service Request
-                              </Text>
+                              <Flex align="center">
+                                <Text fontSize="xs" color="500">
+                                  Valid for Service Request
+                                </Text>
+                                <Checkbox isChecked={data.service_request} readOnly ml={6}>
+                                </Checkbox>
+                              </Flex>
                               <Menu>
                                 {({ isOpen }) => (
                                   <>
@@ -282,12 +339,12 @@ const ViewBusiness = () => {
                                       variant="outline"
                                       size="xs"
                                       style={{ width: '90%' }}
+                                      color = "grey"
                                     >
-                                      Type
+                                      {data.vendor_type}
                                     </MenuButton>
                                     <MenuList>
-                                      <MenuItem>Pins</MenuItem>
-                                      <MenuItem>Flyers</MenuItem>
+                                      <MenuItem isDisabled={true}>{data.vendor_type}</MenuItem>
                                     </MenuList>
                                   </>
                                 )}
@@ -367,27 +424,23 @@ const ViewBusiness = () => {
                     </Box>
                   </Flex>
                 </Card>
-                <Card mt="6" ml="6" height="40vh">
+                <Card mt="6" ml="6" height="60%">
                   <Flex direction="row" align="left" w="full">
                     <Box mt="6" ml="6" mb="4">
                       <Text fontSize="xs" mb="4" as="b" whiteSpace="normal">
                         DONATION FORM HISTORY
                       </Text>
                       <CardBody>
-                        <Divider />
-                        <Box>
-                          <Text pt="2" fontSize="md" mb={5}>
-                            1/12/2024
-                          </Text>
-                          <Divider />
-                        </Box>
-                        <Box>
-                          <Text pt="2" fontSize="md" mb={5}>
-                            1/28/2024
-                          </Text>
-                          <Divider />
-                        </Box>
-                      </CardBody>
+                        <div>
+                          {donationFormsData.map((item, index) => (
+                              <div key={index} style={{marginBottom: '15px'}}>
+                              {/* Render the date property of each object */}
+                              <p style={{ fontSize: 'small' }}>{formatDate(item.date)}</p>
+                              {index !== data.length - 1 && <Divider height="20px" width="150%"/>}
+                              </div>
+                            ))}
+                        </div>
+                    </CardBody>
                     </Box>
                   </Flex>
                 </Card>
@@ -395,14 +448,23 @@ const ViewBusiness = () => {
             </Flex>
           </CardBody>
           <CardFooter
-            justify="space-between"
+            justify="flex-end"
             flexWrap="wrap"
             sx={{
               '& > button': {
                 minW: '136px',
               },
             }}
-          ></CardFooter>
+          >
+            <Flex direction="column">
+              <Text fontSize="xs" color="gray">
+                Created by {data.created_by} {formatDate(data.created_date)}
+              </Text>
+              <Text fontSize="xs" color="gray">
+                Updated by {data.updated_by} {formatDate(data.updated_date_time)}
+              </Text>
+            </Flex>
+          </CardFooter>
         </Card>
       </Flex>
     </ChakraProvider>
