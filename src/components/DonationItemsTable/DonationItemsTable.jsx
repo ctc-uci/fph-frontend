@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useBackend } from '../../contexts/BackendContext';
 import DonationsModal from './DonationsModal.jsx';
+import classes from './DonationItemsTable.module.css';
 import {
   Table,
   Thead,
@@ -13,6 +14,7 @@ import {
   Tab,
   TabPanels,
   TabPanel,
+  Text,
   Box,
   IconButton,
   Button,
@@ -23,13 +25,20 @@ import PropTypes from 'prop-types';
 
 const DonationItemsTable = () => {
   return (
-    <div>
+    <div className={classes.container}>
+      <div className={classes.ditTitleContainer}>
+        <Text>Donation Items</Text>
+      </div>
       <Tabs>
-        <TabList>
-          <Tab>All</Tab>
-          <Tab>Food</Tab>
-          <Tab>Misc.</Tab>
-        </TabList>
+        <div className={classes.tabs}>
+          <Tabs isFitted="true">
+            <TabList>
+              <Tab>All</Tab>
+              <Tab>Food</Tab>
+              <Tab>Misc.</Tab>
+            </TabList>
+          </Tabs>
+        </div>
         <TabPanels>
           <TabPanel>
             <DonationItems category="all" />
@@ -91,11 +100,13 @@ const DonationItems = ({ category }) => {
         setCurrentPageNum={setCurrentPageNum}
         loadInfo={loadInfo}
       />
-      <Button onClick={onOpen}>
-        Add Item
-        <AddIcon />
-      </Button>
-      <Table variant="striped">
+      <div className={classes.addItemContainer}>
+        <Button colorScheme="teal" onClick={onOpen}>
+          Add Item
+          <AddIcon />
+        </Button>
+      </div>
+      <Table variant="striped" className={classes.table} colorScheme="whiteAlpha">
         <Thead>
           <Tr>
             {TABLE_HEADERS.map((header, index) => (
@@ -105,7 +116,7 @@ const DonationItems = ({ category }) => {
         </Thead>
         <Tbody>
           {data.map((item, index) => (
-            <Tr key={index}>
+            <Tr key={index} className={classes.tableRows}>
               {Object.keys(item).map(key => (
                 <Td key={key}>
                   {typeof item[key] === 'boolean' ? (item[key] ? 'True' : 'False') : item[key]}
@@ -113,6 +124,7 @@ const DonationItems = ({ category }) => {
               ))}
               <Td>
                 <Button
+                  sx={{ backgroundColor: 'transparent' }}
                   onClick={() => {
                     onOpen();
                     setSelectedItem(item);
@@ -121,6 +133,7 @@ const DonationItems = ({ category }) => {
                   <EditIcon />
                 </Button>
                 <Button
+                  sx={{ backgroundColor: 'transparent' }}
                   onClick={() => {
                     deleteItem(item);
                   }}
@@ -132,22 +145,24 @@ const DonationItems = ({ category }) => {
           ))}
         </Tbody>
       </Table>
-      <Box>
-        {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentItemNum)} of{' '}
-        {currentItemNum}
-      </Box>
-      <IconButton
-        aria-label="Back button"
-        isDisabled={currentPageNum <= 1}
-        icon={<ChevronLeftIcon />}
-        onClick={() => setCurrentPageNum(currentPageNum - 1)}
-      />
-      <IconButton
-        aria-label="Next button"
-        isDisabled={currentPageNum >= pageLimit}
-        icon={<ChevronRightIcon />}
-        onClick={() => setCurrentPageNum(currentPageNum + 1)}
-      />
+      <div className={classes.resultNavigation}>
+        <Box>
+          {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentItemNum)} of{' '}
+          {currentItemNum}
+        </Box>
+        <IconButton
+          aria-label="Back button"
+          isDisabled={currentPageNum <= 1}
+          icon={<ChevronLeftIcon />}
+          onClick={() => setCurrentPageNum(currentPageNum - 1)}
+        />
+        <IconButton
+          aria-label="Next button"
+          isDisabled={currentPageNum >= pageLimit}
+          icon={<ChevronRightIcon />}
+          onClick={() => setCurrentPageNum(currentPageNum + 1)}
+        />
+      </div>
     </>
   );
 };
