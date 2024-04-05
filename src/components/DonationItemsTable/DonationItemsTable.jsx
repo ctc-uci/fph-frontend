@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useBackend } from '../../contexts/BackendContext';
 import DonationsModal from './DonationsModal.jsx';
+import DonationsDeleteConfirmationModal from './DonationsDeleteConfirmationModal.jsx';
 import {
   Table,
   Thead,
@@ -16,20 +17,29 @@ import {
   Box,
   IconButton,
   Button,
+  Text,
   useDisclosure,
 } from '@chakra-ui/react';
 import { ChevronRightIcon, ChevronLeftIcon, DeleteIcon, EditIcon, AddIcon } from '@chakra-ui/icons';
 import PropTypes from 'prop-types';
+import classes from './DonationItemsTable.module.css';
 
 const DonationItemsTable = () => {
   return (
-    <div>
+    <div className={classes.container}>
+      <div className={classes.ditTitleContainer}>
+        <Text>Donation Items</Text>
+      </div>
       <Tabs>
-        <TabList>
-          <Tab>All</Tab>
-          <Tab>Food</Tab>
-          <Tab>Misc.</Tab>
-        </TabList>
+        <div className={classes.tabs}>
+          <Tabs isFitted="true">
+            <TabList>
+              <Tab>All</Tab>
+              <Tab>Food</Tab>
+              <Tab>Misc.</Tab>
+            </TabList>
+          </Tabs>
+        </div>
         <TabPanels>
           <TabPanel>
             <DonationItems category="all" />
@@ -53,7 +63,16 @@ const DonationItems = ({ category }) => {
   const [currentPageNum, setCurrentPageNum] = useState(1);
   const [pageLimit, setPageLimit] = useState(1);
   const [selectedItem, setSelectedItem] = useState(null);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: deleteModalIsOpen,
+    onOpen: deleteModalOnOpen,
+    onClose: deleteModalOnClose,
+  } = useDisclosure();
+  const {
+    isOpen: donationsModalIsOpen,
+    onOpen: donationsModalOnOpen,
+    onClose: donationsModalOnClose,
+  } = useDisclosure();
 
   const TABLE_HEADERS = ['Id', 'Name', 'Quantity Type', 'Price', 'Category'];
 
@@ -77,25 +96,39 @@ const DonationItems = ({ category }) => {
     setPageLimit(Math.ceil(itemsNumResponse.data[0]['count'] / 10));
   };
 
-  const deleteItem = async item => {
-    await backend.delete(`/value/${item['item_id']}`);
-    loadInfo();
+  const openDeleteModal = async item => {
+    setSelectedItem(item);
+    deleteModalOnOpen();
   };
+
+  // const  deleteModalOnOpen();
+  //   await backend.delete(`/value/${item['item_id']}`);
+  //   //setDeleteModalVisible(true);
+  //   loadInfo();
+  // };
 
   return (
     <>
+      <DonationsDeleteConfirmationModal
+        isOpen={deleteModalIsOpen}
+        onClose={deleteModalOnClose}
+        loadInfo={loadInfo}
+        selectedItem={selectedItem}
+      />
       <DonationsModal
-        isOpen={isOpen}
-        onClose={onClose}
+        isOpen={donationsModalIsOpen}
+        onClose={donationsModalOnClose}
         data={selectedItem}
         setCurrentPageNum={setCurrentPageNum}
         loadInfo={loadInfo}
       />
-      <Button onClick={onOpen}>
-        Add Item
-        <AddIcon />
-      </Button>
-      <Table variant="striped">
+            <div className={classes.addItemContainer}>
+        <Button colorScheme="teal" onClick={donationsModalOnOpen}>
+          Add Item
+          <AddIcon />
+        </Button>
+      </div>
+      <Table variant="striped" className={classes.table} colorScheme="whiteAlpha">
         <Thead>
           <Tr>
             {TABLE_HEADERS.map((header, index) => (
@@ -105,7 +138,7 @@ const DonationItems = ({ category }) => {
         </Thead>
         <Tbody>
           {data.map((item, index) => (
-            <Tr key={index}>
+            <Tr key={index} className={classes.tableRows}>
               {Object.keys(item).map(key => (
                 <Td key={key}>
                   {typeof item[key] === 'boolean' ? (item[key] ? 'True' : 'False') : item[key]}
@@ -113,16 +146,18 @@ const DonationItems = ({ category }) => {
               ))}
               <Td>
                 <Button
+                  sx={{ backgroundColor: 'transparent' }}
                   onClick={() => {
-                    onOpen();
+                    donationsModalOnOpen();
                     setSelectedItem(item);
                   }}
                 >
                   <EditIcon />
                 </Button>
                 <Button
+                  sx={{ backgroundColor: 'transparent' }}
                   onClick={() => {
-                    deleteItem(item);
+                    openDeleteModal(item);
                   }}
                 >
                   <DeleteIcon color="red" />
@@ -132,22 +167,24 @@ const DonationItems = ({ category }) => {
           ))}
         </Tbody>
       </Table>
-      <Box>
-        {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentItemNum)} of{' '}
-        {currentItemNum}
-      </Box>
-      <IconButton
-        aria-label="Back button"
-        isDisabled={currentPageNum <= 1}
-        icon={<ChevronLeftIcon />}
-        onClick={() => setCurrentPageNum(currentPageNum - 1)}
-      />
-      <IconButton
-        aria-label="Next button"
-        isDisabled={currentPageNum >= pageLimit}
-        icon={<ChevronRightIcon />}
-        onClick={() => setCurrentPageNum(currentPageNum + 1)}
-      />
+      <div className={classes.resultNavigation}>
+        <Box>
+          {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentItemNum)} of{' '}
+          {currentItemNum}
+        </Box>
+        <IconButton
+          aria-label="Back button"
+          isDisabled={currentPageNum <= 1}
+          icon={<ChevronLeftIcon />}
+          onClick={() => setCurrentPageNum(currentPageNum - 1)}
+        />
+        <IconButton
+          aria-label="Next button"
+          isDisabled={currentPageNum >= pageLimit}
+          icon={<ChevronRightIcon />}
+          onClick={() => setCurrentPageNum(currentPageNum + 1)}
+        />
+      </div>
     </>
   );
 };
