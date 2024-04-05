@@ -32,7 +32,7 @@ import { useBackend } from '../../contexts/BackendContext';
 import { useParams, useNavigate } from 'react-router-dom';
 import 'boxicons';
 
-function formatDate(dateTimeString) {
+function formatDateDFH(dateTimeString) {
   const date = new Date(dateTimeString);
   const options = {
     year: 'numeric',
@@ -50,6 +50,8 @@ const ViewBusiness = () => {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
   const [donationFormsData, setDonationData] = useState([]);
+  const [lastReminder, setLastReminder] = useState('');
+  const [lastRequest, setLastRequest] = useState('');
 
   const { backend } = useBackend();
 
@@ -66,10 +68,28 @@ const ViewBusiness = () => {
         website: response.data.Website,
         location: response.data.location,
       });
+
+      const reminders = await backend.get(`notification/${id}`);
+      if (reminders.data) {
+        setLastReminder(formatDate(reminders.data[0].timestamp.split('T')[0]));
+      }
+
+      const requests = await backend.get(`notification/request/${id}`);
+      if (requests.data) {
+        setLastRequest(formatDate(requests.data[0].timestamp.split('T')[0]));
+      }
+
       setError(error);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const formatDate = dateString => {
+    const parts = dateString.split('-');
+    const formattedDate = `${parts[1]}/${parts[2]}/${parts[0]}`;
+
+    return formattedDate;
   };
 
   const handleEditClick = () => {
@@ -78,7 +98,7 @@ const ViewBusiness = () => {
 
   const handleHome = () => {
     navigate(`/AdminDashboard`);
-  }
+  };
 
   // ViewBusiness.PropTypes = {
   //   id: PropTypes.number.isRequired,
@@ -103,12 +123,13 @@ const ViewBusiness = () => {
       <Flex justify="flex-end" wrap="nowrap" maxW="80%" mx="auto" flexDirection={'column'}>
         <Flex justifyContent={'space-between'} mr="auto" w="1089px" marginTop={4}>
           <Flex gap={1}>
-            <ChakraLink onClick={handleHome} color='blue.500' decoration='underline'>Home </ChakraLink><Text>/ {data.name}</Text>
+            <ChakraLink onClick={handleHome} color="blue.500" decoration="underline">
+              Home{' '}
+            </ChakraLink>
+            <Text>/ {data.name}</Text>
           </Flex>
-           
-           <IconButton 
-            icon={<box-icon type='solid' name='bell'></box-icon>}
-           />
+
+          <IconButton icon={<box-icon type="solid" name="bell"></box-icon>} />
         </Flex>
         <Card maxW="100%" w="1089px" h="auto" p={6} mt="10">
           <CardHeader>
@@ -266,7 +287,7 @@ const ViewBusiness = () => {
                                 Publish Status
                               </Text>
                               <Text fontSize="xs" color="500">
-                                {data.published ? "Published" : "Not Published"}
+                                {data.published ? 'Published' : 'Not Published'}
                               </Text>
                             </Td>
                           </Tr>
@@ -276,7 +297,7 @@ const ViewBusiness = () => {
                                 Added to Website (Date & Initials)
                               </Text>
                               <Text fontSize="xs" color="500" whiteSpace="normal">
-                                {formatDate(data.web_date_init)}
+                                {formatDateDFH(data.web_date_init)}
                               </Text>
                             </Td>
                           </Tr>
@@ -340,8 +361,11 @@ const ViewBusiness = () => {
                                 <Text fontSize="xs" color="500">
                                   Valid for Service Request
                                 </Text>
-                                <Checkbox isChecked={data.service_request} readOnly ml={6}>
-                                </Checkbox>
+                                <Checkbox
+                                  isChecked={data.service_request}
+                                  readOnly
+                                  ml={6}
+                                ></Checkbox>
                               </Flex>
                               <Menu>
                                 {({ isOpen }) => (
@@ -353,7 +377,7 @@ const ViewBusiness = () => {
                                       variant="outline"
                                       size="xs"
                                       style={{ width: '90%' }}
-                                      color = "grey"
+                                      color="grey"
                                     >
                                       {data.vendor_type}
                                     </MenuButton>
@@ -387,7 +411,7 @@ const ViewBusiness = () => {
                         </Button>
                       </HStack>
                       <Text fontSize="10px" mt="1">
-                        Last reminder sent on 12/3/2023
+                        {lastReminder != '' && `Last reminder sent on ${lastReminder}`}
                       </Text>
                       <Divider w="225px" mt="2"></Divider>
                       <Flex direction="row">
@@ -416,7 +440,7 @@ const ViewBusiness = () => {
                         </Button>
                       </HStack>
                       <Text fontSize="10px" mt="1">
-                        Requested on 1/15/2024
+                        {lastRequest != '' && `Requested on ${lastRequest}`}
                       </Text>
                       <Divider w="225px" mt="2"></Divider>
                       <Flex direction="row">
@@ -447,14 +471,14 @@ const ViewBusiness = () => {
                       <CardBody>
                         <div>
                           {donationFormsData.map((item, index) => (
-                              <div key={index} style={{marginBottom: '15px'}}>
+                            <div key={index} style={{ marginBottom: '15px' }}>
                               {/* Render the date property of each object */}
-                              <p style={{ fontSize: 'small' }}>{formatDate(item.date)}</p>
-                              {index !== data.length - 1 && <Divider height="20px" width="150%"/>}
-                              </div>
-                            ))}
+                              <p style={{ fontSize: 'small' }}>{formatDateDFH(item.date)}</p>
+                              {index !== data.length - 1 && <Divider height="20px" width="150%" />}
+                            </div>
+                          ))}
                         </div>
-                    </CardBody>
+                      </CardBody>
                     </Box>
                   </Flex>
                 </Card>
@@ -472,10 +496,10 @@ const ViewBusiness = () => {
           >
             <Flex direction="column">
               <Text fontSize="xs" color="gray">
-                Created by {data.created_by} {formatDate(data.created_date)}
+                Created by {data.created_by} {formatDateDFH(data.created_date)}
               </Text>
               <Text fontSize="xs" color="gray">
-                Updated by {data.updated_by} {formatDate(data.updated_date_time)}
+                Updated by {data.updated_by} {formatDateDFH(data.updated_date_time)}
               </Text>
             </Flex>
           </CardFooter>
