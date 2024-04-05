@@ -70,12 +70,12 @@ const ViewBusiness = () => {
       });
 
       const reminders = await backend.get(`notification/${id}`);
-      if (reminders.data) {
+      if (reminders.data.length > 0) {
         setLastReminder(formatDate(reminders.data[0].timestamp.split('T')[0]));
       }
 
       const requests = await backend.get(`notification/request/${id}`);
-      if (requests.data) {
+      if (requests.data.length > 0) {
         setLastRequest(formatDate(requests.data[0].timestamp.split('T')[0]));
       }
 
