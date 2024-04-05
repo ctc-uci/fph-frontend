@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useBackend } from '../../contexts/BackendContext';
 import DonationsModal from './DonationsModal.jsx';
-import classes from './DonationItemsTable.module.css';
+import DonationsDeleteConfirmationModal from './DonationsDeleteConfirmationModal.jsx';
 import {
   Table,
   Thead,
@@ -14,14 +14,15 @@ import {
   Tab,
   TabPanels,
   TabPanel,
-  Text,
   Box,
   IconButton,
   Button,
+  Text,
   useDisclosure,
 } from '@chakra-ui/react';
 import { ChevronRightIcon, ChevronLeftIcon, DeleteIcon, EditIcon, AddIcon } from '@chakra-ui/icons';
 import PropTypes from 'prop-types';
+import classes from './DonationItemsTable.module.css';
 
 const DonationItemsTable = () => {
   return (
@@ -62,7 +63,16 @@ const DonationItems = ({ category }) => {
   const [currentPageNum, setCurrentPageNum] = useState(1);
   const [pageLimit, setPageLimit] = useState(1);
   const [selectedItem, setSelectedItem] = useState(null);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: deleteModalIsOpen,
+    onOpen: deleteModalOnOpen,
+    onClose: deleteModalOnClose,
+  } = useDisclosure();
+  const {
+    isOpen: donationsModalIsOpen,
+    onOpen: donationsModalOnOpen,
+    onClose: donationsModalOnClose,
+  } = useDisclosure();
 
   const TABLE_HEADERS = ['Id', 'Name', 'Quantity Type', 'Price', 'Category'];
 
@@ -86,22 +96,34 @@ const DonationItems = ({ category }) => {
     setPageLimit(Math.ceil(itemsNumResponse.data[0]['count'] / 10));
   };
 
-  const deleteItem = async item => {
-    await backend.delete(`/value/${item['item_id']}`);
-    loadInfo();
+  const openDeleteModal = async item => {
+    setSelectedItem(item);
+    deleteModalOnOpen();
   };
+
+  // const  deleteModalOnOpen();
+  //   await backend.delete(`/value/${item['item_id']}`);
+  //   //setDeleteModalVisible(true);
+  //   loadInfo();
+  // };
 
   return (
     <>
+      <DonationsDeleteConfirmationModal
+        isOpen={deleteModalIsOpen}
+        onClose={deleteModalOnClose}
+        loadInfo={loadInfo}
+        selectedItem={selectedItem}
+      />
       <DonationsModal
-        isOpen={isOpen}
-        onClose={onClose}
+        isOpen={donationsModalIsOpen}
+        onClose={donationsModalOnClose}
         data={selectedItem}
         setCurrentPageNum={setCurrentPageNum}
         loadInfo={loadInfo}
       />
-      <div className={classes.addItemContainer}>
-        <Button colorScheme="teal" onClick={onOpen}>
+            <div className={classes.addItemContainer}>
+        <Button colorScheme="teal" onClick={donationsModalOnOpen}>
           Add Item
           <AddIcon />
         </Button>
@@ -126,7 +148,7 @@ const DonationItems = ({ category }) => {
                 <Button
                   sx={{ backgroundColor: 'transparent' }}
                   onClick={() => {
-                    onOpen();
+                    donationsModalOnOpen();
                     setSelectedItem(item);
                   }}
                 >
@@ -135,7 +157,7 @@ const DonationItems = ({ category }) => {
                 <Button
                   sx={{ backgroundColor: 'transparent' }}
                   onClick={() => {
-                    deleteItem(item);
+                    openDeleteModal(item);
                   }}
                 >
                   <DeleteIcon color="red" />

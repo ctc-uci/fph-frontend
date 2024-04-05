@@ -50,7 +50,7 @@ function DonationsDeleteConfirmationModal({ isOpen, onClose, loadInfo, selectedI
 DonationsDeleteConfirmationModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  selectedItem: PropTypes.number.isRequired,
+  selectedItem: PropTypes.object.isRequired,
   loadInfo: PropTypes.func.isRequired,
 };
 
