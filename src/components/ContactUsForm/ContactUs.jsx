@@ -29,6 +29,7 @@ import {
 
 const ContactUs = () => {
   const business_ID = 0;
+  const senderID = 1;
   const { backend } = useBackend();
   const navigate = useNavigate();
   const [text, setText] = useState('');
@@ -113,7 +114,7 @@ const ContactUs = () => {
       'Bin Decals',
       'DS Decals',
     ];
-    const preMessage = `Business is requesting: 
+    const preMessage = `Business ID: ${senderID} is requesting: 
     ${checkedThingies[0]}: ${checkedItems[0]}
     ${checkedThingies[1]}: ${checkedItems[1]}
     ${checkedThingies[2]}: ${checkedItems[2]}
