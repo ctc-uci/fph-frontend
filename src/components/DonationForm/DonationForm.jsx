@@ -1,6 +1,29 @@
-import { FormControl, FormLabel, Input, Select, Button } from '@chakra-ui/react';
+import {
+  FormControl,
+  FormLabel,
+  Input,
+  Select,
+  Button,
+  Box,
+  Flex,
+  Heading,
+  Text,
+  Textarea,
+  InputGroup,
+  InputLeftElement,
+  VStack,
+  Checkbox,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+  Spacer,
+} from '@chakra-ui/react';
+import { SearchIcon, CloseIcon, DownloadIcon } from '@chakra-ui/icons';
 import { useBackend } from '../../contexts/BackendContext';
 import { useState } from 'react';
+import { PropTypes } from 'prop-types';
 
 const DonationForm = () => {
   const { backend } = useBackend();
@@ -36,91 +59,385 @@ const DonationForm = () => {
     setFormData(prevState => ({ ...prevState, [name]: value }));
   };
 
+  function CustomBox({ itemName }) {
+    return (
+      <Box
+        width="480px"
+        border="1px"
+        borderColor="gray.200"
+        borderRadius={'sm'}
+        height="49px"
+        alignContent={'center'}
+      >
+        <Flex alignItems="center">
+          <Text marginLeft="10px">{itemName}</Text>
+          <Spacer />
+          <NumberInput defaultValue={1} size="xs" maxW="66px" marginRight={2}>
+            <NumberInputField />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+          <Text marginRight={2} marginBottom={1}>
+            ea
+          </Text>
+          <CloseIcon color="red.500" boxSize={3} marginRight={4} />
+        </Flex>
+      </Box>
+    );
+  }
+
+  CustomBox.propTypes = {
+    itemName: PropTypes.string.isRequired,
+  };
+
+  function CustomSearchBox({ itemName }) {
+    return (
+      <Box width="480px" border="1px" borderColor="gray.200" height="40px" alignContent={'center'}>
+        <Checkbox marginLeft="10px">{itemName}</Checkbox>
+      </Box>
+    );
+  }
+
+  CustomSearchBox.propTypes = {
+    itemName: PropTypes.string.isRequired,
+  };
+
+  function CustomInput({ id, placeholder, name, width, flex }) {
+    return (
+      <Input
+        id={id}
+        placeholder={placeholder}
+        name={name}
+        height="40px"
+        width={width}
+        flex={flex}
+        padding="0px 16px 0px 16px"
+        onChange={handleChange}
+      />
+    );
+  }
+
+  CustomInput.propTypes = {
+    id: PropTypes.string.isRequired,
+    placeholder: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    width: PropTypes.string.isRequired,
+    flex: PropTypes.number,
+  };
+
+  function CustomFormLabel({ itemName, htmlFor, labelHeight }) {
+    return (
+      <FormLabel
+        htmlFor={htmlFor}
+        fontSize="12px"
+        width="160px"
+        height={labelHeight}
+        fontWeight="700"
+      >
+        {itemName}
+      </FormLabel>
+    );
+  }
+
+  CustomFormLabel.propTypes = {
+    itemName: PropTypes.string.isRequired,
+    htmlFor: PropTypes.string.isRequired,
+    labelHeight: PropTypes.string.isRequired,
+  };
+
+  function CustomFormElement({
+    id,
+    placeholder,
+    name,
+    itemName,
+    htmlFor,
+    labelHeight,
+    inputWidth,
+  }) {
+    return (
+      <Flex alignItems="center" marginTop="10px">
+        <CustomFormLabel itemName={itemName} htmlFor={htmlFor} labelHeight={labelHeight} />
+        <CustomInput id={id} placeholder={placeholder} name={name} width={inputWidth} />
+      </Flex>
+    );
+  }
+
+  CustomFormElement.propTypes = {
+    id: PropTypes.string.isRequired,
+    placeholder: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    itemName: PropTypes.string.isRequired,
+    htmlFor: PropTypes.string.isRequired,
+    labelHeight: PropTypes.string.isRequired,
+    inputWidth: PropTypes.string.isRequired,
+  };
   return (
     <>
-      <h1>Submit your Donation Totals</h1>
-      <FormControl>
-        <FormLabel htmlFor="personName">Name of Person Reporting</FormLabel>
-        <Input
-          id="personName"
-          placeholder="Enter your name"
-          size="lg"
-          name="reporter"
-          onChange={handleChange}
-        />
-        <FormLabel htmlFor="date">Date</FormLabel>
-        <Input id="date" type="date" name="date" onChange={handleChange} />
-        <h2> Amounts </h2>
-        <FormLabel htmlFor="cannedDogFoodAmt">Canned Dog Food</FormLabel>
-        <Input
-          id="cannedDogFoodAmt"
-          placeholder="Enter amount"
-          size="lg"
-          name="canned_dog_food_quantity"
-          onChange={handleChange}
-          type="number"
-        />
-        <FormLabel htmlFor="dryDogFoodAmt">Dry Dog Food</FormLabel>
-        <Input
-          id="dryDogFoodAmt"
-          placeholder="Enter amount"
-          size="lg"
-          name="dry_dog_food_quantity"
-          onChange={handleChange}
-          type="number"
-        />
-        <FormLabel htmlFor="cannedCatFoodAmt">Canned Cat Food</FormLabel>
-        <Input
-          id="cannedCatFoodAmt"
-          placeholder="Enter amount"
-          size="lg"
-          name="canned_cat_food_quantity"
-          onChange={handleChange}
-          type="number"
-        />
-        <FormLabel htmlFor="dryCatFoodAmt">Dry Cat Food</FormLabel>
-        <Input
-          id="dryCatFoodAmt"
-          placeholder="Enter amount"
-          size="lg"
-          name="dry_cat_food_quantity"
-          onChange={handleChange}
-          type="number"
-        />
-        <FormLabel htmlFor="miscFood">Misc</FormLabel>
-        <Input
-          id="miscFood"
-          placeholder="Enter amount"
-          size="lg"
-          name="misc_items"
-          onChange={handleChange}
-        />
-        <FormLabel>Unit of Measure</FormLabel>
-        <Select id="unit" name="dab">
-          <option value="oz"> ounces (oz) </option>
-          <option value="c"> cups (c) </option>
-          <option value="g"> grams (g) </option>
-        </Select>
-        <h2> Volunteer Hours </h2>
-        <FormLabel htmlFor="volunteerHrsWorked">Number of Volunteer Hours Worked </FormLabel>
-        <Input
-          id="volunteerHrsWorked"
-          placeholder="Enter amount"
-          size="lg"
-          name="volunteer_hours"
-          onChange={handleChange}
-          type="number"
-        />
-        <FormLabel htmlFor="volunteerName">Who</FormLabel>
-        <Input id="volunteerName" placeholder="Enter volunteer name" size="lg" />
-        <FormLabel htmlFor="volunteerActivities">Briefly describe volunteer activities</FormLabel>
-        <Input id="volunteerActivities" placeholder="Enter volunteer activities" size="lg" />
-        <FormLabel htmlFor="photoUpload">Upload photo</FormLabel>
-        <Input id="photoUpload" type="file" accept="image/*" multiple />
-        <Button type="button" onClick={submitForm}>
-          Submit
-        </Button>
-      </FormControl>
+      <Text margin="30px 0px 20px 32px" fontSize="16px">
+        Home / Donation Form
+      </Text>
+      <Heading marginLeft="32px" fontSize="36px" paddingBottom={'20px'}>
+        Donation Form
+      </Heading>
+      <Box
+        bg="#FFFFFF"
+        borderRadius="4px"
+        margin="0px 32px 0px 32px"
+        width="1088px"
+        height="1566px"
+        top="160px"
+        left="320px"
+      >
+        <Box marginLeft="35px" position="relative">
+          <FormControl>
+            <Heading fontSize="24px" paddingTop="25px">
+              Donation Information
+            </Heading>
+            <Text fontSize="1xl" marginBottom="10px" paddingTop="15px">
+              Please fill out the following form to complete logging the donation of your business.
+            </Text>
+
+            <CustomFormElement
+              id="companyName"
+              placeholder="Company"
+              name="companyName"
+              itemName="NAME OF COMPANY"
+              htmlFor="companyName"
+              labelHeight="0px"
+              inputWidth={'820px'}
+            />
+
+            <Flex alignItems="center" marginTop="10px">
+              <CustomFormLabel
+                itemName="NAME"
+                htmlFor="personFirstName personLastName"
+                labelHeight="0px"
+              />
+              <Flex height="40px" width="820px" alignItems="center" gap="30px">
+                <CustomInput id="personFirstName" placeholder="First Name" name="personFirstName" />
+                <CustomInput id="personLastName" placeholder="Last Name" name="personLastName" />
+              </Flex>
+            </Flex>
+
+            <CustomFormElement
+              id="email"
+              placeholder="Email"
+              name="email"
+              itemName="EMAIL"
+              htmlFor="email"
+              labelHeight="0px"
+              inputWidth={'820px'}
+            />
+
+            <CustomFormElement
+              id="website"
+              placeholder="Website"
+              name="website"
+              itemName="WEBSITE"
+              htmlFor="website"
+              labelHeight="0px"
+              inputWidth={'820px'}
+            />
+
+            <Flex alignItems="center" marginTop="10px">
+              <CustomFormLabel
+                itemName="LOCATION"
+                htmlFor="streetNumber city state unitNumber zipCode country"
+                labelHeight={'50px'}
+              />
+              <Flex width="820px" alignItems="center" gap="30px">
+                <div>
+                  <CustomInput id="streetNumber" placeholder="Street Number" name="streetNumber" />
+                  <Flex marginTop="10px" gap="20px">
+                    <CustomInput id="city" placeholder="City" name="city" />
+                    <CustomInput id="state" placeholder="State" name="state" />
+                  </Flex>
+                </div>
+                <div>
+                  <CustomInput
+                    id="unitNumber"
+                    placeholder="Unit or Apartment Number"
+                    name="unitNumber"
+                  />
+                  <Flex marginTop="10px" gap="20px">
+                    <CustomInput id="zipCode" placeholder="Zip Code" name="zipCode" />
+                    <CustomInput id="country" placeholder="Country" name="country" />
+                  </Flex>
+                </div>
+              </Flex>
+            </Flex>
+
+            <Flex alignItems="center" marginTop="10px">
+              <CustomFormLabel
+                itemName="PHONE NUMBER"
+                htmlFor="phoneNumber countryCode"
+                labelHeight={'0px'}
+              />
+              <Flex height="40px" width="820px" alignItems="center" gap="20px">
+                <CustomInput id="countryCode" placeholder="+1" name="countryCode" width="187.5px" />
+                <CustomInput
+                  id="phoneNumber"
+                  placeholder="0000-0000-0000"
+                  name="phoneNumber"
+                  flex="1"
+                />
+              </Flex>
+            </Flex>
+
+            <CustomFormElement
+              id="numberOfHours"
+              placeholder="Hours"
+              name="numberOfHours"
+              itemName="NUMBER OF HOURS WORKED"
+              htmlFor="numberOfHours"
+              labelHeight="20px"
+              inputWidth={'820px'}
+            />
+
+            <Flex alignItems="center" marginTop="10px">
+              <FormLabel
+                htmlFor="activities"
+                fontSize="12px"
+                width="160px"
+                height="90px"
+                fontWeight="700"
+              >
+                BRIEFLY DESCRIBE ACTIVITIES
+              </FormLabel>
+              <Flex width="820px">
+                <Textarea id="activities" height="114px" name="activites" onChange={handleChange} />
+              </Flex>
+            </Flex>
+
+            <Heading as="h2" size="md" marginTop="10px" marginBottom="10px">
+              DONATION INFO
+            </Heading>
+            <Text fontWeight="500" fontSize="14px" marginTop="10px" marginBottom="10px">
+              Please select the category, amount, or weight of the items you are donating.
+            </Text>
+            <Text fontWeight="700" fontSize="12px" marginTop="10px" marginBottom="10px">
+              DONATION FOOD ITEM
+            </Text>
+
+            <Flex width="990px" gap="30px">
+              <div>
+                <Select
+                  placeholder="Select..."
+                  height="40px"
+                  width="480px"
+                  textColor={'gray.500'}
+                ></Select>
+                <InputGroup marginTop="10px">
+                  <InputLeftElement>
+                    <SearchIcon color="gray.200" />
+                  </InputLeftElement>
+                  <Input
+                    id="search"
+                    placeholder="Search"
+                    height="40px"
+                    width="480px"
+                    name="search"
+                    borderRadius={'0px'}
+                    onChange={handleChange}
+                  />
+                </InputGroup>
+                <CustomSearchBox itemName="Canned Cat Food" />
+                <CustomSearchBox itemName="Canned Dog Food" />
+                <CustomSearchBox itemName="Canned Pet Food" />
+                <CustomSearchBox itemName="Treats" />
+              </div>
+
+              <VStack spacing={3}>
+                <CustomBox itemName="Canned Cat Food" />
+                <CustomBox itemName="Dog Treats" />
+                <CustomBox itemName="Canned Dog Food" />
+                <CustomBox itemName="Crates" />
+                <CustomBox itemName="Dry Dog Food" />
+              </VStack>
+            </Flex>
+
+            <Flex marginTop="10px">
+              <FormLabel
+                htmlFor="miscDonations"
+                fontSize="12px"
+                width="160px"
+                height="90px"
+                fontWeight="700"
+              >
+                <VStack alignItems={'flex-start'}>
+                  <Text>MISC. DONATIONS</Text>
+                  <Text textColor={'gray.600'} fontSize="xs" fontWeight={400}>
+                    If your donation item is not listed above, please add the item information with
+                    count or pounds to the text box.
+                  </Text>
+                </VStack>
+              </FormLabel>
+              <Flex width="820px">
+                <Textarea
+                  id="miscDonations"
+                  height="171px"
+                  name="miscDonations"
+                  onChange={handleChange}
+                />
+              </Flex>
+            </Flex>
+
+            <Flex marginTop="10px">
+              <FormLabel
+                htmlFor="photos"
+                fontSize="12px"
+                width="160px"
+                height="90px"
+                fontWeight="700"
+              >
+                <VStack alignItems={'flex-start'}>
+                  <Text>UPLOAD PHOTOS</Text>
+                  <Text textColor={'gray.600'} fontSize="xs" fontWeight={400}>
+                    Please insert any photos that were taken while volunteering.
+                  </Text>
+                </VStack>
+              </FormLabel>
+              <Flex width="820px">
+                <Box
+                  height="171px"
+                  width="820px"
+                  borderColor="teal.200"
+                  borderStyle="dashed"
+                  borderWidth="2px"
+                  bgColor="teal.50"
+                  borderRadius={'md'}
+                  alignContent={'center'}
+                >
+                  <Box>
+                    <VStack>
+                      <Text>Drag files here or</Text>
+                      <Button
+                        bgColor="white"
+                        borderColor="teal.200"
+                        borderWidth="2px"
+                        leftIcon={<DownloadIcon color="gray.300" />}
+                      >
+                        Upload File
+                      </Button>
+                    </VStack>
+                  </Box>
+                </Box>
+              </Flex>
+            </Flex>
+
+            <Flex justifyContent={'flex-end'} marginRight="60px" marginTop="20px" gap="20px">
+              <Button type="button" onClick={submitForm}>
+                Cancel
+              </Button>
+              <Button type="button" colorScheme="teal" onClick={submitForm}>
+                Submit
+              </Button>
+            </Flex>
+          </FormControl>
+        </Box>
+      </Box>
     </>
   );
 };

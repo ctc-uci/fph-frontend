@@ -11,6 +11,7 @@ import {
 import './DonationTrackingTable.module.css';
 import { Table, Thead, Tbody, Tr, Th, TableContainer, Checkbox, Text } from '@chakra-ui/react';
 import classes from './DonationTrackingTable.module.css';
+import DownloadCSV from '../../utils/downloadCSV';
 
 const DonationTrackingTable = () => {
   const { backend } = useBackend();
@@ -100,6 +101,25 @@ const DonationTrackingTable = () => {
     }
   };
 
+  const handleDownloadCSV = () => {
+    const ids = Array.from(checkedSet);
+    const headers = [
+      'business_id',
+      'donation_id',
+      'food_bank_donation',
+      'reporter',
+      'email',
+      'date',
+      'misc_items',
+      'volunteer_hours',
+      'canned_cat_food_quantity',
+      'canned_dog_food_quantity',
+      'dry_cat_food_quantity',
+      'dry_dog_food_quantity',
+    ];
+    DownloadCSV(headers, ids, 'donation_tracking');
+  };
+
   const handleSearch = event => {
     setSearchTerm(event.target.value.split(' ').join('+'));
     setCurrentPageNum(1);
@@ -138,13 +158,7 @@ const DonationTrackingTable = () => {
             onChange={handleSearch}
             sx={{ width: '222px', backgroundColor: '#FFFFFF' }}
           />
-          <Button
-            colorScheme="teal"
-            onClick={() => {
-              console.log(checkedSet);
-            }}
-            sx={{ width: '172px' }}
-          >
+          <Button colorScheme="teal" onClick={handleDownloadCSV} sx={{ width: '172px' }}>
             <ArrowDownIcon sx={{ marginRight: '5px' }} />
             Download CSV
           </Button>
