@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Drawer,
   DrawerBody,
@@ -22,12 +23,24 @@ import {
 } from '@chakra-ui/react';
 import { BellIcon, ChevronDownIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 import { useState } from 'react';
+import DownloadCSV from '../../utils/downloadCSV';
 
 const NotificationsDrawer = ({ notificationsData }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
   const [sortState, setSortState] = useState('');
   const toast = useToast();
+
+  NotificationsDrawer.propTypes = {
+    notificationsData: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        type: PropTypes.string.isRequired,
+        message: PropTypes.string.isRequired,
+        timestamp: PropTypes.string.isRequired,
+      }),
+    ).isRequired,
+  };
 
   const notificationAction = {
     'New Application': 'View Application',
@@ -46,6 +59,7 @@ const NotificationsDrawer = ({ notificationsData }) => {
   };
 
   const onActionClick = notification_type => {
+    console.log(notification_type);
     return toast({
       title: afterAction[notification_type],
       description: 'meow',
@@ -53,6 +67,18 @@ const NotificationsDrawer = ({ notificationsData }) => {
       duration: 9000,
       isClosable: true,
     });
+  };
+
+  const handleDownloadCSV = ids => {
+    const headers = [
+      'business_id',
+      'notification_id',
+      'message',
+      'timestamp',
+      'been_dismissed',
+      'type',
+    ];
+    DownloadCSV(headers, ids, 'notification');
   };
 
   return (
@@ -99,11 +125,14 @@ const NotificationsDrawer = ({ notificationsData }) => {
                     <Text>{notification.message}</Text>
                     <Text fontSize="sm">{new Date(notification.timestamp).toLocaleString()}</Text>
                     <Button
-                      onClick={() => onActionClick('Submitted Form')}
+                      onClick={() => {
+                        onActionClick(notification.type);
+                        if (notificationAction[notification.type] === 'Download CSV')
+                          handleDownloadCSV([notification.notification_id]);
+                      }}
                       rightIcon={<ArrowForwardIcon />}
                     >
-                      {' '}
-                      {notificationAction[notification.type]}{' '}
+                      {notificationAction[notification.type]}
                     </Button>
                   </Box>
                 ))}
@@ -116,4 +145,5 @@ const NotificationsDrawer = ({ notificationsData }) => {
     </>
   );
 };
+
 export default NotificationsDrawer;
