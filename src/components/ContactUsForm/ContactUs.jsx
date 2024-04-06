@@ -82,7 +82,9 @@ const ContactUs = () => {
     const updatedFormData = {
       ...formData,
       message: message,
-      timestamp: new Date().toLocaleString('en-US', { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone }),
+      timestamp: new Date().toLocaleString('en-US', {
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      }),
       been_dismissed: false,
       type: 'Supply Request Received',
     };

@@ -10,7 +10,7 @@ const BusinessTable = businessData => {
   const { backend } = useBackend();
   const [data, setData] = useState([]);
   // const [selectedBusinessId, setBusinessId] = useState(null);
-  
+
   const TABLE_HEADERS = [
     'id',
     'Type',

@@ -67,7 +67,7 @@ const EditContactInformation = () => {
         const businessContact = businessContactResponse.data[0];
         const name = businessContact.contact_name.split(' ');
         const firstName = name[0];
-        const lastName = name[1]; 
+        const lastName = name[1];
 
         setBusinessContactInfo({
           businessName: businessContact.name,
@@ -122,7 +122,12 @@ const EditContactInformation = () => {
                   placeholder="Enter Business Name"
                   width={'70%'}
                   value={businessContactInfo.businessName}
-                  onChange={(e) => {setBusinessContactInfo({...businessContactInfo, businessName: e.target.value})}}
+                  onChange={e => {
+                    setBusinessContactInfo({
+                      ...businessContactInfo,
+                      businessName: e.target.value,
+                    });
+                  }}
                 />
               </HStack>
               <HStack marginBottom={'3%'}>
@@ -222,21 +227,27 @@ const EditContactInformation = () => {
                   placeholder="City"
                   width={'28%'}
                   value={businessContactInfo.city}
-                  onChange={(e) => {setBusinessContactInfo({...businessContactInfo, city: e.target.value})}}
+                  onChange={e => {
+                    setBusinessContactInfo({ ...businessContactInfo, city: e.target.value });
+                  }}
                 />
                 <Input
-                  type="text" 
+                  type="text"
                   placeholder="State"
                   width={'18%'}
                   value={businessContactInfo.state}
-                  onChange={(e) => {setBusinessContactInfo({...businessContactInfo, state: e.target.value})}}
+                  onChange={e => {
+                    setBusinessContactInfo({ ...businessContactInfo, state: e.target.value });
+                  }}
                 />
                 <Input
                   type="text"
                   placeholder="Zip Code"
                   width={'21.5%'}
                   value={businessContactInfo.zip}
-                  onChange={(e) => {setBusinessContactInfo({...businessContactInfo, zip: e.target.value})}}
+                  onChange={e => {
+                    setBusinessContactInfo({ ...businessContactInfo, zip: e.target.value });
+                  }}
                 />
               </HStack>
               <HStack marginBottom={'3%'}>
@@ -273,7 +284,12 @@ const EditContactInformation = () => {
                   placeholder="M-F 8:00 am - 10:00 pm"
                   width={'70%'}
                   value={businessContactInfo.business_hours}
-                  onChange={(e) => {setBusinessContactInfo({...businessContactInfo, business_hours: e.target.value})}}
+                  onChange={e => {
+                    setBusinessContactInfo({
+                      ...businessContactInfo,
+                      business_hours: e.target.value,
+                    });
+                  }}
                 />
               </HStack>
             </FormControl>

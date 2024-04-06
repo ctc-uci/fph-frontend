@@ -51,14 +51,18 @@ const DonationForm = () => {
     await backend.post('/donation', formData);
     const fphNotificationData = {
       message: `Business ID: ${businessID} Donation Form Submission`,
-      timestamp: new Date().toLocaleString('en-US', { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone }),
+      timestamp: new Date().toLocaleString('en-US', {
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      }),
       been_dismissed: false,
       type: 'Donation Form Submitted',
     };
     await backend.post('/notification', fphNotificationData);
     const businessNotificationData = {
       message: 'Donation Form Submitted Successfully',
-      timestamp: new Date().toLocaleString('en-US', { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone }),
+      timestamp: new Date().toLocaleString('en-US', {
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      }),
       been_dismissed: false,
       type: 'Donation Form Submitted',
     };

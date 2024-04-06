@@ -122,7 +122,7 @@ const DonationItems = ({ category }) => {
         setCurrentPageNum={setCurrentPageNum}
         loadInfo={loadInfo}
       />
-            <div className={classes.addItemContainer}>
+      <div className={classes.addItemContainer}>
         <Button colorScheme="teal" onClick={donationsModalOnOpen}>
           Add Item
           <AddIcon />

@@ -187,8 +187,7 @@ const BusinessDashboard = () => {
   };
 
   const calculateTimeSince = () => {
-    
-    if (!(reminderData.length > 0)){
+    if (!(reminderData.length > 0)) {
       return 0;
     }
     const currentTime = new Date();
