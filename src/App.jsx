@@ -11,7 +11,7 @@ import ContactUs from './components/ContactUsForm/ContactUs';
 import DonationTrackingTable from './components/DonationTrackingTable/DonationTrackingTable.jsx';
 import styles from './App.module.css';
 import DonationItemsTable from './components/DonationItemsTable/DonationItemsTable.jsx';
-import Signup from './components/Authentication/Signup.jsx';
+import BusinessSetupPageMaster from './components/SetUp/BusinessSetupPageMaster.jsx';
 import Login from './components/Authentication/Login.jsx';
 import BusinessFormMaster from './components/OnBoarding/BusinessFormMaster.jsx';
 import ForgotPassword from './components/Authentication/ForgotPassword.jsx';
@@ -23,12 +23,12 @@ const App = () => {
     <BackendProvider>
       <AuthProvider>
         <div className={styles.appLayout}>
-          <Sidebar isAdmin={false} />
+        <Sidebar isAdmin={false} />
           <div className={styles.mainContent}>
             <Routes>
               <Route exact path="/" element={<div>Welcome to the App</div>} />
-              <Route exact path="/SignupAdmin" element={<Signup isAdmin={true} />} />
-              <Route exact path="/SignupBusiness" element={<Signup isAdmin={false} />} />
+              <Route exact path="/SignupAdmin" element={<BusinessSetupPageMaster isAdmin={true} />} />
+              <Route exact path="/SignupBusiness" element={<BusinessSetupPageMaster isAdmin={false} />} />
               <Route exact path="/LoginAdmin" element={<Login isAdmin={true} />} />
               <Route exact path="/LoginBusiness" element={<Login isAdmin={false} />} />
               <Route exact path="/ForgotPassword" element={<ForgotPassword />} />
