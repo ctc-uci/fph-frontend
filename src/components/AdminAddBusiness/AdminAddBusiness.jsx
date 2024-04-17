@@ -6,7 +6,9 @@ import {
   Button,
   Flex,
   VStack,
+  Select,
   Box,
+  Checkbox,
   Spacer,
   Card,
   HStack,
@@ -32,6 +34,25 @@ const AdminAddBusiness = () => {
     phoneNumber: '',
     numberOfHoursWorked: '',
     howTheyHearAboutUs: '',
+    internalNotes: '',
+    termsAndCondition: false,
+    petFoodProviderSite: false,
+    donationSite: false,
+    shelter: false,
+    domesticViolenceShelter: false,
+    familiesOnlyShelter: false,
+    wellnessClinics: false,
+    spayNeuter: false,
+    financialAssistance: false,
+    rehomeFoster: false,
+    enteredInQB: false,
+    inactive: false,
+    finalCheck: false,
+    erBoarding: false,
+    seniorCitizensOnly: false,
+    cancerSpecific: false,
+    dogSpecific: false,
+    catSpecific: false,
   });
 
   const handleChange = event => {
@@ -54,7 +75,7 @@ const AdminAddBusiness = () => {
         primaryPhone: `${donationSiteInformation.phoneAreaCode} ${donationSiteInformation.lastName}`,
         backupPhone: null,
         primaryEmail: donationSiteInformation.email,
-        comments: null,
+        comments: `${donationSiteInformation.howTheyHearAboutUs} ${donationSiteInformation.internalNotes}`,
         faxPhone: null,
         contactName: `${donationSiteInformation.firstName} ${donationSiteInformation.lastName}`,
         website: donationSiteInformation.website,
@@ -71,18 +92,18 @@ const AdminAddBusiness = () => {
         syncToQb: null,
         veterinary: null,
         resource: null,
-        food: null,
-        donation: null,
-        familyShelter: null,
-        wellness: null,
-        spayNeuter: null,
-        financial: null,
-        reHome: null,
-        erBoarding: null,
-        senior: null,
-        cancer: null,
-        dog: null,
-        cat: null,
+        food: donationSiteInformation.petFoodProviderSite,
+        donation: donationSiteInformation.donationSite,
+        familyShelter: donationSiteInformation.familiesOnlyShelter,
+        wellness: donationSiteInformation.wellnessClinics,
+        spayNeuter: donationSiteInformation.spayNeuter,
+        financial: donationSiteInformation.financialAssistance,
+        reHome: donationSiteInformation.rehomeFoster,
+        erBoarding: donationSiteInformation.erBoarding,
+        senior: donationSiteInformation.seniorCitizensOnly,
+        cancer: donationSiteInformation.cancerSpecific,
+        dog: donationSiteInformation.dogSpecific,
+        cat: donationSiteInformation.catSpecific,
         fphPhone: null,
         contactPhone: null,
         webNotes: null,
@@ -99,6 +120,8 @@ const AdminAddBusiness = () => {
         createdDate: null,
         city: null,
       });
+      console.log("I made it up to this point")
+      console.log(donationSiteInformation.petFoodProviderSite)
     } catch (error) {
       console.error('Error updating data:', error);
     }
@@ -171,7 +194,7 @@ const AdminAddBusiness = () => {
 
           <Card width={'100%'}>
             <FormControl margin={'5%'} width={'90%'}>
-              <HStack marginBottom={'3%'}>
+            <HStack marginBottom={'3%'}>
                 <FormLabel
                   marginStart={'1.5%'}
                   fontSize={'15px'}
@@ -183,9 +206,11 @@ const AdminAddBusiness = () => {
                 </FormLabel>
                 <Input
                   type="text"
-                  placeholder="Company"
+                  placeholder="COMPANY"
+                  defaultValue={donationSiteInformation.nameOfCompany}
+                  name="nameOfCompany"
+                  onChange={handleChange}
                   width={'70%'}
-                  value={donationSiteInformation.nameOfCompany}
                 />
               </HStack>
               <HStack marginBottom={'3%'}>
@@ -314,9 +339,240 @@ const AdminAddBusiness = () => {
                   placeholder="LinkedIn, Google, etc."
                   width={'70%'}
                   value={donationSiteInformation.howTheyHearAboutUs}
+                  name = "howTheyHearAboutUs"
                   onChange={handleChange}
                 />
               </HStack>
+<HStack marginBottom={'3%'} alignItems="center">
+  <FormLabel
+    marginStart={'1.5%'}
+    fontSize={'15px'}
+    fontWeight={'bold'}
+    width={'26%'}
+    alignItems={'center'}
+  >
+    ADDITIONAL INFORMATION
+  </FormLabel>
+  <Box border="1px solid #ccc" borderWidth="70%" padding="10px">
+    <Flex direction="row" flex="1" justifyContent="space-between">
+      <Flex direction="column" flex="1">
+      <Checkbox
+        defaultChecked={false}
+        onChange={donationSiteInformation.petFoodProviderSite=true}
+        marginRight="1%"
+      >
+        <FormLabel fontSize={'15px'} alignItems={'center'}>
+          Pet Food Provider Site
+        </FormLabel>
+      </Checkbox>
+      <Checkbox
+        defaultChecked={false}
+        onChange={donationSiteInformation.donationSite=true}
+        marginRight="1%"
+      >
+        <FormLabel fontSize={'15px'} alignItems={'center'}>
+          Donation Site
+        </FormLabel>
+      </Checkbox>
+      <Checkbox
+        defaultChecked={false}
+        onChange={donationSiteInformation.shelter=true}
+        marginRight="1%"
+      >
+        <FormLabel fontSize={'15px'} alignItems={'center'}>
+          Shelter
+        </FormLabel>
+      </Checkbox>
+      <Checkbox
+        defaultChecked={false}
+        onChange={donationSiteInformation.domesticViolenceShelter=true}
+        marginRight="1%"
+      >
+        <FormLabel fontSize={'15px'} alignItems={'center'}>
+          Domestic Violence Shelter
+        </FormLabel>
+      </Checkbox>
+      <Checkbox
+        defaultChecked={false}
+        onChange={donationSiteInformation.familiesOnlyShelter=true}
+        marginRight="1%"
+      >
+        <FormLabel fontSize={'15px'} alignItems={'center'}>
+          Families Only Shelter
+        </FormLabel>
+      </Checkbox>
+      <Checkbox
+        defaultChecked={false}
+        onChange={donationSiteInformation.wellnessClinics=true}
+        marginRight="1%"
+      >
+        <FormLabel fontSize={'15px'} alignItems={'center'}>
+          Wellness Clinics
+        </FormLabel>
+      </Checkbox>
+      <Checkbox
+        defaultChecked={false}
+        onChange={donationSiteInformation.spayNeuter=true}
+        marginRight="1%"
+      >
+        <FormLabel fontSize={'15px'} alignItems={'center'}>
+          Spay Neuter
+        </FormLabel>
+      </Checkbox>
+      <Checkbox
+        defaultChecked={false}
+        onChange={donationSiteInformation.financialAssistance=true}
+        marginRight="1%"
+      >
+        <FormLabel fontSize={'15px'} alignItems={'center'}>
+          Financial Assistance
+        </FormLabel>
+      </Checkbox>
+      <Checkbox
+        defaultChecked={false}
+        onChange={donationSiteInformation.rehomeFoster=true}
+        marginRight="1%"
+      >
+        <FormLabel fontSize={'15px'} alignItems={'center'}>
+          Rehome Foster
+        </FormLabel>
+      </Checkbox>
+      </Flex>
+      <Flex direction="column" flex="1">
+      <Checkbox
+        defaultChecked={false}
+        onChange={donationSiteInformation.enteredInQB=true}
+        marginRight="1%"
+      >
+        <FormLabel fontSize={'15px'} alignItems={'center'}>
+          Entered In QB
+        </FormLabel>
+      </Checkbox>
+      <Checkbox
+        defaultChecked={false}
+        onChange={donationSiteInformation.inactive=true}
+        marginRight="1%"
+      >
+        <FormLabel fontSize={'15px'} alignItems={'center'}>
+          Inactive
+        </FormLabel>
+      </Checkbox>
+      <Checkbox
+        defaultChecked={false}
+        onChange={donationSiteInformation.finalCheck=true}
+        marginRight="1%"
+      >
+        <FormLabel fontSize={'15px'} alignItems={'center'}>
+          Final Check
+        </FormLabel>
+      </Checkbox>
+      <Checkbox
+        defaultChecked={false}
+        onChange={donationSiteInformation.erBoarding=true}
+        marginRight="1%"
+      >
+        <FormLabel fontSize={'15px'} alignItems={'center'}>
+          ER Boarding
+        </FormLabel>
+      </Checkbox>
+      <Checkbox
+        defaultChecked={false}
+        onChange={donationSiteInformation.seniorCitizensOnly=true}
+        marginRight="1%"
+      >
+        <FormLabel fontSize={'15px'} alignItems={'center'}>
+          Senior Citizens Only
+        </FormLabel>
+      </Checkbox>
+      <Checkbox
+        defaultChecked={false}
+        onChange={donationSiteInformation.cancerSpecific=true}
+        marginRight="1%"
+      >
+        <FormLabel fontSize={'15px'} alignItems={'center'}>
+          Cancer Specific
+        </FormLabel>
+      </Checkbox>
+      <Checkbox
+        defaultChecked={false}
+        onChange={donationSiteInformation.dogSpecific=true}
+        marginRight="1%"
+      >
+        <FormLabel fontSize={'15px'} alignItems={'center'}>
+          Dog Specific
+        </FormLabel>
+      </Checkbox>
+      <Checkbox
+        defaultChecked={false}
+        onChange={donationSiteInformation.catSpecific=true}
+        marginRight="1%"
+      >
+        <FormLabel fontSize={'15px'} alignItems={'center'}>
+          Cat Specific
+        </FormLabel>
+      </Checkbox>
+      </Flex>
+    </Flex>
+    <FormLabel
+      marginStart={'1.5%'}
+      fontSize={'15px'}
+      fontWeight={'bold'}
+      width={'26%'}
+      alignItems={'center'}
+    >
+      Type
+    </FormLabel>
+    <HStack alignItems="center" marginTop="10px">
+      
+      <Select defaultValue="type" width="120px" marginRight="10px">
+        <option value="type" disabled>Type</option>
+        <option value="option1">Option 1</option>
+        <option value="option2">Option 2</option>
+        {/* Add more options as needed */}
+      </Select>
+      <Checkbox
+        defaultChecked={false}
+        onChange={handleChange}
+        marginRight="1%"
+      />
+      <FormLabel fontSize={'15px'} fontWeight={'bold'} alignItems={'center'}>
+        Valid for Service Request
+      </FormLabel>
+    </HStack>
+    <FormLabel
+      marginStart={'1.5%'}
+      fontSize={'15px'}
+      fontWeight={'bold'}
+      width={'26%'}
+      alignItems={'center'}
+    >
+      Internal Notes
+    </FormLabel>
+    <HStack alignItems="left" marginTop="10px">
+      <Input
+        type="text"
+        placeholder="Remember Justine prefers to be called Justy."
+        value={donationSiteInformation.internalNotes}
+        name="internalNotes"
+        onChange={handleChange}
+        width={'70%'}
+        height={'100px'}
+      />
+    </HStack>
+  </Box>
+</HStack>
+<Checkbox
+  defaultChecked={false}
+  onChange={donationSiteInformation.termsAndCondition=true}
+  marginRight="1%"
+>
+  <FormLabel fontSize={'15px'} fontWeight={'bold'} alignItems={'center'}>
+    I accept the Terms and Conditions
+  </FormLabel>
+</Checkbox>
+
+
+
             </FormControl>
           </Card>
           <Box alignContent={'right'}>

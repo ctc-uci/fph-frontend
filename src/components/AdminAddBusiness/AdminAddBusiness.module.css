@@ -1,0 +1,21 @@
+/* AdminAddBusiness.css */
+
+/* Styles for the form container */
+.form-container {
+    border: 1px solid #ccc;
+    border-width: 70%;
+    padding: 10px;
+    margin-bottom: 3%;
+  }
+  
+  /* Styles for the cancel button */
+  .cancel-button {
+    width: 21.5%;
+    margin-right: 1%;
+  }
+  
+  /* Styles for the submit button */
+  .submit-button {
+    width: 11%;
+  }
+  
