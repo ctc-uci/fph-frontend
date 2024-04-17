@@ -9,8 +9,6 @@ import {
   Heading,
   Text,
   Textarea,
-  InputGroup,
-  InputLeftElement,
   VStack,
   Checkbox,
   NumberInput,
@@ -19,15 +17,25 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
   Spacer,
+  Divider,
 } from '@chakra-ui/react';
-import { SearchIcon, CloseIcon, DownloadIcon } from '@chakra-ui/icons';
+import { CloseIcon, DownloadIcon } from '@chakra-ui/icons';
 import { useBackend } from '../../contexts/BackendContext';
 import { useState } from 'react';
 import { PropTypes } from 'prop-types';
+import classes from './DonationForm.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const DonationForm = () => {
   const { backend } = useBackend();
-  const MAX_ID = 9; // This is the maximum business id in the database. This is a temporary solution since the Figma design does not include a business id in the form.
+  const MAX_ID = 6; // This is the maximum business id in the database. This is a temporary solution since the Figma design does not include a business id in the form.
+  const labels = {
+    'Canned Cat Food': 'canned_cat_food_quantity',
+    'Dry Cat Food': 'dry_cat_food_quantity',
+    'Canned Dog Food': 'canned_dog_food_quantity',
+    'Dry Dog Food': 'dry_dog_food_quantity',
+  };
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     business_id: MAX_ID, // Since there's no business_id in the form and the database requires a business id (foreign key), the default for now is the maximum business id in the database (9)
@@ -44,34 +52,77 @@ const DonationForm = () => {
     volunteer_hours: null,
   });
 
-  const businessID = 1;
+  // const submitForm = async event => {
+  //   event.preventDefault();
+  //   console.log(formData);
+
+  //   try {
+  //     await backend.post('/donation', formData);
+
+  //     const fphNotificationData = {
+  //       message: `Business ID: ${businessID} Donation Form Submission`,
+  //       timestamp: new Date().toLocaleString('en-US', {
+  //         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  //       }),
+  //       been_dismissed: false,
+  //       type: 'Donation Form Submitted',
+  //     };
+  //     await backend.post('/notification', fphNotificationData);
+
+  //     const businessNotificationData = {
+  //       message: 'Donation Form Submitted Successfully',
+  //       timestamp: new Date().toLocaleString('en-US', {
+  //         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  //       }),
+  //       been_dismissed: false,
+  //       type: 'Donation Form Submitted',
+  //     };
+  //     await backend.post('/notification', businessNotificationData);
+
+  //     // Navigate to the Congratulations.jsx page
+  //     navigate('/congratulations');
+  //   } catch (error) {
+  //     // Handle error if form submission or navigation fails
+  //     console.error('Form submission failed:', error);
+  //   }
+  // };
 
   const submitForm = async event => {
     event.preventDefault();
-    await backend.post('/donation', formData);
-    const fphNotificationData = {
-      message: `Business ID: ${businessID} Donation Form Submission`,
-      timestamp: new Date().toLocaleString('en-US', {
-        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      }),
-      been_dismissed: false,
-      type: 'Donation Form Submitted',
-    };
-    await backend.post('/notification', fphNotificationData);
-    const businessNotificationData = {
-      message: 'Donation Form Submitted Successfully',
-      timestamp: new Date().toLocaleString('en-US', {
-        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      }),
-      been_dismissed: false,
-      type: 'Donation Form Submitted',
-    };
-    await backend.post('/notification', businessNotificationData);
+    console.log(formData);
+
+    formData.reporter = formData.personFirstName + ' ' + formData.personLastName;
+    formData.date = new Date().toLocaleString('en-US');
+    delete formData.personFirstName;
+    delete formData.personLastName;
+
+    // DO TYPE IN THE DATABASE/CODE HERE, BUT THE DATA ASE DOES NOT SUPPORT SOMEONE HELP, CURRENTLY SHOWS AS TYPE:null
+
+    try {
+      await backend.post('/donation', formData);
+      console.log(formData);
+
+      const fphNotificationData = {
+        business_id: formData.business_id,
+        message: `Business ID: ${formData.business_id} Donation Form Submission`,
+        timestamp: new Date().toLocaleString('en-US', {
+          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        }),
+        been_dismissed: false,
+        // type: 'Submitted Form',
+      };
+      console.log(fphNotificationData);
+      await backend.post('/notification', fphNotificationData);
+    } catch (error) {
+      console.error('Form submission failed:', error);
+    }
+    navigate('/Congrats');
   };
 
   const handleChange = event => {
     const name = event.target.name;
     var value = event.target.value;
+    console.log(name, value);
 
     if (event.target.type === 'number') {
       value = value ? parseInt(value, 10) : '';
@@ -92,7 +143,20 @@ const DonationForm = () => {
         <Flex alignItems="center">
           <Text marginLeft="10px">{itemName}</Text>
           <Spacer />
-          <NumberInput defaultValue={1} size="xs" maxW="66px" marginRight={2}>
+          <NumberInput
+            value={formData[labels[itemName]] || 0}
+            min={0}
+            size="xs"
+            maxW="66px"
+            marginRight={2}
+            name={itemName}
+            onChange={value => {
+              setFormData(prevState => ({
+                ...prevState,
+                [labels[itemName]]: parseInt(value),
+              }));
+            }}
+          >
             <NumberInputField />
             <NumberInputStepper>
               <NumberIncrementStepper />
@@ -102,7 +166,18 @@ const DonationForm = () => {
           <Text marginRight={2} marginBottom={1}>
             ea
           </Text>
-          <CloseIcon color="red.500" boxSize={3} marginRight={4} />
+          <CloseIcon
+            color="red.500"
+            boxSize={3}
+            marginRight={4}
+            cursor="pointer"
+            onClick={() => {
+              setFormData(prevState => ({
+                ...prevState,
+                [labels[itemName]]: 0,
+              }));
+            }}
+          />
         </Flex>
       </Box>
     );
@@ -124,63 +199,23 @@ const DonationForm = () => {
     itemName: PropTypes.string.isRequired,
   };
 
-  function CustomInput({ id, placeholder, name, width, flex }) {
+  function CustomFormElement({ id, placeholder, name, htmlFor, inputWidth, labelText }) {
     return (
-      <Input
-        id={id}
-        placeholder={placeholder}
-        name={name}
-        height="40px"
-        width={width}
-        flex={flex}
-        padding="0px 16px 0px 16px"
-        onChange={handleChange}
-      />
-    );
-  }
-
-  CustomInput.propTypes = {
-    id: PropTypes.string.isRequired,
-    placeholder: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    width: PropTypes.string.isRequired,
-    flex: PropTypes.number,
-  };
-
-  function CustomFormLabel({ itemName, htmlFor, labelHeight }) {
-    return (
-      <FormLabel
-        htmlFor={htmlFor}
-        fontSize="12px"
-        width="160px"
-        height={labelHeight}
-        fontWeight="700"
-      >
-        {itemName}
-      </FormLabel>
-    );
-  }
-
-  CustomFormLabel.propTypes = {
-    itemName: PropTypes.string.isRequired,
-    htmlFor: PropTypes.string.isRequired,
-    labelHeight: PropTypes.string.isRequired,
-  };
-
-  function CustomFormElement({
-    id,
-    placeholder,
-    name,
-    itemName,
-    htmlFor,
-    labelHeight,
-    inputWidth,
-  }) {
-    return (
-      <Flex alignItems="center" marginTop="10px">
-        <CustomFormLabel itemName={itemName} htmlFor={htmlFor} labelHeight={labelHeight} />
-        <CustomInput id={id} placeholder={placeholder} name={name} width={inputWidth} />
-      </Flex>
+      <FormControl>
+        <Flex alignItems="center">
+          <FormLabel htmlFor={htmlFor} width="4px" fontSize="12px" fontWeight="700">
+            {labelText}
+          </FormLabel>
+          <Input
+            id={id}
+            placeholder={placeholder}
+            name={name}
+            width={inputWidth}
+            value={formData[labels[name]]}
+            onChange={handleChange}
+          />
+        </Flex>
+      </FormControl>
     );
   }
 
@@ -188,10 +223,9 @@ const DonationForm = () => {
     id: PropTypes.string.isRequired,
     placeholder: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    itemName: PropTypes.string.isRequired,
     htmlFor: PropTypes.string.isRequired,
-    labelHeight: PropTypes.string.isRequired,
     inputWidth: PropTypes.string.isRequired,
+    labelText: PropTypes.string.isRequired,
   };
   return (
     <>
@@ -213,125 +247,81 @@ const DonationForm = () => {
         <Box marginLeft="35px" position="relative">
           <FormControl>
             <Heading fontSize="24px" paddingTop="25px">
-              Donation Information
+              Donor Info
             </Heading>
             <Text fontSize="1xl" marginBottom="10px" paddingTop="15px">
               Please fill out the following form to complete logging the donation of your business.
             </Text>
-
-            <CustomFormElement
-              id="companyName"
-              placeholder="Company"
-              name="companyName"
-              itemName="NAME OF COMPANY"
-              htmlFor="companyName"
-              labelHeight="0px"
-              inputWidth={'820px'}
-            />
-
-            <Flex alignItems="center" marginTop="10px">
-              <CustomFormLabel
+            <Flex alignItems="center" marginTop="5px" width="80%" marginLeft={-49}>
+              <FormLabel
                 itemName="NAME"
                 htmlFor="personFirstName personLastName"
                 labelHeight="0px"
-              />
-              <Flex height="40px" width="820px" alignItems="center" gap="30px">
-                <CustomInput id="personFirstName" placeholder="First Name" name="personFirstName" />
-                <CustomInput id="personLastName" placeholder="Last Name" name="personLastName" />
-              </Flex>
-            </Flex>
-
-            <CustomFormElement
-              id="email"
-              placeholder="Email"
-              name="email"
-              itemName="EMAIL"
-              htmlFor="email"
-              labelHeight="0px"
-              inputWidth={'820px'}
-            />
-
-            <CustomFormElement
-              id="website"
-              placeholder="Website"
-              name="website"
-              itemName="WEBSITE"
-              htmlFor="website"
-              labelHeight="0px"
-              inputWidth={'820px'}
-            />
-
-            <Flex alignItems="center" marginTop="10px">
-              <CustomFormLabel
-                itemName="LOCATION"
-                htmlFor="streetNumber city state unitNumber zipCode country"
-                labelHeight={'50px'}
-              />
-              <Flex width="820px" alignItems="center" gap="30px">
-                <div>
-                  <CustomInput id="streetNumber" placeholder="Street Number" name="streetNumber" />
-                  <Flex marginTop="10px" gap="20px">
-                    <CustomInput id="city" placeholder="City" name="city" />
-                    <CustomInput id="state" placeholder="State" name="state" />
-                  </Flex>
-                </div>
-                <div>
-                  <CustomInput
-                    id="unitNumber"
-                    placeholder="Unit or Apartment Number"
-                    name="unitNumber"
-                  />
-                  <Flex marginTop="10px" gap="20px">
-                    <CustomInput id="zipCode" placeholder="Zip Code" name="zipCode" />
-                    <CustomInput id="country" placeholder="Country" name="country" />
-                  </Flex>
-                </div>
-              </Flex>
-            </Flex>
-
-            <Flex alignItems="center" marginTop="10px">
-              <CustomFormLabel
-                itemName="PHONE NUMBER"
-                htmlFor="phoneNumber countryCode"
-                labelHeight={'0px'}
-              />
-              <Flex height="40px" width="820px" alignItems="center" gap="20px">
-                <CustomInput id="countryCode" placeholder="+1" name="countryCode" width="187.5px" />
-                <CustomInput
-                  id="phoneNumber"
-                  placeholder="000-000-0000"
-                  name="phoneNumber"
-                  flex="1"
+                className={classes.form_label}
+              ></FormLabel>
+              <Text className={classes.form_label} width={70}>
+                NAME
+              </Text>
+              <Flex height="40px" width="820px" alignItems="center">
+                <Input
+                  id="personFirstName"
+                  placeholder="First Name"
+                  name="personFirstName"
+                  onChange={handleChange}
+                  isRequired={true}
+                />
+                <Input
+                  id="personLastName"
+                  placeholder="Last Name"
+                  name="personLastName"
+                  onChange={handleChange}
+                  isRequired={true}
                 />
               </Flex>
             </Flex>
-
-            <CustomFormElement
-              id="numberOfHours"
-              placeholder="Hours"
-              name="numberOfHours"
-              itemName="NUMBER OF HOURS WORKED"
-              htmlFor="numberOfHours"
-              labelHeight="20px"
-              inputWidth={'820px'}
-            />
-
-            <Flex alignItems="center" marginTop="10px">
+            <Flex alignItems="center" marginTop="5px" width="80%" marginLeft={-49}>
               <FormLabel
-                htmlFor="activities"
-                fontSize="12px"
-                width="160px"
-                height="90px"
-                fontWeight="700"
-              >
-                BRIEFLY DESCRIBE ACTIVITIES
-              </FormLabel>
-              <Flex width="820px">
-                <Textarea id="activities" height="114px" name="activites" onChange={handleChange} />
-              </Flex>
+                itemName="EMAIL"
+                htmlFor="email"
+                labelHeight="0px"
+                className={classes.form_label}
+              ></FormLabel>
+              <Text className={classes.form_label} width={70}>
+                EMAIL
+              </Text>
+              <Input
+                id="email"
+                placeholder="Email"
+                name="email"
+                width="820px"
+                onChange={handleChange}
+                isRequired={true}
+              />
             </Flex>
-
-            <Heading as="h2" size="md" marginTop="10px" marginBottom="10px">
+            <Flex alignItems="center" marginTop="5px" width="80%" marginLeft={-49}>
+              <FormLabel
+                itemName="volunteer_hours"
+                htmlFor="hours"
+                labelHeight="0px"
+                className={classes.form_label}
+              ></FormLabel>
+              <Text className={classes.form_label} width={70}>
+                HOURS
+              </Text>
+              <Input
+                id="volunteer_hours"
+                placeholder="Hours"
+                name="volunteer_hours"
+                width="820px"
+                onChange={handleChange}
+                isRequired={true}
+              />
+            </Flex>
+            <Divider borderColor="black" my={4} />{' '}
+            {/* Customize margin as needed for visual spacing */}
+            <Heading as="h2" size="md" marginTop="30px" marginBottom="10px">
+              {' '}
+              {/* Increased top margin */}
               DONATION INFO
             </Heading>
             <Text fontWeight="500" fontSize="14px" marginTop="10px" marginBottom="10px">
@@ -340,7 +330,6 @@ const DonationForm = () => {
             <Text fontWeight="700" fontSize="12px" marginTop="10px" marginBottom="10px">
               DONATION FOOD ITEM
             </Text>
-
             <Flex width="990px" gap="30px">
               <div>
                 <Select
@@ -348,37 +337,31 @@ const DonationForm = () => {
                   height="40px"
                   width="480px"
                   textColor={'gray.500'}
-                ></Select>
-                <InputGroup marginTop="10px">
-                  <InputLeftElement>
-                    <SearchIcon color="gray.200" />
-                  </InputLeftElement>
-                  <Input
-                    id="search"
-                    placeholder="Search"
-                    height="40px"
-                    width="480px"
-                    name="search"
-                    borderRadius={'0px'}
-                    onChange={handleChange}
-                  />
-                </InputGroup>
-                <CustomSearchBox itemName="Canned Cat Food" />
-                <CustomSearchBox itemName="Canned Dog Food" />
-                <CustomSearchBox itemName="Canned Pet Food" />
-                <CustomSearchBox itemName="Treats" />
+                  onChange={event => {
+                    const selectedItem = event.target.value;
+                    setFormData(prevState => ({
+                      ...prevState,
+                      [labels[selectedItem]]: 1, // Set the initial quantity to 1 when an item is selected
+                    }));
+                  }}
+                >
+                  <option value="Canned Cat Food">Canned Cat Food</option>
+                  <option value="Dry Cat Food">Dry Cat Food</option>
+                  <option value="Canned Dog Food">Canned Dog Food</option>
+                  <option value="Dry Dog Food">Dry Dog Food</option>
+                </Select>
               </div>
 
               <VStack spacing={3}>
-                <CustomBox itemName="Canned Cat Food" />
-                <CustomBox itemName="Dog Treats" />
-                <CustomBox itemName="Canned Dog Food" />
-                <CustomBox itemName="Crates" />
-                <CustomBox itemName="Dry Dog Food" />
+                {Object.entries(labels).map(([itemName, itemKey]) => {
+                  if (formData[itemKey] > 0) {
+                    return <CustomBox key={itemKey} itemName={itemName} />;
+                  }
+                  return null;
+                })}
               </VStack>
             </Flex>
-
-            <Flex marginTop="10px">
+            <Flex marginTop="40px">
               <FormLabel
                 htmlFor="miscDonations"
                 fontSize="12px"
@@ -387,6 +370,7 @@ const DonationForm = () => {
                 fontWeight="700"
               >
                 <VStack alignItems={'flex-start'}>
+                  <Divider borderColor="black" />
                   <Text>MISC. DONATIONS</Text>
                   <Text textColor={'gray.600'} fontSize="xs" fontWeight={400}>
                     If your donation item is not listed above, please add the item information with
@@ -396,14 +380,13 @@ const DonationForm = () => {
               </FormLabel>
               <Flex width="820px">
                 <Textarea
-                  id="miscDonations"
+                  id="misc_items"
                   height="171px"
-                  name="miscDonations"
+                  name="misc_items"
                   onChange={handleChange}
                 />
               </Flex>
             </Flex>
-
             <Flex marginTop="10px">
               <FormLabel
                 htmlFor="photos"
@@ -446,7 +429,6 @@ const DonationForm = () => {
                 </Box>
               </Flex>
             </Flex>
-
             <Flex justifyContent={'flex-end'} marginRight="60px" marginTop="20px" gap="20px">
               <Button type="button" onClick={submitForm}>
                 Cancel
