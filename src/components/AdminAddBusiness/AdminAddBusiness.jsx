@@ -61,13 +61,15 @@ const AdminAddBusiness = () => {
 
     setDonationSiteInformation(prevState => ({ ...prevState, [name]: value }));
   };
-
+  function clearInputField() {
+    document.getElementById('myForm').reset();
+}
   const addNewBusiness = async () => {
     try {
       await backend.post(`/business/`, {
         type: null,
         name: donationSiteInformation.nameOfCompany,
-        street: donationSiteInformation.streetNumber,
+        street: `${donationSiteInformation.streetNumber} ${donationSiteInformation.unitNumber}`,
         zipCode: donationSiteInformation.zipCode,
         state: donationSiteInformation.state,
         qbVendorName: null,
@@ -120,8 +122,45 @@ const AdminAddBusiness = () => {
         createdDate: null,
         city: null,
       });
-      console.log("I made it up to this point")
-      console.log(donationSiteInformation.petFoodProviderSite)
+      setDonationSiteInformation(prevState => ({
+        ...prevState,
+        nameOfCompany: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        website: '',
+        streetNumber: '',
+        unitNumber: '',
+        zip: '',
+        state: '',
+        city: '',
+        country: '',
+        phoneAreaCode: '',
+        phoneNumber: '',
+        numberOfHoursWorked: '',
+        howTheyHearAboutUs: '',
+        internalNotes: '',
+        termsAndCondition: false,
+        petFoodProviderSite: false,
+        donationSite: false,
+        shelter: false,
+        domesticViolenceShelter: false,
+        familiesOnlyShelter: false,
+        wellnessClinics: false,
+        spayNeuter: false,
+        financialAssistance: false,
+        rehomeFoster: false,
+        enteredInQB: false,
+        inactive: false,
+        finalCheck: false,
+        erBoarding: false,
+        seniorCitizensOnly: false,
+        cancerSpecific: false,
+        dogSpecific: false,
+        catSpecific: false,
+      }));
+      clearInputField()
+      
     } catch (error) {
       console.error('Error updating data:', error);
     }
