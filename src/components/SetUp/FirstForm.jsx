@@ -13,6 +13,7 @@ import {
   Image,
   Flex,
 } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 import LOGO from './fph_logo.png';
 import { useAuth } from '../../contexts/AuthContext';
 import PropTypes from 'prop-types'; // Import PropTypes
@@ -24,6 +25,7 @@ const FirstForm = ({ isAdmin, nextStep }) => {
   const { signup } = useAuth();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -56,7 +58,7 @@ const FirstForm = ({ isAdmin, nextStep }) => {
       <Box w="50%" bg="#FFFFFF">
         <VStack spacing={4} align="stretch" height="100vh" justifyContent="center" paddingX="10vh">
           {isAdmin ? (
-            <Heading alignSelf="flex-start">Create Admin Account</Heading>
+            <Heading alignSelf="flex-start" marginBottom="3vh" color="#319795">Create Admin Account</Heading>
           ) : (
             <Heading alignSelf="flex-start" marginBottom="3vh" color="#319795">
               Create Donation Site Account
@@ -92,7 +94,7 @@ const FirstForm = ({ isAdmin, nextStep }) => {
           <Text mt={4} alignSelf="flex-start">
             Already have an account?{' '}
             <Link
-              to={isAdmin ? '/LoginAdmin' : '/LoginBusiness'}
+              onClick={() => {isAdmin ? navigate('/LoginAdmin') : navigate('/LoginBusiness')}}
               color="#319795"
               fontWeight="semibold"
             >
