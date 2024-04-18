@@ -192,7 +192,7 @@ const AdminAddBusiness = () => {
                 </FormLabel>
                 <Input
                   type="text"
-                  placeholder="COMPANY"
+                  placeholder="Company"
                   defaultValue={donationSiteInformation.nameOfCompany}
                   name="nameOfCompany"
                   onChange={handleChange}
