@@ -28,7 +28,6 @@ const App = () => {
           <Sidebar isAdmin={false} />
           <div className={styles.mainContent}>
             <Routes>
-              <Route exact path="/" element={<div>Welcome to the App</div>} />
               <Route exact path="/SignupAdmin" element={<Signup isAdmin={true} />} />
               <Route exact path="/SignupBusiness" element={<Signup isAdmin={false} />} />
               <Route exact path="/LoginAdmin" element={<Login isAdmin={true} />} />
