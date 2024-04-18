@@ -165,56 +165,6 @@ const AdminAddBusiness = () => {
     }
     return;
   };
-  /* CHANGE FOR THIS PAGE WHEN WE REACH BACKEND
-  const updateContactInfo = async () => {
-    try {
-      await backend.put(`/business/${BUSINESS_ID}`, {
-        business_name: businessContactInfo.businessName,
-        contact_name: `${businessContactInfo.firstName} ${businessContactInfo.lastName}`,
-        contact_phone: businessContactInfo.phoneNumber,
-        primary_email: businessContactInfo.email,
-        website: businessContactInfo.website,
-        street: businessContactInfo.street,
-        zip: businessContactInfo.zip,
-        city: businessContactInfo.city,
-        state: businessContactInfo.state,
-        business_hours: businessContactInfo.business_hours,
-      });
-    } catch (error) {
-      console.error('Error updating data:', error);
-    }
-
-  };
-
-  useEffect(() => {
-    const getBusinessContactResponse = async () => {
-      try {
-        const businessContactResponse = await backend.get(`/business/${BUSINESS_ID}`);
-        const businessContact = businessContactResponse.data[0];
-        const name = businessContact.contact_name.split(' ');
-        const firstName = name[0];
-        const lastName = name[1];
-
-        setBusinessContactInfo({
-          businessName: businessContact.name,
-          phoneNumber: businessContact.contact_phone,
-          email: businessContact.primary_email,
-          website: businessContact.website,
-          street: businessContact.street,
-          firstName: firstName,
-          lastName: lastName,
-          city: businessContact.city,
-          state: businessContact.state,
-          zip: businessContact.zip_code,
-          business_hours: businessContact.business_hours,
-        });
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-    getBusinessContactResponse();
-  }, [backend]);*/
-
   useEffect(() => {});
 
   return (
@@ -607,7 +557,7 @@ const AdminAddBusiness = () => {
           </Card>
           <Box alignContent={'right'}>
             <HStack marginBottom={'3%'} marginTop={'5%'} alignItems={'left'}>
-              <Button
+              {/* {<Button
                 color="black"
                 bg="gray.100"
                 variant="solid"
@@ -616,7 +566,7 @@ const AdminAddBusiness = () => {
                 onClick={addNewBusiness} // CHANGE THIS TO DO WHAT A CANCEL BUTTON IS SUPPOSED TO DO
               >
                 Cancel
-              </Button>
+              </Button>} */}
               <Button colorScheme="teal" variant="solid" width={'11%'} onClick={addNewBusiness}>
                 Submit
               </Button>
