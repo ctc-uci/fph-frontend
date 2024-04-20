@@ -19,6 +19,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './utils/ProtectedRoute.jsx';
 import ViewBusiness from './components/ViewBusiness/ViewBusiness.jsx';
 import BusinessForm from './components/BusinessForm/BusinessForm.jsx';
+import Congrats from './components/DonationForm/Congrats.jsx';
 import ViewRequest from './components/ViewRequest/ViewRequest.jsx';
 
 const App = () => {
@@ -36,6 +37,7 @@ const App = () => {
               <Route exact path="/LoginBusiness" element={<Login isAdmin={false} />} />
               <Route exact path="/ForgotPassword" element={<ForgotPassword />} />
               <Route exact path="/ContactUs" element={<ProtectedRoute Component={ContactUs} />} />
+              <Route exact path="/Congrats" element={<ProtectedRoute Component={Congrats} />} />
               <Route
                 exact
                 path="/AdminDashboard"
