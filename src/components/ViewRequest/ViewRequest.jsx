@@ -15,7 +15,7 @@ const ViewRequest = () => {
         "Donation Site Decal",
         "Donation Site Bin Decal",
         "Donation Envelopes",
-        "\"Homesless?\" Card 2",
+        "\"Homeless?\" Card 2",
     ]
     const [itemAmounts, setItemAmounts] = useState({});
     const [notes, setNotes] = useState("");
