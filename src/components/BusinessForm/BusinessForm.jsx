@@ -202,7 +202,6 @@ const BusinessForm = ({ pending, pendingData }) => {
       ...pendingData,
       status: 'Active',
     };
-    console.log({ businessId: pendingData.id });
     try {
       await backend.put(`/business/${pendingData.id}`, updatedData);
       setRegistrationSuccess(true);
@@ -215,7 +214,7 @@ const BusinessForm = ({ pending, pendingData }) => {
         position: 'bottom-right',
       });
     } catch (error) {
-      console.log('Error in approving business: error');
+      console.error('Error in approving business: error');
     }
   };
 
@@ -224,7 +223,6 @@ const BusinessForm = ({ pending, pendingData }) => {
       ...pendingData,
       status: 'Denied',
     };
-    console.log({ businessId: pendingData.id });
     try {
       await backend.put(`/business/${pendingData.id}`, updatedData);
       setRegistrationSuccess(true);
@@ -242,7 +240,6 @@ const BusinessForm = ({ pending, pendingData }) => {
   };
 
   const fillOutPendingData = () => {
-    console.log('Pending Check', pendingData);
     setBusinessName(pendingData.name ? pendingData.name : '');
     if (pendingData.contact_name === null) {
       setFirstName('');

@@ -28,7 +28,7 @@ import {
 } from '@chakra-ui/react';
 
 const ContactUs = () => {
-  const business_ID = 1;
+  const business_ID = 0;
   const { backend } = useBackend();
   const navigate = useNavigate();
   const [text, setText] = useState('');
