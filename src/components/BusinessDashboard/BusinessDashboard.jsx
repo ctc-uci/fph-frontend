@@ -1,5 +1,4 @@
 import './BusinessDashboard.module.css';
-import React from 'react';
 import { useBackend } from '../../contexts/BackendContext';
 import { useEffect, useState } from 'react';
 import {
@@ -20,13 +19,10 @@ import {
   Center,
   Drawer,
   DrawerBody,
-  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-  useDisclosure,
-  VStack,
 } from '@chakra-ui/react';
 import { BiDonateHeart, BiMoney, BiPackage } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
@@ -93,6 +89,8 @@ const BusinessDashboard = () => {
     '"Homeless?" Card',
   ];
 
+  const businessID = 1;
+
   const formatDate = timestamp => {
     const parsedTimestamp = Number(timestamp);
     const date = new Date(isNaN(parsedTimestamp) ? timestamp : parsedTimestamp * 1000);
@@ -119,13 +117,13 @@ const BusinessDashboard = () => {
         const donationResponse = await backend.get('/donation/business/totals/3');
         setDonationData(donationResponse.data[0]);
 
-        const businessResponse = await backend.get('/business/1');
+        const businessResponse = await backend.get(`/business/${businessID}`);
         setUserName(businessResponse.data[0]['contact_name']);
 
         const priceResponse = await backend.get('/value');
         setPriceData(priceResponse.data);
 
-        const reminderResponse = await backend.get('/notification/1');
+        const reminderResponse = await backend.get(`/notification/${businessID}`);
         setReminderData(reminderResponse.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -184,7 +182,20 @@ const BusinessDashboard = () => {
 
   // Bruh naw what is this CHANGE LATER
   const calculateTotalWorth = () => {
+    console.log(priceData);
     return 99;
+  };
+
+  const calculateTimeSince = () => {
+    if (!(reminderData.length > 0)) {
+      return 0;
+    }
+    const currentTime = new Date();
+    const previousTime = new Date(reminderData[0].timestamp);
+    const timeDifference = Math.abs(currentTime - previousTime);
+    // Convert milliseconds to days
+    const daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+    return daysDifference;
   };
 
   <Drawer isOpen={isDrawerOpen} placement="right" onClose={() => setIsDrawerOpen(false)} size="sm">
@@ -328,7 +339,7 @@ const BusinessDashboard = () => {
               <div style={{ marginLeft: '12px' }}>
                 <Box>
                   <Text fontSize={25} fontWeight={500}>
-                    {calculateTotalWorth()}
+                    ${calculateTotalWorth()}
                   </Text>
                 </Box>
                 <Box>
@@ -352,7 +363,7 @@ const BusinessDashboard = () => {
               <div style={{ marginLeft: '12px' }}>
                 <Box>
                   <Text fontSize={25} fontWeight={500}>
-                    0
+                    {calculateTotalPounds()}
                   </Text>
                 </Box>
                 <Box>
@@ -376,7 +387,7 @@ const BusinessDashboard = () => {
               <div style={{ marginLeft: '12px' }}>
                 <Box>
                   <Text fontSize={25} fontWeight={500}>
-                    {calculateTotalPounds()}
+                    {calculateTimeSince()}
                   </Text>
                 </Box>
                 <Text color="gray" mt={-2}>

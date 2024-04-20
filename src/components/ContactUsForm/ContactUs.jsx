@@ -29,12 +29,23 @@ import {
 
 const ContactUs = () => {
   const business_ID = 0;
+  const senderID = 1;
   const { backend } = useBackend();
   const navigate = useNavigate();
   const [text, setText] = useState('');
-  const [checkedItems, setCheckedItems] = useState([0, 0, 0, 0, 0, 0, 0]);
+  const [checkedItems, setCheckedItems] = useState([0, 0, 0, 0, 0, 0, 0, 0]);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
+  const checkedThingies = [
+    'Get Pet Food Decal',
+    'Decal',
+    'Homeless Card',
+    'Business Card',
+    'Donation Site Decal',
+    'Donation Site Bin Decals',
+    'Donation Envelopes',
+    'Homeless Card 2'
+  ];
 
   const formData = {
     business_id: business_ID,
@@ -81,9 +92,11 @@ const ContactUs = () => {
     const updatedFormData = {
       ...formData,
       message: message,
-      timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }),
+      type: 'Supply Request',
+      timestamp: new Date().toLocaleString('en-US', {
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      }),
       been_dismissed: false,
-      type: 'Supply Request Received',
     };
     await backend.post('/notification/', updatedFormData);
     setShowConfirmation(true);
@@ -105,25 +118,12 @@ const ContactUs = () => {
 
   const setMessage = text => {
     const textCopy = text;
-    const checkedThingies = [
-      'DS Decals',
-      'Rack Cards',
-      'Donation Envelopes',
-      'Business Cards',
-      'Stickers',
-      'Bin Decals',
-      'DS Decals',
-    ];
-    const preMessage = `Business is requesting:
-    ${checkedThingies[0]}: ${checkedItems[0]}
-    ${checkedThingies[1]}: ${checkedItems[1]}
-    ${checkedThingies[2]}: ${checkedItems[2]}
-    ${checkedThingies[3]}: ${checkedItems[3]}
-    ${checkedThingies[4]}: ${checkedItems[4]}
-    ${checkedThingies[5]}: ${checkedItems[5]}
-    ${checkedThingies[6]}: ${checkedItems[6]}\n`; // business name... hard-coded right now
-    const updatedMessage = checkedThingies.filter((_, index) => checkedItems[index]).join('\n-');
-    return `${preMessage}-${updatedMessage}\nNotes:\n${textCopy}`;
+   
+    const preMessage = `Business ID: ${senderID} is requesting:`;
+    const messageBody = checkedThingies.map((item, index) => (
+      `${item}: ${checkedItems[index]}\n`
+    ));
+    return `${preMessage}\n${messageBody}\nNotes:\n${textCopy}`;
   };
 
   const textInputHandler = e => {
@@ -168,121 +168,27 @@ const ContactUs = () => {
                   borderRightRadius="1"
                 >
                   <Stack>
-                    <HStack marginBottom={'17%'}>
-                      <NumberInput
-                        size="sm"
-                        maxW={20}
-                        defaultValue={0}
-                        min={0}
-                        onChange={e => handleNumInputChange(e, 0)}
-                      >
-                        <NumberInputField />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
-                      <Text>DS Decals</Text>
-                    </HStack>
-                    <HStack marginBottom={'17%'}>
-                      <NumberInput
-                        size="sm"
-                        maxW={20}
-                        defaultValue={0}
-                        min={0}
-                        onChange={e => handleNumInputChange(e, 1)}
-                      >
-                        <NumberInputField />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
-                      <Text>Rack Cards</Text>
-                    </HStack>
-                    <HStack marginBottom={'17%'}>
-                      <NumberInput
-                        size="sm"
-                        maxW={20}
-                        defaultValue={0}
-                        min={0}
-                        onChange={e => handleNumInputChange(e, 2)}
-                      >
-                        <NumberInputField />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
-                      <Text>Donation Envelopes</Text>
-                    </HStack>
-                    <HStack marginBottom={'17%'}>
-                      <NumberInput
-                        size="sm"
-                        maxW={20}
-                        defaultValue={0}
-                        min={0}
-                        onChange={e => handleNumInputChange(e, 3)}
-                      >
-                        <NumberInputField />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
-                      <Text>BusinessCards</Text>
-                    </HStack>
-                    <HStack marginBottom={'17%'}>
-                      <NumberInput
-                        size="sm"
-                        maxW={20}
-                        defaultValue={0}
-                        min={0}
-                        onChange={e => handleNumInputChange(e, 4)}
-                      >
-                        <NumberInputField />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
-                      <Text>Stickers</Text>
-                    </HStack>
-                  </Stack>
-                  <Stack margin={'5%'}></Stack>
-                  <Stack>
-                    <HStack marginBottom={'17%'}>
-                      <NumberInput
-                        size="sm"
-                        maxW={20}
-                        defaultValue={0}
-                        min={0}
-                        onChange={e => handleNumInputChange(e, 5)}
-                      >
-                        <NumberInputField />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
-                      <Text>Bin Decals</Text>
-                    </HStack>
-                    <HStack marginBottom={'17%'}>
-                      <NumberInput
-                        size="sm"
-                        maxW={20}
-                        defaultValue={0}
-                        min={0}
-                        onChange={e => handleNumInputChange(e, 6)}
-                      >
-                        <NumberInputField />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
-                      <Text>DS Decals</Text>
-                    </HStack>
+                      {checkedThingies.map((item, index) => (
+                        <HStack
+                          marginBottom={'17%'}
+                          key={index}
+                        >
+                          <NumberInput
+                            size="sm"
+                            maxW={20}
+                            defaultValue={0}
+                            min={0}
+                            onChange={e => handleNumInputChange(e, index)}
+                          >
+                            <NumberInputField />
+                            <NumberInputStepper>
+                              <NumberIncrementStepper />
+                              <NumberDecrementStepper />
+                            </NumberInputStepper>
+                          </NumberInput>
+                          <Text>{item}</Text>
+                        </HStack>
+                      ))}
                   </Stack>
                 </Box>
               </Card>

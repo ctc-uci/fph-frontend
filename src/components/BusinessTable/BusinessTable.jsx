@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useBackend } from '../../contexts/BackendContext';
-import ViewBusiness from '../ViewBusiness/ViewBusiness';
 import { Table, Thead, Tbody, Tr, Td, Checkbox, Button, Th } from '@chakra-ui/react';
+import { ArrowDownIcon } from '@chakra-ui/icons';
+import DownloadCSV from '../../utils/downloadCSV';
 
 const BusinessTable = businessData => {
+  const navigate = useNavigate();
   const { backend } = useBackend();
   const [data, setData] = useState([]);
-  const [selectedBusinessId, setBusinessId] = useState(null);
+  // const [selectedBusinessId, setBusinessId] = useState(null);
+
   const TABLE_HEADERS = [
     'id',
     'Type',
@@ -113,6 +117,15 @@ const BusinessTable = businessData => {
     }
   };
 
+  const handleDownloadCSV = () => {
+    const ids = Array.from(selectedBusinessIds);
+    var headers = [];
+    for (var i = 0; i < TABLE_HEADERS.length; i++) {
+      headers.push(TABLE_HEADERS[i].toLowerCase().replace(' ', '_'));
+    }
+    DownloadCSV(headers, ids, 'business');
+  };
+
   useEffect(() => {
     const getData = async () => {
       try {
@@ -125,24 +138,18 @@ const BusinessTable = businessData => {
   }, [businessData]);
 
   const handleRowClick = async id => {
-    try {
-      setBusinessId(id);
-      const response = await backend.get(`/business/${id}`);
-      console.log(response.data);
-    } catch (error) {
-      console.error('Error while fetching business', error);
-    }
+    navigate(`/ViewBusiness/${id}`);
   };
-
-  if (selectedBusinessId) {
-    return <ViewBusiness id={selectedBusinessId} />;
-  }
   return businessData['businessData'].length == 0 ? (
     <h1>Loading ...</h1>
   ) : (
     <div>
       <Button colorScheme="blue" onClick={handleSendReminders}>
         Send Reminders
+      </Button>
+      <Button colorScheme="teal" onClick={handleDownloadCSV} sx={{ width: '172px' }}>
+        <ArrowDownIcon sx={{ marginRight: '5px' }} />
+        Download CSV
       </Button>
       <Table variant="striped" colorScheme="teal">
         <Thead>

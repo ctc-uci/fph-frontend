@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Drawer,
   DrawerBody,
@@ -22,12 +23,27 @@ import {
 } from '@chakra-ui/react';
 import { BellIcon, ChevronDownIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 import { useState } from 'react';
+import DownloadCSV from '../../utils/downloadCSV';
+import { useNavigate } from 'react-router-dom';
+
 
 const NotificationsDrawer = ({ notificationsData }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
   const [sortState, setSortState] = useState('');
   const toast = useToast();
+  const navigate = useNavigate();
+
+  NotificationsDrawer.propTypes = {
+    notificationsData: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        type: PropTypes.string.isRequired,
+        message: PropTypes.string.isRequired,
+        timestamp: PropTypes.string.isRequired,
+      }),
+    ).isRequired,
+  };
 
   const notificationAction = {
     'New Application': 'View Application',
@@ -45,15 +61,33 @@ const NotificationsDrawer = ({ notificationsData }) => {
     'Edited Information': 'Golden Scar',
   };
 
-  const onActionClick = notification_type => {
+  const onActionClick = notification => {
     return toast({
-      title: afterAction[notification_type],
+      title: afterAction[notification.type],
       description: 'meow',
       status: 'success',
       duration: 9000,
       isClosable: true,
     });
   };
+
+  const handleDownloadCSV = ids => {
+    const headers = [
+      'business_id',
+      'notification_id',
+      'message',
+      'timestamp',
+      'been_dismissed',
+      'type',
+    ];
+    DownloadCSV(headers, ids, 'notification');
+  };
+
+  const findBusinessId = message => {
+    const regex = new RegExp(`id: *[0-9]+`, 'i');
+    return message.match(regex, "i")[0].split(":")[1].trim();
+  }
+
 
   return (
     <>
@@ -99,11 +133,19 @@ const NotificationsDrawer = ({ notificationsData }) => {
                     <Text>{notification.message}</Text>
                     <Text fontSize="sm">{new Date(notification.timestamp).toLocaleString()}</Text>
                     <Button
-                      onClick={() => onActionClick('Submitted Form')}
+                      onClick={() => {
+                        onActionClick(notification);
+                        if (notificationAction[notification.type] === 'Download CSV') {
+                          handleDownloadCSV([notification.notification_id]);
+                        } else if (notificationAction[notification.type] === 'View Request') {
+                          navigate(`/ViewRequest/${findBusinessId(notification.message)}`);
+                        } else if (notificationAction[notification.type] === 'View Application' || notificationAction[notification.type] === 'View Information') {
+                          navigate(`/ViewBusiness/${findBusinessId(notification.message)}`);
+                        }
+                      }}
                       rightIcon={<ArrowForwardIcon />}
                     >
-                      {' '}
-                      {notificationAction[notification.type]}{' '}
+                      {notificationAction[notification.type]}
                     </Button>
                   </Box>
                 ))}
@@ -116,4 +158,5 @@ const NotificationsDrawer = ({ notificationsData }) => {
     </>
   );
 };
+
 export default NotificationsDrawer;
