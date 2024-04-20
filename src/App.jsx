@@ -19,6 +19,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './utils/ProtectedRoute.jsx';
 import ViewBusiness from './components/ViewBusiness/ViewBusiness.jsx';
 import BusinessForm from './components/BusinessForm/BusinessForm.jsx';
+import AdminSettingsMaster from './components/AdminSettings/AdminSettingsMaster.jsx';
 
 const App = () => {
   return (
@@ -95,6 +96,11 @@ const App = () => {
                 exact
                 path="/EditBusiness/:id"
                 element={<ProtectedRoute Component={BusinessForm} />}
+              />
+              <Route
+                exact
+                path="/Settings"
+                element={<ProtectedRoute Component={AdminSettingsMaster} />}
               />
             </Routes>
           </div>
