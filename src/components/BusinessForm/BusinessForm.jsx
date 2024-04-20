@@ -29,7 +29,6 @@ import {
 import 'boxicons';
 import './BusinessForm.module.css';
 import { useBackend } from '../../contexts/BackendContext';
-import RegisterSuccessPage from '../RegisterBusinessForm/RegisterSuccessPage';
 
 const BusinessForm = ({ edit = true }) => {
   // State for each form field
@@ -53,7 +52,6 @@ const BusinessForm = ({ edit = true }) => {
     'Rehome Foster',
   ];
   const { id } = useParams();
-  const [businessData, setBusinessData] = useState({});
   const [businessName, setBusinessName] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -67,7 +65,6 @@ const BusinessForm = ({ edit = true }) => {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [howHeard, setHowHeard] = useState('');
-  const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const navigate = useNavigate();
   const [businessHours, setBusinessHours] = useState('');
   const [checkedAddedInfo, setCheckedAddedInfo] = useState({});
@@ -85,175 +82,64 @@ const BusinessForm = ({ edit = true }) => {
     }
   }, [backend]);
 
-  const updateBusinessDataCreate = () => {
-    const DUMMY_STRING = 'STRING';
-    const DUMMY_DATE = new Date().toISOString().split('T')[0];
-    const DUMMY_BOOL = false;
-    setBusinessData({
-      name: businessName,
-      contactName: firstName + ' ' + lastName,
-      street: addressLine1 + ' ' + addressLine2,
-      zipCode: zip,
-      state: state,
-      city: city,
-      website: website,
-      businessHours: businessHours,
-      primaryPhone: phone,
-      primaryEmail: email,
-      findOut: howHeard,
-      type: DUMMY_STRING,
-      qbVendorName: DUMMY_STRING,
-      qbCityStateZip: DUMMY_STRING,
-      backupPhone: DUMMY_STRING,
-      comments: DUMMY_STRING,
-      faxPhone: DUMMY_STRING,
-      onboardingStatus: DUMMY_STRING,
-      joinDate: DUMMY_DATE,
-      inputTypeStatus: DUMMY_STRING,
-      vendorType: DUMMY_STRING,
-      status: DUMMY_STRING,
-      petsOfTheHomelessDiscount: DUMMY_BOOL,
-      updatedBy: DUMMY_STRING,
-      updatedDateTime: DUMMY_DATE,
-      syncToQb: DUMMY_BOOL,
-      veterinary: DUMMY_BOOL,
-      resource: DUMMY_BOOL,
-      food: checkedAddedInfo['Pet Food Provider Site'],
-      donation: checkedAddedInfo['Donation Site'],
-      familyShelter: checkedAddedInfo['Family Shelter'],
-      wellness: checkedAddedInfo['Wellness Clinics'],
-      spayNeuter: checkedAddedInfo['Spay Neuter'],
-      financial: checkedAddedInfo['Financial Assistance'],
-      reHome: checkedAddedInfo['Rehome Foster'],
-      erBoarding: checkedAddedInfo['ER Boarding'],
-      senior: checkedAddedInfo['Senior Citzens Only'],
-      cancer: checkedAddedInfo['Cancer Specific'],
-      dog: checkedAddedInfo['Dog Specific'],
-      cat: checkedAddedInfo['Cat Specific'],
-      fphPhone: fphPhone,
-      contactPhone: DUMMY_STRING,
-      webNotes: webNotes,
-      internalNotes: internalNotes,
-      published: published,
-      shelter: checkedAddedInfo['Shelter'],
-      domesticViolence: checkedAddedInfo['Domestic Violence'],
-      webDateInit: webDateInit,
-      entQb: checkedAddedInfo['Entered In QB'],
-      serviceRequest: serviceRequest,
-      inactive: checkedAddedInfo['Inactive'],
-      finalCheck: checkedAddedInfo['Final Check'],
-      createdBy: DUMMY_DATE,
-      createdDate: DUMMY_DATE,
-    });
-  };
-
-  const updateBusinessDataEdit = () => {
-    setBusinessData({
-      name: businessName,
-      contactName: firstName + ' ' + lastName,
-      street: addressLine1 + ' ' + addressLine2,
-      zipCode: zip,
-      state: state,
-      city: city,
-      website: website,
-      businessHours: businessHours,
-      primaryPhone: phone,
-      primaryEmail: email,
-      findOut: howHeard,
-      food: checkedAddedInfo['Pet Food Provider Site'],
-      donation: checkedAddedInfo['Donation Site'],
-      familyShelter: checkedAddedInfo['Family Shelter'],
-      wellness: checkedAddedInfo['Wellness Clinics'],
-      spayNeuter: checkedAddedInfo['Spay Neuter'],
-      financial: checkedAddedInfo['Financial Assistance'],
-      reHome: checkedAddedInfo['Rehome Foster'],
-      erBoarding: checkedAddedInfo['ER Boarding'],
-      senior: checkedAddedInfo['Senior Citzens Only'],
-      cancer: checkedAddedInfo['Cancer Specific'],
-      dog: checkedAddedInfo['Dog Specific'],
-      cat: checkedAddedInfo['Cat Specific'],
-      fphPhone: fphPhone,
-      webNotes: webNotes,
-      internalNotes: internalNotes,
-      published: published,
-      shelter: checkedAddedInfo['Shelter'],
-      domesticViolence: checkedAddedInfo['Domestic Violence'],
-      webDateInit: webDateInit,
-      entQb: checkedAddedInfo['Entered In QB'],
-      serviceRequest: serviceRequest,
-      inactive: checkedAddedInfo['Inactive'],
-      finalCheck: checkedAddedInfo['Final Check'],
-    });
-  };
-
   const handleSubmit = async e => {
     e.preventDefault();
 
-    if (edit) {
-      updateBusinessDataEdit();
-    } else {
-      updateBusinessDataCreate();
-    }
-
     try {
+      const data = {
+        name: businessName,
+        contactName: firstName + ' ' + lastName,
+        street: addressLine1 + ' ' + addressLine2,
+        zipCode: zip,
+        state: state,
+        city: city,
+        website: website,
+        businessHours: businessHours,
+        primaryPhone: phone,
+        primaryEmail: email,
+        findOut: howHeard,
+        food: checkedAddedInfo['Pet Food Provider Site'],
+        donation: checkedAddedInfo['Donation Site'],
+        familyShelter: checkedAddedInfo['Family Shelter'],
+        wellness: checkedAddedInfo['Wellness Clinics'],
+        spayNeuter: checkedAddedInfo['Spay Neuter'],
+        financial: checkedAddedInfo['Financial Assistance'],
+        reHome: checkedAddedInfo['Rehome Foster'],
+        erBoarding: checkedAddedInfo['ER Boarding'],
+        senior: checkedAddedInfo['Senior Citzens Only'],
+        cancer: checkedAddedInfo['Cancer Specific'],
+        dog: checkedAddedInfo['Dog Specific'],
+        cat: checkedAddedInfo['Cat Specific'],
+        fphPhone: fphPhone,
+        webNotes: webNotes,
+        internalNotes: internalNotes,
+        published: published,
+        shelter: checkedAddedInfo['Shelter'],
+        domesticViolence: checkedAddedInfo['Domestic Violence'],
+        webDateInit: webDateInit,
+        entQb: checkedAddedInfo['Entered In QB'],
+        serviceRequest: serviceRequest,
+        inactive: checkedAddedInfo['Inactive'],
+        finalCheck: checkedAddedInfo['Final Check'],
+      };
       if (edit) {
-        await backend.put(`/business/${id}`, {
-          name: businessName,
-          contactName: firstName + ' ' + lastName,
-          street: addressLine1 + ' ' + addressLine2,
-          zipCode: zip,
-          state: state,
-          city: city,
-          website: website,
-          businessHours: businessHours,
-          primaryPhone: phone,
-          primaryEmail: email,
-          findOut: howHeard,
-          food: checkedAddedInfo['Pet Food Provider Site'],
-          donation: checkedAddedInfo['Donation Site'],
-          familyShelter: checkedAddedInfo['Family Shelter'],
-          wellness: checkedAddedInfo['Wellness Clinics'],
-          spayNeuter: checkedAddedInfo['Spay Neuter'],
-          financial: checkedAddedInfo['Financial Assistance'],
-          reHome: checkedAddedInfo['Rehome Foster'],
-          erBoarding: checkedAddedInfo['ER Boarding'],
-          senior: checkedAddedInfo['Senior Citzens Only'],
-          cancer: checkedAddedInfo['Cancer Specific'],
-          dog: checkedAddedInfo['Dog Specific'],
-          cat: checkedAddedInfo['Cat Specific'],
-          fphPhone: fphPhone,
-          webNotes: webNotes,
-          internalNotes: internalNotes,
-          published: published,
-          shelter: checkedAddedInfo['Shelter'],
-          domesticViolence: checkedAddedInfo['Domestic Violence'],
-          webDateInit: webDateInit,
-          entQb: checkedAddedInfo['Entered In QB'],
-          serviceRequest: serviceRequest,
-          inactive: checkedAddedInfo['Inactive'],
-          finalCheck: checkedAddedInfo['Final Check'],
-        });
+        await backend.put(`/business/${id}`, data);
       } else {
-        await backend.post('/business', businessData);
+        await backend.post('/business', data);
       }
-      navigate('/AdminDashboard');
     } catch (error) {
       console.error('Error in business registration:', error);
     }
     if (edit) {
       navigate(`/ViewBusiness/${id}`);
     } else {
-      setRegistrationSuccess(true);
+      navigate('/AdminDashboard');
     }
   };
 
   const handleHome = () => {
     navigate(`/AdminDashboard`);
   };
-
-  if (registrationSuccess) {
-    return <RegisterSuccessPage />;
-  }
 
   // const handleApprove = async () => {
   //   const updatedData = {
@@ -368,9 +254,8 @@ const BusinessForm = ({ edit = true }) => {
             <ChakraLink onClick={handleHome} color="blue.500" decoration="underline">
               Home{' '}
             </ChakraLink>
-            <Text>/ {businessName}</Text>
+            <Text>/ {edit ? businessName : 'Add A Business'}</Text>
           </Flex>
-
           <IconButton icon={<box-icon type="solid" name="bell"></box-icon>} />
         </Flex>
         <Card maxW="100%" w="1089px" h="auto" p={6} mt="10">
@@ -386,17 +271,23 @@ const BusinessForm = ({ edit = true }) => {
                   />
                 </Box>
               </Flex>
-              <Flex>
-                <Button variant="outline" colorScheme="gray" rightIcon={<box-icon name="pencil" />}>
-                  Editing
-                </Button>
-                <IconButton
-                  variant="regular"
-                  colorScheme="red"
-                  aria-label="Delete menu"
-                  icon={<box-icon name="trash" color="#d30000"></box-icon>}
-                />
-              </Flex>
+              {edit && (
+                <Flex>
+                  <Button
+                    variant="outline"
+                    colorScheme="gray"
+                    rightIcon={<box-icon name="pencil" />}
+                  >
+                    Editing
+                  </Button>
+                  <IconButton
+                    variant="regular"
+                    colorScheme="red"
+                    aria-label="Delete menu"
+                    icon={<box-icon name="trash" color="#d30000"></box-icon>}
+                  />
+                </Flex>
+              )}
             </Flex>
           </CardHeader>
           <CardBody>
@@ -612,7 +503,6 @@ const BusinessForm = ({ edit = true }) => {
                                 Publish Status
                               </Text>
                               <Select
-                                defaultValue={false}
                                 value={published}
                                 onChange={e => setPublished(e.target.value)}
                               >
@@ -754,4 +644,8 @@ BusinessForm.propTypes = {
   edit: PropTypes.bool,
 };
 
-export default BusinessForm;
+const AddBusinessForm = () => {
+  return <BusinessForm edit={false} />;
+};
+
+export { AddBusinessForm, BusinessForm };

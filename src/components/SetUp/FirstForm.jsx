@@ -58,12 +58,15 @@ const FirstForm = ({ isAdmin, nextStep }) => {
       <Box w="50%" bg="#FFFFFF">
         <VStack spacing={4} align="stretch" height="100vh" justifyContent="center" paddingX="10vh">
           {isAdmin ? (
-            <Heading alignSelf="flex-start" marginBottom="3vh" color="#319795">Create Admin Account</Heading>
+            <Heading alignSelf="flex-start" marginBottom="3vh" color="#319795">
+              Create Admin Account
+            </Heading>
           ) : (
             <Heading alignSelf="flex-start" marginBottom="3vh" color="#319795">
               Create Donation Site Account
             </Heading>
           )}
+          {error && <Text color="red.500">{error}</Text>}
           <FormControl id="email">
             <FormLabel>Email</FormLabel>
             <Input type="email" value={email} onChange={e => setEmail(e.target.value)} />
@@ -94,7 +97,9 @@ const FirstForm = ({ isAdmin, nextStep }) => {
           <Text mt={4} alignSelf="flex-start">
             Already have an account?{' '}
             <Link
-              onClick={() => {isAdmin ? navigate('/LoginAdmin') : navigate('/LoginBusiness')}}
+              onClick={() => {
+                isAdmin ? navigate('/LoginAdmin') : navigate('/LoginBusiness');
+              }}
               color="#319795"
               fontWeight="semibold"
             >

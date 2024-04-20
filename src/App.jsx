@@ -18,7 +18,7 @@ import ForgotPassword from './components/Authentication/ForgotPassword.jsx';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './utils/ProtectedRoute.jsx';
 import ViewBusiness from './components/ViewBusiness/ViewBusiness.jsx';
-import BusinessForm from './components/BusinessForm/BusinessForm.jsx';
+import { AddBusinessForm, BusinessForm } from './components/BusinessForm/BusinessForm.jsx';
 import Congrats from './components/DonationForm/Congrats.jsx';
 import ViewRequest from './components/ViewRequest/ViewRequest.jsx';
 
@@ -30,11 +30,18 @@ const App = () => {
           <Sidebar isAdmin={false} />
           <div className={styles.mainContent}>
             <Routes>
-              <Route exact path="/" element={<div>Welcome to the App</div>} />
-              <Route exact path="/SignupAdmin" element={<BusinessSetupPageMaster isAdmin={true} />} />
-              <Route exact path="/SignupBusiness" element={<BusinessSetupPageMaster isAdmin={false} />} />
+              <Route
+                exact
+                path="/SignupAdmin"
+                element={<BusinessSetupPageMaster isAdmin={true} />}
+              />
+              <Route
+                exact
+                path="/SignupBusiness"
+                element={<BusinessSetupPageMaster isAdmin={false} />}
+              />
               <Route exact path="/LoginAdmin" element={<Login isAdmin={true} />} />
-              <Route exact path="/LoginBusin  ess" element={<Login isAdmin={false} />} />
+              <Route exact path="/LoginBusiness" element={<Login isAdmin={false} />} />
               <Route exact path="/ForgotPassword" element={<ForgotPassword />} />
               <Route exact path="/ContactUs" element={<ProtectedRoute Component={ContactUs} />} />
               <Route exact path="/Congrats" element={<ProtectedRoute Component={Congrats} />} />
@@ -100,12 +107,16 @@ const App = () => {
                 path="/EditBusiness/:id"
                 element={<ProtectedRoute Component={BusinessForm} />}
               />
-              <Route 
+              <Route
                 exact
                 path="/ViewRequest/:id"
                 element={<ProtectedRoute Component={ViewRequest} />}
               />
-
+              <Route
+                exact
+                path="/AddBusiness"
+                element={<ProtectedRoute Component={AddBusinessForm} />}
+              />
             </Routes>
           </div>
         </div>

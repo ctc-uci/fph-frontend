@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useBackend } from '../../contexts/BackendContext';
 import ViewBusiness from '../ViewBusiness/ViewBusiness';
-import BusinessForm from '../BusinessForm/BusinessForm';
+import { BusinessForm } from '../BusinessForm/BusinessForm';
 import { Table, Thead, Tbody, Tr, Td, Checkbox, Button, Th } from '@chakra-ui/react';
 
 const BusinessTablePending = businessData => {
