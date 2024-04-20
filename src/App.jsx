@@ -20,6 +20,7 @@ import ProtectedRoute from './utils/ProtectedRoute.jsx';
 import ViewBusiness from './components/ViewBusiness/ViewBusiness.jsx';
 import BusinessForm from './components/BusinessForm/BusinessForm.jsx';
 import Congrats from './components/DonationForm/Congrats.jsx';
+import ViewRequest from './components/ViewRequest/ViewRequest.jsx';
 
 const App = () => {
   return (
@@ -99,6 +100,12 @@ const App = () => {
                 path="/EditBusiness/:id"
                 element={<ProtectedRoute Component={BusinessForm} />}
               />
+              <Route 
+                exact
+                path="/ViewRequest/:id"
+                element={<ProtectedRoute Component={ViewRequest} />}
+              />
+
             </Routes>
           </div>
         </div>
