@@ -32,13 +32,11 @@ const DonationItemsTable = () => {
       </div>
       <Tabs>
         <div className={classes.tabs}>
-          <Tabs isFitted="true">
-            <TabList>
-              <Tab>All</Tab>
-              <Tab>Food</Tab>
-              <Tab>Misc.</Tab>
-            </TabList>
-          </Tabs>
+          <TabList>
+            <Tab>All</Tab>
+            <Tab>Food</Tab>
+            <Tab>Misc.</Tab>
+          </TabList>
         </div>
         <TabPanels>
           <TabPanel>
