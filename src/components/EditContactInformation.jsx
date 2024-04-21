@@ -19,11 +19,12 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useBackend } from '../contexts/BackendContext';
+import { useAuth } from '../contexts/AuthContext';
 import ReferenceGuide from '../components/ReferenceGuide.jsx';
 
 const EditContactInformation = () => {
-  const BUSINESS_ID = 1; // hard coded business_id constant for development purposes
   const { backend } = useBackend();
+  const { currentUser } = useAuth();
   const [toastOpen, setToastOpen] = useState(false);
   const toast = useToast();
 
@@ -55,6 +56,8 @@ const EditContactInformation = () => {
     business_hours: '',
   });
 
+  const [businessId, setBusinessId] = useState(null);
+
   function showToast() {
     if (!toastOpen) {
       setToastOpen(true);
@@ -79,7 +82,7 @@ const EditContactInformation = () => {
   const updateContactInfo = async () => {
     try {
       setInitialBusinessContactInfo(businessContactInfo);
-      await backend.put(`/business/${BUSINESS_ID}`, {
+      await backend.put(`/business/${businessId}`, {
         name: businessContactInfo.businessName,
         contact_name: `${businessContactInfo.firstName} ${businessContactInfo.lastName}`,
         primary_phone: businessContactInfo.phoneNumber,
@@ -108,7 +111,11 @@ const EditContactInformation = () => {
   useEffect(() => {
     const getBusinessContactResponse = async () => {
       try {
-        const businessContactResponse = await backend.get(`/business/${BUSINESS_ID}`);
+        const businessIdResponse = await backend.get(`/businessUser/${currentUser.uid}`);
+        const fetchedBusinessId = businessIdResponse.data[0].id;
+        setBusinessId(fetchedBusinessId);
+
+        const businessContactResponse = await backend.get(`/business/${fetchedBusinessId}`);
         const businessContact = businessContactResponse.data[0];
         const name = businessContact.contact_name.split(' ');
         const firstName = name[0];

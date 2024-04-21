@@ -1,5 +1,6 @@
 import { useBackend } from '../../contexts/BackendContext';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -28,9 +29,9 @@ import {
 } from '@chakra-ui/react';
 
 const ContactUs = () => {
-  const business_ID = 0;
-  const senderID = 1;
+  const FPH_ID = 0;
   const { backend } = useBackend();
+  const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [text, setText] = useState('');
   const [checkedItems, setCheckedItems] = useState([0, 0, 0, 0, 0, 0, 0, 0]);
@@ -47,8 +48,28 @@ const ContactUs = () => {
     'Homeless Card 2',
   ];
 
+  const [businessId, setBusinessId] = useState(null);
+
+  useEffect(() => {
+    // Define an async function inside useEffect since useEffect cannot be asynchronous directly
+    const fetchBusinessId = async () => {
+      try {
+        // Fetch business ID from backend
+        const businessIdResponse = await backend.get(`/businessUser/${currentUser.uid}`);
+        const fetchedBusinessId = businessIdResponse.data[0].id;
+        // Set the fetched business ID in state
+        setBusinessId(fetchedBusinessId);
+      } catch (error) {
+        // Handle errors
+        console.error('Error fetching business ID:', error);
+      }
+    };
+
+    fetchBusinessId();
+  }, []);
+
   const formData = {
-    business_id: business_ID,
+    business_id: FPH_ID,
     message: null,
     timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }),
     been_dismissed: false,
@@ -119,7 +140,7 @@ const ContactUs = () => {
   const setMessage = text => {
     const textCopy = text;
 
-    const preMessage = `Business ID: ${senderID} is requesting:`;
+    const preMessage = `Business ID: ${businessId} is requesting:`;
     const messageBody = checkedThingies.map((item, index) => `${item}: ${checkedItems[index]}\n`);
     return `${preMessage}\n${messageBody}\nNotes:\n${textCopy}`;
   };

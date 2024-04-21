@@ -4,6 +4,7 @@ import SecondForm from './SecondForm';
 import ThirdForm from './ThirdForm';
 import FourthForm from './FourthForm';
 import { useBackend } from '../../contexts/BackendContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { Box, Text, SimpleGrid, Stack, Image, Flex } from '@chakra-ui/react';
 import propTypes from 'prop-types';
 import ICON1 from './icon1.png';
@@ -13,6 +14,7 @@ import ICON4 from './icon4.png';
 
 const BusinessFormMaster = ({ setFormOpen }) => {
   const { backend } = useBackend();
+  const { currentUser } = useAuth();
   const [formData, setFormData] = useState({
     businessName: '',
     personFirstName: '',
@@ -108,7 +110,9 @@ const BusinessFormMaster = ({ setFormOpen }) => {
 
     try {
       if (formData['termsAndConditionsAccepted'] === true) {
-        await backend.post('/business', businessData);
+        const response = await backend.post('/business', businessData);
+        console.log(response);
+        await backend.post('businessUser', { id: response.data[0].id, uid: currentUser.uid });
         await backend.post('/notification', notification_data);
         nextStep();
       }

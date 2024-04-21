@@ -1,5 +1,6 @@
 import './BusinessDashboard.module.css';
 import { useBackend } from '../../contexts/BackendContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { useEffect, useState } from 'react';
 import {
   Table,
@@ -46,6 +47,7 @@ import ViewDonationHistory from '../BusinessDonationHistory/ViewDonationHistory/
 const BusinessDashboard = () => {
   const [userName, setUserName] = useState('jit');
   const { backend } = useBackend();
+  const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [donationData, setDonationData] = useState([]);
   const [notifClicked, setNotifClicked] = useState(null);
@@ -89,8 +91,6 @@ const BusinessDashboard = () => {
     '"Homeless?" Card',
   ];
 
-  const businessID = 1;
-
   const formatDate = timestamp => {
     const parsedTimestamp = Number(timestamp);
     const date = new Date(isNaN(parsedTimestamp) ? timestamp : parsedTimestamp * 1000);
@@ -114,16 +114,19 @@ const BusinessDashboard = () => {
         // in the future will have to change (add parameter to component)
         // so that we can display the dashboard for various businesses
         // ***********************************************************************
-        const donationResponse = await backend.get('/donation/business/totals/3');
+        const businessIdResponse = await backend.get(`/businessUser/${currentUser.uid}`);
+        const businessId = businessIdResponse.data[0].id;
+
+        const donationResponse = await backend.get(`/donation/business/totals/${businessId}`);
         setDonationData(donationResponse.data[0]);
 
-        const businessResponse = await backend.get(`/business/${businessID}`);
+        const businessResponse = await backend.get(`/business/${businessId}`);
         setUserName(businessResponse.data[0]['contact_name']);
 
         const priceResponse = await backend.get('/value');
         setPriceData(priceResponse.data);
 
-        const reminderResponse = await backend.get(`/notification/${businessID}`);
+        const reminderResponse = await backend.get(`/notification/${businessId}`);
         setReminderData(reminderResponse.data);
       } catch (error) {
         console.error('Error fetching data:', error);

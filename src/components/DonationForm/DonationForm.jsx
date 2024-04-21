@@ -21,14 +21,15 @@ import {
 } from '@chakra-ui/react';
 import { CloseIcon, DownloadIcon } from '@chakra-ui/icons';
 import { useBackend } from '../../contexts/BackendContext';
-import { useState } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
+import { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
 import classes from './DonationForm.module.css';
 import { useNavigate } from 'react-router-dom';
 
 const DonationForm = () => {
   const { backend } = useBackend();
-  const MAX_ID = 6; // This is the maximum business id in the database. This is a temporary solution since the Figma design does not include a business id in the form.
+  const { currentUser } = useAuth();
   const labels = {
     'Canned Cat Food': 'canned_cat_food_quantity',
     'Dry Cat Food': 'dry_cat_food_quantity',
@@ -37,12 +38,13 @@ const DonationForm = () => {
   };
   const navigate = useNavigate();
 
+  const [businessId, setBusinessId] = useState(null);
+
   const [formData, setFormData] = useState({
-    business_id: MAX_ID, // Since there's no business_id in the form and the database requires a business id (foreign key), the default for now is the maximum business id in the database (9)
+    business_id: businessId,
     canned_cat_food_quantity: null,
     canned_dog_food_quantity: null,
     date: null,
-    donation_id: MAX_ID,
     dry_cat_food_quantity: null,
     dry_dog_food_quantity: null,
     email: 'NULL',
@@ -51,6 +53,21 @@ const DonationForm = () => {
     reporter: null,
     volunteer_hours: null,
   });
+
+  useEffect(() => {
+    const fetchBusinessId = async () => {
+      try {
+        const businessIdResponse = await backend.get(`/businessUser/${currentUser.uid}`);
+        const fetchedBusinessId = businessIdResponse.data[0].id;
+        setBusinessId(fetchedBusinessId);
+        setFormData(prevState => ({ ...prevState, business_id: fetchedBusinessId }));
+      } catch (error) {
+        console.error('Error fetching business ID:', error);
+      }
+    };
+
+    fetchBusinessId();
+  }, []);
 
   // const submitForm = async event => {
   //   event.preventDefault();
@@ -103,13 +120,13 @@ const DonationForm = () => {
       console.log(formData);
 
       const fphNotificationData = {
-        business_id: formData.business_id,
-        message: `Business ID: ${formData.business_id} Donation Form Submission`,
+        business_id: businessId,
+        message: `Business ID: ${businessId} Donation Form Submission`,
         timestamp: new Date().toLocaleString('en-US', {
           timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         }),
         been_dismissed: false,
-        // type: 'Submitted Form',
+        type: 'Submitted Form',
       };
       console.log(fphNotificationData);
       await backend.post('/notification', fphNotificationData);
