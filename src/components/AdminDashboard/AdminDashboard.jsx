@@ -1,14 +1,19 @@
 import './AdminDashboard.module.css';
 
 import { useBackend } from '../../contexts/BackendContext';
+import { useAuth } from '../../contexts/AuthContext.jsx';
 import NotificationsDrawer from './NotificationsDrawer';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Box } from '@chakra-ui/react';
 import AdminFilterBusinesses from '../AdminFilterBusinesses/AdminFilterBusinesses.jsx';
 
 const AdminDashboard = () => {
   // Created the use states
   const { backend } = useBackend();
+  const { isAdmin } = useAuth();
+  const navigate = useNavigate();
+  const [isAdminUser, setIsAdminUser] = useState(false);
   const [donationData, setDonationData] = useState([]);
   const [businessDictionary, setBusinessDictionary] = useState([]);
   const [notification, setNotifications] = useState([]);
@@ -29,6 +34,15 @@ const AdminDashboard = () => {
         console.error('Error fetching data:', error);
       }
     };
+    
+    const checkIsAdmin = async () => {
+      if (!(await isAdmin())) {
+        setIsAdminUser(true);
+        navigate('/BusinessDashboard');
+      }
+    };
+
+    checkIsAdmin();
     getData();
   }, []);
 
@@ -62,7 +76,9 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div>
+    <>
+    {isAdminUser && (
+      <div>
       <h1>Welcome back, Jit!</h1>
 
       <div>
@@ -79,6 +95,8 @@ const AdminDashboard = () => {
         </>
       </div>
     </div>
+  )}
+  </>
   );
 };
 
