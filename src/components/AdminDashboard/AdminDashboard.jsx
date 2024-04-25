@@ -34,7 +34,7 @@ const AdminDashboard = () => {
         console.error('Error fetching data:', error);
       }
     };
-    
+
     const checkIsAdmin = async () => {
       if (!(await isAdmin())) {
         setIsAdminUser(true);
@@ -77,26 +77,26 @@ const AdminDashboard = () => {
 
   return (
     <>
-    {isAdminUser && (
-      <div>
-      <h1>Welcome back, Jit!</h1>
+      {isAdminUser && (
+        <div>
+          <h1>Welcome back, Jit!</h1>
 
-      <div>
-        <>
-          <Box>{calculateTotalDonationSites()} Current donation sites</Box>
-          <Box>{calculateTotalDonationForms()} donation forms submitted</Box>
-          <Box>
-            {calculateTotalDonationSites() - calculateTotalDonationForms()} donation forms not
-            submitted
-          </Box>
-          <Box>{calculatePendingBusinesses()} applications pending </Box>
-          <AdminFilterBusinesses />
-          <NotificationsDrawer notificationsData={notification} />
-        </>
-      </div>
-    </div>
-  )}
-  </>
+          <div>
+            <>
+              <Box>{calculateTotalDonationSites()} Current donation sites</Box>
+              <Box>{calculateTotalDonationForms()} donation forms submitted</Box>
+              <Box>
+                {calculateTotalDonationSites() - calculateTotalDonationForms()} donation forms not
+                submitted
+              </Box>
+              <Box>{calculatePendingBusinesses()} applications pending </Box>
+              <AdminFilterBusinesses />
+              <NotificationsDrawer notificationsData={notification} />
+            </>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

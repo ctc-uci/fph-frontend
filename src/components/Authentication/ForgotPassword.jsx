@@ -43,7 +43,7 @@ const ForgotPassword = () => {
         status: 'error',
         duration: 3000,
         isClosable: true,
-      })
+      });
     }
 
     setLoading(false);
@@ -56,8 +56,12 @@ const ForgotPassword = () => {
       </Flex>
       <Box w="50%" bg="#FFFFFF">
         <VStack spacing={4} align="stretch" height="100vh" justifyContent="center" paddingX="10vh">
-          <Heading alignSelf="flex-start" marginBottom="0vh" color="#319795">Forgot Password?</Heading>
-          <Text alignSelf="flex-start" marginBottom="2vh">Enter your email below to receive a link to change your password.</Text>
+          <Heading alignSelf="flex-start" marginBottom="0vh" color="#319795">
+            Forgot Password?
+          </Heading>
+          <Text alignSelf="flex-start" marginBottom="2vh">
+            Enter your email below to receive a link to change your password.
+          </Text>
           <FormControl id="email">
             <FormLabel>Email</FormLabel>
             <Input type="email" value={email} onChange={e => setEmail(e.target.value)} />

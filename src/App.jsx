@@ -20,7 +20,7 @@ import ProtectedRoute from './utils/ProtectedRoute.jsx';
 import ViewBusiness from './components/ViewBusiness/ViewBusiness.jsx';
 import { AddBusinessForm, BusinessForm } from './components/BusinessForm/BusinessForm.jsx';
 import Congrats from './components/DonationForm/Congrats.jsx';
-import ViewRequest from './components/ViewRequest/ViewRequest.jsx'; 
+import ViewRequest from './components/ViewRequest/ViewRequest.jsx';
 const App = () => {
   const location = useLocation();
   const currentRoute = location.pathname;
@@ -28,12 +28,10 @@ const App = () => {
     <BackendProvider>
       <AuthProvider>
         <div className={styles.appLayout}>
-          {(currentRoute == '/SignUpAdmin' 
-            || currentRoute == '/SignUpBusiness'
-            || currentRoute == '/Login'
-            || currentRoute == '/ForgotPassword')
-            ||
-            <Sidebar isAdmin={false} />}
+          {currentRoute == '/SignUpAdmin' ||
+            currentRoute == '/SignUpBusiness' ||
+            currentRoute == '/Login' ||
+            currentRoute == '/ForgotPassword' || <Sidebar isAdmin={false} />}
           <div className={styles.mainContent}>
             <Routes>
               <Route

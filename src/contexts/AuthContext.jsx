@@ -47,7 +47,7 @@ export function AuthProvider({ children }) {
         console.error('Error sending reminders:', error);
       }
     }
-  }
+  };
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {

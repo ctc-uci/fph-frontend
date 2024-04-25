@@ -25,7 +25,7 @@ import {
   Checkbox,
   Link as ChakraLink,
 } from '@chakra-ui/react';
-
+import { useAuth } from '../../contexts/AuthContext';
 import 'boxicons';
 import './BusinessForm.module.css';
 import { useBackend } from '../../contexts/BackendContext';
@@ -52,6 +52,7 @@ const BusinessForm = ({ edit = true }) => {
     'Rehome Foster',
   ];
   const { id } = useParams();
+  const { isAdmin } = useAuth();
   const [businessName, setBusinessName] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -75,8 +76,17 @@ const BusinessForm = ({ edit = true }) => {
   const [fphPhone, setFPHPhone] = useState('');
   const [vendorType, setVendorType] = useState('');
   const [serviceRequest, setServiceRequest] = useState(false);
+  const [isAdminUser, setIsAdminUser] = useState(false);
   const { backend } = useBackend();
   useEffect(() => {
+    const checkIsAdmin = async () => {
+      if (!(await isAdmin())) {
+        setIsAdminUser(true);
+        navigate('/BusinessDashboard');
+      }
+    };
+
+    checkIsAdmin();
     if (edit) {
       fillOutPendingData();
     }
@@ -248,394 +258,396 @@ const BusinessForm = ({ edit = true }) => {
 
   return (
     <ChakraProvider>
-      <Flex justify="flex-end" wrap="nowrap" maxW="80%" mx="auto" flexDirection={'column'}>
-        <Flex justifyContent={'space-between'} mr="auto" w="1089px" marginTop={4}>
-          <Flex gap={1}>
-            <ChakraLink onClick={handleHome} color="blue.500" decoration="underline">
-              Home{' '}
-            </ChakraLink>
-            <Text>/ {edit ? businessName : 'Add A Business'}</Text>
-          </Flex>
-          <IconButton icon={<box-icon type="solid" name="bell"></box-icon>} />
-        </Flex>
-        <Card maxW="100%" w="1089px" h="auto" p={6} mt="10">
-          <CardHeader>
-            <Flex justify="space-between" align="center" w="full">
-              <Flex flexGrow={true} align="center" gap="4">
-                <Box>
-                  <Input
-                    size="lg"
-                    value={businessName}
-                    onChange={e => setBusinessName(e.target.value)}
-                    placeholder="Business Name"
-                  />
-                </Box>
-              </Flex>
-              {edit && (
-                <Flex>
-                  <Button
-                    variant="outline"
-                    colorScheme="gray"
-                    rightIcon={<box-icon name="pencil" />}
-                  >
-                    Editing
-                  </Button>
-                  <IconButton
-                    variant="regular"
-                    colorScheme="red"
-                    aria-label="Delete menu"
-                    icon={<box-icon name="trash" color="#d30000"></box-icon>}
-                  />
-                </Flex>
-              )}
+      {isAdminUser && (
+        <Flex justify="flex-end" wrap="nowrap" maxW="80%" mx="auto" flexDirection={'column'}>
+          <Flex justifyContent={'space-between'} mr="auto" w="1089px" marginTop={4}>
+            <Flex gap={1}>
+              <ChakraLink onClick={handleHome} color="blue.500" decoration="underline">
+                Home{' '}
+              </ChakraLink>
+              <Text>/ {edit ? businessName : 'Add A Business'}</Text>
             </Flex>
-          </CardHeader>
-          <CardBody>
-            <Flex direction="row">
-              <Box flex="4">
-                <Card>
-                  <Flex alignItems="left">
-                    <TableContainer>
-                      <Table variant="unstyled">
-                        <Thead></Thead>
-                        <Tbody>
-                          <Tr>
-                            <Td>
-                              <Text fontSize="xs" color="500" as="b">
-                                NAME
-                              </Text>
-                            </Td>
-                            <Td>
-                              <Flex gap={4}>
-                                <Input
-                                  value={firstName}
-                                  onChange={e => {
-                                    setFirstName(e.target.value);
-                                  }}
-                                  placeholder="First"
-                                />
-                                <Input
-                                  value={lastName}
-                                  onChange={e => {
-                                    setLastName(e.target.value);
-                                  }}
-                                  placeholder="Last"
-                                />
-                              </Flex>
-                            </Td>
-                          </Tr>
-                          <Tr>
-                            <Td>
-                              <Text fontSize="xs" color="500" as="b">
-                                EMAIL
-                              </Text>
-                            </Td>
-                            <Td>
-                              <Input
-                                value={email}
-                                onChange={e => {
-                                  setEmail(e.target.value);
-                                }}
-                                placeholder="Email Address"
-                              />
-                            </Td>
-                          </Tr>
-                          <Tr>
-                            <Td>
-                              <Text fontSize="xs" color="500" as="b">
-                                WEBSITE
-                              </Text>
-                            </Td>
-                            <Td>
-                              <Input
-                                value={website}
-                                onChange={e => {
-                                  setWebsite(e.target.value);
-                                }}
-                                placeholder="Website"
-                              />
-                            </Td>
-                          </Tr>
-                          <Tr>
-                            <Td>
-                              <Text fontSize="xs" color="500" as="b">
-                                LOCATION
-                              </Text>
-                            </Td>
-                            <Td>
-                              <Flex flexFlow={'row wrap'} gap={2}>
-                                <Input
-                                  value={addressLine1}
-                                  onChange={e => {
-                                    setAddressLine1(e.target.value);
-                                  }}
-                                  placeholder="Street"
-                                  flex={'1 0 100%'}
-                                />
-                                <Input
-                                  value={city}
-                                  onChange={e => {
-                                    setCity(e.target.value);
-                                  }}
-                                  placeholder="City"
-                                  flex={'1 0 45%'}
-                                />
-                                <Spacer />
-                                <Input
-                                  value={state}
-                                  onChange={e => {
-                                    setState(e.target.value);
-                                  }}
-                                  placeholder="State"
-                                  flex={'1 0 22%'}
-                                />
-                                <Spacer />
-                                <Input
-                                  value={zip}
-                                  onChange={e => {
-                                    setZip(e.target.value);
-                                  }}
-                                  placeholder="Zip/Postal"
-                                  flex={'1 0 24%'}
-                                />
-                              </Flex>
-                            </Td>
-                          </Tr>
-                          <Tr>
-                            <Td>
-                              <Text fontSize="xs" color="500" as="b">
-                                PHONE
-                              </Text>
-                            </Td>
-                            <Td>
-                              <Flex gap={4}>
-                                <Input
-                                  flex={'1 0 15%'}
-                                  value={countrycode}
-                                  onChange={e => {
-                                    setCountryCode(e.target.value);
-                                  }}
-                                  placeholder=""
-                                />
-                                <Input
-                                  flex={'1 0 80%'}
-                                  value={phone}
-                                  onChange={e => {
-                                    setPhone(e.target.value);
-                                  }}
-                                  placeholder="Phone Number"
-                                />
-                              </Flex>
-                            </Td>
-                          </Tr>
-                          <Tr>
-                            <Td>
-                              <Text fontSize="xs" color="500" as="b">
-                                BUSINESS HOURS
-                              </Text>
-                            </Td>
-                            <Td>
-                              <Input
-                                value={businessHours}
-                                onChange={e => {
-                                  setBusinessHours(e.target.value);
-                                }}
-                                placeholder="Business Hours"
-                              />
-                            </Td>
-                          </Tr>
-                        </Tbody>
-                      </Table>
-                    </TableContainer>
+            <IconButton icon={<box-icon type="solid" name="bell"></box-icon>} />
+          </Flex>
+          <Card maxW="100%" w="1089px" h="auto" p={6} mt="10">
+            <CardHeader>
+              <Flex justify="space-between" align="center" w="full">
+                <Flex flexGrow={true} align="center" gap="4">
+                  <Box>
+                    <Input
+                      size="lg"
+                      value={businessName}
+                      onChange={e => setBusinessName(e.target.value)}
+                      placeholder="Business Name"
+                    />
+                  </Box>
+                </Flex>
+                {edit && (
+                  <Flex>
+                    <Button
+                      variant="outline"
+                      colorScheme="gray"
+                      rightIcon={<box-icon name="pencil" />}
+                    >
+                      Editing
+                    </Button>
+                    <IconButton
+                      variant="regular"
+                      colorScheme="red"
+                      aria-label="Delete menu"
+                      icon={<box-icon name="trash" color="#d30000"></box-icon>}
+                    />
                   </Flex>
-                </Card>
-                <Card marginTop="6">
-                  <CardHeader>
-                    <Text fontSize="xs" color="500" as="b">
-                      WEBSITE INFORMATION
-                    </Text>
-                  </CardHeader>
-                  <Flex alignItems="left" mb="3">
-                    <TableContainer flex="1" mr="4">
-                      <Table variant="unstyled">
-                        <Tbody>
-                          <Tr>
-                            <Td>
-                              <Flex flexDirection={'column'}>
+                )}
+              </Flex>
+            </CardHeader>
+            <CardBody>
+              <Flex direction="row">
+                <Box flex="4">
+                  <Card>
+                    <Flex alignItems="left">
+                      <TableContainer>
+                        <Table variant="unstyled">
+                          <Thead></Thead>
+                          <Tbody>
+                            <Tr>
+                              <Td>
                                 <Text fontSize="xs" color="500" as="b">
-                                  Phone for FPOTH Website
+                                  NAME
                                 </Text>
-                                <Input
-                                  value={fphPhone}
-                                  onChange={e => {
-                                    setFPHPhone(e.target.value);
-                                  }}
-                                  placeholder="Phone Number"
-                                />
-                              </Flex>
-                            </Td>
-                          </Tr>
-                          <Tr>
-                            <Td>
-                              <Flex flexDirection={'column'}>
+                              </Td>
+                              <Td>
+                                <Flex gap={4}>
+                                  <Input
+                                    value={firstName}
+                                    onChange={e => {
+                                      setFirstName(e.target.value);
+                                    }}
+                                    placeholder="First"
+                                  />
+                                  <Input
+                                    value={lastName}
+                                    onChange={e => {
+                                      setLastName(e.target.value);
+                                    }}
+                                    placeholder="Last"
+                                  />
+                                </Flex>
+                              </Td>
+                            </Tr>
+                            <Tr>
+                              <Td>
                                 <Text fontSize="xs" color="500" as="b">
-                                  Notes for Website
+                                  EMAIL
+                                </Text>
+                              </Td>
+                              <Td>
+                                <Input
+                                  value={email}
+                                  onChange={e => {
+                                    setEmail(e.target.value);
+                                  }}
+                                  placeholder="Email Address"
+                                />
+                              </Td>
+                            </Tr>
+                            <Tr>
+                              <Td>
+                                <Text fontSize="xs" color="500" as="b">
+                                  WEBSITE
+                                </Text>
+                              </Td>
+                              <Td>
+                                <Input
+                                  value={website}
+                                  onChange={e => {
+                                    setWebsite(e.target.value);
+                                  }}
+                                  placeholder="Website"
+                                />
+                              </Td>
+                            </Tr>
+                            <Tr>
+                              <Td>
+                                <Text fontSize="xs" color="500" as="b">
+                                  LOCATION
+                                </Text>
+                              </Td>
+                              <Td>
+                                <Flex flexFlow={'row wrap'} gap={2}>
+                                  <Input
+                                    value={addressLine1}
+                                    onChange={e => {
+                                      setAddressLine1(e.target.value);
+                                    }}
+                                    placeholder="Street"
+                                    flex={'1 0 100%'}
+                                  />
+                                  <Input
+                                    value={city}
+                                    onChange={e => {
+                                      setCity(e.target.value);
+                                    }}
+                                    placeholder="City"
+                                    flex={'1 0 45%'}
+                                  />
+                                  <Spacer />
+                                  <Input
+                                    value={state}
+                                    onChange={e => {
+                                      setState(e.target.value);
+                                    }}
+                                    placeholder="State"
+                                    flex={'1 0 22%'}
+                                  />
+                                  <Spacer />
+                                  <Input
+                                    value={zip}
+                                    onChange={e => {
+                                      setZip(e.target.value);
+                                    }}
+                                    placeholder="Zip/Postal"
+                                    flex={'1 0 24%'}
+                                  />
+                                </Flex>
+                              </Td>
+                            </Tr>
+                            <Tr>
+                              <Td>
+                                <Text fontSize="xs" color="500" as="b">
+                                  PHONE
+                                </Text>
+                              </Td>
+                              <Td>
+                                <Flex gap={4}>
+                                  <Input
+                                    flex={'1 0 15%'}
+                                    value={countrycode}
+                                    onChange={e => {
+                                      setCountryCode(e.target.value);
+                                    }}
+                                    placeholder=""
+                                  />
+                                  <Input
+                                    flex={'1 0 80%'}
+                                    value={phone}
+                                    onChange={e => {
+                                      setPhone(e.target.value);
+                                    }}
+                                    placeholder="Phone Number"
+                                  />
+                                </Flex>
+                              </Td>
+                            </Tr>
+                            <Tr>
+                              <Td>
+                                <Text fontSize="xs" color="500" as="b">
+                                  BUSINESS HOURS
+                                </Text>
+                              </Td>
+                              <Td>
+                                <Input
+                                  value={businessHours}
+                                  onChange={e => {
+                                    setBusinessHours(e.target.value);
+                                  }}
+                                  placeholder="Business Hours"
+                                />
+                              </Td>
+                            </Tr>
+                          </Tbody>
+                        </Table>
+                      </TableContainer>
+                    </Flex>
+                  </Card>
+                  <Card marginTop="6">
+                    <CardHeader>
+                      <Text fontSize="xs" color="500" as="b">
+                        WEBSITE INFORMATION
+                      </Text>
+                    </CardHeader>
+                    <Flex alignItems="left" mb="3">
+                      <TableContainer flex="1" mr="4">
+                        <Table variant="unstyled">
+                          <Tbody>
+                            <Tr>
+                              <Td>
+                                <Flex flexDirection={'column'}>
+                                  <Text fontSize="xs" color="500" as="b">
+                                    Phone for FPOTH Website
+                                  </Text>
+                                  <Input
+                                    value={fphPhone}
+                                    onChange={e => {
+                                      setFPHPhone(e.target.value);
+                                    }}
+                                    placeholder="Phone Number"
+                                  />
+                                </Flex>
+                              </Td>
+                            </Tr>
+                            <Tr>
+                              <Td>
+                                <Flex flexDirection={'column'}>
+                                  <Text fontSize="xs" color="500" as="b">
+                                    Notes for Website
+                                  </Text>
+                                  <Textarea
+                                    value={webNotes}
+                                    onChange={e => {
+                                      setWebNotes(e.target.value);
+                                    }}
+                                    placeholder="Web Notes"
+                                  />
+                                </Flex>
+                              </Td>
+                            </Tr>
+                          </Tbody>
+                        </Table>
+                      </TableContainer>
+                      <TableContainer flex="1" mr="4">
+                        <Table variant="unstyled">
+                          <Tbody>
+                            <Tr>
+                              <Td>
+                                <Text fontSize="xs" color="500" as="b">
+                                  Publish Status
+                                </Text>
+                                <Select
+                                  value={published}
+                                  onChange={e => setPublished(e.target.value)}
+                                >
+                                  <option value={true}>Published</option>
+                                  <option value={false}>Not Published</option>
+                                </Select>
+                              </Td>
+                            </Tr>
+                            <Tr>
+                              <Td>
+                                <Flex flexDirection={'column'}>
+                                  <Text fontSize="xs" color="500" as="b" whiteSpace="normal">
+                                    Added to Website (Date & Initials)
+                                  </Text>
+                                  <Input
+                                    value={webDateInit}
+                                    onChange={e => {
+                                      setWebDateInit(e.target.value);
+                                    }}
+                                    placeholder="Date and Initials"
+                                  />
+                                </Flex>
+                              </Td>
+                            </Tr>
+                          </Tbody>
+                        </Table>
+                      </TableContainer>
+                    </Flex>
+                  </Card>
+                  <Card marginTop="6">
+                    <Flex alignItems="left">
+                      <TableContainer flex="1" mr="3">
+                        <Table variant="unstyled">
+                          <Tbody>
+                            <Tr>
+                              <Td>
+                                <Text fontSize="xs" color="500" as="b">
+                                  ADDITIONAL INFORMATION
+                                </Text>
+                              </Td>
+                            </Tr>
+                            <Tr>
+                              <Td colSpan={2}>
+                                <Flex flexDirection={'row'} flexWrap={'wrap'} gap={2}>
+                                  {additionalInfoItems.map((item, index) => (
+                                    <Flex
+                                      key={index}
+                                      justifyContent={'space-between'}
+                                      flex={'1 0 34%'}
+                                      maxWidth={'49%'}
+                                    >
+                                      <Text>{item}</Text>
+                                      <Checkbox
+                                        name={item}
+                                        isChecked={checkedAddedInfo[item] || false}
+                                        onChange={handleCheckboxChange}
+                                      />
+                                    </Flex>
+                                  ))}
+                                </Flex>
+                              </Td>
+                            </Tr>
+                            <Tr>
+                              <Td>
+                                <Text fontSize="xs" color="500" as="b">
+                                  TYPE
+                                </Text>
+                                <Select
+                                  placeholder="Select a type"
+                                  value={vendorType}
+                                  onChange={e => setVendorType(e.target.value)}
+                                >
+                                  <option value={'school'}>School</option>
+                                  <option value={'hospital'}>Hospital</option>
+                                  <option value={'grocery store'}>Grocery Store</option>
+                                  <option value={'private institution'}>Private Institution</option>
+                                  <option value={'other'}>Other</option>
+                                </Select>
+                              </Td>
+                              <Td>
+                                <Flex justifyContent={'space-between'}>
+                                  <Text>Valid for Service Request</Text>
+                                  <Checkbox
+                                    value={serviceRequest}
+                                    onChange={e => {
+                                      setServiceRequest(e.target.value);
+                                    }}
+                                  ></Checkbox>
+                                </Flex>
+                              </Td>
+                            </Tr>
+                            <Tr>
+                              <Td>
+                                <Text fontSize="xs" color="500" as="b" whiteSpace="normal">
+                                  Internal Notes
                                 </Text>
                                 <Textarea
-                                  value={webNotes}
+                                  value={internalNotes}
                                   onChange={e => {
-                                    setWebNotes(e.target.value);
+                                    setInternalNotes(e.target.value);
                                   }}
-                                  placeholder="Web Notes"
+                                  placeholder="Internal Notes"
                                 />
-                              </Flex>
-                            </Td>
-                          </Tr>
-                        </Tbody>
-                      </Table>
-                    </TableContainer>
-                    <TableContainer flex="1" mr="4">
-                      <Table variant="unstyled">
-                        <Tbody>
-                          <Tr>
-                            <Td>
-                              <Text fontSize="xs" color="500" as="b">
-                                Publish Status
-                              </Text>
-                              <Select
-                                value={published}
-                                onChange={e => setPublished(e.target.value)}
-                              >
-                                <option value={true}>Published</option>
-                                <option value={false}>Not Published</option>
-                              </Select>
-                            </Td>
-                          </Tr>
-                          <Tr>
-                            <Td>
-                              <Flex flexDirection={'column'}>
-                                <Text fontSize="xs" color="500" as="b" whiteSpace="normal">
-                                  Added to Website (Date & Initials)
-                                </Text>
-                                <Input
-                                  value={webDateInit}
-                                  onChange={e => {
-                                    setWebDateInit(e.target.value);
-                                  }}
-                                  placeholder="Date and Initials"
-                                />
-                              </Flex>
-                            </Td>
-                          </Tr>
-                        </Tbody>
-                      </Table>
-                    </TableContainer>
+                              </Td>
+                            </Tr>
+                          </Tbody>
+                        </Table>
+                      </TableContainer>
+                    </Flex>
+                  </Card>
+                </Box>
+                <Spacer maxW={'sm'}></Spacer>
+                <Flex flexDirection={'column-reverse'}>
+                  <Flex gap={4}>
+                    <Button onClick={handleCancel}>Cancel</Button>
+                    <Button onClick={handleSubmit} colorScheme="teal">
+                      Save
+                    </Button>
                   </Flex>
-                </Card>
-                <Card marginTop="6">
-                  <Flex alignItems="left">
-                    <TableContainer flex="1" mr="3">
-                      <Table variant="unstyled">
-                        <Tbody>
-                          <Tr>
-                            <Td>
-                              <Text fontSize="xs" color="500" as="b">
-                                ADDITIONAL INFORMATION
-                              </Text>
-                            </Td>
-                          </Tr>
-                          <Tr>
-                            <Td colSpan={2}>
-                              <Flex flexDirection={'row'} flexWrap={'wrap'} gap={2}>
-                                {additionalInfoItems.map((item, index) => (
-                                  <Flex
-                                    key={index}
-                                    justifyContent={'space-between'}
-                                    flex={'1 0 34%'}
-                                    maxWidth={'49%'}
-                                  >
-                                    <Text>{item}</Text>
-                                    <Checkbox
-                                      name={item}
-                                      isChecked={checkedAddedInfo[item] || false}
-                                      onChange={handleCheckboxChange}
-                                    />
-                                  </Flex>
-                                ))}
-                              </Flex>
-                            </Td>
-                          </Tr>
-                          <Tr>
-                            <Td>
-                              <Text fontSize="xs" color="500" as="b">
-                                TYPE
-                              </Text>
-                              <Select
-                                placeholder="Select a type"
-                                value={vendorType}
-                                onChange={e => setVendorType(e.target.value)}
-                              >
-                                <option value={'school'}>School</option>
-                                <option value={'hospital'}>Hospital</option>
-                                <option value={'grocery store'}>Grocery Store</option>
-                                <option value={'private institution'}>Private Institution</option>
-                                <option value={'other'}>Other</option>
-                              </Select>
-                            </Td>
-                            <Td>
-                              <Flex justifyContent={'space-between'}>
-                                <Text>Valid for Service Request</Text>
-                                <Checkbox
-                                  value={serviceRequest}
-                                  onChange={e => {
-                                    setServiceRequest(e.target.value);
-                                  }}
-                                ></Checkbox>
-                              </Flex>
-                            </Td>
-                          </Tr>
-                          <Tr>
-                            <Td>
-                              <Text fontSize="xs" color="500" as="b" whiteSpace="normal">
-                                Internal Notes
-                              </Text>
-                              <Textarea
-                                value={internalNotes}
-                                onChange={e => {
-                                  setInternalNotes(e.target.value);
-                                }}
-                                placeholder="Internal Notes"
-                              />
-                            </Td>
-                          </Tr>
-                        </Tbody>
-                      </Table>
-                    </TableContainer>
-                  </Flex>
-                </Card>
-              </Box>
-              <Spacer maxW={'sm'}></Spacer>
-              <Flex flexDirection={'column-reverse'}>
-                <Flex gap={4}>
-                  <Button onClick={handleCancel}>Cancel</Button>
-                  <Button onClick={handleSubmit} colorScheme="teal">
-                    Save
-                  </Button>
                 </Flex>
               </Flex>
-            </Flex>
-          </CardBody>
-          <CardFooter
-            justify="space-between"
-            flexWrap="wrap"
-            sx={{
-              '& > button': {
-                minW: '136px',
-              },
-            }}
-          ></CardFooter>
-        </Card>
-      </Flex>
+            </CardBody>
+            <CardFooter
+              justify="space-between"
+              flexWrap="wrap"
+              sx={{
+                '& > button': {
+                  minW: '136px',
+                },
+              }}
+            ></CardFooter>
+          </Card>
+        </Flex>
+      )}
     </ChakraProvider>
   );
 };

@@ -12,9 +12,13 @@ import './DonationTrackingTable.module.css';
 import { Table, Thead, Tbody, Tr, Th, TableContainer, Checkbox, Text } from '@chakra-ui/react';
 import classes from './DonationTrackingTable.module.css';
 import DownloadCSV from '../../utils/downloadCSV';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
 const DonationTrackingTable = () => {
+  const navigate = useNavigate();
   const { backend } = useBackend();
+  const { isAdmin } = useAuth();
 
   const [donationTrackingTableData, setDonationTrackingTableData] = useState([]);
   const [checkedSet, setCheckedSet] = useState(new Set());
@@ -40,6 +44,7 @@ const DonationTrackingTable = () => {
   const [currentDonationsNum, setCurrentDonationsNum] = useState(0);
   const [pageLimit, setPageLimit] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isAdminUser, setIsAdminUser] = useState(false);
 
   const loadInfo = async () => {
     changePage();
@@ -72,6 +77,15 @@ const DonationTrackingTable = () => {
         console.error('Error fetching data:', error);
       }
     };
+
+    const checkIsAdmin = async () => {
+      if (!(await isAdmin())) {
+        setIsAdminUser(true);
+        navigate('/BusinessDashboard');
+      }
+    };
+
+    checkIsAdmin();
     getData();
   }, [currentTab, currentPageNum, searchTerm]);
 
@@ -127,77 +141,79 @@ const DonationTrackingTable = () => {
 
   return (
     <>
-      <div className={classes.container}>
-        <div className={classes.dttTitleContainer}>
-          <Text>Donation Tracking</Text>
-        </div>
-        <div className={classes.tabs}>
-          <Tabs isFitted="true">
-            <TabList>
-              {tabHeaders.map((header, index) => {
-                if (header != 'all')
-                  return (
-                    <Tab onClick={() => changeTab(header)} key={index}>
-                      This {header.substring(0, 1).toUpperCase() + header.substring(1)}
-                    </Tab>
-                  );
-                else {
-                  return (
-                    <Tab onClick={() => changeTab('all')} key={index}>
-                      All
-                    </Tab>
-                  );
-                }
-              })}
-            </TabList>
-          </Tabs>
-        </div>
-        <div className={classes.searchAndCSVContainer}>
-          <Input
-            placeholder="Search"
-            onChange={handleSearch}
-            sx={{ width: '222px', backgroundColor: '#FFFFFF' }}
-          />
-          <Button colorScheme="teal" onClick={handleDownloadCSV} sx={{ width: '172px' }}>
-            <ArrowDownIcon sx={{ marginRight: '5px' }} />
-            Download CSV
-          </Button>
-        </div>
-        <TableContainer sx={{ backgroundColor: '#FFFFFF' }}>
-          <Table variant="striped" colorScheme="whiteAlpha">
-            <Thead>
-              <Tr>
-                <div className={classes.checkBoxHeader}>
-                  <Checkbox isChecked={topCheckBox} onChange={handleCheckBoxes} />
-                  <ChevronDownIcon />
-                </div>
-                {headers.map((header, index) => {
-                  return <Th key={index}>{header}</Th>;
+      {isAdminUser && (
+        <div className={classes.container}>
+          <div className={classes.dttTitleContainer}>
+            <Text>Donation Tracking</Text>
+          </div>
+          <div className={classes.tabs}>
+            <Tabs isFitted="true">
+              <TabList>
+                {tabHeaders.map((header, index) => {
+                  if (header != 'all')
+                    return (
+                      <Tab onClick={() => changeTab(header)} key={index}>
+                        This {header.substring(0, 1).toUpperCase() + header.substring(1)}
+                      </Tab>
+                    );
+                  else {
+                    return (
+                      <Tab onClick={() => changeTab('all')} key={index}>
+                        All
+                      </Tab>
+                    );
+                  }
                 })}
-              </Tr>
-            </Thead>
-            <Tbody>{renderDonationTrackingTableData()}</Tbody>
-          </Table>
-        </TableContainer>
-        <div className={classes.resultNavigation}>
-          <Box sx={{ marginRight: '50px' }}>
-            {currentDonationsNum > 0 ? (currentPageNum - 1) * 10 + 1 : 0} to{' '}
-            {Math.min(currentPageNum * 10, currentDonationsNum)} of {currentDonationsNum}
-          </Box>
-          <IconButton
-            aria-label="Back button"
-            isDisabled={currentPageNum <= 1}
-            icon={<ChevronLeftIcon />}
-            onClick={() => setCurrentPageNum(currentPageNum - 1)}
-          />
-          <IconButton
-            aria-label="Next button"
-            isDisabled={currentPageNum >= pageLimit}
-            icon={<ChevronRightIcon />}
-            onClick={() => setCurrentPageNum(currentPageNum + 1)}
-          />
+              </TabList>
+            </Tabs>
+          </div>
+          <div className={classes.searchAndCSVContainer}>
+            <Input
+              placeholder="Search"
+              onChange={handleSearch}
+              sx={{ width: '222px', backgroundColor: '#FFFFFF' }}
+            />
+            <Button colorScheme="teal" onClick={handleDownloadCSV} sx={{ width: '172px' }}>
+              <ArrowDownIcon sx={{ marginRight: '5px' }} />
+              Download CSV
+            </Button>
+          </div>
+          <TableContainer sx={{ backgroundColor: '#FFFFFF' }}>
+            <Table variant="striped" colorScheme="whiteAlpha">
+              <Thead>
+                <Tr>
+                  <div className={classes.checkBoxHeader}>
+                    <Checkbox isChecked={topCheckBox} onChange={handleCheckBoxes} />
+                    <ChevronDownIcon />
+                  </div>
+                  {headers.map((header, index) => {
+                    return <Th key={index}>{header}</Th>;
+                  })}
+                </Tr>
+              </Thead>
+              <Tbody>{renderDonationTrackingTableData()}</Tbody>
+            </Table>
+          </TableContainer>
+          <div className={classes.resultNavigation}>
+            <Box sx={{ marginRight: '50px' }}>
+              {currentDonationsNum > 0 ? (currentPageNum - 1) * 10 + 1 : 0} to{' '}
+              {Math.min(currentPageNum * 10, currentDonationsNum)} of {currentDonationsNum}
+            </Box>
+            <IconButton
+              aria-label="Back button"
+              isDisabled={currentPageNum <= 1}
+              icon={<ChevronLeftIcon />}
+              onClick={() => setCurrentPageNum(currentPageNum - 1)}
+            />
+            <IconButton
+              aria-label="Next button"
+              isDisabled={currentPageNum >= pageLimit}
+              icon={<ChevronRightIcon />}
+              onClick={() => setCurrentPageNum(currentPageNum + 1)}
+            />
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

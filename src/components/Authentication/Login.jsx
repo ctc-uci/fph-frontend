@@ -12,7 +12,7 @@ import {
   useToast,
   HStack,
   Flex,
-  Image
+  Image,
 } from '@chakra-ui/react';
 import LOGO from './fph_logo.png';
 import { useAuth } from '../../contexts/AuthContext';
@@ -42,13 +42,13 @@ const Login = ({ isAdmin }) => {
         navigate('/BusinessDashboard');
       }
     } catch (err) {
-      var message = "";
-      if (err.message == "Firebase: Error (auth/invalid-email)."){
-        message = "Invalid Email";
-      } else if (err.message == "Firebase: Error (auth/missing-password)."){ 
-        message = "Missing Password";
+      var message = '';
+      if (err.message == 'Firebase: Error (auth/invalid-email).') {
+        message = 'Invalid Email';
+      } else if (err.message == 'Firebase: Error (auth/missing-password).') {
+        message = 'Missing Password';
       } else {
-        message = "Incorrect Password or Email";
+        message = 'Incorrect Password or Email';
       }
       toast({
         title: 'Login Failed',
@@ -56,8 +56,7 @@ const Login = ({ isAdmin }) => {
         status: 'error',
         duration: 3000,
         isClosable: true,
-      })
-      
+      });
     }
     setLoading(false);
   };
@@ -68,28 +67,33 @@ const Login = ({ isAdmin }) => {
         <Image src={LOGO} boxSize="50vh" />
       </Flex>
       <Box w="50%" bg="#FFFFFF">
-      <VStack spacing={4} align="stretch" height="100vh" justifyContent="center" paddingX="10vh">
-        <Heading alignSelf="flex-start" marginBottom="3vh" color="#319795">Log in</Heading>
-        <FormControl id="email">
-          <FormLabel>Email</FormLabel>
-          <Input type="email" value={email} onChange={e => setEmail(e.target.value)} />
-        </FormControl>
-        <FormControl id="password">
-          <FormLabel>Password</FormLabel>
-          <Input type="password" value={password} onChange={e => setPassword(e.target.value)} />
-        </FormControl>
-        <Flex flex={'row'} justifyContent={'flex-end'} w="100%">
-          <Link to={'/ForgotPassword'} color="black.500" textDecoration={'underline'} fontWeight="semibold">
-            Forgot Password?
-          </Link>
-        </Flex>      
-        <Button colorScheme="teal" w="full" disabled={loading} onClick={e => handleSubmit(e)}>
-          Login
-        </Button>
-        
-      </VStack>
+        <VStack spacing={4} align="stretch" height="100vh" justifyContent="center" paddingX="10vh">
+          <Heading alignSelf="flex-start" marginBottom="3vh" color="#319795">
+            Log in
+          </Heading>
+          <FormControl id="email">
+            <FormLabel>Email</FormLabel>
+            <Input type="email" value={email} onChange={e => setEmail(e.target.value)} />
+          </FormControl>
+          <FormControl id="password">
+            <FormLabel>Password</FormLabel>
+            <Input type="password" value={password} onChange={e => setPassword(e.target.value)} />
+          </FormControl>
+          <Flex flex={'row'} justifyContent={'flex-end'} w="100%">
+            <Link
+              to={'/ForgotPassword'}
+              color="black.500"
+              textDecoration={'underline'}
+              fontWeight="semibold"
+            >
+              Forgot Password?
+            </Link>
+          </Flex>
+          <Button colorScheme="teal" w="full" disabled={loading} onClick={e => handleSubmit(e)}>
+            Login
+          </Button>
+        </VStack>
       </Box>
-      
     </HStack>
   );
 };
