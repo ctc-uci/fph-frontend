@@ -39,7 +39,8 @@ const FirstForm = ({ admin, nextStep }) => {
       setLoading(true);
       
       if (admin) {
-        if (await isAdmin()) {
+        if (await isAdmin({email: email})) {
+          await signup(email, password);
           navigate('/AdminDashboard');
         }
         else {

@@ -22,10 +22,16 @@ export function AuthProvider({ children }) {
   const { backend } = useBackend();
 
   const signup = (email, password) => {
+    if (currentUser) {
+      signOut(auth);
+    }
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
   const login = (email, password) => {
+    if (currentUser) {
+      signOut(auth);
+    }
     return signInWithEmailAndPassword(auth, email, password);
   };
 
@@ -37,11 +43,11 @@ export function AuthProvider({ children }) {
     return sendPasswordResetEmail(auth, email);
   };
 
-  const isAdmin = async () => {
-    if (currentUser !== null) {
+  const isAdmin = async ( user=currentUser ) => {
+    console.log(user);
+    if (user !== null) {
       try {
-        let response = await backend.get(`/adminUser/${currentUser.email}`);
-
+        let response = await backend.get(`/adminUser/${user.email}`);
         return response.data.length > 0;
       } catch (error) {
         console.error('Error sending reminders:', error);

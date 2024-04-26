@@ -49,11 +49,7 @@ function Sidebar() {
   const authLogout = async () => {
     try {
       logout();
-      if (isAdminUser) {
-        navigate('/LoginAdmin');
-      } else {
-        navigate('/LoginBusiness');
-      }
+      navigate('/login')
     } catch (error) {
       console.log(error.message);
     }
