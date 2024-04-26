@@ -27,7 +27,7 @@ const BusinessSetupPageMaster = ({ isAdmin }) => {
   };
 
   const stepsComponents = [
-    <FirstForm key={0} isAdmin={isAdmin} nextStep={nextStep} />,
+    <FirstForm key={0} admin={isAdmin} nextStep={nextStep} />,
     <SecondForm key={1} />,
     <ThirdForm key={2} nextStep={nextStep} />,
     <FourthForm key={3} nextStep={nextStep} />,

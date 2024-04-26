@@ -12,39 +12,65 @@ import {
   HStack,
   Image,
   Flex,
+  useToast,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import LOGO from './fph_logo.png';
 import { useAuth } from '../../contexts/AuthContext';
 import PropTypes from 'prop-types'; // Import PropTypes
 
-const FirstForm = ({ isAdmin, nextStep }) => {
+const FirstForm = ({ admin, nextStep }) => {
+  const { isAdmin } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const { signup } = useAuth();
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const toast = useToast();
 
   const handleSubmit = async e => {
     e.preventDefault();
 
-    if (password !== confirmPassword) {
-      return setError('Passwords do not match');
-    }
-
     try {
-      setError('');
+      if (password !== confirmPassword) {
+        throw new Error('Passwords do not match');
+      }
       setLoading(true);
-      await signup(email, password);
-      if (isAdmin) {
-        nextStep();
-      } else {
+      
+      if (admin) {
+        if (await isAdmin()) {
+          navigate('/AdminDashboard');
+        }
+        else {
+          throw new Error('Email has not been added as an admin yet. Please contact the site owner.');
+        }
+      }else{
+        await signup(email, password);
         nextStep();
       }
-    } catch {
-      setError('Failed to create an account');
+    } catch (err) {
+      console.log(err);
+      var message = '';
+      if (err.message == 'Firebase: Error (auth/invalid-email).'){
+        message = 'Invalid Email';
+      }
+      else if (err.message == 'Password should be at least 6 characters (auth/weak-password).'){
+        message = 'Weak Password';
+      }
+      else if (err.message == 'Firebase: Error (auth/email-already-in-use).'){
+        message = 'Email Already In Use';
+      }
+      else {
+        message = err.message;
+      }
+      toast({
+        title: 'Create Account Failed',
+        description: message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
     }
 
     setLoading(false);
@@ -57,7 +83,7 @@ const FirstForm = ({ isAdmin, nextStep }) => {
       </Flex>
       <Box w="50%" bg="#FFFFFF">
         <VStack spacing={4} align="stretch" height="100vh" justifyContent="center" paddingX="10vh">
-          {isAdmin ? (
+          {admin ? (
             <Heading alignSelf="flex-start" marginBottom="3vh" color="#319795">
               Create Admin Account
             </Heading>
@@ -66,7 +92,6 @@ const FirstForm = ({ isAdmin, nextStep }) => {
               Create Donation Site Account
             </Heading>
           )}
-          {error && <Text color="red.500">{error}</Text>}
           <FormControl id="email">
             <FormLabel>Email</FormLabel>
             <Input type="email" value={email} onChange={e => setEmail(e.target.value)} />
@@ -98,7 +123,7 @@ const FirstForm = ({ isAdmin, nextStep }) => {
             Already have an account?{' '}
             <Link
               onClick={() => {
-                isAdmin ? navigate('/LoginAdmin') : navigate('/LoginBusiness');
+                navigate('/Login');
               }}
               color="#319795"
               fontWeight="semibold"
@@ -113,7 +138,7 @@ const FirstForm = ({ isAdmin, nextStep }) => {
 };
 
 FirstForm.propTypes = {
-  isAdmin: PropTypes.bool.isRequired,
+  admin: PropTypes.bool.isRequired,
   nextStep: PropTypes.bool.isRequired,
 };
 
