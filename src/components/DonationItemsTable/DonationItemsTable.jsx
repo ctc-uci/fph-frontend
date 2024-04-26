@@ -33,8 +33,9 @@ const DonationItemsTable = () => {
   useEffect(() => {
     const checkIsAdmin = async () => {
       if (!(await isAdmin())) {
-        setIsAdminUser(true);
         navigate('/BusinessDashboard');
+      } else {
+        setIsAdminUser(true);
       }
     };
 

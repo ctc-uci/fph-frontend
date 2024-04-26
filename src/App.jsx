@@ -53,8 +53,6 @@ const App = () => {
                 path="/AdminDashboard"
                 element={<ProtectedRoute Component={AdminDashboard} />}
               />
-              <Route exact path="/AdminManageForms" />
-              <Route exact path="/AdminTeamManagement" />
               <Route
                 exact
                 path="/EditContactInformation"

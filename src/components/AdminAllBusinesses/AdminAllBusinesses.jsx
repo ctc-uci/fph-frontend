@@ -1,5 +1,7 @@
 import PendingBusinessTable from '../PendingBusinessTable/PendingBusinessTable';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext.jsx';
 import { Button, Text } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import BusinessForm from '../BusinessForm/BusinessForm';
@@ -8,6 +10,21 @@ const AdminAllBusinesses = () => {
   const [pendingFlag, setPendingFlag] = useState(false);
   const [formFlag, setFormFlag] = useState(false);
   const [formItem, setFormItem] = useState({});
+  const [isAdminUser, setIsAdminUser] = useState(false);
+
+  const { isAdmin } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+     const checkIsAdmin = async () => {
+      if (!(await isAdmin())) {
+        navigate('/BusinessDashboard');
+      } else {
+        setIsAdminUser(true);
+      }
+    };
+    checkIsAdmin();
+  }, []);
 
   const handleClickPending = () => {
     setPendingFlag(true);
@@ -63,7 +80,7 @@ const AdminAllBusinesses = () => {
     </div>
   );
 
-  return contents;
+  return isAdminUser ? contents : <></>;
 };
 
 export default AdminAllBusinesses;

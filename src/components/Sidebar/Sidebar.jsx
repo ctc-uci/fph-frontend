@@ -21,9 +21,8 @@ function Sidebar() {
   const [isAdminUser, setIsAdminUser] = useState(false);
   useEffect(() => {
     const checkIsAdmin = async () => {
-      if (!(await isAdmin())) {
+      if (await isAdmin()) {
         setIsAdminUser(true);
-        navigate('/BusinessDashboard');
       }
     };
 
@@ -41,7 +40,7 @@ function Sidebar() {
     { name: 'Home', path: '/AdminDashboard', icon: 'home-smile' },
     { name: 'Donation Tracking', path: '/DonationTrackingTable', icon: 'building-house' },
     { name: 'Donation Items', path: '/DonationItemsTable', icon: 'heart-circle' },
-    { name: 'Settings', path: '/EditContactInformation', icon: 'cog' },
+    { name: 'Settings', path: '/AdminUsers', icon: 'cog' },
   ];
 
   const navigate = useNavigate();
@@ -50,7 +49,7 @@ function Sidebar() {
   const authLogout = async () => {
     try {
       logout();
-      if (isAdmin) {
+      if (isAdminUser) {
         navigate('/LoginAdmin');
       } else {
         navigate('/LoginBusiness');
