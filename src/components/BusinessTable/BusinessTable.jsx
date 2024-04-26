@@ -17,6 +17,8 @@ import {
   ModalFooter, 
   ModalBody, 
   ModalCloseButton, 
+  Heading,
+  Text,
   useDisclosure} from '@chakra-ui/react';
 import { ArrowDownIcon } from '@chakra-ui/icons';
 import DownloadCSV from '../../utils/downloadCSV';
@@ -172,15 +174,16 @@ const BusinessTable = businessData => {
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>Upload your CSV file</ModalHeader>
+            <ModalHeader marginBottom={0}>
+              <Heading size={'md'}>Upload existing data</Heading>
+            </ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <DropZone />
+              <Text fontFamily={'Inter'}>Transfer all business information into your new portal.</Text>
+              <DropZone onClose={onClose} />
             </ModalBody>
             <ModalFooter>
-              <Button colorScheme="blue" mr={3} onClick={onClose}>
-                Close
-              </Button>
+              
             </ModalFooter>
           </ModalContent>
         </Modal>
