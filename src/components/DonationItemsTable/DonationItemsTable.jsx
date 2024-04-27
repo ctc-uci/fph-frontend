@@ -13,53 +13,25 @@ import {
   Tabs,
   TabList,
   Tab,
-  TabPanels,
-  TabPanel,
   Box,
   IconButton,
   Button,
-  Text,
+  Heading,
   useDisclosure,
+  Flex,
+  Text
 } from '@chakra-ui/react';
 import { ChevronRightIcon, ChevronLeftIcon, DeleteIcon, EditIcon, AddIcon } from '@chakra-ui/icons';
-import PropTypes from 'prop-types';
 import classes from './DonationItemsTable.module.css';
 
 const DonationItemsTable = () => {
-  return (
-    <div className={classes.container}>
-      <div className={classes.ditTitleContainer}>
-        <Text>Donation Items</Text>
-      </div>
-      <Tabs marginBottom={'3%'} colorScheme="teal">
-          <TabList display="inline-flex">
-            <Tab>All</Tab>
-            <Tab>Food</Tab>
-            <Tab>Misc.</Tab>
-          </TabList>
-        <TabPanels>
-          <TabPanel>
-            <DonationItems category="all" />
-          </TabPanel>
-          <TabPanel>
-            <DonationItems category="Food" />
-          </TabPanel>
-          <TabPanel>
-            <DonationItems category="Misc." />
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
-    </div>
-  );
-};
-
-const DonationItems = ({ category }) => {
   const [data, setData] = useState([]);
   const { backend } = useBackend();
   const [currentItemNum, setCurrentItemNum] = useState(0);
   const [currentPageNum, setCurrentPageNum] = useState(1);
   const [pageLimit, setPageLimit] = useState(1);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [category, setCategory] = useState('all');
   const {
     isOpen: deleteModalIsOpen,
     onOpen: deleteModalOnOpen,
@@ -71,7 +43,8 @@ const DonationItems = ({ category }) => {
     onClose: donationsModalOnClose,
   } = useDisclosure();
 
-  const TABLE_HEADERS = ['Id', 'Name', 'Quantity Type', 'Price', 'Category'];
+  const TABLE_HEADERS = ['Category', 'Type', 'Weight Type', 'Price', ''];
+  const keys = ['category', 'item_name', 'quantity_type', 'price']
 
   useEffect(() => {
     loadInfo();
@@ -93,19 +66,29 @@ const DonationItems = ({ category }) => {
     setPageLimit(Math.ceil(itemsNumResponse.data[0]['count'] / 10));
   };
 
+  const updateCategory = index => {
+    switch (index) {
+      case 0:
+        setCategory('all');
+        break;
+      case 1:
+        setCategory('Food');
+        break;
+      case 2:
+        setCategory('Misc.');
+        break;
+      default:
+        setCategory('all');
+        break;
+    }
+  }
+
   const openDeleteModal = async item => {
     setSelectedItem(item);
     deleteModalOnOpen();
   };
-
-  // const  deleteModalOnOpen();
-  //   await backend.delete(`/value/${item['item_id']}`);
-  //   //setDeleteModalVisible(true);
-  //   loadInfo();
-  // };
-
   return (
-    <>
+    <div className={classes.container}>
       <DonationsDeleteConfirmationModal
         isOpen={deleteModalIsOpen}
         onClose={deleteModalOnClose}
@@ -119,77 +102,92 @@ const DonationItems = ({ category }) => {
         setCurrentPageNum={setCurrentPageNum}
         loadInfo={loadInfo}
       />
-      <div className={classes.addItemContainer}>
-        <Button colorScheme="teal" onClick={donationsModalOnOpen}>
-          Add Item
-          <AddIcon />
-        </Button>
-      </div>
-      <TableContainer>
-        <Table variant="simple" className={classes.table} colorScheme="whiteAlpha">
-          <Thead>
-            <Tr>
-              {TABLE_HEADERS.map((header, index) => (
-                <Th key={index}>{header}</Th>
-              ))}
-            </Tr>
-          </Thead>
-          <Tbody>
-            {data.map((item, index) => (
-              <Tr key={index} className={classes.tableRows}>
-                {Object.keys(item).map(key => (
-                  <Td key={key}>
-                    {typeof item[key] === 'boolean' ? (item[key] ? 'True' : 'False') : item[key]}
-                  </Td>
-                ))}
-                <Td>
-                  <Button
-                    sx={{ backgroundColor: 'transparent' }}
-                    onClick={() => {
-                      donationsModalOnOpen();
-                      setSelectedItem(item);
-                    }}
-                  >
-                    <EditIcon />
-                  </Button>
-                  <Button
-                    sx={{ backgroundColor: 'transparent' }}
-                    onClick={() => {
-                      openDeleteModal(item);
-                    }}
-                  >
-                    <DeleteIcon color="red" />
-                  </Button>
-                </Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </TableContainer>
-      <div className={classes.resultNavigation}>
-        <Box>
-          {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentItemNum)} of{' '}
-          {currentItemNum}
-        </Box>
-        <IconButton
-          aria-label="Back button"
-          isDisabled={currentPageNum <= 1}
-          icon={<ChevronLeftIcon />}
-          onClick={() => setCurrentPageNum(currentPageNum - 1)}
-        />
-        <IconButton
-          aria-label="Next button"
-          isDisabled={currentPageNum >= pageLimit}
-          icon={<ChevronRightIcon />}
-          onClick={() => setCurrentPageNum(currentPageNum + 1)}
-        />
-      </div>
-    </>
+      <Flex justifyContent={'space-between'}>
+        <Heading size='md' fontFamily='Inter'>
+          Donation Items
+        </Heading>
+      </Flex>
+      
+      <Tabs marginBottom={'3%'} colorScheme="teal" onChange={(index) => updateCategory(index)}>
+          <Flex flexFlow={'row'} justifyContent={'space-between'} marginBottom={4} >
+            <TabList display="inline-flex">
+              <Tab>All</Tab>
+              <Tab>Food</Tab>
+              <Tab>Misc.</Tab>
+            </TabList>
+            <Button colorScheme="teal" onClick={donationsModalOnOpen} w={32}>
+              <Flex justifyContent={'space-between'}>
+                <AddIcon />
+                <Text>Add Item</Text>
+              </Flex>
+            </Button>
+          </Flex>  
+          <TableContainer bg={'#FFFFFF'} borderRadius={12} border={'1px solid #E2E8F0'} w={'100%'}>
+            <Table variant="simple" margin={'auto'} width={'98%'} marginTop={4} marginBottom={4}>
+                <Thead>
+                  <Tr>
+                    {TABLE_HEADERS.map((header, index) => (
+                      <Th key={index}>{header}</Th>
+                    ))}
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {data.map((item, row_index) => (
+                    <Tr key={row_index} className={classes.tableRows}>
+                      {keys.map((key, col_index) => (
+                        <Td key={col_index} >{item[key]}</Td>
+                      ))}
+                      <Td>
+                        <Flex justifyContent={'flex-end'}>
+                          <Button
+                            sx={{ backgroundColor: 'transparent' }}
+                            onClick={() => {
+                              donationsModalOnOpen();
+                              setSelectedItem(item);
+                            }}
+                          >
+                            <EditIcon />
+                          </Button>
+                          <Button
+                            sx={{ backgroundColor: 'transparent' }}
+                            onClick={() => {
+                              openDeleteModal(item);
+                            }}
+                          >
+                            <DeleteIcon color="red" />
+                          </Button>
+                        </Flex>
+                        
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </TableContainer>
+        <div className={classes.resultNavigation}>
+          <Box>
+            {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentItemNum)} of{' '}
+            {currentItemNum}
+          </Box>
+          <IconButton
+            aria-label="Back button"
+            isDisabled={currentPageNum <= 1}
+            icon={<ChevronLeftIcon />}
+            onClick={() => setCurrentPageNum(currentPageNum - 1)}
+            variant={'ghost'}
+          />
+          <IconButton
+            aria-label="Next button"
+            isDisabled={currentPageNum >= pageLimit}
+            icon={<ChevronRightIcon />}
+            onClick={() => setCurrentPageNum(currentPageNum + 1)}
+            variant={'ghost'}
+          />
+        </div>
+      
+    </Tabs>
+    </div>
   );
-};
-
-DonationItems.propTypes = {
-  category: PropTypes.string.isRequired,
 };
 
 export default DonationItemsTable;

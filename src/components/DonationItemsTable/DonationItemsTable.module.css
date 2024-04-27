@@ -1,28 +1,3 @@
-.ditTitleContainer {
-  color: var(--gray-700, #2d3748);
-  /* text-3xl/lineHeight-9/font-bold */
-  font-family: Inter;
-  font-size: 30px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 36px; /* 120% */
-  margin-top: 32px;
-}
-
-.table {
-  background-color: var(--white, #ffffff);
-}
-
-.tableRows {
-  border-top: 1.5px solid rgb(217, 217, 217);
-}
-
-.addItemContainer {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 12px;
-}
-
 .container {
   padding: 32px;
 }
