@@ -83,9 +83,9 @@ function Sidebar({ isAdmin }) {
 
             {!isAdmin && (
               <Link to={'/ContactUs'} style={{ width: '100%', display: 'block' }}>
-                <Button width="full" justifyContent="flex-start" variant="ghost">
-                  <box-icon type="regular" name="help-circle"></box-icon>
-                  Contact Us
+                <Button width="full" justifyContent="flex-start" variant="ghost" as = "footer">
+                  <box-icon type="regular" name="help-circle" style = {{marginRight : '0.5rem'}}></box-icon>
+                     Contact Us
                 </Button>
               </Link>
             )}
