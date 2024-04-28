@@ -2,13 +2,25 @@ import { useEffect, useState } from 'react';
 import { useBackend } from '../../contexts/BackendContext';
 import ViewBusiness from '../ViewBusiness/ViewBusiness';
 import { BusinessForm } from '../BusinessForm/BusinessForm';
-import { Table, Thead, Tbody, Tr, Td, Checkbox, Button, Th } from '@chakra-ui/react';
+import { Table, Thead, Tbody, Tr, Td, Checkbox, Button, Th, Input } from '@chakra-ui/react';
+import { FaPlus } from 'react-icons/fa6';
+import DownloadCSV from '../../utils/downloadCSV';
+import { ArrowDownIcon } from '@chakra-ui/icons';
+import { BiEnvelope } from 'react-icons/bi';
+import { useNavigate } from 'react-router-dom';
 
 const BusinessTablePending = businessData => {
   const { backend } = useBackend();
   const [data, setData] = useState([]);
   const [selectedBusinessId, setBusinessId] = useState(null);
   const [pendingData, setPendingData] = useState([]);
+  const navigate = useNavigate();
+  const [sendRemindersClicked, setSendRemindersClicked] = useState(false);
+  console.log(sendRemindersClicked)
+
+  const handleClick = () => {
+    navigate('/AddBusiness');
+  };
   //   const [selectedApplication, setSelectedApplication] = useState(new Set());
   const TABLE_HEADERS = [
     'id',
@@ -100,7 +112,17 @@ const BusinessTablePending = businessData => {
     });
   };
 
+  const handleDownloadCSV = () => {
+    const ids = Array.from(selectedBusinessIds);
+    var headers = [];
+    for (var i = 0; i < TABLE_HEADERS.length; i++) {
+      headers.push(TABLE_HEADERS[i].toLowerCase().replace(' ', '_'));
+    }
+    DownloadCSV(headers, ids, 'business');
+  };
+
   const handleSendReminders = async () => {
+    setSendRemindersClicked(true);
     for (const businessId of selectedBusinessIds) {
       try {
         const requestData = {
@@ -157,10 +179,49 @@ const BusinessTablePending = businessData => {
     <h1>Loading ...</h1>
   ) : (
     <div>
-      <Button colorScheme="blue" onClick={handleSendReminders}>
-        Send Reminders
-      </Button>
-      <Table variant="striped" colorScheme="teal">
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+        <div style={{ margin: '0 10px' }}>
+          <Input
+            width="222px"
+            height="40px"
+            size="sm"
+            placeholder="Search"
+            backgroundColor="white"
+            marginRight={4}
+          />
+          <Button
+            width="161px"
+            height="40px"
+            colorScheme="teal"
+            variant="outline"
+            leftIcon={<FaPlus />}
+            onClick={handleClick}
+          >
+            Add Business
+          </Button>
+        </div>
+        <div style={{ margin: '0 10px' }}>
+          <Button
+            colorScheme="teal"
+            onClick={handleSendReminders}
+            marginRight={4}
+            fontSize={'0.9rem'}
+          >
+            <BiEnvelope style={{ marginRight: '5px' }} />
+            Send Reminder
+          </Button>
+          <Button
+            colorScheme="teal"
+            onClick={handleDownloadCSV}
+            sx={{ width: '172px' }}
+            fontSize={'0.9rem'}
+          >
+            <ArrowDownIcon sx={{ marginRight: '5px' }} />
+            Download CSV
+          </Button>
+        </div>
+      </div>
+      <Table variant="simple">
         <Thead>
           <Tr>
             {/* Add an empty header for the checkbox column */}

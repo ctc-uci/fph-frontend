@@ -1,10 +1,10 @@
 import './AdminDashboard.module.css';
-
 import { useBackend } from '../../contexts/BackendContext';
 import NotificationsDrawer from './NotificationsDrawer';
 import { useEffect, useState } from 'react';
-import { Box } from '@chakra-ui/react';
+import { Box, Flex, Stack, Text, Center, Divider } from '@chakra-ui/react';
 import AdminFilterBusinesses from '../AdminFilterBusinesses/AdminFilterBusinesses.jsx';
+import { BiBuildingHouse, BiDonateHeart, BiFile, BiTime} from "react-icons/bi";
 
 const AdminDashboard = () => {
   // Created the use states
@@ -19,6 +19,7 @@ const AdminDashboard = () => {
         // fetches the business table to be used in pending &total #
         const businessResponse = await backend.get('/business');
         setBusinessDictionary(businessResponse.data);
+        console.log('businessdata:', businessResponse.data);
         // fetches donation table data
         const donationResponse = await backend.get('/donation/');
         setDonationData(donationResponse.data);
@@ -61,21 +62,134 @@ const AdminDashboard = () => {
     return pendingBusinesses;
   };
 
+
+
   return (
     <div>
-      <h1>Welcome back, Jit!</h1>
+      <Flex margin="4vh 0 0 3vh" justifyContent="space-between" alignItems="center">
+        {
+          <Stack flexDirection={'row'} justifyContent={'space-between'} width={'98%'}>
+            <Text fontSize="30px" color="teal" fontWeight="bold">
+              Welcome Back, jits
+            </Text>
+            <NotificationsDrawer notificationsData={notification}/>
+          </Stack>
+        }
+      </Flex>
 
       <div>
         <>
-          <Box>{calculateTotalDonationSites()} Current donation sites</Box>
-          <Box>{calculateTotalDonationForms()} donation forms submitted</Box>
-          <Box>
-            {calculateTotalDonationSites() - calculateTotalDonationForms()} donation forms not
-            submitted
-          </Box>
-          <Box>{calculatePendingBusinesses()} applications pending </Box>
-          <AdminFilterBusinesses />
-          <NotificationsDrawer notificationsData={notification} />
+          <Flex
+            margin="4vh 3vh 2vh 3vh"
+            borderRadius="16px"
+            justifyContent="space-around"
+            p={5}
+            border="1px"
+            borderColor="gray.200"
+            bg="#FFFFFF"
+          >
+            <Flex justifyContent="center" alignItems="center">
+              {<BiBuildingHouse color="teal" size={30} />}
+              {
+                <div className="vstack">
+                  <div style={{ marginLeft: '12px' }}>
+                    <Box>
+                      <Text fontSize={25} fontWeight={500}>
+                        {calculateTotalDonationSites()}
+                      </Text>
+                    </Box>
+                    <Box>
+                      <Text color="gray" mt={-2}>
+                        Current Donation sites
+                      </Text>
+                    </Box>
+                  </div>
+                </div>
+              }
+            </Flex>
+            {
+              <Center height="50px">
+                <Divider orientation="vertical" color="#E2E8F0" />
+              </Center>
+            }
+            <Flex justifyContent="center" alignItems="center">
+              {<BiDonateHeart color="teal" size={30} />}
+              {
+                <div className="vstack">
+                  <div style={{ marginLeft: '12px' }}>
+                    <Box>
+                      <Text fontSize={25} fontWeight={500}>
+                        {calculateTotalDonationForms()}
+                      </Text>
+                    </Box>
+                    <Box>
+                      <Text color="gray" mt={-2}>
+                        Donation Forms Submitted
+                      </Text>
+                    </Box>
+                  </div>
+                </div>
+              }
+            </Flex>
+            {
+              <Center height="50px">
+                <Divider orientation="vertical" color="#E2E8F0" />
+              </Center>
+            }
+            <Flex justifyContent="center" alignItems="center">
+              {<BiFile color="teal" boxSize={6} />}
+              {
+                <div className="vstack">
+                  <div style={{ marginLeft: '12px' }}>
+                    <Box>
+                      <Text fontSize={25} fontWeight={500}>
+                        {calculateTotalDonationSites() - calculateTotalDonationForms()}
+                      </Text>
+                    </Box>
+                    <Text color="gray" mt={-2}>
+                      Donation forms not submitted
+                    </Text>
+                  </div>
+                </div>
+              }
+            </Flex>
+            {
+              <Center height="50px">
+                <Divider orientation="vertical" color="#E2E8F0" />
+              </Center>
+            }
+            <Flex justifyContent="center" alignItems="center">
+              {<BiTime color="teal" boxSize={6} />}
+              {
+                <div className="vstack">
+                  <div style={{ marginLeft: '12px' }}>
+                    <Box>
+                      <Text fontSize={25} fontWeight={500}>
+                        {calculatePendingBusinesses()} 
+                      </Text>
+                    </Box>
+                    <Text color="gray" mt={-2}>
+                      Pending applications
+                    </Text>
+                  </div>
+                </div>
+              }
+            </Flex>
+          </Flex>
+          <AdminFilterBusinesses/>
+          {/* <div>
+            <Input width="222px" height="40px" size="sm" placeholder="Search" backgroundColor='white' />
+            <Button
+              width="161px"
+              height="40px"
+              colorScheme="teal"
+              variant="outline"
+              leftIcon={<FaPlus />}
+              onClick={handleClick}
+            >
+              Add Business
+            </Button>
+          </div> */}
         </>
       </div>
     </div>

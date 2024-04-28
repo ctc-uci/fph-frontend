@@ -1,7 +1,6 @@
 import './AdminFilterBusinesses.module.css';
 import BusinessTable from '../BusinessTable/BusinessTable.jsx';
 import BusinessTablePending from '../BusinessTablePending/BusinessTablePending.jsx';
-
 import { useBackend } from '../../contexts/BackendContext';
 import { useEffect, useState } from 'react';
 import { Box, IconButton, Tabs, TabList, Tab } from '@chakra-ui/react';
@@ -14,7 +13,7 @@ const AdminFilterBusinesses = () => {
   const [businessDictionary, setBusinessDictionary] = useState([]);
   const [currentBusinessNum, setCurrentBusinessNum] = useState(0);
   const [currentPageNum, setCurrentPageNum] = useState(1);
-  const [currentTab, setCurrentTab] = useState('Active'); //change to all once all page is implemented
+  const [currentTab, setCurrentTab] = useState('All'); //change to all once all page is implemented
   const [pageLimit, setPageLimit] = useState(1);
 
   useEffect(() => {
@@ -39,6 +38,7 @@ const AdminFilterBusinesses = () => {
     changePage();
     const businessNumResponse = await backend.get(`/business/totalBusinesses/?tab=${tab}`);
     setCurrentBusinessNum(businessNumResponse.data[0]['count']);
+    console.log(businessNumResponse.data[0]['count']);
     setPageLimit(Math.ceil(businessNumResponse.data[0]['count'] / 10));
   };
 
@@ -53,6 +53,13 @@ const AdminFilterBusinesses = () => {
     <div>
       <Tabs>
         <TabList>
+          <Tab
+            onClick={() => {
+              changeTab('All');
+            }}
+          >
+            All
+          </Tab>
           <Tab
             onClick={() => {
               changeTab('Active');
@@ -76,27 +83,30 @@ const AdminFilterBusinesses = () => {
           </Tab>
         </TabList>
       </Tabs>
-      {currentTab !== 'Pending' ? (
+
+      {currentTab !== 'Pending' && currentTab !== 'All' ? (
         <BusinessTable businessData={businessDictionary} />
       ) : (
         <BusinessTablePending businessData={businessDictionary} />
       )}
-      <Box>
-        {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentBusinessNum)} of{' '}
-        {currentBusinessNum}
-      </Box>
-      <IconButton
-        aria-label="Back button"
-        isDisabled={currentPageNum <= 1}
-        icon={<ChevronLeftIcon />}
-        onClick={() => setCurrentPageNum(currentPageNum - 1)}
-      />
-      <IconButton
-        aria-label="Next button"
-        isDisabled={currentPageNum >= pageLimit}
-        icon={<ChevronRightIcon />}
-        onClick={() => setCurrentPageNum(currentPageNum + 1)}
-      />
+      <div style={{ width: '95%', display: 'flex', justifyContent: 'end' }}>
+          <Box>
+            {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentBusinessNum)}{' '}
+            of {currentBusinessNum}
+          </Box>
+            <IconButton
+              aria-label="Back button"
+              isDisabled={currentPageNum <= 1}
+              icon={<ChevronLeftIcon />}
+              onClick={() => setCurrentPageNum(currentPageNum - 1)}
+            />
+            <IconButton
+              aria-label="Next button"
+              isDisabled={currentPageNum >= pageLimit}
+              icon={<ChevronRightIcon />}
+              onClick={() => setCurrentPageNum(currentPageNum + 1)}
+            />
+      </div>
     </div>
   );
 };
