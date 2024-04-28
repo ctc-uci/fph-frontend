@@ -4,9 +4,9 @@ import { useBackend } from '../../contexts/BackendContext';
 import { AdminModal } from './AdminModal.jsx';
 import { DeleteAdminModal } from './DeleteAdminModal.jsx';
 import {
-  // Box,
+  Box,
   Flex,
-  // IconButton,
+  IconButton,
   Table,
   Thead,
   Tbody,
@@ -17,7 +17,7 @@ import {
   useDisclosure,
   Input,
 } from '@chakra-ui/react';
-import { EditIcon, AddIcon, DeleteIcon } from '@chakra-ui/icons';
+import { EditIcon, AddIcon, DeleteIcon, ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import { Button } from '@chakra-ui/react';
 import classes from './AdminSettings.module.css';
 
@@ -25,11 +25,10 @@ const AdminsTable = () => {
   const { backend } = useBackend();
   const [data, setData] = useState([]);
   // const [editEmail, setEditEmail] = useState('');
-  // const [searchTerm, setSearchTerm] = useState('');
-  // const [currentItemNum, setCurrentItemNum] = useState(0);
-  // const [currentPageNum, setCurrentPageNum] = useState(1);
-  // const [pageLimit, setPageLimit] = useState(1);
-  // FOR SELECTED ADMIN ON EDIT, HOW TO GET UNIQUE IDENTIFIER???
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentItemNum, setCurrentItemNum] = useState(0);
+  const [currentPageNum, setCurrentPageNum] = useState(1);
+  const [pageLimit, setPageLimit] = useState(1);
   const [selectedAdmin, setSelectedAdmin] = useState(null);
   const {
     isOpen: adminModalIsOpen,
@@ -44,25 +43,19 @@ const AdminsTable = () => {
 
   useEffect(() => {
     getAdminData();
-  }, []);
+  }, [currentPageNum, searchTerm]);
 
   const getAdminData = async () => {
     try {
-      const adminDataResponse = await backend.get('/adminUser/paginate');
+      const adminDataResponse = await backend.get(`/adminUser/paginate?itemsLimit=10&pageNum=${currentPageNum}&searchTerm=${searchTerm}`);
       setData(adminDataResponse.data);
-
-      // WHEN ADDING PAGINATION, USE THIS TO REPLACE CODE ABOVE
-      // const formResponse = await backend.get(
-      //   `/adminUser/paginate?itemsLimit=10&pageNum=${currentPageNum}`,
-      // );
-      // setAdminData(formResponse.data);
     } catch (error) {
       console.log(error.message);
     }
 
-    // const itemsNumResponse = await backend.get(`/adminUser/totalValues`);
-    // setCurrentItemNum(itemsNumResponse.data[0]['count']);
-    // setPageLimit(Math.ceil(itemsNumResponse.data[0]['count'] / 10));
+    const itemsNumResponse = await backend.get(`/adminUser/totalValues`);
+    setCurrentItemNum(itemsNumResponse.data[0]['count']);
+    setPageLimit(Math.ceil(itemsNumResponse.data[0]['count'] / 10));
   };
 
   const formatDate = dateString => {
@@ -71,8 +64,8 @@ const AdminsTable = () => {
   };
 
   const handleSearch = event => {
-    console.log(event);
-    // setSearchTerm(event.target.value.split(' ').join('+'));
+    setSearchTerm(event.target.value.split(' ').join('+'));
+    setCurrentPageNum(1);
   };
 
   const openDeleteModal = async admin => {
@@ -154,7 +147,7 @@ const AdminsTable = () => {
         </TableContainer>
       </div>
 
-      {/* <div className={classes.resultNavigation}>
+      <div className={classes.resultNavigation}>
         <Box>
           {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentItemNum)} of{' '}
           {currentItemNum}
@@ -171,7 +164,7 @@ const AdminsTable = () => {
           icon={<ChevronRightIcon />}
           onClick={() => setCurrentPageNum(currentPageNum + 1)}
         />
-      </div> */}
+      </div>
     </>
   );
 };
