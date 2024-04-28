@@ -20,7 +20,7 @@ const FourthForm = ({ setFormOpen }) => {
         <Box width="35%" textAlign={'center'}>
           <Text fontSize="xs">
             Thank you for taking the time to apply for becoming one of our donors! While our team
-            reviews your application, see what we’ve been up to by heading back to our{' '}
+            reviews your application, see what we&apos;ve been up to by heading back to our&nbsp;
             {
               <Link
                 textDecoration="underline"

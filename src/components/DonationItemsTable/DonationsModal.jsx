@@ -44,12 +44,12 @@ const DonationsModal = ({ isOpen, onClose, data, setCurrentPageNum, loadInfo }) 
   }, [isOpen]);
 
   const closeAndReset = () => {
+    onClose();
     setTypeData('');
     setWeightData('');
     setPriceData('');
     setCategoryData('');
     setAlertVisible(false);
-    onClose();
     setCurrentPageNum(1);
     loadInfo();
   };
@@ -78,12 +78,12 @@ const DonationsModal = ({ isOpen, onClose, data, setCurrentPageNum, loadInfo }) 
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size={'md'}>
+    <Modal isOpen={isOpen} onClose={closeAndReset} size={'md'}>
       <ModalOverlay>
         <ModalContent>
           <ModalHeader>
             {data ? 'Edit Item' : 'Add Item'}
-            <IconButton aria-label="Close" icon={<CloseIcon />} onClick={onClose} />
+            <IconButton aria-label="Close" icon={<CloseIcon />} onClick={closeAndReset} />
           </ModalHeader>
           <ModalBody>
             <Text>Category</Text>
@@ -130,7 +130,7 @@ const DonationsModal = ({ isOpen, onClose, data, setCurrentPageNum, loadInfo }) 
             </Alert>
           )}
           <ModalFooter justifyContent="flex-end">
-            <Button onClick={onClose}>Cancel</Button>
+            <Button onClick={closeAndReset}>Cancel</Button>
             <Button
               onClick={event => {
                 submitForm(event);

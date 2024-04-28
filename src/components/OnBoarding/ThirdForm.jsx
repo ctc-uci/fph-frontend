@@ -135,10 +135,10 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit, setFormData
               transform="translateY(-50%)"
             >
               <ModalHeader>
-                {' '}
+                &nbsp;
                 <Stack direction="row" justifyContent="space-between">
                   <Text fontWeight="bold" fontSize="2xl">
-                    Terms and Conditions{' '}
+                    Terms and Conditions&nbsp;
                   </Text>
 
                   <ModalCloseButton
@@ -289,7 +289,7 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit, setFormData
                 </Box>
                 <Box marginBottom="0.6vh">
                   <Text fontSize="xs">
-                    I accept the{' '}
+                    I accept the&nbsp;
                     {
                       <Link
                         textDecoration="underline"

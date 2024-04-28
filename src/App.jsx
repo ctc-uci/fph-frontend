@@ -21,6 +21,8 @@ import ViewBusiness from './components/ViewBusiness/ViewBusiness.jsx';
 import { AddBusinessForm, BusinessForm } from './components/BusinessForm/BusinessForm.jsx';
 import Congrats from './components/DonationForm/Congrats.jsx';
 import ViewRequest from './components/ViewRequest/ViewRequest.jsx';
+import AdminSettingsMaster from './components/AdminSettings/AdminSettingsMaster.jsx';
+
 const App = () => {
   const location = useLocation();
   const currentRoute = location.pathname;
@@ -53,6 +55,7 @@ const App = () => {
                 path="/AdminDashboard"
                 element={<ProtectedRoute Component={AdminDashboard} />}
               />
+              <Route exace path="/AdminSettings" Component={AdminSettingsMaster} />
               <Route
                 exact
                 path="/EditContactInformation"
