@@ -100,12 +100,11 @@ const App = () => {
                 path="/EditBusiness/:id"
                 element={<ProtectedRoute Component={BusinessForm} />}
               />
-              <Route 
+              <Route
                 exact
                 path="/ViewRequest/:id"
                 element={<ProtectedRoute Component={ViewRequest} />}
               />
-
             </Routes>
           </div>
         </div>

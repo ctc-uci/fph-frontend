@@ -26,7 +26,6 @@ import { useState } from 'react';
 import DownloadCSV from '../../utils/downloadCSV';
 import { useNavigate } from 'react-router-dom';
 
-
 const NotificationsDrawer = ({ notificationsData }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
@@ -85,9 +84,8 @@ const NotificationsDrawer = ({ notificationsData }) => {
 
   const findBusinessId = message => {
     const regex = new RegExp(`id: *[0-9]+`, 'i');
-    return message.match(regex, "i")[0].split(":")[1].trim();
-  }
-
+    return message.match(regex, 'i')[0].split(':')[1].trim();
+  };
 
   return (
     <>
@@ -139,7 +137,10 @@ const NotificationsDrawer = ({ notificationsData }) => {
                           handleDownloadCSV([notification.notification_id]);
                         } else if (notificationAction[notification.type] === 'View Request') {
                           navigate(`/ViewRequest/${findBusinessId(notification.message)}`);
-                        } else if (notificationAction[notification.type] === 'View Application' || notificationAction[notification.type] === 'View Information') {
+                        } else if (
+                          notificationAction[notification.type] === 'View Application' ||
+                          notificationAction[notification.type] === 'View Information'
+                        ) {
                           navigate(`/ViewBusiness/${findBusinessId(notification.message)}`);
                         }
                       }}
