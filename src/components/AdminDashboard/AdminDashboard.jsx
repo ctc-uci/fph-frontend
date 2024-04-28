@@ -4,12 +4,12 @@ import NotificationsDrawer from './NotificationsDrawer';
 import { useEffect, useState } from 'react';
 import { Box, Flex, Stack, Text, Center, Divider } from '@chakra-ui/react';
 import AdminFilterBusinesses from '../AdminFilterBusinesses/AdminFilterBusinesses.jsx';
-import { BiBuildingHouse, BiDonateHeart, BiFile, BiTime} from "react-icons/bi";
+import { BiBuildingHouse, BiDonateHeart, BiFile, BiTime } from 'react-icons/bi';
 
 const AdminDashboard = () => {
   // Created the use states
   const { backend } = useBackend();
-  const [donationData, setDonationData] = useState([]);
+  // const [donationData, setDonationData] = useState([]);
   const [businessDictionary, setBusinessDictionary] = useState([]);
   const [notification, setNotifications] = useState([]);
 
@@ -21,8 +21,8 @@ const AdminDashboard = () => {
         setBusinessDictionary(businessResponse.data);
         console.log('businessdata:', businessResponse.data);
         // fetches donation table data
-        const donationResponse = await backend.get('/donation/');
-        setDonationData(donationResponse.data);
+        // const donationResponse = await backend.get('/donation/');
+        // setDonationData(donationResponse.data);
 
         const notificationResponse = await backend.get(`/notification/0`);
         setNotifications(notificationResponse.data);
@@ -35,15 +35,22 @@ const AdminDashboard = () => {
 
   // Counts number of donation forms submitted by unique businesses
   const calculateTotalDonationForms = () => {
-    const uniqueBusiness = [];
-    for (const [value] of Object.entries(donationData)) {
-      const businessId = value['business_id'];
-      if (uniqueBusiness.includes(businessId) == false) {
-        uniqueBusiness.push(businessId);
+    // const uniqueBusiness = [];
+    // for (const [value] of Object.entries(donationData)) {
+    //   const businessId = value['business_id'];
+    //   if (uniqueBusiness.includes(businessId) == false) {
+    //     uniqueBusiness.push(businessId);
+    //   }
+    // }
+    var submittedBusinesses = 0;
+    for (const [value] of Object.entries(businessDictionary)) {
+      const status = businessDictionary[value].status;
+      if (status == 'Active') {
+        submittedBusinesses += 1;
       }
     }
-
-    return uniqueBusiness.length;
+    // return uniqueBusiness.length;
+    return submittedBusinesses;
   };
 
   // Counts number of Donation Sites
@@ -51,6 +58,7 @@ const AdminDashboard = () => {
     return Object.keys(businessDictionary).length;
   };
 
+  // Calculates number of pending applications from businesses
   const calculatePendingBusinesses = () => {
     var pendingBusinesses = 0;
     for (const [value] of Object.entries(businessDictionary)) {
@@ -62,8 +70,6 @@ const AdminDashboard = () => {
     return pendingBusinesses;
   };
 
-
-
   return (
     <div>
       <Flex margin="4vh 0 0 3vh" justifyContent="space-between" alignItems="center">
@@ -72,7 +78,7 @@ const AdminDashboard = () => {
             <Text fontSize="30px" color="teal" fontWeight="bold">
               Welcome Back, jits
             </Text>
-            <NotificationsDrawer notificationsData={notification}/>
+            <NotificationsDrawer notificationsData={notification} />
           </Stack>
         }
       </Flex>
@@ -100,7 +106,7 @@ const AdminDashboard = () => {
                     </Box>
                     <Box>
                       <Text color="gray" mt={-2}>
-                        Current Donation sites
+                        Current Donation Sites
                       </Text>
                     </Box>
                   </div>
@@ -147,7 +153,7 @@ const AdminDashboard = () => {
                       </Text>
                     </Box>
                     <Text color="gray" mt={-2}>
-                      Donation forms not submitted
+                      Donation Forms Not Submitted
                     </Text>
                   </div>
                 </div>
@@ -165,18 +171,18 @@ const AdminDashboard = () => {
                   <div style={{ marginLeft: '12px' }}>
                     <Box>
                       <Text fontSize={25} fontWeight={500}>
-                        {calculatePendingBusinesses()} 
+                        {calculatePendingBusinesses()}
                       </Text>
                     </Box>
                     <Text color="gray" mt={-2}>
-                      Pending applications
+                      Pending Applications
                     </Text>
                   </div>
                 </div>
               }
             </Flex>
           </Flex>
-          <AdminFilterBusinesses/>
+          <AdminFilterBusinesses />
           {/* <div>
             <Input width="222px" height="40px" size="sm" placeholder="Search" backgroundColor='white' />
             <Button
