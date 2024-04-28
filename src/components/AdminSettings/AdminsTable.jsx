@@ -53,7 +53,7 @@ const AdminsTable = () => {
       console.log(error.message);
     }
 
-    const itemsNumResponse = await backend.get(`/adminUser/totalValues`);
+    const itemsNumResponse = await backend.get(`/adminUser/totalValues?searchTerm=${searchTerm}`);
     setCurrentItemNum(itemsNumResponse.data[0]['count']);
     setPageLimit(Math.ceil(itemsNumResponse.data[0]['count'] / 10));
   };
