@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   ChakraProvider,
@@ -14,9 +14,21 @@ import {
 import 'boxicons';
 import fphLogo from './fph-logo.png.png';
 import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
-function Sidebar({ isAdmin }) {
+function Sidebar() {
+  const { isAdmin } = useAuth();
+  const [isAdminUser, setIsAdminUser] = useState(false);
+  useEffect(() => {
+    const checkIsAdmin = async () => {
+      if (await isAdmin()) {
+        setIsAdminUser(true);
+      }
+    };
+
+    checkIsAdmin();
+  });
+
   const businessList = [
     { name: 'Home', path: '/BusinessDashboard', icon: 'home-smile' },
     { name: 'Donation History', path: '/BusinessDonationTrackingForm', icon: 'heart-circle' },
@@ -37,17 +49,13 @@ function Sidebar({ isAdmin }) {
   const authLogout = async () => {
     try {
       logout();
-      if (isAdmin) {
-        navigate('/LoginAdmin');
-      } else {
-        navigate('/LoginBusiness');
-      }
+      navigate('/login')
     } catch (error) {
       console.log(error.message);
     }
   };
 
-  const navList = isAdmin ? adminList : businessList;
+  const navList = isAdminUser ? adminList : businessList;
   return (
     <ChakraProvider>
       <>

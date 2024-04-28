@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { auth } from '../utils/firebaseAuthUtil';
+import { useBackend } from './BackendContext';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -18,11 +19,19 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const { backend } = useBackend();
+
   const signup = (email, password) => {
+    if (currentUser) {
+      signOut(auth);
+    }
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
   const login = (email, password) => {
+    if (currentUser) {
+      signOut(auth);
+    }
     return signInWithEmailAndPassword(auth, email, password);
   };
 
@@ -32,6 +41,18 @@ export function AuthProvider({ children }) {
 
   const resetPassword = email => {
     return sendPasswordResetEmail(auth, email);
+  };
+
+  const isAdmin = async ( user=currentUser ) => {
+    console.log(user);
+    if (user !== null) {
+      try {
+        let response = await backend.get(`/adminUser/${user.email}`);
+        return response.data.length > 0;
+      } catch (error) {
+        console.error('Error sending reminders:', error);
+      }
+    }
   };
 
   useEffect(() => {
@@ -49,6 +70,7 @@ export function AuthProvider({ children }) {
     login,
     logout,
     resetPassword,
+    isAdmin,
   };
 
   return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;

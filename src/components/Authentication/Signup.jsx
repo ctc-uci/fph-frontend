@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -10,6 +10,7 @@ import {
   Heading,
   Text,
   Link,
+  useToast,
 } from '@chakra-ui/react';
 import { useAuth } from '../../contexts/AuthContext';
 import PropTypes from 'prop-types'; // Import PropTypes
@@ -24,8 +25,18 @@ const Signup = ({ isAdmin }) => {
   // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
+  const toast = useToast();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    toast({
+      title: 'Login Failed',
+      description: error,
+      status: 'error',
+      duration: 3000,
+      isClosable: true,
+    });
+  }, [error]);
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -35,7 +46,6 @@ const Signup = ({ isAdmin }) => {
     }
 
     try {
-      setError('');
       setLoading(true);
       await signup(email, password);
       if (isAdmin) {
@@ -43,16 +53,14 @@ const Signup = ({ isAdmin }) => {
       } else {
         navigate('/BusinessDashboard');
       }
-    } catch {
-      setError('Failed to create an account');
+    } catch (err) {
+      setError(err.message);
     }
-
     setLoading(false);
   };
 
   return (
     <Box p={8}>
-      {error}
       <VStack spacing={4}>
         {isAdmin ? (
           <Heading>Create Admin Account</Heading>

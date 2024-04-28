@@ -1,7 +1,9 @@
 import './AdminDashboard.module.css';
 import { useBackend } from '../../contexts/BackendContext';
+import { useAuth } from '../../contexts/AuthContext.jsx';
 import NotificationsDrawer from './NotificationsDrawer';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Box, Flex, Stack, Text, Center, Divider } from '@chakra-ui/react';
 import AdminFilterBusinesses from '../AdminFilterBusinesses/AdminFilterBusinesses.jsx';
 import { BiBuildingHouse, BiDonateHeart, BiFile, BiTime } from 'react-icons/bi';
@@ -9,13 +11,16 @@ import { BiBuildingHouse, BiDonateHeart, BiFile, BiTime } from 'react-icons/bi';
 const AdminDashboard = () => {
   // Created the use states
   const { backend } = useBackend();
-  // const [donationData, setDonationData] = useState([]);
+  const { isAdmin } = useAuth();
+  const navigate = useNavigate();
+  //const [donationData, setDonationData] = useState([]);
   const [businessDictionary, setBusinessDictionary] = useState([]);
   const [notification, setNotifications] = useState([]);
 
   useEffect(() => {
     const getData = async () => {
       try {
+        checkIsAdmin();
         // fetches the business table to be used in pending &total #
         const businessResponse = await backend.get('/business');
         setBusinessDictionary(businessResponse.data);
@@ -26,11 +31,18 @@ const AdminDashboard = () => {
 
         const notificationResponse = await backend.get(`/notification/0`);
         setNotifications(notificationResponse.data);
-
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
+
+    const checkIsAdmin = async () => {
+      if (!(await isAdmin())) {
+        navigate('/BusinessDashboard');
+      }
+    };
+
+    checkIsAdmin();
     getData();
   }, []);
 

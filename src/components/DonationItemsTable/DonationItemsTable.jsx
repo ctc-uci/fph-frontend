@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useBackend } from '../../contexts/BackendContext';
 import DonationsModal from './DonationsModal.jsx';
 import DonationsDeleteConfirmationModal from './DonationsDeleteConfirmationModal.jsx';
@@ -23,34 +24,53 @@ import {
 import { ChevronRightIcon, ChevronLeftIcon, DeleteIcon, EditIcon, AddIcon } from '@chakra-ui/icons';
 import PropTypes from 'prop-types';
 import classes from './DonationItemsTable.module.css';
+import { useAuth } from '../../contexts/AuthContext.jsx';
 
 const DonationItemsTable = () => {
+  const { isAdmin } = useAuth();
+  const [isAdminUser, setIsAdminUser] = useState(false);
+  const navigate = useNavigate();
+  useEffect(() => {
+    const checkIsAdmin = async () => {
+      if (!(await isAdmin())) {
+        navigate('/BusinessDashboard');
+      } else {
+        setIsAdminUser(true);
+      }
+    };
+
+    checkIsAdmin();
+  });
   return (
-    <div className={classes.container}>
-      <div className={classes.ditTitleContainer}>
-        <Text>Donation Items</Text>
-      </div>
-      <Tabs>
-        <div className={classes.tabs}>
-          <TabList>
-            <Tab>All</Tab>
-            <Tab>Food</Tab>
-            <Tab>Misc.</Tab>
-          </TabList>
+    <>
+      {isAdminUser && (
+        <div className={classes.container}>
+          <div className={classes.ditTitleContainer}>
+            <Text>Donation Items</Text>
+          </div>
+          <Tabs>
+            <div className={classes.tabs}>
+              <TabList>
+                <Tab>All</Tab>
+                <Tab>Food</Tab>
+                <Tab>Misc.</Tab>
+              </TabList>
+            </div>
+            <TabPanels>
+              <TabPanel>
+                <DonationItems category="all" />
+              </TabPanel>
+              <TabPanel>
+                <DonationItems category="Food" />
+              </TabPanel>
+              <TabPanel>
+                <DonationItems category="Misc." />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
         </div>
-        <TabPanels>
-          <TabPanel>
-            <DonationItems category="all" />
-          </TabPanel>
-          <TabPanel>
-            <DonationItems category="Food" />
-          </TabPanel>
-          <TabPanel>
-            <DonationItems category="Misc." />
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
-    </div>
+      )}
+    </>
   );
 };
 

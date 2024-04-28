@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { BackendProvider } from './contexts/BackendContext';
 import Sidebar from './components/Sidebar/Sidebar.jsx';
 import BusinessDashboard from './components/BusinessDashboard/BusinessDashboard';
@@ -24,11 +24,16 @@ import ViewRequest from './components/ViewRequest/ViewRequest.jsx';
 import AdminSettingsMaster from './components/AdminSettings/AdminSettingsMaster.jsx';
 
 const App = () => {
+  const location = useLocation();
+  const currentRoute = location.pathname;
   return (
     <BackendProvider>
       <AuthProvider>
         <div className={styles.appLayout}>
-          <Sidebar isAdmin={true} />
+          {currentRoute == '/SignUpAdmin' ||
+            currentRoute == '/SignUpBusiness' ||
+            currentRoute == '/Login' ||
+            currentRoute == '/ForgotPassword' || <Sidebar isAdmin={false} />}
           <div className={styles.mainContent}>
             <Routes>
               <Route
@@ -41,8 +46,7 @@ const App = () => {
                 path="/SignupBusiness"
                 element={<BusinessSetupPageMaster isAdmin={false} />}
               />
-              <Route exact path="/LoginAdmin" element={<Login isAdmin={true} />} />
-              <Route exact path="/LoginBusiness" element={<Login isAdmin={false} />} />
+              <Route exact path="/Login" element={<Login isAdmin={true} />} />
               <Route exact path="/ForgotPassword" element={<ForgotPassword />} />
               <Route exact path="/ContactUs" element={<ProtectedRoute Component={ContactUs} />} />
               <Route exact path="/Congrats" element={<ProtectedRoute Component={Congrats} />} />
@@ -51,8 +55,6 @@ const App = () => {
                 path="/AdminDashboard"
                 element={<ProtectedRoute Component={AdminDashboard} />}
               />
-              <Route exact path="/AdminManageForms" />
-              <Route exact path="/AdminTeamManagement" />
               <Route exace path="/AdminSettings" Component={AdminSettingsMaster} />
               <Route
                 exact

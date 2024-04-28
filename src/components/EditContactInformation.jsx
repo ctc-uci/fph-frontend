@@ -57,7 +57,6 @@ const EditContactInformation = () => {
   });
 
   const [businessId, setBusinessId] = useState(null);
-
   function showToast() {
     if (!toastOpen) {
       setToastOpen(true);
@@ -296,7 +295,10 @@ const EditContactInformation = () => {
                         width={'28%'}
                         value={businessContactInfo.city}
                         onChange={e => {
-                          setBusinessContactInfo({ ...businessContactInfo, city: e.target.value });
+                          setBusinessContactInfo({
+                            ...businessContactInfo,
+                            city: e.target.value,
+                          });
                           showToast();
                         }}
                       />
@@ -306,7 +308,10 @@ const EditContactInformation = () => {
                         width={'18%'}
                         value={businessContactInfo.state}
                         onChange={e => {
-                          setBusinessContactInfo({ ...businessContactInfo, state: e.target.value });
+                          setBusinessContactInfo({
+                            ...businessContactInfo,
+                            state: e.target.value,
+                          });
                           showToast();
                         }}
                       />
