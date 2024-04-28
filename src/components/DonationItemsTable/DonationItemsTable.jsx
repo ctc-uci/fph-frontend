@@ -91,13 +91,13 @@ const DonationItemsTable = () => {
     <div className={classes.container}>
       <DonationsDeleteConfirmationModal
         isOpen={deleteModalIsOpen}
-        onClose={deleteModalOnClose}
+        onClose={() => {deleteModalOnClose(); setSelectedItem(null);}}
         loadInfo={loadInfo}
         selectedItem={selectedItem}
       />
       <DonationsModal
         isOpen={donationsModalIsOpen}
-        onClose={donationsModalOnClose}
+        onClose={() => {donationsModalOnClose(); setSelectedItem(null);}}
         data={selectedItem}
         setCurrentPageNum={setCurrentPageNum}
         loadInfo={loadInfo}
@@ -107,7 +107,7 @@ const DonationItemsTable = () => {
           Donation Items
         </Heading>
       </Flex>
-      
+
       <Tabs marginBottom={'3%'} colorScheme="teal" onChange={(index) => updateCategory(index)}>
           <Flex flexFlow={'row'} justifyContent={'space-between'} marginBottom={4} >
             <TabList display="inline-flex">
@@ -121,7 +121,7 @@ const DonationItemsTable = () => {
                 <Text>Add Item</Text>
               </Flex>
             </Button>
-          </Flex>  
+          </Flex>
           <TableContainer bg={'#FFFFFF'} borderRadius={12} border={'1px solid #E2E8F0'} w={'100%'}>
             <Table variant="simple" margin={'auto'} width={'98%'} marginTop={4} marginBottom={4}>
                 <Thead>
@@ -157,7 +157,7 @@ const DonationItemsTable = () => {
                             <DeleteIcon color="red" />
                           </Button>
                         </Flex>
-                        
+
                       </Td>
                     </Tr>
                   ))}
@@ -184,7 +184,7 @@ const DonationItemsTable = () => {
             variant={'ghost'}
           />
         </div>
-      
+
     </Tabs>
     </div>
   );

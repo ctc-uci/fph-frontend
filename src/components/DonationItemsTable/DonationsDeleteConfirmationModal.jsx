@@ -19,6 +19,7 @@ function DonationsDeleteConfirmationModal({ isOpen, onClose, loadInfo, selectedI
     await backend.delete(`/value/${selectedItem.item_id}`);
     loadInfo();
     onClose();
+    selectedItem = null;
   };
 
   return (
@@ -33,7 +34,7 @@ function DonationsDeleteConfirmationModal({ isOpen, onClose, loadInfo, selectedI
             <AlertDialogBody>Are you sure? You cannot undo this action afterwards.</AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose}>
+              <Button ref={cancelRef} onClick={() => {onClose(); selectedItem = null;}}>
                 Cancel
               </Button>
               <Button colorScheme="red" onClick={handleDelete} ml={3}>
