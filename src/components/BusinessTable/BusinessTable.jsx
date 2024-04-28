@@ -1,14 +1,36 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBackend } from '../../contexts/BackendContext';
-import { Table, Thead, Tbody, Tr, Td, Checkbox, Button, Th } from '@chakra-ui/react';
+import { 
+  Table, 
+  Thead, 
+  Tbody, 
+  Tr, 
+  Td, 
+  Checkbox, 
+  Button, 
+  Th, 
+  Modal, 
+  ModalOverlay, 
+  ModalContent, 
+  ModalHeader, 
+  ModalFooter, 
+  ModalBody, 
+  ModalCloseButton, 
+  Heading,
+  Text,
+  useDisclosure} from '@chakra-ui/react';
 import { ArrowDownIcon } from '@chakra-ui/icons';
 import DownloadCSV from '../../utils/downloadCSV';
+import DropZone from '../BusinessTable/DropZone';
+
+
 
 const BusinessTable = businessData => {
   const navigate = useNavigate();
   const { backend } = useBackend();
   const [data, setData] = useState([]);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   // const [selectedBusinessId, setBusinessId] = useState(null);
 
   const TABLE_HEADERS = [
@@ -117,6 +139,9 @@ const BusinessTable = businessData => {
     }
   };
 
+
+
+
   const handleDownloadCSV = () => {
     const ids = Array.from(selectedBusinessIds);
     var headers = [];
@@ -144,6 +169,24 @@ const BusinessTable = businessData => {
     <h1>Loading ...</h1>
   ) : (
     <div>
+      <Button onClick={onOpen}>Upload CSV</Button>
+
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader marginBottom={0}>
+              <Heading size={'md'}>Upload existing data</Heading>
+            </ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Text fontFamily={'Inter'}>Transfer all business information into your new portal.</Text>
+              <DropZone onClose={onClose} />
+            </ModalBody>
+            <ModalFooter>
+              
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       <Button colorScheme="blue" onClick={handleSendReminders}>
         Send Reminders
       </Button>
