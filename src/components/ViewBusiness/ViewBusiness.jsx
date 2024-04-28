@@ -418,7 +418,15 @@ const ViewBusiness = () => {
                         <Text fontSize="xs" as="b" mt="3">
                           OR
                         </Text>
-                        <Button size="xs" onClick={() => navigate("/BusinessDonationTrackingForm")} colorScheme="teal" variant="link" ml="3" mt="3" as="b">
+                        <Button
+                          size="xs"
+                          onClick={() => navigate('/BusinessDonationTrackingForm')}
+                          colorScheme="teal"
+                          variant="link"
+                          ml="3"
+                          mt="3"
+                          as="b"
+                        >
                           Manually submit form <ArrowForwardIcon />
                         </Button>
                       </Flex>
