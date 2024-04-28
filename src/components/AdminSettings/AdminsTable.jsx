@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useBackend } from '../../contexts/BackendContext';
 import { AdminModal } from './AdminModal.jsx';
+import { DeleteAdminModal } from './DeleteAdminModal.jsx';
 import {
   // Box,
   Flex,
@@ -16,7 +17,7 @@ import {
   useDisclosure,
   Input,
 } from '@chakra-ui/react';
-import { EditIcon, AddIcon } from '@chakra-ui/icons';
+import { EditIcon, AddIcon, DeleteIcon } from '@chakra-ui/icons';
 import { Button } from '@chakra-ui/react';
 import classes from './AdminSettings.module.css';
 
@@ -34,6 +35,11 @@ const AdminsTable = () => {
     isOpen: adminModalIsOpen,
     onOpen: adminModalOnOpen,
     onClose: adminModalOnClose,
+  } = useDisclosure();
+  const {
+    isOpen: deleteModalIsOpen,
+    onOpen: deleteModalOnOpen,
+    onClose: deleteModalOnClose,
   } = useDisclosure();
 
   useEffect(() => {
@@ -69,11 +75,10 @@ const AdminsTable = () => {
     // setSearchTerm(event.target.value.split(' ').join('+'));
   };
 
-  // UNCOMMENT WHEN ADDING IN DELETE ADMIN MODAL
-  // const openDeleteModal = async admin => {
-  //   setSelectedAdmin(admin);
-  //   // deleteModalOnOpen();
-  // };
+  const openDeleteModal = async admin => {
+    setSelectedAdmin(admin);
+    deleteModalOnOpen();
+  };
 
   const displayAdminTable = () => {
     return data.map((admin, index) => (
@@ -86,26 +91,20 @@ const AdminsTable = () => {
             <Button
               sx={{ backgroundColor: 'transparent' }}
               onClick={() => {
-                // setAdminData({
-                //   name: admin.name,
-                //   email: admin.email,
-                //   last_updated: new Date().toISOString(),
-                // });
-                // setEditEmail(admin.email);
                 adminModalOnOpen();
                 setSelectedAdmin(admin);
               }}
             >
               <EditIcon />
             </Button>
-            {/* <Button
+            <Button
               sx={{ backgroundColor: 'transparent' }}
               onClick={() => {
-                deleteAdmin(admin.email);
+                openDeleteModal(admin);
               }}
             >
               <DeleteIcon color="red" />
-            </Button> */}
+            </Button>
           </Flex>
         </Td>
       </Tr>
@@ -129,6 +128,12 @@ const AdminsTable = () => {
       </div>
 
       <div className={classes.roundedTable}>
+        <DeleteAdminModal
+          isOpen={deleteModalIsOpen}
+          onClose={() => {deleteModalOnClose(); setSelectedAdmin(null);}}
+          loadInfo={getAdminData}
+          selectedItem={selectedAdmin}
+        />
         <AdminModal
           isOpen={adminModalIsOpen}
           onClose={() => {adminModalOnClose(); setSelectedAdmin(null);}}
