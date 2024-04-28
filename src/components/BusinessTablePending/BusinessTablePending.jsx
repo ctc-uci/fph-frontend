@@ -2,74 +2,75 @@ import { useEffect, useState } from 'react';
 import { useBackend } from '../../contexts/BackendContext';
 import ViewBusiness from '../ViewBusiness/ViewBusiness';
 import { BusinessForm } from '../BusinessForm/BusinessForm';
-import { Table, Thead, Tbody, Tr, Td, Checkbox, Button, Th } from '@chakra-ui/react';
+import { Table, Thead, Tbody, Tr, Td, Checkbox, Button, Th, Input, Card, Badge } from '@chakra-ui/react';
+import { FaPlus } from 'react-icons/fa6';
+import DownloadCSV from '../../utils/downloadCSV';
+import { ArrowDownIcon } from '@chakra-ui/icons';
+import { BiEnvelope } from 'react-icons/bi';
+import { useNavigate } from 'react-router-dom';
 
 const BusinessTablePending = businessData => {
   const { backend } = useBackend();
   const [data, setData] = useState([]);
   const [selectedBusinessId, setBusinessId] = useState(null);
   const [pendingData, setPendingData] = useState([]);
+  const navigate = useNavigate();
+  const [sendRemindersClicked, setSendRemindersClicked] = useState(false);
+  console.log(sendRemindersClicked);
+
   //   const [selectedApplication, setSelectedApplication] = useState(new Set());
   const TABLE_HEADERS = [
-    'id',
-    'Type',
-    'Name',
-    'Street',
-    'Zipcode',
-    'State',
-    'Qb Vendor Name',
-    'Qb City State Zip',
-    'Primary Phone',
-    'Backup Phone',
-    'Primary Email',
-    'Comments',
-    'Fax phone',
-    'Contact name',
-    'Website',
-    'Business hours',
-    'Find out',
-    'Onboarding status',
-    'Join date',
-    'Input type status',
-    'Vendor type',
-    'Status',
-    'Pets of the homeless discount',
-    'Updated by',
-    'Updated date time',
-    'Sync to qb',
-    'Veterinary',
-    'Ressoure',
-    'Food',
-    'Donation',
-    'Family shelter',
-    'Wellness',
-    'Spray neuter',
-    'Financial',
-    'Re home',
-    'Er boarding',
-    'Senior',
-    'Cancer',
-    'Dog',
-    'Cat',
-    'Fph phone',
-    'Contact phone',
-    'Web notes',
-    'Internal notes',
-    'Published',
-    'Shelter',
-    'Domestic Violence',
-    'Web Date Init',
-    'Ent Qb',
-    'Service Request',
-    'Inactive',
-    'Final Check',
-    'Created By',
-    'Created Date',
-    'City',
+    'Business Name',
+    'Location',
+    'Email',
+    'Form Status',
+    'Last Submitted',
     'Application',
   ];
   const tableHeaders = TABLE_HEADERS.map(tableHeader => <th key={tableHeader}>{tableHeader}</th>);
   const [selectedBusinessIds, setSelectedBusinessIds] = useState(new Set());
+
+  function formatDateDFH(dateTimeString) {
+    const date = new Date(dateTimeString);
+    const options = {
+      year: 'numeric',
+      month: 'short',
+      day: '2-digit',
+    };
+    return date.toLocaleDateString('en-US', options);
+  }
+
+  // Changes style based on status of application
+  function getStatusBadge(status) {
+    switch (status) {
+      case 'Pending':
+        return (
+          <Badge colorScheme="gray" px="2">
+            <box-icon type="regular" name="time-five" size="xs" mr="10px"></box-icon>
+            Pending
+          </Badge>
+        );
+      case 'Active':
+        return (
+          <Badge colorScheme="green" px="2">
+            <box-icon type="regular" name="check" size="xs" color="green"></box-icon>
+            Submitted
+          </Badge>
+        );
+      default:
+        return (
+          <Badge colorScheme="red" px="2">
+            <box-icon type="regular" name="x" size="xs" mr="5px" color="red"></box-icon>
+            Not Submitted
+          </Badge>
+        );
+    }
+  }
+
+  // Handles click for when Add Business button is clicked on AdminDashboard
+  const handleClick = () => {
+    navigate('/AddBusiness');
+  };
 
   const handleCheckboxChange = businessId => {
     setSelectedBusinessIds(prevSelectedIds => {
@@ -100,7 +101,17 @@ const BusinessTablePending = businessData => {
     });
   };
 
+  const handleDownloadCSV = () => {
+    const ids = Array.from(selectedBusinessIds);
+    var headers = [];
+    for (var i = 0; i < TABLE_HEADERS.length; i++) {
+      headers.push(TABLE_HEADERS[i].toLowerCase().replace(' ', '_'));
+    }
+    DownloadCSV(headers, ids, 'business');
+  };
+
   const handleSendReminders = async () => {
+    setSendRemindersClicked(true);
     for (const businessId of selectedBusinessIds) {
       try {
         const requestData = {
@@ -157,46 +168,88 @@ const BusinessTablePending = businessData => {
     <h1>Loading ...</h1>
   ) : (
     <div>
-      <Button colorScheme="blue" onClick={handleSendReminders}>
-        Send Reminders
-      </Button>
-      <Table variant="striped" colorScheme="teal">
-        <Thead>
-          <Tr>
-            {/* Add an empty header for the checkbox column */}
-            <Th key="checkbox">
-              <Checkbox
-                isChecked={selectedBusinessIds.size > 0 && selectedBusinessIds.size === data.length}
-                onChange={handleSelectAllChange}
-              ></Checkbox>
-            </Th>
-            {tableHeaders.map((header, index) => (
-              <Th key={index}>{header}</Th>
-            ))}
-          </Tr>
-        </Thead>
-        <Tbody>
-          {data.map((item, index) => (
-            <Tr key={index}>
-              {/* Add a Checkbox for each row in the checkbox column */}
-              <Td key="checkbox">
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+        <div style={{ margin: '0 20px' }}>
+          <Input
+            width="222px"
+            height="40px"
+            size="sm"
+            placeholder="Search"
+            backgroundColor="white"
+            marginRight={4}
+          />
+          <Button
+            width="161px"
+            height="40px"
+            colorScheme="teal"
+            variant="outline"
+            leftIcon={<FaPlus />}
+            onClick={handleClick}
+          >
+            Add Business
+          </Button>
+        </div>
+        <div style={{ margin: '0 20px' }}>
+          <Button
+            colorScheme="teal"
+            onClick={handleSendReminders}
+            marginRight={4}
+            fontSize={'0.9rem'}
+          >
+            <BiEnvelope style={{ marginRight: '5px' }} />
+            Send Reminder
+          </Button>
+          <Button
+            colorScheme="teal"
+            onClick={handleDownloadCSV}
+            sx={{ width: '172px' }}
+            fontSize={'0.9rem'}
+          >
+            <ArrowDownIcon sx={{ marginRight: '5px' }} />
+            Download CSV
+          </Button>
+        </div>
+      </div>
+      <Card ml="20px" mr="20px" mb="20px" mt="20px">
+        <Table variant="simple">
+          <Thead>
+            <Tr>
+              {/* Add an empty header for the checkbox column */}
+              <Th key="checkbox">
                 <Checkbox
-                  isChecked={selectedBusinessIds.has(item.id)}
-                  onChange={() => handleCheckboxChange(item.id)} // .append, .add
+                  isChecked={selectedBusinessIds.size > 0 && selectedBusinessIds.size === data.length}
+                  onChange={handleSelectAllChange}
                 ></Checkbox>
-              </Td>
-              {Object.keys(item).map(key => (
-                <Td key={key} onClick={() => handleRowClick(item.id)}>
-                  {typeof item[key] === 'boolean' ? (item[key] ? 'True' : 'False') : item[key]}
-                </Td>
+              </Th>
+              {tableHeaders.map((header, index) => (
+                <Th key={index} style={{ whiteSpace: 'nowrap' }}>{header}</Th>
               ))}
-              <Td key="Application">
-                <Button onClick={() => handleViewApplication(item.id)}>View Application</Button>
-              </Td>
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
+          </Thead>
+          <Tbody>
+            {data.map((item, index) => (
+              <Tr key={index} onClick={() => handleRowClick(item.id)}>
+                {/* Add a Checkbox for each row in the checkbox column */}
+                <Td key="checkbox">
+                  <Checkbox
+                    isChecked={selectedBusinessIds.has(item.id)}
+                    onChange={() => handleCheckboxChange(item.id)} // .append, .add
+                  ></Checkbox>
+                </Td>
+                <Td>{item.name}</Td>
+                <Td>{item.city}, {item.state}</Td>
+                <Td>{item.primary_email}</Td>
+                <Td>{getStatusBadge(item.status)}</Td>
+                {/* Not correct date to use? */}
+                <Td>{formatDateDFH(item.join_date)}</Td>
+                <Td key="Application">
+                  <Button size="xs" onClick={() => handleViewApplication(item.id)}>View Application</Button>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </Card>
     </div>
   );
 };

@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBackend } from '../../contexts/BackendContext';
+import { BiEnvelope } from 'react-icons/bi';
+import { ArrowDownIcon } from '@chakra-ui/icons';
+import DownloadCSV from '../../utils/downloadCSV';
+import { FaPlus } from 'react-icons/fa6';
+import 'boxicons'
 import { 
   Table, 
   Thead, 
@@ -19,9 +24,11 @@ import {
   ModalCloseButton, 
   Heading,
   Text,
-  useDisclosure} from '@chakra-ui/react';
-import { ArrowDownIcon } from '@chakra-ui/icons';
-import DownloadCSV from '../../utils/downloadCSV';
+  useDisclosure,
+  Input,
+  Card,
+  Badge
+} from '@chakra-ui/react';
 import DropZone from '../BusinessTable/DropZone';
 
 
@@ -31,67 +38,56 @@ const BusinessTable = businessData => {
   const { backend } = useBackend();
   const [data, setData] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  // const [selectedBusinessId, setBusinessId] = useState(null);
 
   const TABLE_HEADERS = [
-    'id',
-    'Type',
-    'Name',
-    'Street',
-    'Zipcode',
-    'State',
-    'Qb Vendor Name',
-    'Qb City State Zip',
-    'Primary Phone',
-    'Backup Phone',
-    'Primary Email',
-    'Comments',
-    'Fax phone',
-    'Contact name',
-    'Website',
-    'Business hours',
-    'Find out',
-    'Onboarding status',
-    'Join date',
-    'Input type status',
-    'Vendor type',
-    'Status',
-    'Pets of the homeless discount',
-    'Updated by',
-    'Updated date time',
-    'Sync to qb',
-    'Veterinary',
-    'Ressoure',
-    'Food',
-    'Donation',
-    'Family shelter',
-    'Wellness',
-    'Spray neuter',
-    'Financial',
-    'Re home',
-    'Er boarding',
-    'Senior',
-    'Cancer',
-    'Dog',
-    'Cat',
-    'Fph phone',
-    'Contact phone',
-    'Web notes',
-    'Internal notes',
-    'Published',
-    'Shelter',
-    'Domestic Violence',
-    'Web Date Init',
-    'Ent Qb',
-    'Service Request',
-    'Inactive',
-    'Final Check',
-    'Created By',
-    'Created Date',
-    'City',
+    'Business Name',
+    'Location',
+    'Email',
+    'Form Status',
+    'Last Submitted',
   ];
   const tableHeaders = TABLE_HEADERS.map(tableHeader => <th key={tableHeader}>{tableHeader}</th>);
   const [selectedBusinessIds, setSelectedBusinessIds] = useState(new Set());
+
+  function formatDateDFH(dateTimeString) {
+    const date = new Date(dateTimeString);
+    const options = {
+      year: 'numeric',
+      month: 'short',
+      day: '2-digit',
+    };
+    return date.toLocaleDateString('en-US', options);
+  }
+
+  function getStatusBadge(status) {
+    switch (status) {
+      case 'Pending':
+        return (
+          <Badge colorScheme="yellow" px="2">
+            <box-icon type="regular" name="time-five" size="xs" mr="10px"></box-icon>
+            Pending
+          </Badge>
+        );
+      case 'Active':
+        return (
+          <Badge colorScheme="green" px="2">
+            <box-icon type="regular" name="check" size="xs" color="green"></box-icon>
+            Submitted
+          </Badge>
+        );
+      default:
+        return (
+          <Badge colorScheme="gray" px="2">
+            <box-icon type="regular" name="x" size="xs" mr="5px"></box-icon>
+            Not Submitted
+          </Badge>
+        );
+    }
+  }
+
+  const handleClick = () => {
+    navigate('/AddBusiness');
+  };
 
   const handleCheckboxChange = businessId => {
     setSelectedBusinessIds(prevSelectedIds => {
@@ -165,10 +161,54 @@ const BusinessTable = businessData => {
   const handleRowClick = async id => {
     navigate(`/ViewBusiness/${id}`);
   };
+
   return businessData['businessData'].length == 0 ? (
     <h1>Loading ...</h1>
   ) : (
     <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+        <div style={{ margin: '0 20px' }}>
+          <Input
+            width="222px"
+            height="40px"
+            size="sm"
+            placeholder="Search"
+            backgroundColor="white"
+            marginRight={4}
+          />
+          <Button
+            width="161px"
+            height="40px"
+            colorScheme="teal"
+            variant="outline"
+            leftIcon={<FaPlus />}
+            onClick={handleClick}
+          >
+            Add Business
+          </Button>
+        </div>
+        <div style={{ margin: '0 20px' }}>
+          <Button
+            colorScheme="teal"
+            onClick={handleSendReminders}
+            marginRight={4}
+            fontSize={'0.9rem'}
+          >
+            <BiEnvelope style={{ marginRight: '5px' }} />
+            Send Reminder
+          </Button>
+          <Button
+            colorScheme="teal"
+            onClick={handleDownloadCSV}
+            sx={{ width: '172px' }}
+            fontSize={'0.9rem'}
+          >
+            <ArrowDownIcon sx={{ marginRight: '5px' }} />
+            Download CSV
+          </Button>
+        </div>
+      </div>
+      <Card ml="20px" mr="20px" mb="20px" mt="20px">
       <Button onClick={onOpen}>Upload CSV</Button>
 
         <Modal isOpen={isOpen} onClose={onClose}>
@@ -194,10 +234,9 @@ const BusinessTable = businessData => {
         <ArrowDownIcon sx={{ marginRight: '5px' }} />
         Download CSV
       </Button>
-      <Table variant="striped" colorScheme="teal">
+      <Table variant="simple" colorScheme="facebook">
         <Thead>
           <Tr>
-            {/* Add an empty header for the checkbox column */}
             <Th key="checkbox">
               <Checkbox
                 isChecked={selectedBusinessIds.size > 0 && selectedBusinessIds.size === data.length}
@@ -209,25 +248,25 @@ const BusinessTable = businessData => {
             ))}
           </Tr>
         </Thead>
-        <Tbody>
+          <Tbody>
           {data.map((item, index) => (
-            <Tr key={index}>
-              {/* Add a Checkbox for each row in the checkbox column */}
-              <Td key="checkbox">
-                <Checkbox
-                  isChecked={selectedBusinessIds.has(item.id)}
-                  onChange={() => handleCheckboxChange(item.id)} // .append, .add
-                ></Checkbox>
-              </Td>
-              {Object.keys(item).map(key => (
-                <Td key={key} onClick={() => handleRowClick(item.id)}>
-                  {typeof item[key] === 'boolean' ? (item[key] ? 'True' : 'False') : item[key]}
+              <Tr key={index} onClick={() => handleRowClick(item.id)}>
+                <Td key="checkbox">
+                  <Checkbox
+                    isChecked={selectedBusinessIds.has(item.id)}
+                    onChange={() => handleCheckboxChange(item.id)}
+                  ></Checkbox>
                 </Td>
-              ))}
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
+                <Td>{item.name}</Td>
+                <Td>{item.city}, {item.state}</Td>
+                <Td>{item.primary_email}</Td>
+                <Td>{getStatusBadge(item.status)}</Td>
+                <Td>{formatDateDFH(item.join_date)}</Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </Card>
     </div>
   );
 };
