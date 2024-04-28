@@ -11,14 +11,16 @@ import ContactUs from './components/ContactUsForm/ContactUs';
 import DonationTrackingTable from './components/DonationTrackingTable/DonationTrackingTable.jsx';
 import styles from './App.module.css';
 import DonationItemsTable from './components/DonationItemsTable/DonationItemsTable.jsx';
-import Signup from './components/Authentication/Signup.jsx';
+import BusinessSetupPageMaster from './components/SetUp/BusinessSetupPageMaster.jsx';
 import Login from './components/Authentication/Login.jsx';
 import BusinessFormMaster from './components/OnBoarding/BusinessFormMaster.jsx';
 import ForgotPassword from './components/Authentication/ForgotPassword.jsx';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './utils/ProtectedRoute.jsx';
 import ViewBusiness from './components/ViewBusiness/ViewBusiness.jsx';
-import BusinessForm from './components/BusinessForm/BusinessForm.jsx';
+import { AddBusinessForm, BusinessForm } from './components/BusinessForm/BusinessForm.jsx';
+import Congrats from './components/DonationForm/Congrats.jsx';
+import ViewRequest from './components/ViewRequest/ViewRequest.jsx';
 import AdminSettingsMaster from './components/AdminSettings/AdminSettingsMaster.jsx';
 
 const App = () => {
@@ -29,12 +31,21 @@ const App = () => {
           <Sidebar isAdmin={true} />
           <div className={styles.mainContent}>
             <Routes>
-              <Route exact path="/SignupAdmin" element={<Signup isAdmin={true} />} />
-              <Route exact path="/SignupBusiness" element={<Signup isAdmin={false} />} />
+              <Route
+                exact
+                path="/SignupAdmin"
+                element={<BusinessSetupPageMaster isAdmin={true} />}
+              />
+              <Route
+                exact
+                path="/SignupBusiness"
+                element={<BusinessSetupPageMaster isAdmin={false} />}
+              />
               <Route exact path="/LoginAdmin" element={<Login isAdmin={true} />} />
               <Route exact path="/LoginBusiness" element={<Login isAdmin={false} />} />
               <Route exact path="/ForgotPassword" element={<ForgotPassword />} />
               <Route exact path="/ContactUs" element={<ProtectedRoute Component={ContactUs} />} />
+              <Route exact path="/Congrats" element={<ProtectedRoute Component={Congrats} />} />
               <Route
                 exact
                 path="/AdminDashboard"
@@ -100,8 +111,13 @@ const App = () => {
               />
               <Route
                 exact
-                path="/Settings"
-                element={<ProtectedRoute Component={AdminSettingsMaster} />}
+                path="/ViewRequest/:id"
+                element={<ProtectedRoute Component={ViewRequest} />}
+              />
+              <Route
+                exact
+                path="/AddBusiness"
+                element={<ProtectedRoute Component={AddBusinessForm} />}
               />
             </Routes>
           </div>

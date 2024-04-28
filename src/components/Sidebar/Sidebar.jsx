@@ -21,7 +21,7 @@ function Sidebar({ isAdmin }) {
     { name: 'Home', path: '/BusinessDashboard', icon: 'home-smile' },
     { name: 'Donation History', path: '/BusinessDonationTrackingForm', icon: 'heart-circle' },
     { name: 'Supply Request', path: '/ContactUs', icon: 'package' },
-    { name: 'Settings', path: '/EditContactInformation', icon: 'cog' },
+    { name: 'Account', path: '/EditContactInformation', icon: 'user' },
   ];
 
   const adminList = [
@@ -51,69 +51,100 @@ function Sidebar({ isAdmin }) {
   return (
     <ChakraProvider>
       <>
-        <Flex width="40vh">
-          <VStack>
-            <HStack marginLeft="1vh" marginTop="1vh">
-              <Image
-                borderRadius="full"
-                boxSize="7.5vh"
-                src={fphLogo}
-                alt="FPH Logo"
-                style={{ position: 'relative', top: '0', left: '0' }}
+        <Flex width="35vh">
+          <VStack marginLeft="-2vh" justifyContent={'space-between'}>
+            <Flex flexDirection="column">
+              <HStack marginTop="3vh">
+                <Image
+                  marginLeft="3vh"
+                  marginRight="2vh"
+                  borderRadius="full"
+                  boxSize="6.5vh"
+                  src={fphLogo}
+                  alt="FPH Logo"
+                />
+                <Text color="teal" width="13vh" fontWeight="bold">
+                  Feeding Pets of the Homeless
+                </Text>
+              </HStack>
+              <Divider
+                borderWidth="1.5px"
+                width="30vh"
+                marginTop="2vh"
+                marginLeft="3vh"
+                marginBottom="1vh"
+                borderColor={'#CAC6BE'}
               />
-              <Text color="teal" fontWeight="bold">
-                Feeding Pets of the Homeless
-              </Text>
-            </HStack>
-            <Divider marginLeft="1vh" marginTop="1vh" marginBottom="1vh" borderColor={'#CAC6BE'} />
 
-            {navList.map(item => (
-              <Link to={item.path} key={item.name} style={{ width: '100%', display: 'block' }}>
-                <Button width="full" justifyContent="flex-start" variant="ghost">
-                  {/* Make sure box-icon is a valid component */}
+              {navList.map(item => (
+                <Link to={item.path} key={item.name} style={{ width: '100%', display: 'block' }}>
+                  <Button
+                    marginLeft="2vh"
+                    marginTop="0.8vh"
+                    width="full"
+                    justifyContent="flex-start"
+                    variant="ghost"
+                  >
+                    {/* Make sure box-icon is a valid component */}
+                    <box-icon
+                      type="regular"
+                      name={item.icon}
+                      style={{ marginRight: '1vh' }}
+                    ></box-icon>
+                    {item.name}
+                  </Button>
+                </Link>
+              ))}
+            </Flex>
+            <Flex width="35vh" flexDirection="column">
+              <VStack>
+                {!isAdmin && (
+                  <Link to={'/ContactUs'} style={{ width: '100%', display: 'block' }}>
+                    <Button
+                      width="full"
+                      marginLeft="3vh"
+                      justifyContent="flex-start"
+                      variant="ghost"
+                      as="footer"
+                    >
+                      <box-icon
+                        type="regular"
+                        name="help-circle"
+                        style={{ marginRight: '0.5rem' }}
+                      ></box-icon>
+                      Contact Us
+                    </Button>
+                  </Link>
+                )}
+
+                <HStack
+                  width="30vh"
+                  as="footer"
+                  py="4"
+                  textAlign="left"
+                  marginLeft="3vh"
+                  borderTop="2px solid"
+                  borderColor={'#CAC6BE'}
+                  bottom="0"
+                  left="0"
+                  justifyContent={'space-between'}
+                >
+                  <Box>
+                    <Text fontSize="0.8rem">Laura Brown</Text>
+                    <Text fcolor={'#CAC6BE'} fontSize="0.8rem">
+                      laurabrown@fph.com
+                    </Text>
+                  </Box>
                   <box-icon
                     type="regular"
-                    name={item.icon}
-                    style={{ marginRight: '1vh' }}
+                    color={'#857A6D'}
+                    style={{ cursor: 'pointer' }}
+                    name="log-out"
+                    onClick={authLogout}
                   ></box-icon>
-                  {item.name}
-                </Button>
-              </Link>
-            ))}
-
-            {!isAdmin && (
-              <Link to={'/ContactUs'} style={{ width: '100%', display: 'block' }}>
-                <Button width="full" justifyContent="flex-start" variant="ghost">
-                  <box-icon type="regular" name="help-circle"></box-icon>
-                  Contact Us
-                </Button>
-              </Link>
-            )}
-
-            <Box
-              as="footer"
-              py="4"
-              textAlign="left"
-              marginLeft="3"
-              borderTop="1px solid"
-              borderColor={'#CAC6BE'}
-              position="fixed"
-              bottom="0"
-              left="0"
-              width="20%"
-            >
-              <Text fontSize="0.8rem">Laura Brown</Text>
-              <Text fcolor={'#CAC6BE'} fontSize="0.8rem">
-                laurabrown@fph.com
-              </Text>
-              <box-icon
-                type="regular"
-                color={'#857A6D'}
-                style={{ marginLeft: '30vh', cursor: 'pointer' }}
-                name="log-out"
-                onClick={authLogout}
-              ></box-icon>
-            </Box>
+                </HStack>
+              </VStack>
+            </Flex>
           </VStack>
         </Flex>
       </>

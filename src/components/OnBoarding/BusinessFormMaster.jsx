@@ -99,11 +99,21 @@ const BusinessFormMaster = ({ setFormOpen }) => {
       createdDate: DUMMY_DATE,
     };
 
+    const notification_data = {
+      business_id: 0,
+      message: `New Donation Site Application from ${formData['businessName']}`,
+      timestamp: new Date().toLocaleString('en-US', {
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      }),
+      type: 'New Application',
+    };
+
     try {
       if (formData['termsAndConditionsAccepted'] === true) {
         const response = await backend.post('/business', businessData);
         console.log(response.data[0]);
         backend.post('/businessUser', { id: response.data[0].id, uid: currentUser.uid });
+        await backend.post('/notification', notification_data);
         nextStep();
       }
     } catch (error) {
