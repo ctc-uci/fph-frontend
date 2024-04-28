@@ -111,8 +111,8 @@ const BusinessFormMaster = ({ setFormOpen }) => {
     try {
       if (formData['termsAndConditionsAccepted'] === true) {
         const response = await backend.post('/business', businessData);
-        console.log(response);
-        await backend.post('businessUser', { id: response.data[0].id, uid: currentUser.uid });
+        console.log(response.data[0]);
+        backend.post('/businessUser', { id: response.data[0].id, uid: currentUser.uid });
         await backend.post('/notification', notification_data);
         nextStep();
       }
