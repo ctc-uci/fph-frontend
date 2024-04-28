@@ -1,18 +1,43 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBackend } from '../../contexts/BackendContext';
-import { Table, Thead, Tbody, Tr, Td, Checkbox, Button, Th, Input, Card, Badge } from '@chakra-ui/react';
 import { BiEnvelope } from 'react-icons/bi';
 import { ArrowDownIcon } from '@chakra-ui/icons';
 import DownloadCSV from '../../utils/downloadCSV';
 import { FaPlus } from 'react-icons/fa6';
 import 'boxicons'
+import { 
+  Table, 
+  Thead, 
+  Tbody, 
+  Tr, 
+  Td, 
+  Checkbox, 
+  Button, 
+  Th, 
+  Modal, 
+  ModalOverlay, 
+  ModalContent, 
+  ModalHeader, 
+  ModalFooter, 
+  ModalBody, 
+  ModalCloseButton, 
+  Heading,
+  Text,
+  useDisclosure,
+  Input,
+  Card,
+  Badge
+} from '@chakra-ui/react';
+import DropZone from '../BusinessTable/DropZone';
+
+
 
 const BusinessTable = businessData => {
   const navigate = useNavigate();
   const { backend } = useBackend();
   const [data, setData] = useState([]);
-  // const [selectedBusinessId, setBusinessId] = useState(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const TABLE_HEADERS = [
     'Business Name',
@@ -60,7 +85,6 @@ const BusinessTable = businessData => {
     }
   }
 
-  // Handles click for when Add Business button is clicked on AdminDashboard
   const handleClick = () => {
     navigate('/AddBusiness');
   };
@@ -110,6 +134,9 @@ const BusinessTable = businessData => {
       }
     }
   };
+
+
+
 
   const handleDownloadCSV = () => {
     const ids = Array.from(selectedBusinessIds);
@@ -182,36 +209,58 @@ const BusinessTable = businessData => {
         </div>
       </div>
       <Card ml="20px" mr="20px" mb="20px" mt="20px">
-        <Table variant="simple" colorScheme="facebook">
-          <Thead>
-            <Tr>
-              {/* Add an empty header for the checkbox column */}
-              <Th key="checkbox">
-                <Checkbox
-                  isChecked={selectedBusinessIds.size > 0 && selectedBusinessIds.size === data.length}
-                  onChange={handleSelectAllChange}
-                ></Checkbox>
-              </Th>
-              {tableHeaders.map((header, index) => (
-                <Th key={index} style={{ whiteSpace: 'nowrap' }}>{header}</Th>
-              ))}
-            </Tr>
-          </Thead>
+      <Button onClick={onOpen}>Upload CSV</Button>
+
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader marginBottom={0}>
+              <Heading size={'md'}>Upload existing data</Heading>
+            </ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Text fontFamily={'Inter'}>Transfer all business information into your new portal.</Text>
+              <DropZone onClose={onClose} />
+            </ModalBody>
+            <ModalFooter>
+              
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      <Button colorScheme="blue" onClick={handleSendReminders}>
+        Send Reminders
+      </Button>
+      <Button colorScheme="teal" onClick={handleDownloadCSV} sx={{ width: '172px' }}>
+        <ArrowDownIcon sx={{ marginRight: '5px' }} />
+        Download CSV
+      </Button>
+      <Table variant="simple" colorScheme="facebook">
+        <Thead>
+          <Tr>
+            <Th key="checkbox">
+              <Checkbox
+                isChecked={selectedBusinessIds.size > 0 && selectedBusinessIds.size === data.length}
+                onChange={handleSelectAllChange}
+              ></Checkbox>
+            </Th>
+            {tableHeaders.map((header, index) => (
+              <Th key={index}>{header}</Th>
+            ))}
+          </Tr>
+        </Thead>
           <Tbody>
           {data.map((item, index) => (
               <Tr key={index} onClick={() => handleRowClick(item.id)}>
-                {/* Add a Checkbox for each row in the checkbox column */}
                 <Td key="checkbox">
                   <Checkbox
                     isChecked={selectedBusinessIds.has(item.id)}
-                    onChange={() => handleCheckboxChange(item.id)} // .append, .add
+                    onChange={() => handleCheckboxChange(item.id)}
                   ></Checkbox>
                 </Td>
                 <Td>{item.name}</Td>
                 <Td>{item.city}, {item.state}</Td>
                 <Td>{item.primary_email}</Td>
                 <Td>{getStatusBadge(item.status)}</Td>
-                {/* Not correct date to use? */}
                 <Td>{formatDateDFH(item.join_date)}</Td>
               </Tr>
             ))}

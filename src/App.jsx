@@ -21,13 +21,14 @@ import ViewBusiness from './components/ViewBusiness/ViewBusiness.jsx';
 import { AddBusinessForm, BusinessForm } from './components/BusinessForm/BusinessForm.jsx';
 import Congrats from './components/DonationForm/Congrats.jsx';
 import ViewRequest from './components/ViewRequest/ViewRequest.jsx';
+import AdminSettingsMaster from './components/AdminSettings/AdminSettingsMaster.jsx';
 
 const App = () => {
   return (
     <BackendProvider>
       <AuthProvider>
         <div className={styles.appLayout}>
-          <Sidebar isAdmin={false} />
+          <Sidebar isAdmin={true} />
           <div className={styles.mainContent}>
             <Routes>
               <Route
@@ -52,6 +53,7 @@ const App = () => {
               />
               <Route exact path="/AdminManageForms" />
               <Route exact path="/AdminTeamManagement" />
+              <Route exace path="/AdminSettings" Component={AdminSettingsMaster} />
               <Route
                 exact
                 path="/EditContactInformation"

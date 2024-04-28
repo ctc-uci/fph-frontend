@@ -45,7 +45,7 @@ import ViewDonationHistory from '../BusinessDonationHistory/ViewDonationHistory/
 // However, none of the current code anywhere does this, and the type for all notifications is null by default. Either that has to be fixed
 // or this will need to be changed so that it doesn't rely on a notification having a type.
 const BusinessDashboard = () => {
-  const [userName, setUserName] = useState('jit');
+  const [userName, setUserName] = useState('');
   const { backend } = useBackend();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
