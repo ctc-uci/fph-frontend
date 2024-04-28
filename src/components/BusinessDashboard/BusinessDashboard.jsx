@@ -1,6 +1,6 @@
 import './BusinessDashboard.module.css';
 import { useBackend } from '../../contexts/BackendContext';
-import { useAuth } from '../../contexts/AuthContext'
+import { useAuth } from '../../contexts/AuthContext';
 import { useEffect, useState } from 'react';
 import {
   Table,
@@ -115,7 +115,7 @@ const BusinessDashboard = () => {
         // so that we can display the dashboard for various businesses
         // ***********************************************************************
         const businessIdResponse = await backend.get(`/businessUser/${currentUser.uid}`);
-        const businessId = businessIdResponse.data[0].id
+        const businessId = businessIdResponse.data[0].id;
 
         const donationResponse = await backend.get(`/donation/business/totals/${businessId}`);
         setDonationData(donationResponse.data[0]);

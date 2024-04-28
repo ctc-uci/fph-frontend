@@ -26,7 +26,7 @@ const App = () => {
     <BackendProvider>
       <AuthProvider>
         <div className={styles.appLayout}>
-          <Sidebar isAdmin={false} />
+          <Sidebar isAdmin={true} />
           <div className={styles.mainContent}>
             <Routes>
               <Route exact path="/SignupAdmin" element={<Signup isAdmin={true} />} />
@@ -42,6 +42,7 @@ const App = () => {
               />
               <Route exact path="/AdminManageForms" />
               <Route exact path="/AdminTeamManagement" />
+              <Route exace path="/AdminSettings" Component={AdminSettingsMaster} />
               <Route
                 exact
                 path="/EditContactInformation"

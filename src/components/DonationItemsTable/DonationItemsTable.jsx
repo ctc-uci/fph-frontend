@@ -3,6 +3,7 @@ import { useBackend } from '../../contexts/BackendContext';
 import DonationsModal from './DonationsModal.jsx';
 import DonationsDeleteConfirmationModal from './DonationsDeleteConfirmationModal.jsx';
 import {
+  TableContainer,
   Table,
   Thead,
   Tbody,
@@ -30,16 +31,12 @@ const DonationItemsTable = () => {
       <div className={classes.ditTitleContainer}>
         <Text>Donation Items</Text>
       </div>
-      <Tabs>
-        <div className={classes.tabs}>
-          <Tabs isFitted="true">
-            <TabList>
-              <Tab>All</Tab>
-              <Tab>Food</Tab>
-              <Tab>Misc.</Tab>
-            </TabList>
-          </Tabs>
-        </div>
+      <Tabs marginBottom={'3%'} colorScheme="teal">
+        <TabList display="inline-flex">
+          <Tab>All</Tab>
+          <Tab>Food</Tab>
+          <Tab>Misc.</Tab>
+        </TabList>
         <TabPanels>
           <TabPanel>
             <DonationItems category="all" />
@@ -103,7 +100,7 @@ const DonationItems = ({ category }) => {
 
   // const  deleteModalOnOpen();
   //   await backend.delete(`/value/${item['item_id']}`);
-  //   //setDeleteModalVisible(true);
+  //   setDeleteModalVisible(true);
   //   loadInfo();
   // };
 
@@ -117,7 +114,7 @@ const DonationItems = ({ category }) => {
       />
       <DonationsModal
         isOpen={donationsModalIsOpen}
-        onClose={donationsModalOnClose}
+        onClose={() => {donationsModalOnClose(); setSelectedItem(null);}}
         data={selectedItem}
         setCurrentPageNum={setCurrentPageNum}
         loadInfo={loadInfo}
@@ -128,45 +125,47 @@ const DonationItems = ({ category }) => {
           <AddIcon />
         </Button>
       </div>
-      <Table variant="striped" className={classes.table} colorScheme="whiteAlpha">
-        <Thead>
-          <Tr>
-            {TABLE_HEADERS.map((header, index) => (
-              <Th key={index}>{header}</Th>
-            ))}
-          </Tr>
-        </Thead>
-        <Tbody>
-          {data.map((item, index) => (
-            <Tr key={index} className={classes.tableRows}>
-              {Object.keys(item).map(key => (
-                <Td key={key}>
-                  {typeof item[key] === 'boolean' ? (item[key] ? 'True' : 'False') : item[key]}
-                </Td>
+      <TableContainer>
+        <Table className={classes.table} colorScheme="whiteAlpha">
+          <Thead>
+            <Tr>
+              {TABLE_HEADERS.map((header, index) => (
+                <Th key={index}>{header}</Th>
               ))}
-              <Td>
-                <Button
-                  sx={{ backgroundColor: 'transparent' }}
-                  onClick={() => {
-                    donationsModalOnOpen();
-                    setSelectedItem(item);
-                  }}
-                >
-                  <EditIcon />
-                </Button>
-                <Button
-                  sx={{ backgroundColor: 'transparent' }}
-                  onClick={() => {
-                    openDeleteModal(item);
-                  }}
-                >
-                  <DeleteIcon color="red" />
-                </Button>
-              </Td>
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
+          </Thead>
+          <Tbody>
+            {data.map((item, index) => (
+              <Tr key={index} className={classes.tableRows}>
+                {Object.keys(item).map(key => (
+                  <Td key={key}>
+                    {typeof item[key] === 'boolean' ? (item[key] ? 'True' : 'False') : item[key]}
+                  </Td>
+                ))}
+                <Td>
+                  <Button
+                    sx={{ backgroundColor: 'transparent' }}
+                    onClick={() => {
+                      donationsModalOnOpen();
+                      setSelectedItem(item);
+                    }}
+                  >
+                    <EditIcon />
+                  </Button>
+                  <Button
+                    sx={{ backgroundColor: 'transparent' }}
+                    onClick={() => {
+                      openDeleteModal(item);
+                    }}
+                  >
+                    <DeleteIcon color="red" />
+                  </Button>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
       <div className={classes.resultNavigation}>
         <Box>
           {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentItemNum)} of{' '}
