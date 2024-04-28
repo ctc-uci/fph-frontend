@@ -90,22 +90,22 @@ const AdminFilterBusinesses = () => {
         <BusinessTablePending businessData={businessDictionary} />
       )}
       <div style={{ width: '95%', display: 'flex', justifyContent: 'end' }}>
-          <Box>
-            {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentBusinessNum)}{' '}
-            of {currentBusinessNum}
-          </Box>
-            <IconButton
-              aria-label="Back button"
-              isDisabled={currentPageNum <= 1}
-              icon={<ChevronLeftIcon />}
-              onClick={() => setCurrentPageNum(currentPageNum - 1)}
-            />
-            <IconButton
-              aria-label="Next button"
-              isDisabled={currentPageNum >= pageLimit}
-              icon={<ChevronRightIcon />}
-              onClick={() => setCurrentPageNum(currentPageNum + 1)}
-            />
+        <Box>
+          {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentBusinessNum)} of{' '}
+          {currentBusinessNum}
+        </Box>
+        <IconButton
+          aria-label="Back button"
+          isDisabled={currentPageNum <= 1}
+          icon={<ChevronLeftIcon />}
+          onClick={() => setCurrentPageNum(currentPageNum - 1)}
+        />
+        <IconButton
+          aria-label="Next button"
+          isDisabled={currentPageNum >= pageLimit}
+          icon={<ChevronRightIcon />}
+          onClick={() => setCurrentPageNum(currentPageNum + 1)}
+        />
       </div>
     </div>
   );
