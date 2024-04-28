@@ -28,7 +28,7 @@ function Sidebar({ isAdmin }) {
     { name: 'Home', path: '/AdminDashboard', icon: 'home-smile' },
     { name: 'Donation Tracking', path: '/DonationTrackingTable', icon: 'building-house' },
     { name: 'Donation Items', path: '/DonationItemsTable', icon: 'heart-circle' },
-    { name: 'Account', path: '/EditContactInformation', icon: 'user' },
+    { name: 'Settings', path: '/AdminSettings', icon: 'cog' },
   ];
 
   const navigate = useNavigate();

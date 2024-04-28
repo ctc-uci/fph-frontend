@@ -6,7 +6,7 @@ const ThirdForm = () => {
     <Flex height="90vh" justifyContent="center" alignItems="center" bg="#FFFFFF">
       <VStack spacing={8}>
         <Text color={'#359797'} fontSize="5xl" fontWeight="bold">
-          Let's Get You Set Up!
+          Let&apos;s Get You Set Up!
         </Text>
         <Box bg="#F9F8F7" p={4} borderRadius="2vh" maxWidth="110vh" width="full">
           <HStack spacing={4}>
