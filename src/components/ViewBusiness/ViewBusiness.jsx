@@ -27,9 +27,9 @@ import {
   Checkbox,
   Link as ChakraLink,
 } from '@chakra-ui/react';
-import { ChevronDownIcon, ArrowForwardIcon } from '@chakra-ui/icons';
+import { ChevronDownIcon, ArrowForwardIcon, ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import { useBackend } from '../../contexts/BackendContext';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate} from 'react-router-dom';
 import 'boxicons';
 
 function formatDateDFH(dateTimeString) {
@@ -52,9 +52,14 @@ const ViewBusiness = () => {
   const [donationFormsData, setDonationData] = useState([]);
   const [lastReminder, setLastReminder] = useState('');
   const [lastRequest, setLastRequest] = useState('');
-
+  const [currentPage, setCurrentPage] = useState(1);
   const { backend } = useBackend();
+  const itemsPerPage = 5;
 
+  const totalPages = Math.ceil(donationFormsData.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, donationFormsData.length);
+  const currentPageData = donationFormsData.slice(startIndex, endIndex);
   const fetchBusiness = async () => {
     try {
       const response = await backend.get(`/business/${id}`);
@@ -100,6 +105,10 @@ const ViewBusiness = () => {
     navigate(`/AdminDashboard`);
   };
 
+  const handleFormClick = (id) => {
+    navigate(`/ViewDonation/${id}`);
+  };
+
   // ViewBusiness.PropTypes = {
   //   id: PropTypes.number.isRequired,
   // }
@@ -117,6 +126,14 @@ const ViewBusiness = () => {
   if (isLoading) {
     return <div>Loading...</div>;
   }
+
+  const handlePrevClick = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  const handleNextClick = () => {
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+  };
 
   return (
     <ChakraProvider>
@@ -462,23 +479,46 @@ const ViewBusiness = () => {
                     </Box>
                   </Flex>
                 </Card>
-                <Card mt="6" ml="6" height="60%">
-                  <Flex direction="row" align="left" w="full">
+                <Card mt="6" ml="6" height="550px">
+                  <Flex direction="column" align="left" w="full">
                     <Box mt="6" ml="6" mb="4">
                       <Text fontSize="xs" mb="4" as="b" whiteSpace="normal">
                         DONATION FORM HISTORY
                       </Text>
-                      <CardBody>
+                      <CardBody pt="0" pl="0">
                         <div>
-                          {donationFormsData.map((item, index) => (
-                            <div key={index} style={{ marginBottom: '15px' }}>
-                              {/* Render the date property of each object */}
-                              <p style={{ fontSize: 'small' }}>{formatDateDFH(item.date)}</p>
-                              {index !== data.length - 1 && <Divider height="20px" width="150%" />}
-                            </div>
+                          <Divider height="10px" width="100%" />
+                          {currentPageData.map((item, index) => (
+                            <div key={index} style={{ marginBottom: '30px', marginTop: '30px' }} onClick={() => handleFormClick(item.donation_id)}>
+                            {/* Render the date property of each object */}
+                            <p style={{ fontSize: 'small' ,textDecoration: 'underline'  }}>{formatDateDFH(item.date)}</p>
+                            {index !== data.length - 1 && <Divider height="20px" width="100%" />}
+                          </div>
                           ))}
                         </div>
                       </CardBody>
+                      <Box justifyContent={'flex-end'}>
+                        <Flex alignContent={'center'}>
+                          <Box sx={{ marginRight: '15px', alignContent:'center', fontSize:'14px', bottom:'1px', position:'relative' }}>
+                            {currentPageData.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0}-
+                            {Math.min(currentPage * itemsPerPage, donationFormsData.length)} of {donationFormsData.length}
+                          </Box>
+                          <IconButton
+                            aria-label="Back button"
+                            disabled={currentPage <= 1}
+                            onClick={handlePrevClick}
+                            icon={<ChevronLeftIcon />}
+                            backgroundColor={'#00000000'}
+                          />
+                          <IconButton
+                            aria-label="Next button"
+                            disabled={currentPage >= totalPages}
+                            onClick={handleNextClick}
+                            icon={<ChevronRightIcon />}
+                            backgroundColor={'#00000000'}
+                          />
+                        </Flex>
+                      </Box>
                     </Box>
                   </Flex>
                 </Card>

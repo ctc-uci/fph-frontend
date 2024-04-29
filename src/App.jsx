@@ -19,13 +19,14 @@ import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './utils/ProtectedRoute.jsx';
 import ViewBusiness from './components/ViewBusiness/ViewBusiness.jsx';
 import BusinessForm from './components/BusinessForm/BusinessForm.jsx';
+import ViewDonation from './components/ViewDonation/ViewDonation.jsx';
 
 const App = () => {
   return (
     <BackendProvider>
       <AuthProvider>
         <div className={styles.appLayout}>
-          <Sidebar isAdmin={false} />
+          <Sidebar isAdmin={true} />
           <div className={styles.mainContent}>
             <Routes>
               <Route exact path="/" element={<div>Welcome to the App</div>} />
@@ -96,6 +97,11 @@ const App = () => {
                 exact
                 path="/EditBusiness/:id"
                 element={<ProtectedRoute Component={BusinessForm} />}
+              />
+              <Route
+                exact
+                path="/ViewDonation/:id"
+                element={<ProtectedRoute Component={ViewDonation} />}
               />
             </Routes>
           </div>
