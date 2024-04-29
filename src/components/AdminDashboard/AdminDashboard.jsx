@@ -196,19 +196,6 @@ const AdminDashboard = () => {
             </Flex>
           </Flex>
           <AdminFilterBusinesses />
-          {/* <div>
-            <Input width="222px" height="40px" size="sm" placeholder="Search" backgroundColor='white' />
-            <Button
-              width="161px"
-              height="40px"
-              colorScheme="teal"
-              variant="outline"
-              leftIcon={<FaPlus />}
-              onClick={handleClick}
-            >
-              Add Business
-            </Button>
-          </div> */}
         </>
       </div>
     </div>

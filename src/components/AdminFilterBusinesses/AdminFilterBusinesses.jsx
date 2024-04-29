@@ -1,6 +1,5 @@
 import './AdminFilterBusinesses.module.css';
 import BusinessTable from '../BusinessTable/BusinessTable.jsx';
-import BusinessTablePending from '../BusinessTablePending/BusinessTablePending.jsx';
 import { useBackend } from '../../contexts/BackendContext';
 import { useEffect, useState } from 'react';
 import { Box, IconButton, Tabs, TabList, Tab } from '@chakra-ui/react';
@@ -10,43 +9,31 @@ const AdminFilterBusinesses = () => {
   // Created the use states
   const { backend } = useBackend();
   //const [donationData, setDonationData] = useState([]);
-  const [businessDictionary, setBusinessDictionary] = useState([]);
   const [currentBusinessNum, setCurrentBusinessNum] = useState(0);
   const [currentPageNum, setCurrentPageNum] = useState(1);
-  const [currentTab, setCurrentTab] = useState('All'); //change to all once all page is implemented
+  const [currentTab, setCurrentTab] = useState('All');
   const [pageLimit, setPageLimit] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    const getData = async () => {
-      try {
-        loadInfo(currentTab);
-        console.log(businessDictionary);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-    getData();
-  }, [currentTab, currentPageNum]);
+    try {
+      loadInfo(currentTab, searchTerm);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  }, [currentTab, currentPageNum, searchTerm]);
 
   const changeTab = async tab => {
     setCurrentTab(tab);
     setCurrentPageNum(1);
-    //loadInfo(tab);
+    setSearchTerm('');
   };
 
-  const loadInfo = async tab => {
-    changePage();
-    const businessNumResponse = await backend.get(`/business/totalBusinesses/?tab=${tab}`);
+  const loadInfo = async ( tab, search ) => {
+    const businessNumResponse = await backend.get(`/business/totalBusinesses/?tab=${tab}&searchTerm=${searchTerm, search}`);
     setCurrentBusinessNum(businessNumResponse.data[0]['count']);
     console.log(businessNumResponse.data[0]['count']);
     setPageLimit(Math.ceil(businessNumResponse.data[0]['count'] / 10));
-  };
-
-  const changePage = async () => {
-    const businessResponse = await backend.get(
-      `/business/?businessLimit=10&pageNum=${currentPageNum}&tab=${currentTab}`,
-    );
-    setBusinessDictionary(businessResponse.data);
   };
 
   return (
@@ -62,14 +49,14 @@ const AdminFilterBusinesses = () => {
           </Tab>
           <Tab
             onClick={() => {
-              changeTab('Active');
+              changeTab('Submitted');
             }}
           >
             Submitted
           </Tab>
           <Tab
             onClick={() => {
-              changeTab('Pending');
+              changeTab('NotSubmitted');
             }}
           >
             Not Submitted
@@ -83,12 +70,7 @@ const AdminFilterBusinesses = () => {
           </Tab>
         </TabList>
       </Tabs>
-
-      {currentTab !== 'Pending' && currentTab !== 'All' ? (
-        <BusinessTable businessData={businessDictionary} />
-      ) : (
-        <BusinessTablePending businessData={businessDictionary} />
-      )}
+      <BusinessTable tab={currentTab} currentPageNum={currentPageNum} />
       <div style={{ width: '95%', display: 'flex', justifyContent: 'end' }}>
         <Box>
           {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentBusinessNum)} of{' '}

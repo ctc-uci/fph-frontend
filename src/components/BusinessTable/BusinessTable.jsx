@@ -30,14 +30,14 @@ import {
   Badge
 } from '@chakra-ui/react';
 import DropZone from '../BusinessTable/DropZone';
+import PropTypes from 'prop-types';
 
-
-
-const BusinessTable = businessData => {
+const BusinessTable = ({ tab, currentPageNum }) => {
   const navigate = useNavigate();
   const { backend } = useBackend();
   const [data, setData] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [search, setSearch] = useState('');
 
   const TABLE_HEADERS = [
     'Business Name',
@@ -135,9 +135,6 @@ const BusinessTable = businessData => {
     }
   };
 
-
-
-
   const handleDownloadCSV = () => {
     const ids = Array.from(selectedBusinessIds);
     var headers = [];
@@ -150,19 +147,22 @@ const BusinessTable = businessData => {
   useEffect(() => {
     const getData = async () => {
       try {
-        setData(businessData['businessData']);
+        const businessResponse = await backend.get(
+          `/business/filter/${tab}?pageLimit=10&pageNum=${currentPageNum}&searchTerm=${search}`,
+        );
+        setData(businessResponse.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
     getData();
-  }, [businessData]);
+  }, [search, tab, currentPageNum]);
 
   const handleRowClick = async id => {
     navigate(`/ViewBusiness/${id}`);
   };
 
-  return businessData['businessData'].length == 0 ? (
+  return data.length == 0 ? (
     <h1>Loading ...</h1>
   ) : (
     <div>
@@ -175,6 +175,8 @@ const BusinessTable = businessData => {
             placeholder="Search"
             backgroundColor="white"
             marginRight={4}
+            value={search}
+            onChange={e => setSearch(e.target.value)}
           />
           <Button
             width="161px"
@@ -249,7 +251,7 @@ const BusinessTable = businessData => {
           </Tr>
         </Thead>
           <Tbody>
-          {data.map((item, index) => (
+          {data && data.map((item, index) => (
               <Tr key={index} onClick={() => handleRowClick(item.id)}>
                 <Td key="checkbox">
                   <Checkbox
@@ -269,6 +271,11 @@ const BusinessTable = businessData => {
       </Card>
     </div>
   );
+};
+
+BusinessTable.propTypes = {
+  tab: PropTypes.string,
+  currentPageNum: PropTypes.number,
 };
 
 export default BusinessTable;
