@@ -1,17 +1,91 @@
-import { useState } from 'react';
-// import { useBackend } from '../../contexts/BackendContext';
-import { HStack, Box, Button, FormControl, FormLabel, Card, Input } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { useBackend } from '../../contexts/BackendContext';
+import { useAuth } from '../../contexts/AuthContext.jsx';
+import { HStack, Box, Button, FormControl, FormLabel, Card, Input, useToast } from '@chakra-ui/react';
 import classes from './AdminSettings.module.css';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 
 const AdminAccount = () => {
-  const [businessContactInfo, setBusinessContactInfo] = useState({});
+  const toast = useToast();
+  const { backend } = useBackend();
+  const { currentUser, resetPassword } = useAuth();
+  const [adminContactInfo, setAdminContactInfo] = useState({
+    firstName: '',
+    lastName: '',
+    email: currentUser.email,
+  });
 
-  const updateContactInfo = () => {
-    setBusinessContactInfo();
+  useEffect(() => {
+    const getName = async () => {
+      try {
+        const response = await backend.get(`/adminuser/${currentUser.email}`);
+        const newName = response.data[0].name;
+        const [firstName, lastName] = newName.split(' ');
+        setAdminContactInfo(prevState => ({
+          ...prevState,
+          firstName: firstName,
+          lastName: lastName,
+        }));
+      } catch (error) {
+        console.error("Error fetching admin user data:", error);
+      }
+    };
+    
+    getName();
+  }, [backend, currentUser]);
+
+  const updateContactInfo = async () => {
+    const lastUpdated = new Date().toISOString(); 
+
+    try {
+      await backend.put(`/adminuser/${adminContactInfo.email}`, {
+        name: adminContactInfo.firstName + ' ' + adminContactInfo.lastName,
+        last_updated: lastUpdated,
+      });
+  
+      toast({
+        title: 'Success',
+        description: "Your changes have been saved.",
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: "Your changes were not saved.",
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
 
-  const handleChange = () => {};
+  const changePassword = async () => {
+    try {
+      await resetPassword(adminContactInfo.email);
+      toast({
+        title: 'Password reset email sent successfully',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    } catch (error) {
+      console.error(error.message);
+      toast({
+        title: 'Password reset email was not sent',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  }
+
+  const handleChange = event => {
+    const name = event.target.name;
+    var value = event.target.value;
+    setAdminContactInfo(prevState => ({ ...prevState, [name]: value }));
+  };
 
   return (
     <>
@@ -30,7 +104,7 @@ const AdminAccount = () => {
             <Input
               type="text"
               placeholder="First"
-              defaultValue={businessContactInfo.firstName}
+              defaultValue={adminContactInfo.firstName}
               name="firstName"
               width={'34.5%'}
               onChange={handleChange}
@@ -38,7 +112,7 @@ const AdminAccount = () => {
             <Input
               type="text"
               placeholder="Last"
-              defaultValue={businessContactInfo.lastName}
+              defaultValue={adminContactInfo.lastName}
               name="lastName"
               width={'34%'}
               onChange={handleChange}
@@ -57,7 +131,8 @@ const AdminAccount = () => {
             <Input
               type="text"
               placeholder="example@email.com"
-              value={businessContactInfo.email}
+              value={adminContactInfo.email}
+              disabled={true}
               name="email"
               onChange={handleChange}
               width={'70%'}
@@ -70,6 +145,7 @@ const AdminAccount = () => {
               fontWeight={'bold'}
               width={'26%'}
               alignItems={'center'}
+              onClick={changePassword}
             >
               PASSWORD
             </FormLabel>
@@ -83,6 +159,7 @@ const AdminAccount = () => {
               width={'70%'}
               color={'teal'}
               align
+              onClick={changePassword}
             >
               Change Password
               <ArrowForwardIcon style={{ marginLeft: '3px' }} />
@@ -92,7 +169,7 @@ const AdminAccount = () => {
       </Card>
       <Box alignContent={'left'}>
         <HStack marginBottom={'3%'} marginTop={'5%'} alignItems={'left'}>
-          <Button
+          {/* <Button
             color="black"
             bg="gray.100"
             variant="solid"
@@ -101,7 +178,7 @@ const AdminAccount = () => {
             onClick={updateContactInfo}
           >
             Undo Changes
-          </Button>
+          </Button> */}
           <Button colorScheme="teal" variant="solid" width={'11%'} onClick={updateContactInfo}>
             Save
           </Button>

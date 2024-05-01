@@ -56,7 +56,7 @@ const App = () => {
                 path="/AdminDashboard"
                 element={<ProtectedRoute Component={AdminDashboard} />}
               />
-              <Route exace path="/AdminSettings" Component={AdminSettingsMaster} />
+              <Route exact path="/AdminSettings" element={<ProtectedRoute Component={AdminSettingsMaster} />} />
               <Route
                 exact
                 path="/EditContactInformation"
