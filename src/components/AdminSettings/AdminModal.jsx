@@ -67,10 +67,10 @@ const AdminModal = ({ isOpen, onClose, data, loadInfo }) => {
       return;
     } else {
       if (data == null) {
-        console.log("add")
+        console.log('add');
         await backend.post(`/adminUser`, body);
       } else {
-        console.log("edit")
+        console.log('edit');
         await backend.put(`/adminUser/${data['email']}`, body);
       }
     }
@@ -89,16 +89,26 @@ const AdminModal = ({ isOpen, onClose, data, loadInfo }) => {
         </ModalHeader>
         <ModalBody>
           <Text> Name </Text>
-          <Input type="text" name="name" value={nameData} onChange={e => setNameData(e.target.value)} />
+          <Input
+            type="text"
+            name="name"
+            value={nameData}
+            onChange={e => setNameData(e.target.value)}
+          />
           <Text> Email </Text>
-          <Input type="text" name="email" value={emailData} onChange={e => setEmailData(e.target.value)} />
+          <Input
+            type="text"
+            name="email"
+            value={emailData}
+            onChange={e => setEmailData(e.target.value)}
+          />
         </ModalBody>
         {alertVisible && (
-            <Alert>
-              <AlertTitle>Missing necessary data!</AlertTitle>
-              <AlertDescription>Please make sure all textboxes are filed out</AlertDescription>
-            </Alert>
-          )}
+          <Alert>
+            <AlertTitle>Missing necessary data!</AlertTitle>
+            <AlertDescription>Please make sure all textboxes are filed out</AlertDescription>
+          </Alert>
+        )}
         <ModalFooter>
           <Button mr={3} onClick={closeAndReset}>
             Cancel

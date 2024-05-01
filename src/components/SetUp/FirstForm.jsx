@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -17,17 +17,46 @@ import {
 import { useNavigate } from 'react-router-dom';
 import LOGO from './fph_logo.png';
 import { useAuth } from '../../contexts/AuthContext';
+import { useBackend } from '../../contexts/BackendContext';
 import PropTypes from 'prop-types'; // Import PropTypes
 
 const FirstForm = ({ admin, nextStep }) => {
-  const { isAdmin } = useAuth();
+  const { isAdmin, currentUser } = useAuth();
+  const { backend } = useBackend();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const { signup } = useAuth();
+  const [id, setId] = useState('');
+  const { signup, logout } = useAuth();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
+
+  useEffect(() => {
+    const setUp = async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const idFromUrl = urlParams.get('id');
+      setId(idFromUrl);
+      await logout()
+    }
+    
+    setUp();
+  }, []);
+
+  useEffect(() => {  
+    const createUser = async () => {
+      try {
+        await backend.post('/businessUser', { id: id, uid: currentUser.uid });
+        nextStep();
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    if (currentUser) {
+      createUser();
+    }
+  }, [currentUser]);
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -37,32 +66,30 @@ const FirstForm = ({ admin, nextStep }) => {
         throw new Error('Passwords do not match');
       }
       setLoading(true);
-      
+
       if (admin) {
-        if (await isAdmin({email: email})) {
+        if (await isAdmin({ email: email })) {
           await signup(email, password);
           navigate('/AdminDashboard');
+        } else {
+          throw new Error(
+            'Email has not been added as an admin yet. Please contact the site owner.',
+          );
         }
-        else {
-          throw new Error('Email has not been added as an admin yet. Please contact the site owner.');
-        }
-      }else{
+      } else {
         await signup(email, password);
-        nextStep();
+        console.log("YOU", currentUser)
       }
     } catch (err) {
       console.log(err);
       var message = '';
-      if (err.message == 'Firebase: Error (auth/invalid-email).'){
+      if (err.message == 'Firebase: Error (auth/invalid-email).') {
         message = 'Invalid Email';
-      }
-      else if (err.message == 'Password should be at least 6 characters (auth/weak-password).'){
+      } else if (err.message == 'Password should be at least 6 characters (auth/weak-password).') {
         message = 'Weak Password';
-      }
-      else if (err.message == 'Firebase: Error (auth/email-already-in-use).'){
+      } else if (err.message == 'Firebase: Error (auth/email-already-in-use).') {
         message = 'Email Already In Use';
-      }
-      else {
+      } else {
         message = err.message;
       }
       toast({

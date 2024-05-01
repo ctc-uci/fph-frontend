@@ -16,7 +16,7 @@ const AdminAllBusinesses = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-     const checkIsAdmin = async () => {
+    const checkIsAdmin = async () => {
       if (!(await isAdmin())) {
         navigate('/BusinessDashboard');
       } else {

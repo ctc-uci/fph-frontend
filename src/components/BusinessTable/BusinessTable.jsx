@@ -5,23 +5,23 @@ import { BiEnvelope } from 'react-icons/bi';
 import { ArrowDownIcon } from '@chakra-ui/icons';
 import DownloadCSV from '../../utils/downloadCSV';
 import { FaPlus } from 'react-icons/fa6';
-import 'boxicons'
-import { 
-  Table, 
-  Thead, 
-  Tbody, 
-  Tr, 
-  Td, 
-  Checkbox, 
-  Button, 
-  Th, 
-  Modal, 
-  ModalOverlay, 
-  ModalContent, 
-  ModalHeader, 
-  ModalFooter, 
-  ModalBody, 
-  ModalCloseButton, 
+import 'boxicons';
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Td,
+  Checkbox,
+  Button,
+  Th,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
   Heading,
   Text,
   useDisclosure,
@@ -360,12 +360,12 @@ const BusinessTable = () => {
             </ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <Text fontFamily={'Inter'}>Transfer all business information into your new portal.</Text>
+              <Text fontFamily={'Inter'}>
+                Transfer all business information into your new portal.
+              </Text>
               <DropZone onClose={onClose} />
             </ModalBody>
-            <ModalFooter>
-              
-            </ModalFooter>
+            <ModalFooter></ModalFooter>
           </ModalContent>
         </Modal>
         <Table variant="simple" colorScheme="facebook">

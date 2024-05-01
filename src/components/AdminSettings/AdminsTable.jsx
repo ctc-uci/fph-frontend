@@ -47,7 +47,9 @@ const AdminsTable = () => {
 
   const getAdminData = async () => {
     try {
-      const adminDataResponse = await backend.get(`/adminUser/paginate?itemsLimit=10&pageNum=${currentPageNum}&searchTerm=${searchTerm}`);
+      const adminDataResponse = await backend.get(
+        `/adminUser/paginate?itemsLimit=10&pageNum=${currentPageNum}&searchTerm=${searchTerm}`,
+      );
       setData(adminDataResponse.data);
     } catch (error) {
       console.log(error.message);
@@ -112,9 +114,7 @@ const AdminsTable = () => {
           onChange={handleSearch}
           sx={{ width: '222px', backgroundColor: '#FFFFFF' }}
         />
-        <Button
-          colorScheme="teal"
-          onClick={adminModalOnOpen}>
+        <Button colorScheme="teal" onClick={adminModalOnOpen}>
           <AddIcon />
           Add Admin
         </Button>
@@ -123,13 +123,19 @@ const AdminsTable = () => {
       <div className={classes.roundedTable}>
         <DeleteAdminModal
           isOpen={deleteModalIsOpen}
-          onClose={() => {deleteModalOnClose(); setSelectedAdmin(null);}}
+          onClose={() => {
+            deleteModalOnClose();
+            setSelectedAdmin(null);
+          }}
           loadInfo={getAdminData}
           selectedItem={selectedAdmin}
         />
         <AdminModal
           isOpen={adminModalIsOpen}
-          onClose={() => {adminModalOnClose(); setSelectedAdmin(null);}}
+          onClose={() => {
+            adminModalOnClose();
+            setSelectedAdmin(null);
+          }}
           data={selectedAdmin}
           loadInfo={getAdminData}
         />
