@@ -25,16 +25,16 @@ import AdminSettingsMaster from './components/AdminSettings/AdminSettingsMaster.
 
 const App = () => {
   const location = useLocation();
-  const currentRoute = location.pathname;
+  const currentRoute = location.pathname.toLowerCase();
   return (
     <BackendProvider>
       <AuthProvider>
         <div className={styles.appLayout}>
-          {currentRoute == '/SignupAdmin' ||
-            currentRoute == '/SignupBusiness' ||
-            currentRoute == '/Login' ||
-            currentRoute == '/ForgotPassword' ||
-            currentRoute == '/BusinessForm' || <Sidebar isAdmin={false} />}
+          {currentRoute == '/signupadmin' ||
+            currentRoute == '/signupbusiness' ||
+            currentRoute == '/login' ||
+            currentRoute == '/forgotpassword' ||
+            currentRoute == '/businessform' || <Sidebar isAdmin={false} />}
           <div className={styles.mainContent}>
             <Routes>
               <Route

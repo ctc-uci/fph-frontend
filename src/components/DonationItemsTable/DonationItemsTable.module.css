@@ -9,17 +9,6 @@
   margin-top: 32px;
 }
 
-.tabs {
-  width: 24%;
-  margin-top: 24px;
-  background-color: var(--white, #ffffff);
-}
-
-.table {
-  border-radius: 5px;
-  background-color: var(--white, #ffffff);
-}
-
 .tableRows {
   border-top: 1.5px solid rgb(217, 217, 217);
 }
