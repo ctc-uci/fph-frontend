@@ -115,6 +115,7 @@ const BusinessDashboard = () => {
         // so that we can display the dashboard for various businesses
         // ***********************************************************************
         const businessIdResponse = await backend.get(`/businessUser/${currentUser.uid}`);
+        console.log(businessIdResponse, currentUser)
         const businessId = businessIdResponse.data[0].id;
 
         const donationResponse = await backend.get(`/donation/business/totals/${businessId}`);

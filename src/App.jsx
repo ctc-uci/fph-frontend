@@ -30,8 +30,8 @@ const App = () => {
     <BackendProvider>
       <AuthProvider>
         <div className={styles.appLayout}>
-          {currentRoute == '/SignUpAdmin' ||
-            currentRoute == '/SignUpBusiness' ||
+          {currentRoute == '/SignupAdmin' ||
+            currentRoute == '/SignupBusiness' ||
             currentRoute == '/Login' ||
             currentRoute == '/ForgotPassword' || <Sidebar isAdmin={false} />}
           <div className={styles.mainContent}>

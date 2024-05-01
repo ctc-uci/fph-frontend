@@ -5,29 +5,29 @@ import { BiEnvelope } from 'react-icons/bi';
 import { ArrowDownIcon } from '@chakra-ui/icons';
 import DownloadCSV from '../../utils/downloadCSV';
 import { FaPlus } from 'react-icons/fa6';
-import 'boxicons'
-import { 
-  Table, 
-  Thead, 
-  Tbody, 
-  Tr, 
-  Td, 
-  Checkbox, 
-  Button, 
-  Th, 
-  Modal, 
-  ModalOverlay, 
-  ModalContent, 
-  ModalHeader, 
-  ModalFooter, 
-  ModalBody, 
-  ModalCloseButton, 
+import 'boxicons';
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Td,
+  Checkbox,
+  Button,
+  Th,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
   Heading,
   Text,
   useDisclosure,
   Input,
   Card,
-  Badge
+  Badge,
 } from '@chakra-ui/react';
 import DropZone from '../BusinessTable/DropZone';
 import PropTypes from 'prop-types';
@@ -39,13 +39,7 @@ const BusinessTable = ({ tab, currentPageNum }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [search, setSearch] = useState('');
 
-  const TABLE_HEADERS = [
-    'Business Name',
-    'Location',
-    'Email',
-    'Form Status',
-    'Last Submitted',
-  ];
+  const TABLE_HEADERS = ['Business Name', 'Location', 'Email', 'Form Status', 'Last Submitted'];
   const tableHeaders = TABLE_HEADERS.map(tableHeader => <th key={tableHeader}>{tableHeader}</th>);
   const [selectedBusinessIds, setSelectedBusinessIds] = useState(new Set());
 
@@ -211,7 +205,7 @@ const BusinessTable = ({ tab, currentPageNum }) => {
         </div>
       </div>
       <Card ml="20px" mr="20px" mb="20px" mt="20px">
-      <Button onClick={onOpen}>Upload CSV</Button>
+        <Button onClick={onOpen}>Upload CSV</Button>
 
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
@@ -221,51 +215,56 @@ const BusinessTable = ({ tab, currentPageNum }) => {
             </ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <Text fontFamily={'Inter'}>Transfer all business information into your new portal.</Text>
+              <Text fontFamily={'Inter'}>
+                Transfer all business information into your new portal.
+              </Text>
               <DropZone onClose={onClose} />
             </ModalBody>
-            <ModalFooter>
-              
-            </ModalFooter>
+            <ModalFooter></ModalFooter>
           </ModalContent>
         </Modal>
-      <Button colorScheme="blue" onClick={handleSendReminders}>
-        Send Reminders
-      </Button>
-      <Button colorScheme="teal" onClick={handleDownloadCSV} sx={{ width: '172px' }}>
-        <ArrowDownIcon sx={{ marginRight: '5px' }} />
-        Download CSV
-      </Button>
-      <Table variant="simple" colorScheme="facebook">
-        <Thead>
-          <Tr>
-            <Th key="checkbox">
-              <Checkbox
-                isChecked={selectedBusinessIds.size > 0 && selectedBusinessIds.size === data.length}
-                onChange={handleSelectAllChange}
-              ></Checkbox>
-            </Th>
-            {tableHeaders.map((header, index) => (
-              <Th key={index}>{header}</Th>
-            ))}
-          </Tr>
-        </Thead>
+        <Button colorScheme="blue" onClick={handleSendReminders}>
+          Send Reminders
+        </Button>
+        <Button colorScheme="teal" onClick={handleDownloadCSV} sx={{ width: '172px' }}>
+          <ArrowDownIcon sx={{ marginRight: '5px' }} />
+          Download CSV
+        </Button>
+        <Table variant="simple" colorScheme="facebook">
+          <Thead>
+            <Tr>
+              <Th key="checkbox">
+                <Checkbox
+                  isChecked={
+                    selectedBusinessIds.size > 0 && selectedBusinessIds.size === data.length
+                  }
+                  onChange={handleSelectAllChange}
+                ></Checkbox>
+              </Th>
+              {tableHeaders.map((header, index) => (
+                <Th key={index}>{header}</Th>
+              ))}
+            </Tr>
+          </Thead>
           <Tbody>
-          {data && data.map((item, index) => (
-              <Tr key={index} onClick={() => handleRowClick(item.id)}>
-                <Td key="checkbox">
-                  <Checkbox
-                    isChecked={selectedBusinessIds.has(item.id)}
-                    onChange={() => handleCheckboxChange(item.id)}
-                  ></Checkbox>
-                </Td>
-                <Td>{item.name}</Td>
-                <Td>{item.city}, {item.state}</Td>
-                <Td>{item.primary_email}</Td>
-                <Td>{getStatusBadge(item.status)}</Td>
-                <Td>{formatDateDFH(item.join_date)}</Td>
-              </Tr>
-            ))}
+            {data &&
+              data.map((item, index) => (
+                <Tr key={index} onClick={() => handleRowClick(item.id)}>
+                  <Td key="checkbox">
+                    <Checkbox
+                      isChecked={selectedBusinessIds.has(item.id)}
+                      onChange={() => handleCheckboxChange(item.id)}
+                    ></Checkbox>
+                  </Td>
+                  <Td>{item.name}</Td>
+                  <Td>
+                    {item.city}, {item.state}
+                  </Td>
+                  <Td>{item.primary_email}</Td>
+                  <Td>{getStatusBadge(item.status)}</Td>
+                  <Td>{formatDateDFH(item.join_date)}</Td>
+                </Tr>
+              ))}
           </Tbody>
         </Table>
       </Card>

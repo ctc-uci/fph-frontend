@@ -1,14 +1,6 @@
 import { useState } from 'react';
 // import { useBackend } from '../../contexts/BackendContext';
-import {
-  HStack,
-  Box,
-  Button,
-  FormControl,
-  FormLabel,
-  Card,
-  Input,
-} from '@chakra-ui/react';
+import { HStack, Box, Button, FormControl, FormLabel, Card, Input } from '@chakra-ui/react';
 import classes from './AdminSettings.module.css';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 
@@ -19,9 +11,7 @@ const AdminAccount = () => {
     setBusinessContactInfo();
   };
 
-  const handleChange = () => {
-  };
-
+  const handleChange = () => {};
 
   return (
     <>
@@ -84,12 +74,18 @@ const AdminAccount = () => {
               PASSWORD
             </FormLabel>
             <Button
-              style={{backgroundColor:"transparent", padding:"0", justifyContent: "flex-start", textAlign: "right"}}
+              style={{
+                backgroundColor: 'transparent',
+                padding: '0',
+                justifyContent: 'flex-start',
+                textAlign: 'right',
+              }}
               width={'70%'}
               color={'teal'}
-              align>
-                Change Password
-                <ArrowForwardIcon style={{marginLeft:"3px"}}/>
+              align
+            >
+              Change Password
+              <ArrowForwardIcon style={{ marginLeft: '3px' }} />
             </Button>
           </HStack>
         </FormControl>

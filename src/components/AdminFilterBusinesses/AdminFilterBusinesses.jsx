@@ -29,8 +29,10 @@ const AdminFilterBusinesses = () => {
     setSearchTerm('');
   };
 
-  const loadInfo = async ( tab, search ) => {
-    const businessNumResponse = await backend.get(`/business/totalBusinesses/?tab=${tab}&searchTerm=${searchTerm, search}`);
+  const loadInfo = async (tab, search) => {
+    const businessNumResponse = await backend.get(
+      `/business/totalBusinesses/?tab=${tab}&searchTerm=${(searchTerm, search)}`,
+    );
     setCurrentBusinessNum(businessNumResponse.data[0]['count']);
     console.log(businessNumResponse.data[0]['count']);
     setPageLimit(Math.ceil(businessNumResponse.data[0]['count'] / 10));

@@ -49,7 +49,7 @@ function Sidebar() {
   const authLogout = async () => {
     try {
       logout();
-      navigate('/login')
+      navigate('/login');
     } catch (error) {
       console.log(error.message);
     }
