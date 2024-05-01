@@ -26,7 +26,7 @@ const FirstForm = ({ formData, handleChange, nextStep }) => {
       <Flex direction="column" align="stretch" gap={5}>
         <Flex direction="column" gap={4}>
           <FormControl paddingLeft="10vh" paddingRight="10vh" id="business-name">
-            <Text fontSize="2xl" marginTop="8vh">
+            <Text fontSize="xl" marginTop="8vh">
               Business/Org Name{' '}
             </Text>
 
@@ -40,7 +40,7 @@ const FirstForm = ({ formData, handleChange, nextStep }) => {
               }}
             />
           </FormControl>
-          <Text paddingLeft="10vh" paddingRight="10vh" marginTop="2vh" fontSize="2xl">
+          <Text paddingLeft="10vh" paddingRight="10vh" marginTop="2vh" fontSize="xl">
             Person of Contact
           </Text>
           <SimpleGrid rows="2" columns="2">
@@ -100,7 +100,7 @@ const FirstForm = ({ formData, handleChange, nextStep }) => {
             </Box>
           </SimpleGrid>
           <FormControl paddingLeft="10vh" paddingRight="10vh" marginTop="2vh" id="website" flex="1">
-            <Text fontSize="2xl">Business Website</Text>
+            <Text fontSize="xl">Business Website</Text>
             <Input
               marginTop="1vh"
               name="website"

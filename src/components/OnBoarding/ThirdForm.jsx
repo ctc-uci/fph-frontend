@@ -20,13 +20,6 @@ import {
   AlertIcon,
   Link,
   AlertTitle,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverHeader,
-  PopoverBody,
-  PopoverArrow,
-  PopoverCloseButton,
   HStack,
   Image,
   Textarea,
@@ -35,20 +28,8 @@ import {
 import FPH_LOGO from './fph_logo.png';
 
 const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit, setFormData }) => {
-  const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-  const [businessHours, changeBusinessHours] = useState(
-    daysOfWeek.reduce(
-      (acc, day) => ({
-        ...acc,
-        [day]: {
-          start: { hour: '9', minute: '00', ampm: 'AM' },
-          end: { hour: '5', minute: '00', ampm: 'PM' },
-        },
-      }),
-      {},
-    ),
-  );
+  const [businessHours, setBusinessHours] = useState('');
   useEffect(() => {
     setFormData({ ...formData, businessHours });
   }, [businessHours]);
@@ -106,8 +87,8 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit, setFormData
     isReadOnly: propTypes.bool.isRequired,
   };
 
-  const handleTimeChange = (day, period, value) => {
-    changeBusinessHours({ ...businessHours, [day]: { ...businessHours[day], [period]: value } });
+  const handleTimeChange = (e) => {
+    setBusinessHours(e.target.value);
   };
 
   const [termsAndConditionsIsOpened, changeTermsAndConditionsIsOpened] = useState(false);
@@ -148,7 +129,7 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit, setFormData
                   />
                 </Stack>
               </ModalHeader>
-              <ModalBody alignItems="center">
+              <ModalBody alignItems="center" overflow={'scroll'}>
                 <Text fontSize="xl">
                   I hereby acknowledge and agree to serve as a member/volunteer for Feeding Pets of
                   the Homeless, 710 West Washington Street, Carson City, NV 89703. I give my consent
@@ -190,39 +171,12 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit, setFormData
           <Flex direction="column" align="stretch" gap={5}>
             <Flex direction="column">
               <Box>
-                <FormControl marginTop="8vh" paddingLeft="10vh" id="business-hours">
-                  <FormLabel>Business Hours</FormLabel>
-                  <Popover placement="right" width="auto">
-                    <PopoverTrigger>
-                      <Button bg="none" borderColor="#E2E8F0" borderWidth="1px">
-                        Select Hours
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent padding="2vh" width="full">
-                      <PopoverArrow />
-                      <PopoverCloseButton />
-                      <PopoverHeader>Hours</PopoverHeader>
-                      <PopoverBody>
-                        {daysOfWeek.map(day => (
-                          <Flex key={day} justify="space-between" align="center">
-                            <Box width="20vh" flexBasis="100px">
-                              {day}
-                            </Box>
-                            <TimeInput
-                              label="From"
-                              value={businessHours[day].start}
-                              onChange={value => handleTimeChange(day, 'start', value)}
-                            />
-                            <TimeInput
-                              label="To"
-                              value={businessHours[day].end}
-                              onChange={value => handleTimeChange(day, 'end', value)}
-                            />
-                          </Flex>
-                        ))}
-                      </PopoverBody>
-                    </PopoverContent>
-                  </Popover>
+                <FormControl marginTop="8vh" paddingLeft="10vh" paddingRight="10vh" id="business-hours">
+                <Text fontSize="xl">Business Hours</Text>
+                  <Input
+                    value={businessHours}
+                    onChange={handleTimeChange}
+                  ></Input>
                 </FormControl>
               </Box>
 
@@ -231,11 +185,10 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit, setFormData
                   marginTop="2vh"
                   paddingLeft="10vh"
                   paddingRight="10vh"
-                  width="80vh"
                   id="phone-number"
                   flex="1"
                 >
-                  <FormLabel fontSize="small">Phone Number</FormLabel>
+                  <Text fontSize="xl">Phone Number</Text>
                   <Input
                     maxLength="10"
                     name="phoneNumber"
@@ -255,7 +208,7 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit, setFormData
                   id="heard-about"
                   flex="1"
                 >
-                  <FormLabel fontSize="small">How Did You Hear About Us?</FormLabel>
+                  <Text fontSize="xl">How Did You Hear About Us?</Text>
                   <Textarea
                     height="12vh"
                     name="heardAbout"
@@ -319,7 +272,6 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit, setFormData
               </Box>
               <Box>
                 <Button
-                  type="submit"
                   background="#319795"
                   width="9vh"
                   onClick={async e => {
@@ -329,7 +281,7 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit, setFormData
                       await handleSubmit(e);
                     }
                   }}
-                  colorScheme="blue"
+                  colorScheme="teal"
                 >
                   Submit
                 </Button>

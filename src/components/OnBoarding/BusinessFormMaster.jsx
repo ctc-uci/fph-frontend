@@ -4,7 +4,6 @@ import SecondForm from './SecondForm';
 import ThirdForm from './ThirdForm';
 import FourthForm from './FourthForm';
 import { useBackend } from '../../contexts/BackendContext';
-import { useAuth } from '../../contexts/AuthContext';
 import { Box, Text, SimpleGrid, Stack, Image, Flex } from '@chakra-ui/react';
 import propTypes from 'prop-types';
 import ICON1 from './icon1.png';
@@ -14,7 +13,6 @@ import ICON4 from './icon4.png';
 
 const BusinessFormMaster = ({ setFormOpen }) => {
   const { backend } = useBackend();
-  const { currentUser } = useAuth();
   const [formData, setFormData] = useState({
     businessName: '',
     personFirstName: '',
@@ -37,7 +35,7 @@ const BusinessFormMaster = ({ setFormOpen }) => {
   const handleSubmit = async e => {
     e.preventDefault();
 
-    const DUMMY_STRING = 'STRING';
+    const DUMMY_STRING = '';
     const PENDING_STATUS = 'Pending';
     const DUMMY_DATE = new Date().toISOString().split('T')[0];
     const DUMMY_BOOL = false;
@@ -100,18 +98,18 @@ const BusinessFormMaster = ({ setFormOpen }) => {
     };
 
     const notification_data = {
-      business_id: 0,
+      businessId: 0,
       message: `New Donation Site Application from ${formData['businessName']}`,
       timestamp: new Date().toLocaleString('en-US', {
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       }),
       type: 'New Application',
+      beenDismissed: false,
     };
 
     try {
       if (formData['termsAndConditionsAccepted'] === true) {
-        const response = await backend.post('/business', businessData);
-        await backend.post('/businessUser', { id: response.data[0].id, uid: currentUser.uid });
+        await backend.post('/business', businessData);
         await backend.post('/notification', notification_data);
         nextStep();
       }
@@ -201,7 +199,7 @@ const BusinessFormMaster = ({ setFormOpen }) => {
                         </Box>
                         <Box>
                           <Text fontSize="xl" color="#2D3748" fontWeight="bold">
-                            28,344
+                            29,357
                           </Text>
                         </Box>
                         <Box>
@@ -226,7 +224,7 @@ const BusinessFormMaster = ({ setFormOpen }) => {
                         </Box>
                         <Box>
                           <Text fontSize="xl" color="#2D3748" fontWeight="bold">
-                            $4,685,177
+                            $5,217,665
                           </Text>
                         </Box>
                         <Box width="15vh">
@@ -251,7 +249,7 @@ const BusinessFormMaster = ({ setFormOpen }) => {
                         </Box>
                         <Box>
                           <Text fontSize="xl" color="#2D3748" fontWeight="bold">
-                            2,088,364 lbs
+                            2,143,740 lbs
                           </Text>
                         </Box>
                         <Box>
@@ -277,7 +275,7 @@ const BusinessFormMaster = ({ setFormOpen }) => {
                         </Box>
                         <Box>
                           <Text fontSize="xl" color="#2D3748" fontWeight="bold">
-                            194
+                            204
                           </Text>
                         </Box>
                         <Box>

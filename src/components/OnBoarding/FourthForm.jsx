@@ -1,10 +1,8 @@
 import { Box, Link, Text, Image, Flex, Stack } from '@chakra-ui/react';
 import FPH_LOGO from './fph_logo.png';
-import { useNavigate } from 'react-router-dom';
 import propTypes from 'prop-types';
 
 const FourthForm = ({ setFormOpen }) => {
-  const navigate = useNavigate();
 
   return (
     <Flex>
@@ -24,9 +22,9 @@ const FourthForm = ({ setFormOpen }) => {
             {
               <Link
                 textDecoration="underline"
+                href={'https://petsofthehomeless.org/'}
                 onClick={() => {
                   setFormOpen(false);
-                  navigate('/');
                 }}
               >
                 website

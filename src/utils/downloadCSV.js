@@ -1,25 +1,20 @@
 // DownloadCSV.js
 
-// import { useBackend } from '../contexts/BackendContext';
-
-async function DownloadCSV(headers, ids, tableName) {
-  // const { backend } = useBackend();
+async function DownloadCSV(ids, tableName) {
+  const headers = [];
   try {
-    // Make a GET request to the backend API with the ids as query parameters
     const response = await fetch(
       `http://localhost:3001/donation/${tableName}/selectByIds?ids=${ids.join(',')}`,
       {
         method: 'GET',
       },
     );
-    // const response = await backend.get(`/donation/${tableName}/selectByIds?ids=${ids.join(',')}`);
 
     if (!response.ok) {
       throw new Error('Failed to fetch data from the server');
     }
 
     const data = await response.json();
-    // const data = response.data[0];
 
     // Create CSV string
     const csvRows = [];

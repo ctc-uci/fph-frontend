@@ -238,7 +238,7 @@ const ViewBusiness = () => {
                               </Td>
                               <Td>
                                 <Text fontSize="xs" color="500">
-                                  {data.primary_phone.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')}
+                                  {data.primary_phone && data.primary_phone.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')}
                                 </Text>
                               </Td>
                             </Tr>

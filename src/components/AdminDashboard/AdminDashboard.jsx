@@ -5,7 +5,7 @@ import NotificationsDrawer from './NotificationsDrawer';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Flex, Stack, Text, Center, Divider } from '@chakra-ui/react';
-import AdminFilterBusinesses from '../AdminFilterBusinesses/AdminFilterBusinesses.jsx';
+import BusinessTable from '../BusinessTable/BusinessTable.jsx';
 import { BiBuildingHouse, BiDonateHeart, BiFile, BiTime } from 'react-icons/bi';
 
 const AdminDashboard = () => {
@@ -15,6 +15,7 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   //const [donationData, setDonationData] = useState([]);
   const [businessDictionary, setBusinessDictionary] = useState([]);
+  const [pendingBusinesses, setPendingBusinesses] = useState([]);
   const [notification, setNotifications] = useState([]);
 
   useEffect(() => {
@@ -22,13 +23,10 @@ const AdminDashboard = () => {
       try {
         checkIsAdmin();
         // fetches the business table to be used in pending &total #
-        const businessResponse = await backend.get('/business');
+        const businessResponse = await backend.get('/business/filter/All');
         setBusinessDictionary(businessResponse.data);
-        console.log('businessdata:', businessResponse.data);
-        // fetches donation table data
-        // const donationResponse = await backend.get('/donation/');
-        // setDonationData(donationResponse.data);
-
+        const numPending = await backend.get('/business/totalBusinesses?tab=Pending');
+        setPendingBusinesses(numPending.data[0]['count']);
         const notificationResponse = await backend.get(`/notification/0`);
         setNotifications(notificationResponse.data);
       } catch (error) {
@@ -57,8 +55,8 @@ const AdminDashboard = () => {
     // }
     var submittedBusinesses = 0;
     for (const [value] of Object.entries(businessDictionary)) {
-      const status = businessDictionary[value].status;
-      if (status == 'Active') {
+      const status = businessDictionary[value].submitted;
+      if (status) {
         submittedBusinesses += 1;
       }
     }
@@ -73,19 +71,12 @@ const AdminDashboard = () => {
 
   // Calculates number of pending applications from businesses
   const calculatePendingBusinesses = () => {
-    var pendingBusinesses = 0;
-    for (const [value] of Object.entries(businessDictionary)) {
-      const pendingStatus = businessDictionary[value].status;
-      if (pendingStatus == 'Pending') {
-        pendingBusinesses += 1;
-      }
-    }
     return pendingBusinesses;
   };
 
   return (
-    <div>
-      <Flex margin="4vh 0 0 3vh" justifyContent="space-between" alignItems="center">
+    <Box>
+      <Flex margin="4vh 0 0 20px" justifyContent="space-between" alignItems="center">
         {
           <Stack flexDirection={'row'} justifyContent={'space-between'} width={'98%'}>
             <Text fontSize="30px" color="teal" fontWeight="bold">
@@ -96,10 +87,10 @@ const AdminDashboard = () => {
         }
       </Flex>
 
-      <div>
+      <Box>
         <>
           <Flex
-            margin="4vh 3vh 2vh 3vh"
+            margin="4vh 20px 2vh 20px"
             borderRadius="16px"
             justifyContent="space-around"
             p={5}
@@ -195,10 +186,10 @@ const AdminDashboard = () => {
               }
             </Flex>
           </Flex>
-          <AdminFilterBusinesses />
+          <BusinessTable />
         </>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 
