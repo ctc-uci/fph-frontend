@@ -1,10 +1,23 @@
 // DownloadCSV.js
 
-async function DownloadCSV(ids, tableName) {
-  const headers = [];
+async function DownloadCSV(ids) {
+  const headers = {
+    'Business Name': 'name',
+    'Business Phone': 'primary_phone',
+    'Business Email': 'primary_email',
+    'Donation Submission Date': 'max_date',
+    'Donation Reporter': 'reporter',
+    'Food Bank Donation': 'food_bank_donation',
+    'Canned Dog Food Quantity': 'canned_dog_food_quantity',
+    'Dry Dog Food Quantity': 'dry_dog_food_quantity',
+    'Canned Cat Food Quantity': 'canned_cat_food_quantity',
+    'Dry Cat Food Quantity': 'dry_cat_food_quantity',
+    'Miscellaneous Items': 'miscellaneous_items',
+    'Volunteer Hours': 'volunteer_hours',
+  };
   try {
     const response = await fetch(
-      `http://localhost:3001/donation/${tableName}/selectByIds?ids=${ids.join(',')}`,
+      `http://localhost:3001/donation/selectByIds?ids=${ids.join(',')}`,
       {
         method: 'GET',
       },
@@ -19,14 +32,12 @@ async function DownloadCSV(ids, tableName) {
     // Create CSV string
     const csvRows = [];
 
-    // Add headers
-    csvRows.push(headers.join(','));
+    csvRows.push(Object.keys(headers).join(','));
 
-    // Add data
     data.forEach(row => {
-      const values = headers.map(header => {
-        const escaped = ('' + row[header]).replace(/"/g, '\\"'); // Escape double quotes
-        return `"${escaped}"`; // Encapsulate in quotes to handle commas in data
+      const values = Object.values(headers).map((key) => {
+        const escaped = ('' + row[key]).replace(/"/g, '\\"');
+        return `"${escaped}"`;
       });
       csvRows.push(values.join(','));
     });
@@ -40,7 +51,7 @@ async function DownloadCSV(ids, tableName) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `${tableName}_data.csv`; // Name of the file to download
+    link.download = `business_data.csv`; // Name of the file to download
     document.body.appendChild(link); // Required for Firefox
     link.click();
     document.body.removeChild(link); // Clean up

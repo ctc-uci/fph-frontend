@@ -38,7 +38,6 @@ import {
 } from '@chakra-ui/react';
 import { ChevronRightIcon, ChevronLeftIcon } from '@chakra-ui/icons';
 import DropZone from '../BusinessTable/DropZone';
-import PropTypes from 'prop-types';
 
 const BusinessTable = () => {
   const navigate = useNavigate();
@@ -189,7 +188,7 @@ const BusinessTable = () => {
       headers.push(TABLE_HEADERS[i].toLowerCase().replace(' ', '_'));
     }
     try {
-      DownloadCSV(ids, 'business');
+      DownloadCSV(ids);
       const message = `For ${ids.length} ${ids.length > 1 ? `businesses` : ` business`}.`;
       toast({
         title: 'Downloaded CSV',
@@ -247,6 +246,9 @@ const BusinessTable = () => {
         const businessCountResponse = await backend.get(
           `/business/totalBusinesses?tab=${currentTab}&searchTerm=${searchTerm}`,
         );
+        if (currentTab === 'All' && search === '' && businessCountResponse.data[0]['count'] === 0) {
+          onOpen();
+        }
         setPageLimit(Math.ceil(businessCountResponse.data[0]['count'] / 10));
         setCurrentBusinessNum(businessCountResponse.data[0]['count']);
         setData(businessResponse.data);
@@ -266,7 +268,7 @@ const BusinessTable = () => {
 
   return (
     <Box mr="20px" ml="20px" mb="30px">
-      <Tabs colorScheme="teal">
+      <Tabs colorScheme="teal" sx={{width: 'fit-content'}}>
         <TabList>
           <Tab
             onClick={() => {
@@ -294,7 +296,7 @@ const BusinessTable = () => {
               changeTab('Pending');
             }}
           >
-            Pending
+            Pending Application
           </Tab>
         </TabList>
       </Tabs>
@@ -319,34 +321,39 @@ const BusinessTable = () => {
               leftIcon={<FaPlus />}
               onClick={handleClick}
             >
-              Add Business
+              Add business
             </Button>
           </Box>
           <Box>
             <Button
-              colorScheme="teal"
+              colorScheme={(currentTab === 'Submitted') ? "gray" : "teal"}
               onClick={handleSendReminders}
               marginRight={4}
               fontSize={'0.9rem'}
+              sx={{width: '172px'}}
               isDisabled={currentTab === 'Submitted' || selectedBusinessIds.size === 0}
             >
-              <BiEnvelope style={{ marginRight: '5px' }} />
-              Send Reminder
+              
+              <Flex w={'100%'} justifyContent={'space-evenly'} alignItems={'center'}>
+                <BiEnvelope style={{ marginRight: '5px' }} />
+                <Text>Send reminder</Text>
+              </Flex>
             </Button>
             <Button
-              colorScheme="teal"
+              colorScheme={(currentTab === 'NotSubmitted') ? "gray" : "teal"}
               onClick={handleDownloadCSV}
               sx={{ width: '172px' }}
               fontSize={'0.9rem'}
               isDisabled={currentTab === 'NotSubmitted' || selectedBusinessIds.size === 0}
             >
-              <ArrowDownIcon sx={{ marginRight: '5px' }} />
-              Download CSV
+              <Flex w={'100%'} justifyContent={'space-evenly'} alignItems={'center'}>
+                <ArrowDownIcon sx={{ marginRight: '5px' }} />
+                <Text>Download CSV</Text>
+              </Flex>
             </Button>
           </Box>
         </Box>
         <Card mb="20px" mt="20px">
-          <Button onClick={onOpen}>Upload CSV</Button>
           <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
@@ -451,12 +458,6 @@ const BusinessTable = () => {
       </Box>
     </Box>
   );
-};
-
-BusinessTable.propTypes = {
-  tab: PropTypes.string,
-  ids: PropTypes.set,
-  setIds: PropTypes.func,
 };
 
 export default BusinessTable;
