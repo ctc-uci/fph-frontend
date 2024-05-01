@@ -37,13 +37,13 @@ const FirstForm = ({ admin, nextStep }) => {
       const urlParams = new URLSearchParams(window.location.search);
       const idFromUrl = urlParams.get('id');
       setId(idFromUrl);
-      await logout()
-    }
-    
+      await logout();
+    };
+
     setUp();
   }, []);
 
-  useEffect(() => {  
+  useEffect(() => {
     const createUser = async () => {
       try {
         await backend.post('/businessUser', { id: id, uid: currentUser.uid });
@@ -78,7 +78,7 @@ const FirstForm = ({ admin, nextStep }) => {
         }
       } else {
         await signup(email, password);
-        console.log("YOU", currentUser)
+        console.log('YOU', currentUser);
       }
     } catch (err) {
       console.log(err);

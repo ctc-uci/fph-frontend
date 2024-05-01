@@ -34,8 +34,7 @@ const App = () => {
             currentRoute == '/SignupBusiness' ||
             currentRoute == '/Login' ||
             currentRoute == '/ForgotPassword' ||
-            currentRoute == '/BusinessForm' ||
-            <Sidebar isAdmin={false} />}
+            currentRoute == '/BusinessForm' || <Sidebar isAdmin={false} />}
           <div className={styles.mainContent}>
             <Routes>
               <Route

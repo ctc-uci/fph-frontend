@@ -28,7 +28,6 @@ import {
 import FPH_LOGO from './fph_logo.png';
 
 const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit, setFormData }) => {
-
   const [businessHours, setBusinessHours] = useState('');
   useEffect(() => {
     setFormData({ ...formData, businessHours });
@@ -87,7 +86,7 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit, setFormData
     isReadOnly: propTypes.bool.isRequired,
   };
 
-  const handleTimeChange = (e) => {
+  const handleTimeChange = e => {
     setBusinessHours(e.target.value);
   };
 
@@ -171,12 +170,14 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit, setFormData
           <Flex direction="column" align="stretch" gap={5}>
             <Flex direction="column">
               <Box>
-                <FormControl marginTop="8vh" paddingLeft="10vh" paddingRight="10vh" id="business-hours">
-                <Text fontSize="xl">Business Hours</Text>
-                  <Input
-                    value={businessHours}
-                    onChange={handleTimeChange}
-                  ></Input>
+                <FormControl
+                  marginTop="8vh"
+                  paddingLeft="10vh"
+                  paddingRight="10vh"
+                  id="business-hours"
+                >
+                  <Text fontSize="xl">Business Hours</Text>
+                  <Input value={businessHours} onChange={handleTimeChange}></Input>
                 </FormControl>
               </Box>
 

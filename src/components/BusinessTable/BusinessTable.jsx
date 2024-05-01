@@ -53,13 +53,7 @@ const BusinessTable = () => {
   const [selectedBusinessIds, setSelectedBusinessIds] = useState(new Set());
   const toast = useToast();
 
-  const TABLE_HEADERS = [
-    'Business Name',
-    'Location',
-    'Email',
-    'Form Status',
-    'Last Submitted',
-  ];
+  const TABLE_HEADERS = ['Business Name', 'Location', 'Email', 'Form Status', 'Last Submitted'];
 
   const PENDING_HEADERS = [
     'Business Name',
@@ -67,10 +61,10 @@ const BusinessTable = () => {
     'Email',
     'Residential Status',
     'Application Sent',
-  ]
+  ];
 
   const [headers, setHeaders] = useState(TABLE_HEADERS);
-  
+
   const changeTab = async tab => {
     setCurrentTab(tab);
     setSelectedBusinessIds(new Set());
@@ -89,7 +83,7 @@ const BusinessTable = () => {
   }
 
   function getStatusBadge(status, submitted, notified) {
-    if (status === 'Pending'){
+    if (status === 'Pending') {
       return (
         <Badge colorScheme="yellow" px="2">
           <box-icon type="regular" name="time-five" size="xs" mr="10px"></box-icon>
@@ -97,7 +91,7 @@ const BusinessTable = () => {
         </Badge>
       );
     }
-    if (submitted){
+    if (submitted) {
       return (
         <Badge colorScheme="green" px="2">
           <Flex gap={1}>
@@ -122,7 +116,7 @@ const BusinessTable = () => {
         <Flex gap={1}>
           <box-icon type="regular" name="x" size="xs"></box-icon>
           <Text>Not Submitted</Text>
-        </Flex>    
+        </Flex>
       </Badge>
     );
   }
@@ -172,12 +166,13 @@ const BusinessTable = () => {
         };
 
         await backend.post('/notification', requestData);
-        
       } catch (error) {
         console.error('Error sending reminders:', error);
       }
     }
-    const message = `To ${selectedBusinessIds.size} ${(selectedBusinessIds.size > 1) ? `businesses` : ` business`}.`;
+    const message = `To ${selectedBusinessIds.size} ${
+      selectedBusinessIds.size > 1 ? `businesses` : ` business`
+    }.`;
     toast({
       title: 'Reminder Sent',
       description: message,
@@ -195,7 +190,7 @@ const BusinessTable = () => {
     }
     try {
       DownloadCSV(ids, 'business');
-      const message = `For ${ids.length} ${(ids.length > 1) ? `businesses` : ` business`}.`;
+      const message = `For ${ids.length} ${ids.length > 1 ? `businesses` : ` business`}.`;
       toast({
         title: 'Downloaded CSV',
         description: message,
@@ -204,19 +199,17 @@ const BusinessTable = () => {
         isClosable: true,
       });
     } catch (error) {
-
       toast({
         title: 'Error Downloading CSV',
         description: error.message,
         status: 'success',
         duration: 3000,
         isClosable: true,
-      })
-    }    
-    
+      });
+    }
   };
 
-  const getResidentialStatusBadge = (status) => {
+  const getResidentialStatusBadge = status => {
     if (status === 'Pending') {
       return (
         <Badge colorScheme="orange" px="2">
@@ -242,7 +235,7 @@ const BusinessTable = () => {
         </Flex>
       </Badge>
     );
-  }
+  };
 
   useEffect(() => {
     const getData = async () => {
@@ -251,7 +244,9 @@ const BusinessTable = () => {
         const businessResponse = await backend.get(
           `/business/filter/${currentTab}?pageLimit=10&pageNum=${currentPageNum}&searchTerm=${searchTerm}`,
         );
-        const businessCountResponse = await backend.get(`/business/totalBusinesses?tab=${currentTab}&searchTerm=${searchTerm}`);
+        const businessCountResponse = await backend.get(
+          `/business/totalBusinesses?tab=${currentTab}&searchTerm=${searchTerm}`,
+        );
         setPageLimit(Math.ceil(businessCountResponse.data[0]['count'] / 10));
         setCurrentBusinessNum(businessCountResponse.data[0]['count']);
         setData(businessResponse.data);
@@ -270,8 +265,8 @@ const BusinessTable = () => {
   };
 
   return (
-    <Box mr='20px' ml='20px' mb='30px'>
-      <Tabs colorScheme='teal'>
+    <Box mr="20px" ml="20px" mb="30px">
+      <Tabs colorScheme="teal">
         <TabList>
           <Tab
             onClick={() => {
@@ -350,96 +345,111 @@ const BusinessTable = () => {
             </Button>
           </Box>
         </Box>
-      <Card mb="20px" mt="20px">
-      <Button onClick={onOpen}>Upload CSV</Button>
-        <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader marginBottom={0}>
-              <Heading size={'md'}>Upload existing data</Heading>
-            </ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <Text fontFamily={'Inter'}>
-                Transfer all business information into your new portal.
-              </Text>
-              <DropZone onClose={onClose} />
-            </ModalBody>
-            <ModalFooter></ModalFooter>
-          </ModalContent>
-        </Modal>
-        <Table variant="simple" colorScheme="facebook">
-          <Thead>
-            <Tr>
-              <Th key="checkbox" w={'5%'}>
-                <Checkbox
-                  isChecked={selectedBusinessIds.size > 0 && selectedBusinessIds.size === data.length}
-                  onChange={handleSelectAllChange}
-                ></Checkbox>
-              </Th>
-              {headers.map((header, index) => (
-                <Th key={index} w={'19%'}>{header}</Th>
-              ))}
-            </Tr>
-          </Thead>
-          {data.length == 0 ? (
-            <h1>Loading ...</h1>
-          ) : (
-            <Tbody>
-              {data && data.map((item, index) => (
-                  <Tr key={index}>
-                    <Td key="checkbox">
-                      <Checkbox
-                        isChecked={selectedBusinessIds.has(item.id)}
-                        onChange={() => handleCheckboxChange(item.id)}
-                      ></Checkbox>
-                    </Td>
-                    <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>{item.name}</Td>
-                    <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>{item.city}, {item.state}</Td>
-                    <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>{item.primary_email}</Td>
-                    {currentTab === 'Pending' ? (
-                      <>
-                        <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>{getResidentialStatusBadge(item.residential)}</Td>
-                        <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>{formatDateDFH(item.join_date)}</Td>
-                      </>
-                      
-                    )
-                    : (
-                      <>
-                        <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>{getStatusBadge(item.status, item.submitted, item.notified)}</Td>
-                        <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>{formatDateDFH(item.max_date)}</Td>
-                      </>
-                    )}
-                  </Tr>
+        <Card mb="20px" mt="20px">
+          <Button onClick={onOpen}>Upload CSV</Button>
+          <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader marginBottom={0}>
+                <Heading size={'md'}>Upload existing data</Heading>
+              </ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <Text fontFamily={'Inter'}>
+                  Transfer all business information into your new portal.
+                </Text>
+                <DropZone onClose={onClose} />
+              </ModalBody>
+              <ModalFooter></ModalFooter>
+            </ModalContent>
+          </Modal>
+          <Table variant="simple" colorScheme="facebook">
+            <Thead>
+              <Tr>
+                <Th key="checkbox" w={'5%'}>
+                  <Checkbox
+                    isChecked={
+                      selectedBusinessIds.size > 0 && selectedBusinessIds.size === data.length
+                    }
+                    onChange={handleSelectAllChange}
+                  ></Checkbox>
+                </Th>
+                {headers.map((header, index) => (
+                  <Th key={index} w={'19%'}>
+                    {header}
+                  </Th>
                 ))}
+              </Tr>
+            </Thead>
+            {data.length == 0 ? (
+              <h1>Loading ...</h1>
+            ) : (
+              <Tbody>
+                {data &&
+                  data.map((item, index) => (
+                    <Tr key={index}>
+                      <Td key="checkbox">
+                        <Checkbox
+                          isChecked={selectedBusinessIds.has(item.id)}
+                          onChange={() => handleCheckboxChange(item.id)}
+                        ></Checkbox>
+                      </Td>
+                      <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
+                        {item.name}
+                      </Td>
+                      <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
+                        {item.city}, {item.state}
+                      </Td>
+                      <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
+                        {item.primary_email}
+                      </Td>
+                      {currentTab === 'Pending' ? (
+                        <>
+                          <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
+                            {getResidentialStatusBadge(item.residential)}
+                          </Td>
+                          <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
+                            {formatDateDFH(item.join_date)}
+                          </Td>
+                        </>
+                      ) : (
+                        <>
+                          <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
+                            {getStatusBadge(item.status, item.submitted, item.notified)}
+                          </Td>
+                          <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
+                            {formatDateDFH(item.max_date)}
+                          </Td>
+                        </>
+                      )}
+                    </Tr>
+                  ))}
               </Tbody>
             )}
           </Table>
-      </Card>
-      <Flex gap={4} justifyContent={'flex-end'} alignItems={'center'}>
-        <Box>
-          {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentBusinessNum)} of{' '}
-          {currentBusinessNum}
-        </Box>
-        <IconButton
-          aria-label="Back button"
-          isDisabled={currentPageNum <= 1}
-          variant={'ghost'}
-          icon={<ChevronLeftIcon />}
-          onClick={() => setCurrentPageNum(currentPageNum - 1)}
-        />
-        <IconButton
-          aria-label="Next button"
-          isDisabled={currentPageNum >= pageLimit}
-          variant={'ghost'}
-          icon={<ChevronRightIcon />}
-          onClick={() => setCurrentPageNum(currentPageNum + 1)}
-        />
-      </Flex>
+        </Card>
+        <Flex gap={4} justifyContent={'flex-end'} alignItems={'center'}>
+          <Box>
+            {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentBusinessNum)}{' '}
+            of {currentBusinessNum}
+          </Box>
+          <IconButton
+            aria-label="Back button"
+            isDisabled={currentPageNum <= 1}
+            variant={'ghost'}
+            icon={<ChevronLeftIcon />}
+            onClick={() => setCurrentPageNum(currentPageNum - 1)}
+          />
+          <IconButton
+            aria-label="Next button"
+            isDisabled={currentPageNum >= pageLimit}
+            variant={'ghost'}
+            icon={<ChevronRightIcon />}
+            onClick={() => setCurrentPageNum(currentPageNum + 1)}
+          />
+        </Flex>
+      </Box>
     </Box>
-  </Box>
-  
-  
   );
 };
 

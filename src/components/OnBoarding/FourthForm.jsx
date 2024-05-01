@@ -3,7 +3,6 @@ import FPH_LOGO from './fph_logo.png';
 import propTypes from 'prop-types';
 
 const FourthForm = ({ setFormOpen }) => {
-
   return (
     <Flex>
       <Stack marginTop="30vh" width="full" direction="column" align={'center'}>

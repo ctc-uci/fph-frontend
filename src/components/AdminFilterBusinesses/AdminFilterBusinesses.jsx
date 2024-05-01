@@ -96,4 +96,3 @@ const AdminFilterBusinesses = () => {
 };
 
 export default AdminFilterBusinesses;
-
