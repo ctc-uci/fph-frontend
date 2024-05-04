@@ -1,7 +1,7 @@
 import './AdminDashboard.module.css';
 import { useBackend } from '../../contexts/BackendContext';
 import { useAuth } from '../../contexts/AuthContext.jsx';
-import NotificationsDrawer from './NotificationsDrawer';
+import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer.jsx';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Flex, Stack, Text, Center, Divider } from '@chakra-ui/react';

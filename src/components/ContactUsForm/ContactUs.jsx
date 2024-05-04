@@ -49,6 +49,7 @@ const ContactUs = () => {
   ];
 
   const [businessId, setBusinessId] = useState(null);
+  const [businessName, setBusinessName] = useState('');
 
   useEffect(() => {
     // Define an async function inside useEffect since useEffect cannot be asynchronous directly
@@ -57,8 +58,11 @@ const ContactUs = () => {
         // Fetch business ID from backend
         const businessIdResponse = await backend.get(`/businessUser/${currentUser.uid}`);
         const fetchedBusinessId = businessIdResponse.data[0].id;
+        const businessNameResponse = await backend.get(`/business/${fetchedBusinessId}`);
+        const fetchedBusinessName = businessNameResponse.data[0].business_name;
         // Set the fetched business ID in state
         setBusinessId(fetchedBusinessId);
+        setBusinessName(fetchedBusinessName);
       } catch (error) {
         // Handle errors
         console.error('Error fetching business ID:', error);
@@ -67,13 +71,6 @@ const ContactUs = () => {
 
     fetchBusinessId();
   }, []);
-
-  const formData = {
-    business_id: FPH_ID,
-    message: null,
-    timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }),
-    been_dismissed: false,
-  };
 
   const ConfirmationDialog = ({ isOpen, onClose }) => (
     <Modal size="5xl" isOpen={isOpen} onClose={onClose}>
@@ -109,15 +106,25 @@ const ContactUs = () => {
   };
 
   const SubmitForm = async () => {
-    const message = setMessage(text);
+    const msg = {
+      "Get Pet Food Decal": checkedItems[0],
+      "Decal": checkedItems[1],
+      "Homeless Card": checkedItems[2],
+      "Business Card": checkedItems[3],
+      "Donation Site Decal": checkedItems[4],
+      "Donation Site Bin Decals": checkedItems[5],
+      "Donation Envelopes": checkedItems[6],
+      "Homeless Card 2": checkedItems[7],
+      "Notes": text,
+    };
+    const message = JSON.stringify(msg);
     const updatedFormData = {
-      ...formData,
+      businessId: FPH_ID,
       message: message,
       type: 'Supply Request',
-      timestamp: new Date().toLocaleString('en-US', {
-        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      }),
-      been_dismissed: false,
+      senderId: businessId,
+      businessName: businessName,
+      donationId: null,
     };
     await backend.post('/notification/', updatedFormData);
     setShowConfirmation(true);
@@ -135,14 +142,6 @@ const ContactUs = () => {
   const isFormFilled = () => {
     // Check if all form fields are filled
     return checkedItems.some(value => value !== 0) || text.length > 0;
-  };
-
-  const setMessage = text => {
-    const textCopy = text;
-
-    const preMessage = `Business ID: ${businessId} is requesting:`;
-    const messageBody = checkedThingies.map((item, index) => `${item}: ${checkedItems[index]}\n`);
-    return `${preMessage}\n${messageBody}\nNotes:\n${textCopy}`;
   };
 
   const textInputHandler = e => {
