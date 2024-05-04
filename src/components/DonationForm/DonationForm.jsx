@@ -26,11 +26,14 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
 import classes from './DonationForm.module.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const DonationForm = () => {
   const { backend } = useBackend();
   const { currentUser } = useAuth();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const paramId = searchParams.get('id');
   const labels = {
     'Canned Cat Food': 'canned_cat_food_quantity',
     'Dry Cat Food': 'dry_cat_food_quantity',
@@ -57,13 +60,17 @@ const DonationForm = () => {
 
   useEffect(() => {
     const fetchBusinessId = async () => {
-      try {
-        const businessIdResponse = await backend.get(`/businessUser/${currentUser.uid}`);
-        const fetchedBusinessId = businessIdResponse.data[0].id;
-        setBusinessId(fetchedBusinessId);
-        setFormData(prevState => ({ ...prevState, business_id: fetchedBusinessId }));
-      } catch (error) {
-        console.error('Error fetching business ID:', error);
+      if (paramId) {
+        setFormData(prevState => ({ ...prevState, business_id: paramId }));
+      } else {
+        try {
+          const businessIdResponse = await backend.get(`/businessUser/${currentUser.uid}`);
+          const fetchedBusinessId = businessIdResponse.data[0].id;
+          setBusinessId(fetchedBusinessId);
+          setFormData(prevState => ({ ...prevState, business_id: fetchedBusinessId }));
+        } catch (error) {
+          console.error('Error fetching business ID:', error);
+        }
       }
     };
 
@@ -71,7 +78,11 @@ const DonationForm = () => {
   }, []);
 
   const handleCancelClick = () => {
-    navigate('/BusinessDashboard');
+    if (paramId) {
+      navigate(`/ViewBusiness/${paramId}`);
+    } else {
+      navigate('/BusinessDashboard');
+    }
   };
 
   const submitForm = async event => {
@@ -103,7 +114,11 @@ const DonationForm = () => {
     } catch (error) {
       console.error('Form submission failed:', error);
     }
-    navigate('/Congrats');
+    if (!paramId) {
+      navigate('/Congrats');
+    } else {
+      navigate(`/ViewBusiness/${paramId}`)
+    }
   };
 
   const handleChange = event => {
@@ -220,9 +235,7 @@ const DonationForm = () => {
         <Link color="blue.500" onClick={handleCancelClick} fontSize="16px">
           Home
         </Link>
-        <Text fontSize="16px">
-          / Donation Form
-        </Text>
+        <Text fontSize="16px">/ Donation Form</Text>
       </Flex>
       <Heading marginLeft="32px" fontSize="36px" paddingBottom={'20px'}>
         Donation Form

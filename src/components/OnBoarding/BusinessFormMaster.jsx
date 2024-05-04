@@ -64,8 +64,8 @@ const BusinessFormMaster = ({ setFormOpen }) => {
       vendorType: DUMMY_STRING,
       status: PENDING_STATUS,
       petsOfTheHomelessDiscount: DUMMY_BOOL,
-      updatedBy: DUMMY_STRING,
-      updatedDateTime: DUMMY_DATE,
+      updatedBy: formData['personFirstName'] + ' ' + formData['personLastName'],
+      updatedDateTime: new Date(),
       syncToQb: DUMMY_BOOL,
       veterinary: DUMMY_BOOL,
       resource: DUMMY_BOOL,
@@ -93,8 +93,8 @@ const BusinessFormMaster = ({ setFormOpen }) => {
       serviceRequest: DUMMY_BOOL,
       inactive: DUMMY_BOOL,
       finalCheck: DUMMY_BOOL,
-      createdBy: DUMMY_DATE,
-      createdDate: DUMMY_DATE,
+      createdBy: formData['personFirstName'] + ' ' + formData['personLastName'],
+      createdDate: new Date(),
     };
 
     const notification_data = {

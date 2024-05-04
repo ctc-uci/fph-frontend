@@ -28,6 +28,7 @@ import {
   ModalCloseButton,
   ModalOverlay,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   Stack,
   Link as ChakraLink,
@@ -59,7 +60,8 @@ const BusinessForm = ({ edit = true }) => {
     'Rehome Foster',
   ];
   const { id } = useParams();
-  const { isAdmin } = useAuth();
+  const { isAdmin, currentUser } = useAuth();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [businessName, setBusinessName] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -86,6 +88,7 @@ const BusinessForm = ({ edit = true }) => {
   const [isAdminUser, setIsAdminUser] = useState(false);
   const [termsAndConditionsIsOpened, setTermsAndConditionsIsOpened] = useState(false);
   const [termsAndConditionsAccepted, setTermsAndConditionsAccepted] = useState(false);
+  const [updatedBy, setUpdatedBy] = useState(null);
   const { backend } = useBackend();
   useEffect(() => {
     const checkIsAdmin = async () => {
@@ -99,6 +102,18 @@ const BusinessForm = ({ edit = true }) => {
     checkIsAdmin();
     if (edit) {
       fillOutPendingData();
+    }
+
+    const getAdminUser = async () => {
+      try {
+        const adminUserResponse = await backend.get(`adminUser/${currentUser.email}`);
+        setUpdatedBy(adminUserResponse.data[0].name);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    if (currentUser) {
+      getAdminUser();
     }
   }, [backend]);
 
@@ -144,17 +159,17 @@ const BusinessForm = ({ edit = true }) => {
         inactive: checkedAddedInfo['Inactive'],
         finalCheck: checkedAddedInfo['Final Check'],
         type: vendorType,
-        status: "Active",
-        onboardingStatus: "Active",
-        createdDate: new Date(),
-        resedential: "Residential"
+        status: 'Active',
+        onboardingStatus: 'Active',
+        updatedDateTime: new Date(),
+        updatedBy: updatedBy,
       };
       if (edit) {
         await backend.put(`/business/${id}`, data);
       } else {
         await backend.post('/business', data);
       }
-      
+
       if (edit) {
         navigate(`/ViewBusiness/${id}`);
       } else {
@@ -167,6 +182,12 @@ const BusinessForm = ({ edit = true }) => {
 
   const handleHome = () => {
     navigate(`/AdminDashboard`);
+  };
+
+  const handleDeleteModalClick = () => {
+    backend.delete(`/business/${id}`);
+    setIsDeleteModalOpen(false);
+    navigate('/AdminDashboard');
   };
 
   const fillOutPendingData = async () => {
@@ -199,7 +220,7 @@ const BusinessForm = ({ edit = true }) => {
     setPublished(business_data.published || false);
     setWebDateInit(business_data.web_date_init || '');
     setBusinessHours(business_data.business_hours || '');
-    setVendorType(business_data.vendorType || '');
+    setVendorType(business_data.type || '');
     setCheckedAddedInfo({
       ...checkedAddedInfo,
       ['Pet Food Provider Site']: business_data.food,
@@ -221,6 +242,7 @@ const BusinessForm = ({ edit = true }) => {
       ['Cat Specific']: business_data.cat,
     });
     setFPHPhone(business_data.fph_phone || '');
+    setServiceRequest(business_data.service_request || false);
   };
 
   const handleCheckboxChange = event => {
@@ -241,13 +263,25 @@ const BusinessForm = ({ edit = true }) => {
       {isAdminUser && (
         <>
           <>
+            <Modal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>Delete business</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>Are you sure? You can’t undo this action afterwards.</ModalBody>
+                <ModalFooter>
+                  <Button colorScheme="gray" mr={3} onClick={() => setIsDeleteModalOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button colorScheme="red" onClick={handleDeleteModalClick}>
+                    Delete
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
             <Modal isOpen={termsAndConditionsIsOpened} isCentered>
               <ModalOverlay>
-                <ModalContent
-                  width="80%"
-                  maxWidth="800px"
-                  top="5vw"
-                >
+                <ModalContent width="80%" maxWidth="800px" top="5vw">
                   <ModalHeader>
                     &nbsp;
                     <Stack direction="row" justifyContent="space-between">
@@ -336,6 +370,7 @@ const BusinessForm = ({ edit = true }) => {
                         colorScheme="red"
                         aria-label="Delete menu"
                         icon={<box-icon name="trash" color="#d30000"></box-icon>}
+                        onClick={() => setIsDeleteModalOpen(true)}
                       />
                     </Flex>
                   )}
@@ -590,23 +625,21 @@ const BusinessForm = ({ edit = true }) => {
                                       onChange={e => setVendorType(e.target.value)}
                                       w="20vw"
                                     >
-                                      <option value={'school'}>School</option>
-                                      <option value={'hospital'}>Hospital</option>
-                                      <option value={'grocery store'}>Grocery Store</option>
-                                      <option value={'private institution'}>
+                                      <option value={'School'}>School</option>
+                                      <option value={'hospitHospitalal'}>Hospital</option>
+                                      <option value={'Grocery store'}>Grocery Store</option>
+                                      <option value={'Private institution'}>
                                         Private Institution
                                       </option>
-                                      <option value={'other'}>Other</option>
+                                      <option value={'Other'}>Other</option>
                                     </Select>
                                   </Td>
                                   <Td>
                                     <Flex gap={10} mt={2}>
                                       <Text>Valid for Service Request</Text>
                                       <Checkbox
-                                        value={serviceRequest}
-                                        onChange={e => {
-                                          setServiceRequest(e.target.value);
-                                        }}
+                                        isChecked={serviceRequest}
+                                        onChange={() => setServiceRequest(!serviceRequest)}
                                       ></Checkbox>
                                     </Flex>
                                   </Td>

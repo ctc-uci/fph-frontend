@@ -18,14 +18,13 @@ import {
   ModalCloseButton,
   ModalBody,
   Spacer,
-  Icon
+  Icon,
 } from '@chakra-ui/react';
 import 'boxicons';
 import fphLogo from './fph-logo.png.png';
 import { useAuth } from '../../contexts/AuthContext';
 import { useEffect, useState } from 'react';
-import { BiBuildingHouse, BiPhone, BiEnvelope,} from 'react-icons/bi';
-
+import { BiBuildingHouse, BiPhone, BiEnvelope } from 'react-icons/bi';
 
 function Sidebar() {
   const [isAdminUser, setIsAdminUser] = useState(false);
@@ -120,8 +119,19 @@ function Sidebar() {
               <VStack>
                 {!isAdminUser && (
                   <Link style={{ width: '100%', display: 'block' }}>
-                    <Button onClick={onOpen} width="full" marginLeft="3vh" justifyContent="flex-start" variant="ghost" as="footer">
-                      <box-icon type="regular" name="help-circle" style={{ marginRight: '0.5rem' }}></box-icon>
+                    <Button
+                      onClick={onOpen}
+                      width="full"
+                      marginLeft="3vh"
+                      justifyContent="flex-start"
+                      variant="ghost"
+                      as="footer"
+                    >
+                      <box-icon
+                        type="regular"
+                        name="help-circle"
+                        style={{ marginRight: '0.5rem' }}
+                      ></box-icon>
                       Contact Us
                     </Button>
                   </Link>
@@ -167,7 +177,10 @@ function Sidebar() {
                 <Box color={'#359797'}>
                   <Icon as={BiBuildingHouse} />
                 </Box>
-                <Text as='b' ml={2}>Address</Text> {/* Added margin left for spacing */}
+                <Text as="b" ml={2}>
+                  Address
+                </Text>{' '}
+                {/* Added margin left for spacing */}
               </Flex>
               <Text>710 W Washington St, Carson City, NV 89703</Text>
               <Spacer height="4" />
@@ -175,7 +188,10 @@ function Sidebar() {
                 <Box color={'#359797'}>
                   <Icon as={BiPhone} />
                 </Box>
-                <Text as='b' ml={2}>Phone Number</Text> {/* Added margin left for spacing */}
+                <Text as="b" ml={2}>
+                  Phone Number
+                </Text>{' '}
+                {/* Added margin left for spacing */}
               </Flex>
               <Text>(775) 841-7463</Text>
               <Spacer height="4" />
@@ -183,7 +199,10 @@ function Sidebar() {
                 <Box color={'#359797'}>
                   <Icon as={BiEnvelope} />
                 </Box>
-                <Text as='b' ml={2}>Email</Text> {/* Added margin left for spacing */}
+                <Text as="b" ml={2}>
+                  Email
+                </Text>{' '}
+                {/* Added margin left for spacing */}
               </Flex>
               <Text>info@petsofthehomeless.org</Text>
               <br />

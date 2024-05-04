@@ -23,6 +23,7 @@ import { AddBusinessForm, BusinessForm } from './components/BusinessForm/Busines
 import Congrats from './components/DonationForm/Congrats.jsx';
 import ViewRequest from './components/ViewRequest/ViewRequest.jsx';
 import AdminSettingsMaster from './components/AdminSettings/AdminSettingsMaster.jsx';
+import ViewDonation from './components/ViewDonation/ViewDonation.jsx';
 
 const App = () => {
   const location = useLocation();
@@ -57,7 +58,11 @@ const App = () => {
                 path="/AdminDashboard"
                 element={<ProtectedRoute Component={AdminDashboard} />}
               />
-              <Route exact path="/AdminSettings" element={<ProtectedRoute Component={AdminSettingsMaster} />} />
+              <Route
+                exact
+                path="/AdminSettings"
+                element={<ProtectedRoute Component={AdminSettingsMaster} />}
+              />
               <Route
                 exact
                 path="/EditContactInformation"
@@ -117,6 +122,11 @@ const App = () => {
                 exact
                 path="/ViewRequest/:id"
                 element={<ProtectedRoute Component={ViewRequest} />}
+              />
+              <Route
+                exact
+                path="/ViewDonation/:id"
+                element={<ProtectedRoute Component={ViewDonation} />}
               />
               <Route
                 exact
