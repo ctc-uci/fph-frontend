@@ -7,6 +7,7 @@ import BusinessNotificationCenter from './components/BusinessNotificationCenter/
 import AdminDashboard from './components/AdminDashboard/AdminDashboard';
 import EditContactInformation from './components/EditContactInformation';
 import BusinessDonationHistory from './components/BusinessDonationHistory/BusinessDonationHistory.jsx';
+import ViewDonationHistory from './components/BusinessDonationHistory/ViewDonationHistory/ViewDonationHistory.jsx';
 import ContactUs from './components/ContactUsForm/ContactUs';
 import DonationTrackingTable from './components/DonationTrackingTable/DonationTrackingTable.jsx';
 import styles from './App.module.css';
@@ -116,6 +117,11 @@ const App = () => {
                 exact
                 path="/ViewRequest/:id"
                 element={<ProtectedRoute Component={ViewRequest} />}
+              />
+              <Route
+                exact
+                path="/BusinessDonationHistory/:id"
+                element={<ProtectedRoute Component={ViewDonationHistory} />}
               />
               <Route
                 exact

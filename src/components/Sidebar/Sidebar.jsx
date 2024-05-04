@@ -10,15 +10,27 @@ import {
   Box,
   Text,
   HStack,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  Spacer,
+  Icon
 } from '@chakra-ui/react';
 import 'boxicons';
 import fphLogo from './fph-logo.png.png';
 import { useAuth } from '../../contexts/AuthContext';
 import { useEffect, useState } from 'react';
+import { BiBuildingHouse, BiPhone, BiEnvelope,} from 'react-icons/bi';
+
 
 function Sidebar() {
-  const { isAdmin } = useAuth();
   const [isAdminUser, setIsAdminUser] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure(); // State management for modal
+
   useEffect(() => {
     const checkIsAdmin = async () => {
       if (await isAdmin()) {
@@ -31,7 +43,7 @@ function Sidebar() {
 
   const businessList = [
     { name: 'Home', path: '/BusinessDashboard', icon: 'home-smile' },
-    { name: 'Donation History', path: '/BusinessDonationTrackingForm', icon: 'heart-circle' },
+    { name: 'Donation History', path: '/BusinessDonationHistory', icon: 'heart-circle' },
     { name: 'Supply Request', path: '/ContactUs', icon: 'package' },
     { name: 'Account', path: '/EditContactInformation', icon: 'user' },
   ];
@@ -44,7 +56,7 @@ function Sidebar() {
   ];
 
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, isAdmin } = useAuth();
 
   const authLogout = async () => {
     try {
@@ -106,20 +118,10 @@ function Sidebar() {
             </Flex>
             <Flex width="35vh" flexDirection="column">
               <VStack>
-                {!isAdmin && (
+                {!isAdminUser && (
                   <Link to={'/ContactUs'} style={{ width: '100%', display: 'block' }}>
-                    <Button
-                      width="full"
-                      marginLeft="3vh"
-                      justifyContent="flex-start"
-                      variant="ghost"
-                      as="footer"
-                    >
-                      <box-icon
-                        type="regular"
-                        name="help-circle"
-                        style={{ marginRight: '0.5rem' }}
-                      ></box-icon>
+                    <Button onClick={onOpen} width="full" marginLeft="3vh" justifyContent="flex-start" variant="ghost" as="footer">
+                      <box-icon type="regular" name="help-circle" style={{ marginRight: '0.5rem' }}></box-icon>
                       Contact Us
                     </Button>
                   </Link>
@@ -155,6 +157,39 @@ function Sidebar() {
             </Flex>
           </VStack>
         </Flex>
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Contact Information</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Flex alignItems="center">
+                <Box color={'#359797'}>
+                  <Icon as={BiBuildingHouse} />
+                </Box>
+                <Text as='b' ml={2}>Address</Text> {/* Added margin left for spacing */}
+              </Flex>
+              <Text>710 W Washington St, Carson City, NV 89703</Text>
+              <Spacer height="4" />
+              <Flex alignItems="center">
+                <Box color={'#359797'}>
+                  <Icon as={BiPhone} />
+                </Box>
+                <Text as='b' ml={2}>Phone Number</Text> {/* Added margin left for spacing */}
+              </Flex>
+              <Text>(775) 841-7463</Text>
+              <Spacer height="4" />
+              <Flex alignItems="center">
+                <Box color={'#359797'}>
+                  <Icon as={BiEnvelope} />
+                </Box>
+                <Text as='b' ml={2}>Email</Text> {/* Added margin left for spacing */}
+              </Flex>
+              <Text>info@petsofthehomeless.org</Text>
+              <br />
+            </ModalBody>
+          </ModalContent>
+        </Modal>
       </>
     </ChakraProvider>
   );
