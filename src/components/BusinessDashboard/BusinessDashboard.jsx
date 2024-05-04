@@ -127,6 +127,7 @@ const BusinessDashboard = () => {
         const priceResponse = await backend.get('/value');
         setPriceData(priceResponse.data);
 
+
         const reminderResponse = await backend.get(`/notification/${businessId}`);
         setReminderData(reminderResponse.data);
       } catch (error) {
@@ -168,27 +169,28 @@ const BusinessDashboard = () => {
     );
   };
 
-  /*
+
   const calculateTotalWorth = () => {
     // ***********************************************************************
     // CHANGE LATER: Right now the prices are just the first four rows of the
     // fair_market_value table, thus if the table has less than four tables
     // this function will break
     // ***********************************************************************
-    return donationData['canned_dog_food_quantity'] && priceData.length > 0
-      ? donationData['canned_dog_food_quantity'] * priceData[0]['price'] +
-          donationData['dry_dog_food_quantity'] * priceData[1]['price'] +
-          donationData['canned_cat_food_quantity'] * priceData[2]['price'] +
-          donationData['dry_cat_food_quantity'] * priceData[3]['price']
-      : 0;
-  };
-  */
+    //return donationData['canned_dog_food_quantity'] && priceData.length > 0
+    // ?
+    //: 0;
+    const totalWorth =
+    (donationData['canned_dog_food_quantity'] || 0) * (priceData[0] ? priceData[0]['price'] : 0) +
+    (donationData['dry_dog_food_quantity'] || 0) * (priceData[1] ? priceData[1]['price'] : 0) +
+    (donationData['canned_cat_food_quantity'] || 0) * (priceData[2] ? priceData[2]['price'] : 0) +
+    (donationData['dry_cat_food_quantity'] || 0) * (priceData[3] ? priceData[3]['price'] : 0);
+return totalWorth.toFixed(2);
 
-  // Bruh naw what is this CHANGE LATER
-  const calculateTotalWorth = () => {
-    console.log(priceData);
-    return 99;
+
   };
+
+
+
 
   const calculateTimeSince = () => {
     if (!(reminderData.length > 0)) {

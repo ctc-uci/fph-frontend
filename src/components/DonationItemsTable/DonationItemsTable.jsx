@@ -195,7 +195,10 @@ const DonationItems = ({ category }) => {
                     openDeleteModal(item);
                   }}
                 >
+                  {index >= 4 ?
                   <DeleteIcon color="red" />
+                  : null }
+
                 </Button>
               </Td>
             </Tr>
