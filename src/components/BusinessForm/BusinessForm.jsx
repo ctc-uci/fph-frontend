@@ -23,6 +23,13 @@ import {
   Textarea,
   Select,
   Checkbox,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  Stack,
   Link as ChakraLink,
 } from '@chakra-ui/react';
 import { useAuth } from '../../contexts/AuthContext';
@@ -71,12 +78,14 @@ const BusinessForm = ({ edit = true }) => {
   const [checkedAddedInfo, setCheckedAddedInfo] = useState({});
   const [webNotes, setWebNotes] = useState('');
   const [published, setPublished] = useState(false);
-  const [webDateInit, setWebDateInit] = useState('');
+  const [webDateInit, setWebDateInit] = useState(new Date());
   const [internalNotes, setInternalNotes] = useState('');
   const [fphPhone, setFPHPhone] = useState('');
   const [vendorType, setVendorType] = useState('');
   const [serviceRequest, setServiceRequest] = useState(false);
   const [isAdminUser, setIsAdminUser] = useState(false);
+  const [termsAndConditionsIsOpened, setTermsAndConditionsIsOpened] = useState(false);
+  const [termsAndConditionsAccepted, setTermsAndConditionsAccepted] = useState(false);
   const { backend } = useBackend();
   useEffect(() => {
     const checkIsAdmin = async () => {
@@ -97,6 +106,8 @@ const BusinessForm = ({ edit = true }) => {
     e.preventDefault();
 
     try {
+      const parsedPhone = phone.replace(/-/g, '');
+
       const data = {
         name: businessName,
         contactName: firstName + ' ' + lastName,
@@ -106,7 +117,7 @@ const BusinessForm = ({ edit = true }) => {
         city: city,
         website: website,
         businessHours: businessHours,
-        primaryPhone: phone,
+        primaryPhone: parsedPhone,
         primaryEmail: email,
         findOut: howHeard,
         food: checkedAddedInfo['Pet Food Provider Site'],
@@ -132,67 +143,31 @@ const BusinessForm = ({ edit = true }) => {
         serviceRequest: serviceRequest,
         inactive: checkedAddedInfo['Inactive'],
         finalCheck: checkedAddedInfo['Final Check'],
+        type: vendorType,
+        status: "Active",
+        onboardingStatus: "Active",
+        createdDate: new Date(),
+        resedential: "Residential"
       };
       if (edit) {
         await backend.put(`/business/${id}`, data);
       } else {
         await backend.post('/business', data);
       }
+      
+      if (edit) {
+        navigate(`/ViewBusiness/${id}`);
+      } else {
+        navigate('/AdminDashboard');
+      }
     } catch (error) {
       console.error('Error in business registration:', error);
-    }
-    if (edit) {
-      navigate(`/ViewBusiness/${id}`);
-    } else {
-      navigate('/AdminDashboard');
     }
   };
 
   const handleHome = () => {
     navigate(`/AdminDashboard`);
   };
-
-  // const handleApprove = async () => {
-  //   const updatedData = {
-  //     ...businessData,
-  //     status: 'Active',
-  //   };
-  //   try {
-  //     await backend.put(`/business/${id}`, updatedData);
-  //     setRegistrationSuccess(true);
-  //     navigate('/AdminDashboard');
-  //     toast({
-  //       title: 'Business form has been approved',
-  //       status: 'warning',
-  //       duration: 3000,
-  //       isClosable: true,
-  //       position: 'bottom-right',
-  //     });
-  //   } catch (error) {
-  //     console.log('Error in approving business:', error);
-  //   }
-  // };
-
-  // const handleDeny = async () => {
-  //   const updatedData = {
-  //     ...businessData,
-  //     status: 'Denied',
-  //   };
-  //   try {
-  //     await backend.put(`/business/${id}`, updatedData);
-  //     setRegistrationSuccess(true);
-  //     navigate('/AdminDashboard');
-  //     toast({
-  //       title: 'Business form has been denied',
-  //       status: 'warning',
-  //       duration: 3000,
-  //       isClosable: true,
-  //       position: 'bottom-right',
-  //     });
-  //   } catch (error) {
-  //     console.error('Error in approving business:', error);
-  //   }
-  // };
 
   const fillOutPendingData = async () => {
     const business = await backend.get(`/business/${id}`);
@@ -257,397 +232,446 @@ const BusinessForm = ({ edit = true }) => {
     navigate(`/ViewBusiness/${id}`);
   };
 
+  const handleToggleTerms = () => {
+    setTermsAndConditionsAccepted(!termsAndConditionsAccepted);
+  };
+
   return (
     <ChakraProvider>
       {isAdminUser && (
-        <Flex justify="flex-end" wrap="nowrap" maxW="80%" mx="auto" flexDirection={'column'}>
-          <Flex justifyContent={'space-between'} mr="auto" w="1089px" marginTop={4}>
-            <Flex gap={1}>
-              <ChakraLink onClick={handleHome} color="blue.500" decoration="underline">
-                Home{' '}
-              </ChakraLink>
-              <Text>/ {edit ? businessName : 'Add A Business'}</Text>
-            </Flex>
-            <IconButton icon={<box-icon type="solid" name="bell"></box-icon>} />
-          </Flex>
-          <Card maxW="100%" w="1089px" h="auto" p={6} mt="10">
-            <CardHeader>
-              <Flex justify="space-between" align="center" w="full">
-                <Flex flexGrow={true} align="center" gap="4">
-                  <Box>
-                    <Input
-                      size="lg"
-                      value={businessName}
-                      onChange={e => setBusinessName(e.target.value)}
-                      placeholder="Business Name"
-                    />
-                  </Box>
-                </Flex>
-                {edit && (
-                  <Flex>
-                    <Button
-                      variant="outline"
-                      colorScheme="gray"
-                      rightIcon={<box-icon name="pencil" />}
-                    >
-                      Editing
-                    </Button>
-                    <IconButton
-                      variant="regular"
-                      colorScheme="red"
-                      aria-label="Delete menu"
-                      icon={<box-icon name="trash" color="#d30000"></box-icon>}
-                    />
-                  </Flex>
-                )}
-              </Flex>
-            </CardHeader>
-            <CardBody>
-              <Flex direction="row">
-                <Box flex="4">
-                  <Card>
-                    <Flex alignItems="left">
-                      <TableContainer>
-                        <Table variant="unstyled">
-                          <Thead></Thead>
-                          <Tbody>
-                            <Tr>
-                              <Td>
-                                <Text fontSize="xs" color="500" as="b">
-                                  NAME
-                                </Text>
-                              </Td>
-                              <Td>
-                                <Flex gap={4}>
-                                  <Input
-                                    value={firstName}
-                                    onChange={e => {
-                                      setFirstName(e.target.value);
-                                    }}
-                                    placeholder="First"
-                                  />
-                                  <Input
-                                    value={lastName}
-                                    onChange={e => {
-                                      setLastName(e.target.value);
-                                    }}
-                                    placeholder="Last"
-                                  />
-                                </Flex>
-                              </Td>
-                            </Tr>
-                            <Tr>
-                              <Td>
-                                <Text fontSize="xs" color="500" as="b">
-                                  EMAIL
-                                </Text>
-                              </Td>
-                              <Td>
-                                <Input
-                                  value={email}
-                                  onChange={e => {
-                                    setEmail(e.target.value);
-                                  }}
-                                  placeholder="Email Address"
-                                />
-                              </Td>
-                            </Tr>
-                            <Tr>
-                              <Td>
-                                <Text fontSize="xs" color="500" as="b">
-                                  WEBSITE
-                                </Text>
-                              </Td>
-                              <Td>
-                                <Input
-                                  value={website}
-                                  onChange={e => {
-                                    setWebsite(e.target.value);
-                                  }}
-                                  placeholder="Website"
-                                />
-                              </Td>
-                            </Tr>
-                            <Tr>
-                              <Td>
-                                <Text fontSize="xs" color="500" as="b">
-                                  LOCATION
-                                </Text>
-                              </Td>
-                              <Td>
-                                <Flex flexFlow={'row wrap'} gap={2}>
-                                  <Input
-                                    value={addressLine1}
-                                    onChange={e => {
-                                      setAddressLine1(e.target.value);
-                                    }}
-                                    placeholder="Street"
-                                    flex={'1 0 100%'}
-                                  />
-                                  <Input
-                                    value={city}
-                                    onChange={e => {
-                                      setCity(e.target.value);
-                                    }}
-                                    placeholder="City"
-                                    flex={'1 0 45%'}
-                                  />
-                                  <Spacer />
-                                  <Input
-                                    value={state}
-                                    onChange={e => {
-                                      setState(e.target.value);
-                                    }}
-                                    placeholder="State"
-                                    flex={'1 0 22%'}
-                                  />
-                                  <Spacer />
-                                  <Input
-                                    value={zip}
-                                    onChange={e => {
-                                      setZip(e.target.value);
-                                    }}
-                                    placeholder="Zip/Postal"
-                                    flex={'1 0 24%'}
-                                  />
-                                </Flex>
-                              </Td>
-                            </Tr>
-                            <Tr>
-                              <Td>
-                                <Text fontSize="xs" color="500" as="b">
-                                  PHONE
-                                </Text>
-                              </Td>
-                              <Td>
-                                <Flex gap={4}>
-                                  <Input
-                                    flex={'1 0 15%'}
-                                    value={countrycode}
-                                    onChange={e => {
-                                      setCountryCode(e.target.value);
-                                    }}
-                                    placeholder=""
-                                  />
-                                  <Input
-                                    flex={'1 0 80%'}
-                                    value={phone}
-                                    onChange={e => {
-                                      setPhone(e.target.value);
-                                    }}
-                                    placeholder="Phone Number"
-                                  />
-                                </Flex>
-                              </Td>
-                            </Tr>
-                            <Tr>
-                              <Td>
-                                <Text fontSize="xs" color="500" as="b">
-                                  BUSINESS HOURS
-                                </Text>
-                              </Td>
-                              <Td>
-                                <Input
-                                  value={businessHours}
-                                  onChange={e => {
-                                    setBusinessHours(e.target.value);
-                                  }}
-                                  placeholder="Business Hours"
-                                />
-                              </Td>
-                            </Tr>
-                          </Tbody>
-                        </Table>
-                      </TableContainer>
-                    </Flex>
-                  </Card>
-                  <Card marginTop="6">
-                    <CardHeader>
-                      <Text fontSize="xs" color="500" as="b">
-                        WEBSITE INFORMATION
+        <>
+          <>
+            <Modal isOpen={termsAndConditionsIsOpened} isCentered>
+              <ModalOverlay>
+                <ModalContent
+                  width="80%"
+                  maxWidth="800px"
+                  top="5vw"
+                >
+                  <ModalHeader>
+                    &nbsp;
+                    <Stack direction="row" justifyContent="space-between">
+                      <Text fontWeight="bold" fontSize="2xl">
+                        Terms and Conditions&nbsp;
                       </Text>
-                    </CardHeader>
-                    <Flex alignItems="left" mb="3">
-                      <TableContainer flex="1" mr="4">
-                        <Table variant="unstyled">
-                          <Tbody>
-                            <Tr>
-                              <Td>
-                                <Flex flexDirection={'column'}>
-                                  <Text fontSize="xs" color="500" as="b">
-                                    Phone for FPOTH Website
-                                  </Text>
-                                  <Input
-                                    value={fphPhone}
-                                    onChange={e => {
-                                      setFPHPhone(e.target.value);
-                                    }}
-                                    placeholder="Phone Number"
-                                  />
-                                </Flex>
-                              </Td>
-                            </Tr>
-                            <Tr>
-                              <Td>
-                                <Flex flexDirection={'column'}>
-                                  <Text fontSize="xs" color="500" as="b">
-                                    Notes for Website
-                                  </Text>
-                                  <Textarea
-                                    value={webNotes}
-                                    onChange={e => {
-                                      setWebNotes(e.target.value);
-                                    }}
-                                    placeholder="Web Notes"
-                                  />
-                                </Flex>
-                              </Td>
-                            </Tr>
-                          </Tbody>
-                        </Table>
-                      </TableContainer>
-                      <TableContainer flex="1" mr="4">
-                        <Table variant="unstyled">
-                          <Tbody>
-                            <Tr>
-                              <Td>
-                                <Text fontSize="xs" color="500" as="b">
-                                  Publish Status
-                                </Text>
-                                <Select
-                                  value={published}
-                                  onChange={e => setPublished(e.target.value)}
-                                >
-                                  <option value={true}>Published</option>
-                                  <option value={false}>Not Published</option>
-                                </Select>
-                              </Td>
-                            </Tr>
-                            <Tr>
-                              <Td>
-                                <Flex flexDirection={'column'}>
-                                  <Text fontSize="xs" color="500" as="b" whiteSpace="normal">
-                                    Added to Website (Date & Initials)
-                                  </Text>
-                                  <Input
-                                    value={webDateInit}
-                                    onChange={e => {
-                                      setWebDateInit(e.target.value);
-                                    }}
-                                    placeholder="Date and Initials"
-                                  />
-                                </Flex>
-                              </Td>
-                            </Tr>
-                          </Tbody>
-                        </Table>
-                      </TableContainer>
+
+                      <ModalCloseButton
+                        onClick={() => {
+                          setTermsAndConditionsIsOpened(false);
+                        }}
+                      />
+                    </Stack>
+                  </ModalHeader>
+                  <ModalBody alignItems="center" overflow={'scroll'}>
+                    <Text fontSize="xl">
+                      I hereby acknowledge and agree to serve as a member/volunteer for Feeding Pets
+                      of the Homeless, 710 West Washington Street, Carson City, NV 89703. I give my
+                      consent and agree to release, indemnify and hold harmless Feeding Pets of the
+                      Homeless (DBA: Pets of the Homeless) and all personnel, including but not
+                      limited to its officers, agents and/or employees, other participants,
+                      sponsors, advertisers, I hereby assume all of the risks of participating as a
+                      volunteer, with respect to any and all injury, disability, death or loss or
+                      damage of person or property, whether arising from negligence of the releases
+                      or otherwise, to the fullest extent permitted by law. I agree to comply with
+                      the guidelines and conditions for participation. See Fundraising Policies
+                      here:
+                      http://www.petsofthehomeless.org/fundraising-policy-for-pets-of-the-homeless/
+                      Pets of the Homeless reserves the right to terminate this agreement at any
+                      time. I also grant Feeding Pets of the Homeless the right to use photographs
+                      of me at events and activities and use the photographs in future advertising
+                      including online webpage. <br />
+                      <br />I acknowledge that all information regarding Pets of the Homeless&apos;
+                      operations, procedures, contacts, volunteers, recipients and donors is of a
+                      proprietary nature and should not be disclosed or used for any purposes other
+                      than the direct benefit of the organization
+                      <br />
+                      <br />I HAVE READ THIS RELEASE OF LIABILITY AND FULLY UNDERSTAND ITS TERMS AND
+                      CONDITIONS.
+                      <br />
+                      <br />I acknowledge that I am not authorized to speak to the media. I agree to
+                      refer all media inquiries to Headquarters, 775-841-7463.
+                    </Text>
+                    <Text fontsize="sm" marginTop="5vh">
+                      By checking the &quot;I Accept the Terms and Conditions&quot; box and clicking
+                      the &quot;Save&quot; button on this page, you acknowledge you have read and
+                      agree to the above.
+                    </Text>
+                  </ModalBody>
+                </ModalContent>
+              </ModalOverlay>
+            </Modal>
+          </>
+          <Flex justify="flex-end" wrap="nowrap" maxW="80%" mx="auto" flexDirection={'column'}>
+            <Flex justifyContent={'space-between'} mr="auto" w="1089px" marginTop={4}>
+              <Flex gap={1}>
+                <ChakraLink onClick={handleHome} color="blue.500" decoration="underline">
+                  Home{' '}
+                </ChakraLink>
+                <Text>/ {edit ? businessName : 'Add A Business'}</Text>
+              </Flex>
+              <IconButton icon={<box-icon type="solid" name="bell"></box-icon>} />
+            </Flex>
+            <Card maxW="100%" w="70vw" h="auto" p={6} mt="10">
+              <CardHeader>
+                <Flex justify="space-between" align="center" w="full">
+                  <Flex flexGrow={true} alignItems="flex-start" gap="4" flexDirection="column">
+                    <Text fontSize="2xl" fontWeight="700" color="gray.700">
+                      Donation Site Information
+                    </Text>
+                    <Text>
+                      {edit ? '' : 'Please fill the following form to add a new donation site.'}
+                    </Text>
+                  </Flex>
+                  {edit && (
+                    <Flex>
+                      <Button
+                        variant="outline"
+                        colorScheme="gray"
+                        rightIcon={<box-icon name="pencil" />}
+                      >
+                        Editing
+                      </Button>
+                      <IconButton
+                        variant="regular"
+                        colorScheme="red"
+                        aria-label="Delete menu"
+                        icon={<box-icon name="trash" color="#d30000"></box-icon>}
+                      />
                     </Flex>
-                  </Card>
-                  <Card marginTop="6">
-                    <Flex alignItems="left">
-                      <TableContainer flex="1" mr="3">
-                        <Table variant="unstyled">
-                          <Tbody>
-                            <Tr>
-                              <Td>
-                                <Text fontSize="xs" color="500" as="b">
-                                  ADDITIONAL INFORMATION
-                                </Text>
-                              </Td>
-                            </Tr>
-                            <Tr>
-                              <Td colSpan={2}>
-                                <Flex flexDirection={'row'} flexWrap={'wrap'} gap={2}>
-                                  {additionalInfoItems.map((item, index) => (
-                                    <Flex
-                                      key={index}
-                                      justifyContent={'space-between'}
-                                      flex={'1 0 34%'}
-                                      maxWidth={'49%'}
-                                    >
-                                      <Text>{item}</Text>
-                                      <Checkbox
-                                        name={item}
-                                        isChecked={checkedAddedInfo[item] || false}
-                                        onChange={handleCheckboxChange}
+                  )}
+                </Flex>
+              </CardHeader>
+              <CardBody>
+                <Flex direction="row">
+                  <Box flex="4">
+                    <Card w="61vw">
+                      <Flex alignItems="left">
+                        <TableContainer>
+                          <Table variant="unstyled">
+                            <Thead></Thead>
+                            <Tbody>
+                              <Tr>
+                                <Td>
+                                  <Text fontSize="xs" color="500" as="b">
+                                    NAME OF BUSINESS
+                                  </Text>
+                                </Td>
+                                <Td>
+                                  <Input
+                                    value={businessName}
+                                    onChange={e => setBusinessName(e.target.value)}
+                                    placeholder="Business"
+                                  />
+                                </Td>
+                              </Tr>
+                              <Tr>
+                                <Td>
+                                  <Text fontSize="xs" color="500" as="b">
+                                    NAME
+                                  </Text>
+                                </Td>
+                                <Td>
+                                  <Flex gap={4}>
+                                    <Input
+                                      value={firstName}
+                                      onChange={e => {
+                                        setFirstName(e.target.value);
+                                      }}
+                                      placeholder="First Name"
+                                    />
+                                    <Input
+                                      value={lastName}
+                                      onChange={e => {
+                                        setLastName(e.target.value);
+                                      }}
+                                      placeholder="Last Name"
+                                    />
+                                  </Flex>
+                                </Td>
+                              </Tr>
+                              <Tr>
+                                <Td>
+                                  <Text fontSize="xs" color="500" as="b">
+                                    EMAIL
+                                  </Text>
+                                </Td>
+                                <Td>
+                                  <Input
+                                    value={email}
+                                    onChange={e => {
+                                      setEmail(e.target.value);
+                                    }}
+                                    placeholder="Email"
+                                  />
+                                </Td>
+                              </Tr>
+                              <Tr>
+                                <Td>
+                                  <Text fontSize="xs" color="500" as="b">
+                                    WEBSITE
+                                  </Text>
+                                </Td>
+                                <Td>
+                                  <Input
+                                    value={website}
+                                    onChange={e => {
+                                      setWebsite(e.target.value);
+                                    }}
+                                    placeholder="Website"
+                                  />
+                                </Td>
+                              </Tr>
+                              <Tr>
+                                <Td>
+                                  <Text fontSize="xs" color="500" as="b">
+                                    LOCATION
+                                  </Text>
+                                </Td>
+                                <Td>
+                                  <Flex flexFlow={'row wrap'} gap={2}>
+                                    <Flex gap={4}>
+                                      <Input
+                                        value={addressLine1}
+                                        onChange={e => {
+                                          setAddressLine1(e.target.value);
+                                        }}
+                                        w="42vw"
+                                        placeholder="Street"
+                                      />
+                                      <Input
+                                        value={addressLine2}
+                                        onChange={e => {
+                                          setAddressLine2(e.target.value);
+                                        }}
+                                        placeholder="Unit or Apartment Number"
                                       />
                                     </Flex>
-                                  ))}
-                                </Flex>
-                              </Td>
-                            </Tr>
-                            <Tr>
-                              <Td>
-                                <Text fontSize="xs" color="500" as="b">
-                                  TYPE
-                                </Text>
-                                <Select
-                                  placeholder="Select a type"
-                                  value={vendorType}
-                                  onChange={e => setVendorType(e.target.value)}
-                                >
-                                  <option value={'school'}>School</option>
-                                  <option value={'hospital'}>Hospital</option>
-                                  <option value={'grocery store'}>Grocery Store</option>
-                                  <option value={'private institution'}>Private Institution</option>
-                                  <option value={'other'}>Other</option>
-                                </Select>
-                              </Td>
-                              <Td>
-                                <Flex justifyContent={'space-between'}>
-                                  <Text>Valid for Service Request</Text>
-                                  <Checkbox
-                                    value={serviceRequest}
+                                    <Flex gap={4}>
+                                      <Flex gap={4}>
+                                        <Input
+                                          value={city}
+                                          onChange={e => {
+                                            setCity(e.target.value);
+                                          }}
+                                          placeholder="City"
+                                        />
+                                        <Input
+                                          value={state}
+                                          onChange={e => {
+                                            setState(e.target.value);
+                                          }}
+                                          placeholder="State"
+                                        />
+                                      </Flex>
+                                      <Flex>
+                                        <Input
+                                          value={zip}
+                                          onChange={e => {
+                                            setZip(e.target.value);
+                                          }}
+                                          placeholder="Zip/Postal"
+                                        />
+                                      </Flex>
+                                    </Flex>
+                                  </Flex>
+                                </Td>
+                              </Tr>
+                              <Tr>
+                                <Td>
+                                  <Text fontSize="xs" color="500" as="b">
+                                    NUMBER OF CONTACT
+                                  </Text>
+                                </Td>
+                                <Td>
+                                  <Flex gap={4}>
+                                    <Input
+                                      flex={'1 0 15%'}
+                                      value={countrycode}
+                                      onChange={e => {
+                                        setCountryCode(e.target.value);
+                                      }}
+                                      placeholder="+1"
+                                    />
+                                    <Input
+                                      flex={'1 0 80%'}
+                                      value={phone}
+                                      onChange={e => {
+                                        setPhone(e.target.value);
+                                      }}
+                                      placeholder="000-000-0000"
+                                    />
+                                  </Flex>
+                                </Td>
+                              </Tr>
+                              <Tr>
+                                <Td>
+                                  <Text fontSize="xs" color="500" as="b">
+                                    BUSINESS HOURS
+                                  </Text>
+                                </Td>
+                                <Td>
+                                  <Input
+                                    value={businessHours}
                                     onChange={e => {
-                                      setServiceRequest(e.target.value);
+                                      setBusinessHours(e.target.value);
                                     }}
-                                  ></Checkbox>
+                                    placeholder="Business Hours"
+                                  />
+                                </Td>
+                              </Tr>
+                              <Tr>
+                                <Td>
+                                  <Flex flexDirection="column">
+                                    <Text fontSize="xs" color="500" as="b">
+                                      HOW DID THIS BUSINESS
+                                    </Text>
+                                    <Text fontSize="xs" color="500" as="b">
+                                      HEAR OF US?
+                                    </Text>
+                                  </Flex>
+                                </Td>
+                                <Td>
+                                  <Input
+                                    value={howHeard}
+                                    onChange={e => {
+                                      setHowHeard(e.target.value);
+                                    }}
+                                    placeholder="LinkedIn, Google, etc."
+                                  />
+                                </Td>
+                              </Tr>
+                            </Tbody>
+                          </Table>
+                        </TableContainer>
+                      </Flex>
+                    </Card>
+                    <Card marginTop="6">
+                      <Flex alignItems="left">
+                        <TableContainer flex="1" mr="3">
+                          <Table variant="unstyled">
+                            <Tbody>
+                              <Tr>
+                                <Td>
+                                  <Text fontSize="xs" color="500" as="b">
+                                    ADDITIONAL INFORMATION
+                                  </Text>
+                                </Td>
+                              </Tr>
+                              <Tr>
+                                <Td colSpan={2}>
+                                  <Flex flexDirection={'row'} flexWrap={'wrap'} gap={2}>
+                                    {additionalInfoItems.map((item, index) => (
+                                      <Flex
+                                        key={index}
+                                        justifyContent={'space-between'}
+                                        flex={'1 0 34%'}
+                                        maxWidth={'49%'}
+                                      >
+                                        <Text>{item}</Text>
+                                        <Checkbox
+                                          name={item}
+                                          isChecked={checkedAddedInfo[item] || false}
+                                          onChange={handleCheckboxChange}
+                                        />
+                                      </Flex>
+                                    ))}
+                                  </Flex>
+                                </Td>
+                              </Tr>
+                              <Tr>
+                                <Flex alignItems="center">
+                                  <Td>
+                                    <Text fontSize="xs" color="500" as="b">
+                                      TYPE
+                                    </Text>
+                                    <Select
+                                      placeholder="Type"
+                                      value={vendorType}
+                                      onChange={e => setVendorType(e.target.value)}
+                                      w="20vw"
+                                    >
+                                      <option value={'school'}>School</option>
+                                      <option value={'hospital'}>Hospital</option>
+                                      <option value={'grocery store'}>Grocery Store</option>
+                                      <option value={'private institution'}>
+                                        Private Institution
+                                      </option>
+                                      <option value={'other'}>Other</option>
+                                    </Select>
+                                  </Td>
+                                  <Td>
+                                    <Flex gap={10} mt={2}>
+                                      <Text>Valid for Service Request</Text>
+                                      <Checkbox
+                                        value={serviceRequest}
+                                        onChange={e => {
+                                          setServiceRequest(e.target.value);
+                                        }}
+                                      ></Checkbox>
+                                    </Flex>
+                                  </Td>
                                 </Flex>
-                              </Td>
-                            </Tr>
-                            <Tr>
-                              <Td>
-                                <Text fontSize="xs" color="500" as="b" whiteSpace="normal">
-                                  Internal Notes
-                                </Text>
-                                <Textarea
-                                  value={internalNotes}
-                                  onChange={e => {
-                                    setInternalNotes(e.target.value);
-                                  }}
-                                  placeholder="Internal Notes"
-                                />
-                              </Td>
-                            </Tr>
-                          </Tbody>
-                        </Table>
-                      </TableContainer>
-                    </Flex>
-                  </Card>
-                </Box>
-                <Spacer maxW={'sm'}></Spacer>
-                <Flex flexDirection={'column-reverse'}>
-                  <Flex gap={4}>
-                    <Button onClick={handleCancel}>Cancel</Button>
-                    <Button onClick={handleSubmit} colorScheme="teal">
-                      Save
-                    </Button>
-                  </Flex>
+                              </Tr>
+                              <Tr>
+                                <Td>
+                                  <Text fontSize="xs" color="500" as="b" whiteSpace="normal">
+                                    Internal Notes
+                                  </Text>
+                                  <Textarea
+                                    value={internalNotes}
+                                    onChange={e => {
+                                      setInternalNotes(e.target.value);
+                                    }}
+                                    placeholder="Internal Notes"
+                                  />
+                                </Td>
+                              </Tr>
+                            </Tbody>
+                          </Table>
+                        </TableContainer>
+                      </Flex>
+                    </Card>
+                  </Box>
+                  <Spacer maxW={'sm'}></Spacer>
+                </Flex>
+              </CardBody>
+              <Flex gap={2} ml="1vw">
+                <Checkbox isChecked={termsAndConditionsAccepted} onChange={handleToggleTerms} />
+                <Flex gap={1}>
+                  <Text>Accepted the</Text>
+                  <Text
+                    textDecoration="underline"
+                    cursor="pointer"
+                    onClick={() => {
+                      setTermsAndConditionsIsOpened(true);
+                    }}
+                  >
+                    Terms and Conditions
+                  </Text>
                 </Flex>
               </Flex>
-            </CardBody>
-            <CardFooter
-              justify="space-between"
-              flexWrap="wrap"
-              sx={{
-                '& > button': {
-                  minW: '136px',
-                },
-              }}
-            ></CardFooter>
-          </Card>
-        </Flex>
+              <Flex gap={4} ml="auto" mr="1vw">
+                <Button onClick={handleCancel}>Cancel</Button>
+                <Button
+                  onClick={handleSubmit}
+                  colorScheme="teal"
+                  isDisabled={!termsAndConditionsAccepted}
+                >
+                  Save
+                </Button>
+              </Flex>
+              <CardFooter
+                justify="space-between"
+                flexWrap="wrap"
+                sx={{
+                  '& > button': {
+                    minW: '136px',
+                  },
+                }}
+              ></CardFooter>
+            </Card>
+          </Flex>
+        </>
       )}
     </ChakraProvider>
   );
