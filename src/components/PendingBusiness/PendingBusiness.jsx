@@ -62,7 +62,7 @@ const PendingBusiness = ({ data, handleHome }) => {
       action === 'Active' ? `FPH Has Approved Your Application` : `FPH Has Denied Your Application`;
     console.log(data);
     const emailData = {
-        email: data.primary_email,
+      email: data.primary_email,
       messageHtml: renderEmail(
         action === 'Active' ? approvedEmailTemplate(data.id) : deniedEmailTemplate(),
       ),

@@ -68,7 +68,7 @@ const DonationsModal = ({ isOpen, onClose, data, setCurrentPageNum, loadInfo, is
     const cleanedValue = price.replace(/[^\d.]/g, '');
     let floatValue = parseFloat(cleanedValue);
     floatValue = floatValue.toFixed(2);
-    console.log(floatValue)
+    console.log(floatValue);
     setPriceData(floatValue);
 
     const body = {
@@ -104,8 +104,7 @@ const DonationsModal = ({ isOpen, onClose, data, setCurrentPageNum, loadInfo, is
             position: 'bottom-right',
           });
         }
-      }
-      catch (error) {
+      } catch (error) {
         console.log(error);
       }
       closeAndReset();
@@ -116,12 +115,12 @@ const DonationsModal = ({ isOpen, onClose, data, setCurrentPageNum, loadInfo, is
     <Modal isOpen={isOpen} onClose={closeAndReset} size={'md'}>
       <ModalOverlay>
         <ModalContent>
-          <ModalHeader display='flex' justifyContent='space-between'>
+          <ModalHeader display="flex" justifyContent="space-between">
             {isEdit ? 'Edit Item' : 'Add Item'}
             <IconButton aria-label="Close" icon={<CloseIcon />} onClick={closeAndReset} />
           </ModalHeader>
           <ModalBody>
-          <Text>Type</Text>
+            <Text>Type</Text>
             <Input
               id="type"
               value={typeData}
@@ -138,7 +137,7 @@ const DonationsModal = ({ isOpen, onClose, data, setCurrentPageNum, loadInfo, is
               placeholder="Price"
               size="lg"
               name="reporter"
-              onChange={(e) => setPriceData(e.target.value)}
+              onChange={e => setPriceData(e.target.value)}
               mb={4}
             />
             <Text>Category</Text>
@@ -146,7 +145,7 @@ const DonationsModal = ({ isOpen, onClose, data, setCurrentPageNum, loadInfo, is
               id="category"
               value={categoryData}
               size="lg"
-              onChange={(e) => setCategoryData(e.target.value)}
+              onChange={e => setCategoryData(e.target.value)}
               mb={4}
             >
               <option value="Food">Food</option>
@@ -157,7 +156,7 @@ const DonationsModal = ({ isOpen, onClose, data, setCurrentPageNum, loadInfo, is
               id="weight"
               value={weightData}
               size="lg"
-              onChange={(e) => setWeightData(e.target.value)}
+              onChange={e => setWeightData(e.target.value)}
               mb={4}
             >
               <option value="lbs">Pounds (lbs)</option>
@@ -176,7 +175,7 @@ const DonationsModal = ({ isOpen, onClose, data, setCurrentPageNum, loadInfo, is
               onClick={event => {
                 submitForm(event, priceData);
               }}
-              colorScheme='teal'
+              colorScheme="teal"
             >
               Save
             </Button>

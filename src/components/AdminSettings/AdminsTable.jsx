@@ -116,9 +116,7 @@ const AdminsTable = () => {
           onChange={handleSearch}
           sx={{ width: '222px', backgroundColor: '#FFFFFF' }}
         />
-        <Button
-          colorScheme="teal"
-          onClick={() => adminModalOnOpen()}>
+        <Button colorScheme="teal" onClick={() => adminModalOnOpen()}>
           <AddIcon />
           Add Admin
         </Button>

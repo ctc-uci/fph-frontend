@@ -35,7 +35,7 @@ async function DownloadCSV(ids) {
     csvRows.push(Object.keys(headers).join(','));
 
     data.forEach(row => {
-      const values = Object.values(headers).map((key) => {
+      const values = Object.values(headers).map(key => {
         const escaped = ('' + row[key]).replace(/"/g, '\\"');
         return `"${escaped}"`;
       });

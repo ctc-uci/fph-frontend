@@ -112,7 +112,7 @@ const DonationItems = ({ category }) => {
     } catch (error) {
       console.log(error.message);
     }
-    console.log(category)
+    console.log(category);
     const itemsNumResponse = await backend.get(`/value/totalValues?category=${category}`);
     setCurrentItemNum(itemsNumResponse.data[0]['count']);
     setPageLimit(Math.ceil(itemsNumResponse.data[0]['count'] / 10));
@@ -123,9 +123,9 @@ const DonationItems = ({ category }) => {
     deleteModalOnOpen();
   };
 
-  const setEditModal = (isEdit) => {
+  const setEditModal = isEdit => {
     setIsEdit(isEdit);
-  }
+  };
 
   // const  deleteModalOnOpen();
   //   await backend.delete(`/value/${item['item_id']}`);
@@ -150,8 +150,15 @@ const DonationItems = ({ category }) => {
         isEdit={isEdit}
       />
       <Box className={classes.addItemContainer} mr={4}>
-        <Button colorScheme="teal" onClick={() => {donationsModalOnOpen(); setEditModal(false)} } gap={2}>
-          <AddIcon boxSize={3}/>
+        <Button
+          colorScheme="teal"
+          onClick={() => {
+            donationsModalOnOpen();
+            setEditModal(false);
+          }}
+          gap={2}
+        >
+          <AddIcon boxSize={3} />
           Add Item
         </Button>
       </Box>
@@ -213,20 +220,21 @@ const DonationItems = ({ category }) => {
           onClick={() => setCurrentPageNum(currentPageNum + 1)}
         />
       </div>
-      <Box
-        position="absolute"
-        left="40%"
-      >
-        {currentPageNum === pageLimit && category === "Food" && (
+      <Box position="absolute" left="40%">
+        {currentPageNum === pageLimit && category === 'Food' && (
           <>
             <Image src={MalePettingDog} alt="Male Image" />
-            <Text ml='10' color="blackAlpha.400">You’ve reached the end!</Text>
+            <Text ml="10" color="blackAlpha.400">
+              You’ve reached the end!
+            </Text>
           </>
         )}
-        {currentPageNum === pageLimit && category !== "Food" && (
+        {currentPageNum === pageLimit && category !== 'Food' && (
           <>
             <Image src={FemalePettingDog} alt="Female Image" />
-            <Text ml='4' color="blackAlpha.400">You’ve reached the end!</Text>
+            <Text ml="4" color="blackAlpha.400">
+              You’ve reached the end!
+            </Text>
           </>
         )}
       </Box>

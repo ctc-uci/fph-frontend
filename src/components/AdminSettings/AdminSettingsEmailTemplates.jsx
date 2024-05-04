@@ -16,7 +16,8 @@ export const editedEmailTemplateAdmin = (
   <Email title="Hello,">
     <Item align="center">
       <Span fontSize={20}>
-        Your information has been updated by FPH. If this was not authrorized, immediately contact FPH. Otherwise, you do not need to do anything.
+        Your information has been updated by FPH. If this was not authrorized, immediately contact
+        FPH. Otherwise, you do not need to do anything.
         <A href="https://github.com/chromakode/react-html-email">react-html-email</A>.
       </Span>
     </Item>

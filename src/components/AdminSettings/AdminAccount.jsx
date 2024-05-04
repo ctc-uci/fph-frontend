@@ -1,7 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useBackend } from '../../contexts/BackendContext';
 import { useAuth } from '../../contexts/AuthContext.jsx';
-import { HStack, Box, Button, FormControl, FormLabel, Card, Input, useToast } from '@chakra-ui/react';
+import {
+  HStack,
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  Card,
+  Input,
+  useToast,
+} from '@chakra-ui/react';
 import classes from './AdminSettings.module.css';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 
@@ -27,25 +36,25 @@ const AdminAccount = () => {
           lastName: lastName,
         }));
       } catch (error) {
-        console.error("Error fetching admin user data:", error);
+        console.error('Error fetching admin user data:', error);
       }
     };
-    
+
     getName();
   }, [backend, currentUser]);
 
   const updateContactInfo = async () => {
-    const lastUpdated = new Date().toISOString(); 
+    const lastUpdated = new Date().toISOString();
 
     try {
       await backend.put(`/adminuser/${adminContactInfo.email}`, {
         name: adminContactInfo.firstName + ' ' + adminContactInfo.lastName,
         last_updated: lastUpdated,
       });
-  
+
       toast({
         title: 'Success',
-        description: "Your changes have been saved.",
+        description: 'Your changes have been saved.',
         status: 'success',
         duration: 5000,
         isClosable: true,
@@ -53,7 +62,7 @@ const AdminAccount = () => {
     } catch (error) {
       toast({
         title: 'Error',
-        description: "Your changes were not saved.",
+        description: 'Your changes were not saved.',
         status: 'error',
         duration: 5000,
         isClosable: true,
@@ -79,7 +88,7 @@ const AdminAccount = () => {
         isClosable: true,
       });
     }
-  }
+  };
 
   const handleChange = event => {
     const name = event.target.name;

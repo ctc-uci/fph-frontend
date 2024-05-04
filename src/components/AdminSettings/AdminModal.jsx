@@ -18,7 +18,10 @@ import {
   ModalOverlay,
   ModalFooter,
 } from '@chakra-ui/react';
-import { approvedEmailTemplateAdmin, editedEmailTemplateAdmin } from './AdminSettingsEmailTemplates';
+import {
+  approvedEmailTemplateAdmin,
+  editedEmailTemplateAdmin,
+} from './AdminSettingsEmailTemplates';
 import { CloseIcon } from '@chakra-ui/icons';
 
 // TODO: Refactor states such that its a nested state
@@ -75,37 +78,36 @@ const AdminModal = ({ isOpen, onClose, data, loadInfo, toast }) => {
           ),
           subject: emailSubject,
         };
-        
+
         if (data == null) {
           await backend.post(`/adminUser`, body);
           toast({
             title: 'Success',
-            description: "Admin added successfully.",
+            description: 'Admin added successfully.',
             status: 'success',
             duration: 5000,
             isClosable: true,
-          })
+          });
         } else {
           await backend.put(`/adminUser/${data['email']}`, body);
           toast({
             title: 'Success',
-            description: "Successfully updated information.",
+            description: 'Successfully updated information.',
             status: 'success',
             duration: 5000,
             isClosable: true,
-          })
+          });
         }
         await backend.post('/email/send', emailInfo);
-  
       } catch (error) {
         console.error(error);
         toast({
           title: 'Error',
-          description: "Your changes were not saved.",
+          description: 'Your changes were not saved.',
           status: 'error',
           duration: 5000,
           isClosable: true,
-        })
+        });
       }
     }
     closeAndReset();
@@ -123,7 +125,12 @@ const AdminModal = ({ isOpen, onClose, data, loadInfo, toast }) => {
         </ModalHeader>
         <ModalBody>
           <Text> First and Last Name </Text>
-          <Input type="text" name="name" value={nameData} onChange={e => setNameData(e.target.value)} />
+          <Input
+            type="text"
+            name="name"
+            value={nameData}
+            onChange={e => setNameData(e.target.value)}
+          />
           <Text> Email </Text>
           <Input
             type="text"

@@ -268,7 +268,7 @@ const BusinessTable = () => {
 
   return (
     <Box mr="20px" ml="20px" mb="30px">
-      <Tabs colorScheme="teal" sx={{width: 'fit-content'}}>
+      <Tabs colorScheme="teal" sx={{ width: 'fit-content' }}>
         <TabList>
           <Tab
             onClick={() => {
@@ -326,21 +326,20 @@ const BusinessTable = () => {
           </Box>
           <Box>
             <Button
-              colorScheme={(currentTab === 'Submitted') ? "gray" : "teal"}
+              colorScheme={currentTab === 'Submitted' ? 'gray' : 'teal'}
               onClick={handleSendReminders}
               marginRight={4}
               fontSize={'0.9rem'}
-              sx={{width: '172px'}}
+              sx={{ width: '172px' }}
               isDisabled={currentTab === 'Submitted' || selectedBusinessIds.size === 0}
             >
-              
               <Flex w={'100%'} justifyContent={'space-evenly'} alignItems={'center'}>
                 <BiEnvelope style={{ marginRight: '5px' }} />
                 <Text>Send reminder</Text>
               </Flex>
             </Button>
             <Button
-              colorScheme={(currentTab === 'NotSubmitted') ? "gray" : "teal"}
+              colorScheme={currentTab === 'NotSubmitted' ? 'gray' : 'teal'}
               onClick={handleDownloadCSV}
               sx={{ width: '172px' }}
               fontSize={'0.9rem'}

@@ -78,7 +78,6 @@ const FirstForm = ({ admin, nextStep }) => {
         }
       } else {
         await signup(email, password);
-        console.log('YOU', currentUser);
       }
     } catch (err) {
       console.log(err);

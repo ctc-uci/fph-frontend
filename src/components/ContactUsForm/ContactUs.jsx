@@ -74,7 +74,7 @@ const ContactUs = () => {
     Supply_4,
     Supply_5,
     Supply_6,
-    Supply_7
+    Supply_7,
   ];
 
   const [businessId, setBusinessId] = useState(null);
@@ -136,15 +136,15 @@ const ContactUs = () => {
 
   const SubmitForm = async () => {
     const msg = {
-      "Get Pet Food Decal": checkedItems[0],
-      "Decal": checkedItems[1],
-      "Homeless Card": checkedItems[2],
-      "Business Card": checkedItems[3],
-      "Donation Site Decal": checkedItems[4],
-      "Donation Site Bin Decals": checkedItems[5],
-      "Donation Envelopes": checkedItems[6],
-      "Homeless Card 2": checkedItems[7],
-      "Notes": text,
+      'Get Pet Food Decal': checkedItems[0],
+      Decal: checkedItems[1],
+      'Homeless Card': checkedItems[2],
+      'Business Card': checkedItems[3],
+      'Donation Site Decal': checkedItems[4],
+      'Donation Site Bin Decals': checkedItems[5],
+      'Donation Envelopes': checkedItems[6],
+      'Homeless Card 2': checkedItems[7],
+      Notes: text,
     };
     const message = JSON.stringify(msg);
     const updatedFormData = {
@@ -193,89 +193,96 @@ const ContactUs = () => {
     navigate('/BusinessDashboard');
   };
 
-    const showSupplyRequests = (startingIndex, endingIndex) => {
-      return (
-        <Stack flex="1" spacing="4">
-      {checkedThingies.slice(startingIndex, endingIndex).map((item, index) => (
-        <HStack marginTop="20px" key={index} align="top" spacing="0" width="476px" height="131px">
-          <Box
-            width="202px"
-            height="131px"
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Image
-              width="200px"
+  const showSupplyRequests = (startingIndex, endingIndex) => {
+    return (
+      <Stack flex="1" spacing="4">
+        {checkedThingies.slice(startingIndex, endingIndex).map((item, index) => (
+          <HStack marginTop="20px" key={index} align="top" spacing="0" width="476px" height="131px">
+            <Box
+              width="202px"
               height="131px"
-              src={suppliesImages[startingIndex + index]}
-              alt={`Supply ${startingIndex + index}`}
-              objectFit="contain"
-            />
-          </Box>
-          <VStack align="stretch" justifyContent="center" spacing="1" flex="1">
-            <HStack spacing={4}>
-              <NumberInput size="sm" maxW="100px" defaultValue={0} min={0}
-                onChange={(valueString) => handleNumInputChange(startingIndex + index, valueString)}>
-                <NumberInputField />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-              <Text>{item}</Text>
-            </HStack>
-            <Text color="#718096" fontSize="sm" lineHeight="5" fontWeight="normal" fontFamily="Inter">
-              {supplyDescriptions[startingIndex + index]}
-            </Text>
-          </VStack>
-        </HStack>
-      ))}
-    </Stack>
-      );
-    }
-  
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Image
+                width="200px"
+                height="131px"
+                src={suppliesImages[startingIndex + index]}
+                alt={`Supply ${startingIndex + index}`}
+                objectFit="contain"
+              />
+            </Box>
+            <VStack align="stretch" justifyContent="center" spacing="1" flex="1">
+              <HStack spacing={4}>
+                <NumberInput
+                  size="sm"
+                  maxW="100px"
+                  defaultValue={0}
+                  min={0}
+                  onChange={valueString => handleNumInputChange(startingIndex + index, valueString)}
+                >
+                  <NumberInputField />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+                <Text>{item}</Text>
+              </HStack>
+              <Text
+                color="#718096"
+                fontSize="sm"
+                lineHeight="5"
+                fontWeight="normal"
+                fontFamily="Inter"
+              >
+                {supplyDescriptions[startingIndex + index]}
+              </Text>
+            </VStack>
+          </HStack>
+        ))}
+      </Stack>
+    );
+  };
 
   return (
     <>
       <Flex>
         <Box bg="#F5F5F5" width={'100%'} height={'100%'}>
           <Box marginLeft={'1%'} marginRight={'3%'} marginTop={'5%'} marginBottom={'5%'}>
-          <Spacer margin={'2%'}>
-            <Text fontSize="2xl" as="b">
-              Supply Request
-            </Text>
-          </Spacer>
+            <Spacer margin={'2%'}>
+              <Text fontSize="2xl" as="b">
+                Supply Request
+              </Text>
+            </Spacer>
 
-            
             <Card width={'81%'} variant={'outline'} margin={'2%'} marginBottom={'0%'}>
-                <Box
-                  marginTop={'2%'}
-                  marginLeft={'2%'}
-                >
-                  <Text fontWeight={'bold'} fontSize={'18px'}>Select Supplies Needed</Text>
-                </Box>
-                
-                <Box
-                  p={4}
-                  display="flex"
-                  mt="0"
-                  alignItems="top"
-                  border="20%"
-                  marginLeft={'3%'}
-                  borderColor="gray.200"
-                  borderRightRadius="1"
-                >
-                  <Flex mt="4">
-                    
-                    <Stack flex="1" spacing="4">
-                      {showSupplyRequests(0, 4)}
-                    </Stack>
-                    <Stack flex="1" spacing="4">
-                      {showSupplyRequests(4, 8)}
-                    </Stack>
-                  </Flex>
-                </Box>
+              <Box marginTop={'2%'} marginLeft={'2%'}>
+                <Text fontWeight={'bold'} fontSize={'18px'}>
+                  Select Supplies Needed
+                </Text>
+              </Box>
+
+              <Box
+                p={4}
+                display="flex"
+                mt="0"
+                alignItems="top"
+                border="20%"
+                marginLeft={'3%'}
+                borderColor="gray.200"
+                borderRightRadius="1"
+              >
+                <Flex mt="4">
+                  <Stack flex="1" spacing="4">
+                    {showSupplyRequests(0, 4)}
+                  </Stack>
+                  <Stack flex="1" spacing="4">
+                    {showSupplyRequests(4, 8)}
+                  </Stack>
+                </Flex>
+              </Box>
               <Box margin={'5%'}>
                 <Textarea
                   width={'90%'}

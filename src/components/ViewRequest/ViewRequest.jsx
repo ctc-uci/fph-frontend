@@ -39,7 +39,7 @@ const ViewRequest = () => {
     'Donation Site Bin Decals',
     'Donation Envelopes',
     'Homeless Card 2',
-  ]
+  ];
   const [itemAmounts, setItemAmounts] = useState({});
   const [businessName, setBusinessName] = useState('');
   const [dateRequested, setDateRequested] = useState('');

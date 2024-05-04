@@ -1,7 +1,21 @@
 /* eslint-disable react/prop-types */
 
 import { useEffect, useState } from 'react';
-import { IconButton, Link as ChakraLink, Heading,Card, TableContainer, Flex, Box, Text, Table, Thead, Tbody, Tr, Td } from '@chakra-ui/react';
+import {
+  IconButton,
+  Link as ChakraLink,
+  Heading,
+  Card,
+  TableContainer,
+  Flex,
+  Box,
+  Text,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Td,
+} from '@chakra-ui/react';
 import { useBackend } from '../../../contexts/BackendContext';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -22,7 +36,6 @@ const ViewDonationHistory = () => {
     };
 
     fetchDonation();
-    
   }, [id]);
 
   const handleHome = () => {
@@ -48,7 +61,6 @@ const ViewDonationHistory = () => {
         </Box>
       </Flex>
 
-
       <Flex direction="row" ml="6">
         <Box flex="2">
           <Card maxW="100%" w="1089px" h="auto" p={6} mt="10">
@@ -58,52 +70,148 @@ const ViewDonationHistory = () => {
                   <Thead></Thead>
                   <Tbody>
                     <Tr>
-                      <Td><Text fontSize="xs" color="500" as="b">BUSINESS ID</Text></Td>
-                      <Td><Text fontSize="xs" color="500">{data.business_id}</Text></Td>
+                      <Td>
+                        <Text fontSize="xs" color="500" as="b">
+                          BUSINESS ID
+                        </Text>
+                      </Td>
+                      <Td>
+                        <Text fontSize="xs" color="500">
+                          {data.business_id}
+                        </Text>
+                      </Td>
                     </Tr>
                     <Tr>
-                      <Td><Text fontSize="xs" color="500" as="b">DONATION ID</Text></Td>
-                      <Td><Text fontSize="xs" color="500">{data.donation_id}</Text></Td>
+                      <Td>
+                        <Text fontSize="xs" color="500" as="b">
+                          DONATION ID
+                        </Text>
+                      </Td>
+                      <Td>
+                        <Text fontSize="xs" color="500">
+                          {data.donation_id}
+                        </Text>
+                      </Td>
                     </Tr>
                     <Tr>
-                      <Td><Text fontSize="xs" color="500" as="b">FOOD BANK</Text></Td>
-                      <Td><Text fontSize="xs" color="500">{data.food_bank_donation}</Text></Td>
+                      <Td>
+                        <Text fontSize="xs" color="500" as="b">
+                          FOOD BANK
+                        </Text>
+                      </Td>
+                      <Td>
+                        <Text fontSize="xs" color="500">
+                          {data.food_bank_donation}
+                        </Text>
+                      </Td>
                     </Tr>
                     <Tr>
-                      <Td><Text fontSize="xs" color="500" as="b">PERSON REPORTING</Text></Td>
-                      <Td><Text fontSize="xs" color="500">{data.reporter}</Text></Td>
+                      <Td>
+                        <Text fontSize="xs" color="500" as="b">
+                          PERSON REPORTING
+                        </Text>
+                      </Td>
+                      <Td>
+                        <Text fontSize="xs" color="500">
+                          {data.reporter}
+                        </Text>
+                      </Td>
                     </Tr>
                     <Tr>
-                      <Td><Text fontSize="xs" color="500" as="b">EMAIL</Text></Td>
-                      <Td><Text fontSize="xs" color="500">{data.email}</Text></Td>
+                      <Td>
+                        <Text fontSize="xs" color="500" as="b">
+                          EMAIL
+                        </Text>
+                      </Td>
+                      <Td>
+                        <Text fontSize="xs" color="500">
+                          {data.email}
+                        </Text>
+                      </Td>
                     </Tr>
                     <Tr>
-                      <Td><Text fontSize="xs" color="500" as="b">DATE</Text></Td>
-                      <Td><Text fontSize="xs" color="500">{data.date}</Text></Td>
+                      <Td>
+                        <Text fontSize="xs" color="500" as="b">
+                          DATE
+                        </Text>
+                      </Td>
+                      <Td>
+                        <Text fontSize="xs" color="500">
+                          {data.date}
+                        </Text>
+                      </Td>
                     </Tr>
                     <Tr>
-                      <Td><Text fontSize="xs" color="500" as="b">CANNED DOG FOOD QTY</Text></Td>
-                      <Td><Text fontSize="xs" color="500">{data.canned_dog_food_quantity}</Text></Td>
+                      <Td>
+                        <Text fontSize="xs" color="500" as="b">
+                          CANNED DOG FOOD QTY
+                        </Text>
+                      </Td>
+                      <Td>
+                        <Text fontSize="xs" color="500">
+                          {data.canned_dog_food_quantity}
+                        </Text>
+                      </Td>
                     </Tr>
                     <Tr>
-                      <Td><Text fontSize="xs" color="500" as="b">DRY DOG FOOD QTY</Text></Td>
-                      <Td><Text fontSize="xs" color="500">{data.dry_dog_food_quantity}</Text></Td>
+                      <Td>
+                        <Text fontSize="xs" color="500" as="b">
+                          DRY DOG FOOD QTY
+                        </Text>
+                      </Td>
+                      <Td>
+                        <Text fontSize="xs" color="500">
+                          {data.dry_dog_food_quantity}
+                        </Text>
+                      </Td>
                     </Tr>
                     <Tr>
-                      <Td><Text fontSize="xs" color="500" as="b">CANNED CAT FOOD QTY</Text></Td>
-                      <Td><Text fontSize="xs" color="500">{data.canned_cat_food_quantity}</Text></Td>
+                      <Td>
+                        <Text fontSize="xs" color="500" as="b">
+                          CANNED CAT FOOD QTY
+                        </Text>
+                      </Td>
+                      <Td>
+                        <Text fontSize="xs" color="500">
+                          {data.canned_cat_food_quantity}
+                        </Text>
+                      </Td>
                     </Tr>
                     <Tr>
-                      <Td><Text fontSize="xs" color="500" as="b">DRY CAT FOOD QTY</Text></Td>
-                      <Td><Text fontSize="xs" color="500">{data.dry_cat_food_quantity}</Text></Td>
+                      <Td>
+                        <Text fontSize="xs" color="500" as="b">
+                          DRY CAT FOOD QTY
+                        </Text>
+                      </Td>
+                      <Td>
+                        <Text fontSize="xs" color="500">
+                          {data.dry_cat_food_quantity}
+                        </Text>
+                      </Td>
                     </Tr>
                     <Tr>
-                      <Td><Text fontSize="xs" color="500" as="b">MISC ITEMS</Text></Td>
-                      <Td><Text fontSize="xs" color="500">{data.misc_items}</Text></Td>
+                      <Td>
+                        <Text fontSize="xs" color="500" as="b">
+                          MISC ITEMS
+                        </Text>
+                      </Td>
+                      <Td>
+                        <Text fontSize="xs" color="500">
+                          {data.misc_items}
+                        </Text>
+                      </Td>
                     </Tr>
                     <Tr>
-                      <Td><Text fontSize="xs" color="500" as="b">VOLUNTEER HOURS</Text></Td>
-                      <Td><Text fontSize="xs" color="500">{data.volunteer_hours}</Text></Td>
+                      <Td>
+                        <Text fontSize="xs" color="500" as="b">
+                          VOLUNTEER HOURS
+                        </Text>
+                      </Td>
+                      <Td>
+                        <Text fontSize="xs" color="500">
+                          {data.volunteer_hours}
+                        </Text>
+                      </Td>
                     </Tr>
                   </Tbody>
                 </Table>

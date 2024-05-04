@@ -20,19 +20,19 @@ function DeleteAdminModal({ isOpen, onClose, loadInfo, selectedItem, toast }) {
       await backend.delete(`/adminUser/${selectedItem.email}`);
       toast({
         title: 'Success',
-        description: "Successfully deleted admin.",
+        description: 'Successfully deleted admin.',
         status: 'success',
         duration: 5000,
         isClosable: true,
-      })
+      });
     } catch {
       toast({
         title: 'Error',
-        description: "Your changes were not saved.",
+        description: 'Your changes were not saved.',
         status: 'error',
         duration: 5000,
         isClosable: true,
-      })
+      });
     }
     loadInfo();
     onClose();

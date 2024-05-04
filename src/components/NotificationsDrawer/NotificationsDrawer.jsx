@@ -55,7 +55,7 @@ const NotificationsDrawer = ({ notificationsData }) => {
     'Edited Information': 'View Information',
   };
 
-  const handleDownloadCSV = (ids) => {
+  const handleDownloadCSV = ids => {
     DownloadCSV(ids);
   };
 
@@ -74,84 +74,93 @@ const NotificationsDrawer = ({ notificationsData }) => {
     } catch (error) {
       console.error('Error sending reminders:', error);
     }
-  }
+  };
 
-  const getNotifBadge = (type) => {
+  const getNotifBadge = type => {
     return (
       <Flex>
-        <Badge borderRadius="full" px="2" bgColor="#359797" width='26px' height={'26px'}>
+        <Badge borderRadius="full" px="2" bgColor="#359797" width="26px" height={'26px'}>
           <Flex justifyContent={'center'} alignItems={'center'} width={'100%'} height={'100%'}>
-            {type == 'New Application' && (<box-icon size='18px' name='buildings' type='regular' color={'white'}></box-icon>)}
-            {type == 'Not Submitted' && (<box-icon size='18px' name='envelope' type='regular' color={'white'}></box-icon>)}
-            {type == 'Submitted Form' && (<box-icon size='18px' name='check' type='regular' color={'white'}></box-icon>)}
-            {type == 'Supply Request' && (<box-icon size='18px' name='package' type='regular' color={'white'}></box-icon>)}
-            {type == 'Edited Information' && (<box-icon size='18px' name='edit' type='regular' color={'white'}></box-icon>)}
+            {type == 'New Application' && (
+              <box-icon size="18px" name="buildings" type="regular" color={'white'}></box-icon>
+            )}
+            {type == 'Not Submitted' && (
+              <box-icon size="18px" name="envelope" type="regular" color={'white'}></box-icon>
+            )}
+            {type == 'Submitted Form' && (
+              <box-icon size="18px" name="check" type="regular" color={'white'}></box-icon>
+            )}
+            {type == 'Supply Request' && (
+              <box-icon size="18px" name="package" type="regular" color={'white'}></box-icon>
+            )}
+            {type == 'Edited Information' && (
+              <box-icon size="18px" name="edit" type="regular" color={'white'}></box-icon>
+            )}
           </Flex>
         </Badge>
       </Flex>
-      
-    )
-  }
+    );
+  };
 
   const getSortState = () => {
-    switch(sortState) {
+    switch (sortState) {
       case 'New Application':
         return (
           <>
-            <box-icon name='buildings' type='regular' color={'black'}></box-icon>
+            <box-icon name="buildings" type="regular" color={'black'}></box-icon>
             <Text>New application</Text>
           </>
-          );
+        );
       case 'Not Submitted':
         return (
           <>
-            <box-icon name='envelope' type='regular' color={'black'}></box-icon>
+            <box-icon name="envelope" type="regular" color={'black'}></box-icon>
             <Text>Send reminder</Text>
           </>
         );
       case 'Submitted Form':
         return (
           <>
-            <box-icon name='check' type='regular' color={'black'}></box-icon>
+            <box-icon name="check" type="regular" color={'black'}></box-icon>
             <Text>Submitted form</Text>
-          </> 
+          </>
         );
       case 'Supply Request':
         return (
           <>
-            <box-icon name='package' type='regular' color={'black'}></box-icon>
+            <box-icon name="package" type="regular" color={'black'}></box-icon>
             <Text>Supply request</Text>
           </>
         );
       case 'Edited Information':
-        return(
+        return (
           <>
-            <box-icon name='edit' type='regular' color={'black'}></box-icon>
+            <box-icon name="edit" type="regular" color={'black'}></box-icon>
             <Text>Edited information</Text>
-          </>  
-          );
+          </>
+        );
       default:
         return <></>;
     }
-  }
+  };
 
-  const getNotificationText = (type) => {
-    if(type === 'New Application') {
+  const getNotificationText = type => {
+    if (type === 'New Application') {
       return 'Sent a business application.';
     }
-    if(type === 'Not Submitted') {
+    if (type === 'Not Submitted') {
       return 'Donation form not submitted this quarter.';
     }
-    if(type === 'Submitted Form') {
+    if (type === 'Submitted Form') {
       return 'Submitted their donation form.';
     }
-    if(type === 'Supply Request') {
+    if (type === 'Supply Request') {
       return 'Sent a supply request.';
     }
-    if(type === 'Edited Information') {
+    if (type === 'Edited Information') {
       return 'Edited their business information.';
     }
-  }
+  };
 
   return (
     <>
@@ -160,7 +169,7 @@ const NotificationsDrawer = ({ notificationsData }) => {
         variant="ghost"
         colorScheme="gray"
         aria-label="Edit menu"
-        icon={<box-icon name='bell' type='regular' color={'black'}></box-icon>}
+        icon={<box-icon name="bell" type="regular" color={'black'}></box-icon>}
         mr={4}
       />
       <Drawer size="lg" isOpen={isOpen} placement="right" onClose={onClose} finalFocusRef={btnRef}>
@@ -168,8 +177,8 @@ const NotificationsDrawer = ({ notificationsData }) => {
         <DrawerContent>
           <DrawerCloseButton />
           <Box boxSize={6} mt={6} mb={-10} ml={6}>
-            <box-icon name='bell' type='regular' color={'black'}></box-icon>
-          </Box> 
+            <box-icon name="bell" type="regular" color={'black'}></box-icon>
+          </Box>
           <DrawerHeader mt={-1} ml={12}>
             Notifications
           </DrawerHeader>
@@ -187,29 +196,67 @@ const NotificationsDrawer = ({ notificationsData }) => {
                   Sort By
                 </MenuButton>{' '}
                 <MenuList>
-                  <MenuItem width={'96%'} margin={'auto'} borderRadius={2} onClick={() => setSortState('')}>All</MenuItem>
-                  <MenuItem width={'96%'} margin={'auto'} borderRadius={2} onClick={() => setSortState('New Application')}>New Application</MenuItem>
-                  <MenuItem width={'96%'} margin={'auto'} borderRadius={2} onClick={() => setSortState('Not Submitted')}>Send Reminder</MenuItem>
-                  <MenuItem width={'96%'} margin={'auto'} borderRadius={2} onClick={() => setSortState('Submitted Form')}>Submitted Form</MenuItem>
-                  <MenuItem width={'96%'} margin={'auto'} borderRadius={2} onClick={() => setSortState('Supply Request')}>Supply Request</MenuItem>
-                  <MenuItem width={'96%'} margin={'auto'} borderRadius={2} onClick={() => setSortState('Edited Information')}>
+                  <MenuItem
+                    width={'96%'}
+                    margin={'auto'}
+                    borderRadius={2}
+                    onClick={() => setSortState('')}
+                  >
+                    All
+                  </MenuItem>
+                  <MenuItem
+                    width={'96%'}
+                    margin={'auto'}
+                    borderRadius={2}
+                    onClick={() => setSortState('New Application')}
+                  >
+                    New Application
+                  </MenuItem>
+                  <MenuItem
+                    width={'96%'}
+                    margin={'auto'}
+                    borderRadius={2}
+                    onClick={() => setSortState('Not Submitted')}
+                  >
+                    Send Reminder
+                  </MenuItem>
+                  <MenuItem
+                    width={'96%'}
+                    margin={'auto'}
+                    borderRadius={2}
+                    onClick={() => setSortState('Submitted Form')}
+                  >
+                    Submitted Form
+                  </MenuItem>
+                  <MenuItem
+                    width={'96%'}
+                    margin={'auto'}
+                    borderRadius={2}
+                    onClick={() => setSortState('Supply Request')}
+                  >
+                    Supply Request
+                  </MenuItem>
+                  <MenuItem
+                    width={'96%'}
+                    margin={'auto'}
+                    borderRadius={2}
+                    onClick={() => setSortState('Edited Information')}
+                  >
                     Edited Information
                   </MenuItem>
                 </MenuList>
               </Menu>
             </Flex>
             <Flex marginLeft={'-24px'} width={'172px'}>
-              {sortState === '' ||
+              {sortState === '' || (
                 <Badge width={'100%'} height={'100%'}>
                   <Flex justifyContent={'space-evenly'} alignItems={'center'} height={'100%'}>
                     {getSortState()}
                   </Flex>
                 </Badge>
-              }
-              
+              )}
             </Flex>
           </Flex>
-          
 
           <DrawerBody marginTop={2}>
             <VStack spacing={4} align="stretch">
@@ -220,10 +267,10 @@ const NotificationsDrawer = ({ notificationsData }) => {
                     <Flex alignItems={'center'} justifyContent={'space-between'} gap={4}>
                       {getNotifBadge(notification.type)}
                       <Flex flexDirection={'column'} width={'75%'}>
-                        <Text>
-                          {getNotificationText(notification.type)}
+                        <Text>{getNotificationText(notification.type)}</Text>
+                        <Text fontSize="sm">
+                          {new Date(notification.timestamp).toLocaleString()}
                         </Text>
-                        <Text fontSize="sm">{new Date(notification.timestamp).toLocaleString()}</Text>
                       </Flex>
                       <Button
                         _hover={'none'}
@@ -244,8 +291,8 @@ const NotificationsDrawer = ({ notificationsData }) => {
                         rightIcon={<ArrowForwardIcon />}
                         variant={'ghost'}
                       >
-                      {notificationAction[notification.type]}
-                    </Button>
+                        {notificationAction[notification.type]}
+                      </Button>
                     </Flex>
                   </Box>
                 ))}
