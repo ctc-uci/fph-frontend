@@ -3,6 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useBackend } from '../../contexts/BackendContext';
 import DonationsModal from './DonationsModal.jsx';
 import DonationsDeleteConfirmationModal from './DonationsDeleteConfirmationModal.jsx';
+import { ChevronRightIcon, ChevronLeftIcon, DeleteIcon, EditIcon, AddIcon } from '@chakra-ui/icons';
+import PropTypes from 'prop-types';
+import classes from './DonationItemsTable.module.css';
+import { useAuth } from '../../contexts/AuthContext.jsx';
+import FemalePettingDog from '../../assets/FemalePettingDog.png';
+import MalePettingDog from '../../assets/MalePettingDog.png';
 import {
   Table,
   Thead,
@@ -17,14 +23,11 @@ import {
   TabPanel,
   Box,
   IconButton,
+  Image,
   Button,
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import { ChevronRightIcon, ChevronLeftIcon, DeleteIcon, EditIcon, AddIcon } from '@chakra-ui/icons';
-import PropTypes from 'prop-types';
-import classes from './DonationItemsTable.module.css';
-import { useAuth } from '../../contexts/AuthContext.jsx';
 
 const DonationItemsTable = () => {
   const { isAdmin } = useAuth();
@@ -49,8 +52,8 @@ const DonationItemsTable = () => {
             <Text>Donation Items</Text>
           </div>
           <Tabs>
-            <div className={classes.tabs}>
-              <TabList>
+            <div>
+              <TabList w="185px" mb={-10}>
                 <Tab>All</Tab>
                 <Tab>Food</Tab>
                 <Tab>Misc.</Tab>
@@ -81,6 +84,7 @@ const DonationItems = ({ category }) => {
   const [currentPageNum, setCurrentPageNum] = useState(1);
   const [pageLimit, setPageLimit] = useState(1);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [isEdit, setIsEdit] = useState(false);
   const {
     isOpen: deleteModalIsOpen,
     onOpen: deleteModalOnOpen,
@@ -92,7 +96,7 @@ const DonationItems = ({ category }) => {
     onClose: donationsModalOnClose,
   } = useDisclosure();
 
-  const TABLE_HEADERS = ['Id', 'Name', 'Quantity Type', 'Price', 'Category'];
+  const TABLE_HEADERS = ['Id', 'Name', 'Quantity Type', 'Price', 'Category', ''];
 
   useEffect(() => {
     loadInfo();
@@ -108,7 +112,7 @@ const DonationItems = ({ category }) => {
     } catch (error) {
       console.log(error.message);
     }
-
+    console.log(category)
     const itemsNumResponse = await backend.get(`/value/totalValues?category=${category}`);
     setCurrentItemNum(itemsNumResponse.data[0]['count']);
     setPageLimit(Math.ceil(itemsNumResponse.data[0]['count'] / 10));
@@ -119,6 +123,10 @@ const DonationItems = ({ category }) => {
     deleteModalOnOpen();
   };
 
+  const setEditModal = (isEdit) => {
+    setIsEdit(isEdit);
+  }
+
   // const  deleteModalOnOpen();
   //   await backend.delete(`/value/${item['item_id']}`);
   //   //setDeleteModalVisible(true);
@@ -126,7 +134,7 @@ const DonationItems = ({ category }) => {
   // };
 
   return (
-    <>
+    <Box>
       <DonationsDeleteConfirmationModal
         isOpen={deleteModalIsOpen}
         onClose={deleteModalOnClose}
@@ -139,14 +147,15 @@ const DonationItems = ({ category }) => {
         data={selectedItem}
         setCurrentPageNum={setCurrentPageNum}
         loadInfo={loadInfo}
+        isEdit={isEdit}
       />
-      <div className={classes.addItemContainer}>
-        <Button colorScheme="teal" onClick={donationsModalOnOpen}>
+      <Box className={classes.addItemContainer} mr={4}>
+        <Button colorScheme="teal" onClick={() => {donationsModalOnOpen(); setEditModal(false)} } gap={2}>
+          <AddIcon boxSize={3}/>
           Add Item
-          <AddIcon />
         </Button>
-      </div>
-      <Table variant="striped" className={classes.table} colorScheme="whiteAlpha">
+      </Box>
+      <Table variant="simple" ml={-4} bg="white" borderRadius={10}>
         <Thead>
           <Tr>
             {TABLE_HEADERS.map((header, index) => (
@@ -156,7 +165,7 @@ const DonationItems = ({ category }) => {
         </Thead>
         <Tbody>
           {data.map((item, index) => (
-            <Tr key={index} className={classes.tableRows}>
+            <Tr key={index}>
               {Object.keys(item).map(key => (
                 <Td key={key}>
                   {typeof item[key] === 'boolean' ? (item[key] ? 'True' : 'False') : item[key]}
@@ -168,6 +177,7 @@ const DonationItems = ({ category }) => {
                   onClick={() => {
                     donationsModalOnOpen();
                     setSelectedItem(item);
+                    setEditModal(true);
                   }}
                 >
                   <EditIcon />
@@ -203,7 +213,24 @@ const DonationItems = ({ category }) => {
           onClick={() => setCurrentPageNum(currentPageNum + 1)}
         />
       </div>
-    </>
+      <Box
+        position="absolute"
+        left="40%"
+      >
+        {currentPageNum === pageLimit && category === "Food" && (
+          <>
+            <Image src={MalePettingDog} alt="Male Image" />
+            <Text ml='10' color="blackAlpha.400">You’ve reached the end!</Text>
+          </>
+        )}
+        {currentPageNum === pageLimit && category !== "Food" && (
+          <>
+            <Image src={FemalePettingDog} alt="Female Image" />
+            <Text ml='4' color="blackAlpha.400">You’ve reached the end!</Text>
+          </>
+        )}
+      </Box>
+    </Box>
   );
 };
 

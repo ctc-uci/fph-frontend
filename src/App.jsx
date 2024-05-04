@@ -7,6 +7,7 @@ import BusinessNotificationCenter from './components/BusinessNotificationCenter/
 import AdminDashboard from './components/AdminDashboard/AdminDashboard';
 import EditContactInformation from './components/EditContactInformation';
 import BusinessDonationHistory from './components/BusinessDonationHistory/BusinessDonationHistory.jsx';
+import ViewDonationHistory from './components/BusinessDonationHistory/ViewDonationHistory/ViewDonationHistory.jsx';
 import ContactUs from './components/ContactUsForm/ContactUs';
 import DonationTrackingTable from './components/DonationTrackingTable/DonationTrackingTable.jsx';
 import styles from './App.module.css';
@@ -25,16 +26,16 @@ import AdminSettingsMaster from './components/AdminSettings/AdminSettingsMaster.
 
 const App = () => {
   const location = useLocation();
-  const currentRoute = location.pathname;
+  const currentRoute = location.pathname.toLowerCase();
   return (
     <BackendProvider>
       <AuthProvider>
         <div className={styles.appLayout}>
-          {currentRoute == '/SignupAdmin' ||
-            currentRoute == '/SignupBusiness' ||
-            currentRoute == '/Login' ||
-            currentRoute == '/ForgotPassword' ||
-            currentRoute == '/BusinessForm' || <Sidebar isAdmin={false} />}
+          {currentRoute == '/signupadmin' ||
+            currentRoute == '/signupbusiness' ||
+            currentRoute == '/login' ||
+            currentRoute == '/forgotpassword' ||
+            currentRoute == '/businessform' || <Sidebar isAdmin={false} />}
           <div className={styles.mainContent}>
             <Routes>
               <Route
@@ -56,7 +57,7 @@ const App = () => {
                 path="/AdminDashboard"
                 element={<ProtectedRoute Component={AdminDashboard} />}
               />
-              <Route exace path="/AdminSettings" Component={AdminSettingsMaster} />
+              <Route exact path="/AdminSettings" element={<ProtectedRoute Component={AdminSettingsMaster} />} />
               <Route
                 exact
                 path="/EditContactInformation"
@@ -116,6 +117,11 @@ const App = () => {
                 exact
                 path="/ViewRequest/:id"
                 element={<ProtectedRoute Component={ViewRequest} />}
+              />
+              <Route
+                exact
+                path="/BusinessDonationHistory/:id"
+                element={<ProtectedRoute Component={ViewDonationHistory} />}
               />
               <Route
                 exact

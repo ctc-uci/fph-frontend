@@ -19,14 +19,15 @@ import {
   Spacer,
   TableContainer,
 } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 import { ChevronRightIcon, ChevronLeftIcon, ArrowForwardIcon } from '@chakra-ui/icons';
-import ViewDonationHistory from './ViewDonationHistory/ViewDonationHistory';
 import './BusinessDonationHistory.module.css';
 
 const BusinessDonationHistory = () => {
   const { backend } = useBackend();
   const [data, setData] = useState([]);
   const [selectedDonationId, setSelectedDonationId] = useState(null);
+  const navigate = useNavigate();
 
   // for pagination
   const [currentTotalDonationNum, setCurrentTotalDonationNum] = useState(0);
@@ -70,7 +71,7 @@ const BusinessDonationHistory = () => {
   };
 
   if (selectedDonationId) {
-    return <ViewDonationHistory id={selectedDonationId} />;
+    navigate(`/BusinessDonationHistory/${selectedDonationId}`);
   }
 
   const handleSearch = e => {

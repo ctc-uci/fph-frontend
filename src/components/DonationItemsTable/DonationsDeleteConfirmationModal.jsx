@@ -30,7 +30,7 @@ function DonationsDeleteConfirmationModal({ isOpen, onClose, loadInfo, selectedI
               Delete
             </AlertDialogHeader>
 
-            <AlertDialogBody>Are you sure? You cannot undo this action afterwards.</AlertDialogBody>
+            <AlertDialogBody>Are you sure you would like to delete this item?</AlertDialogBody>
 
             <AlertDialogFooter>
               <Button ref={cancelRef} onClick={onClose}>

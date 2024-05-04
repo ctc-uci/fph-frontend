@@ -16,6 +16,7 @@ import {
   TableContainer,
   useDisclosure,
   Input,
+  useToast,
 } from '@chakra-ui/react';
 import { EditIcon, AddIcon, DeleteIcon, ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import { Button } from '@chakra-ui/react';
@@ -40,6 +41,7 @@ const AdminsTable = () => {
     onOpen: deleteModalOnOpen,
     onClose: deleteModalOnClose,
   } = useDisclosure();
+  const toast = useToast();
 
   useEffect(() => {
     getAdminData();
@@ -114,7 +116,9 @@ const AdminsTable = () => {
           onChange={handleSearch}
           sx={{ width: '222px', backgroundColor: '#FFFFFF' }}
         />
-        <Button colorScheme="teal" onClick={adminModalOnOpen}>
+        <Button
+          colorScheme="teal"
+          onClick={() => adminModalOnOpen()}>
           <AddIcon />
           Add Admin
         </Button>
@@ -138,6 +142,7 @@ const AdminsTable = () => {
           }}
           data={selectedAdmin}
           loadInfo={getAdminData}
+          toast={toast}
         />
         <TableContainer>
           <Table style={{ borderCollapse: 'collapse' }}>
