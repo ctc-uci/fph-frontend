@@ -119,7 +119,7 @@ function Sidebar() {
             <Flex width="35vh" flexDirection="column">
               <VStack>
                 {!isAdminUser && (
-                  <Link to={'/ContactUs'} style={{ width: '100%', display: 'block' }}>
+                  <Link style={{ width: '100%', display: 'block' }}>
                     <Button onClick={onOpen} width="full" marginLeft="3vh" justifyContent="flex-start" variant="ghost" as="footer">
                       <box-icon type="regular" name="help-circle" style={{ marginRight: '0.5rem' }}></box-icon>
                       Contact Us

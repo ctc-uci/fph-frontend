@@ -8,6 +8,7 @@ import {
   Flex,
   Heading,
   Text,
+  Link,
   Textarea,
   VStack,
   Checkbox,
@@ -69,40 +70,9 @@ const DonationForm = () => {
     fetchBusinessId();
   }, []);
 
-  // const submitForm = async event => {
-  //   event.preventDefault();
-  //   console.log(formData);
-
-  //   try {
-  //     await backend.post('/donation', formData);
-
-  //     const fphNotificationData = {
-  //       message: `Business ID: ${businessID} Donation Form Submission`,
-  //       timestamp: new Date().toLocaleString('en-US', {
-  //         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-  //       }),
-  //       been_dismissed: false,
-  //       type: 'Donation Form Submitted',
-  //     };
-  //     await backend.post('/notification', fphNotificationData);
-
-  //     const businessNotificationData = {
-  //       message: 'Donation Form Submitted Successfully',
-  //       timestamp: new Date().toLocaleString('en-US', {
-  //         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-  //       }),
-  //       been_dismissed: false,
-  //       type: 'Donation Form Submitted',
-  //     };
-  //     await backend.post('/notification', businessNotificationData);
-
-  //     // Navigate to the Congratulations.jsx page
-  //     navigate('/congratulations');
-  //   } catch (error) {
-  //     // Handle error if form submission or navigation fails
-  //     console.error('Form submission failed:', error);
-  //   }
-  // };
+  const handleCancelClick = () => {
+    navigate('/BusinessDashboard');
+  };
 
   const submitForm = async event => {
     event.preventDefault();
@@ -120,7 +90,7 @@ const DonationForm = () => {
       console.log(formData);
 
       const fphNotificationData = {
-        business_id: businessId,
+        businessId: businessId,
         message: `Business ID: ${businessId} Donation Form Submission`,
         timestamp: new Date().toLocaleString('en-US', {
           timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -246,30 +216,35 @@ const DonationForm = () => {
   };
   return (
     <>
-      <Text margin="30px 0px 20px 32px" fontSize="16px">
-        Home / Donation Form
-      </Text>
+      <Flex margin="30px 0px 20px 32px" gap={2}>
+        <Link color="blue.500" onClick={handleCancelClick} fontSize="16px">
+          Home
+        </Link>
+        <Text fontSize="16px">
+          / Donation Form
+        </Text>
+      </Flex>
       <Heading marginLeft="32px" fontSize="36px" paddingBottom={'20px'}>
         Donation Form
       </Heading>
       <Box
         bg="#FFFFFF"
         borderRadius="4px"
-        margin="0px 32px 0px 32px"
+        margin="0px 32px 40px 32px"
         width="1088px"
-        height="1566px"
+        height="900px"
         top="160px"
         left="320px"
       >
         <Box marginLeft="35px" position="relative">
           <FormControl>
             <Heading fontSize="24px" paddingTop="25px">
-              Donor Info
+              Volunteer Information
             </Heading>
             <Text fontSize="1xl" marginBottom="10px" paddingTop="15px">
-              Please fill out the following form to complete logging the donation of your business.
+              Please fill out the following form to log your donation totals.
             </Text>
-            <Flex alignItems="center" marginTop="5px" width="80%" marginLeft={-49}>
+            <Flex alignItems="center" marginTop="5px" width="80%" marginLeft={-55}>
               <FormLabel
                 itemName="NAME"
                 htmlFor="personFirstName personLastName"
@@ -279,7 +254,7 @@ const DonationForm = () => {
               <Text className={classes.form_label} width={70}>
                 NAME
               </Text>
-              <Flex height="40px" width="820px" alignItems="center">
+              <Flex height="40px" width="820px" alignItems="center" gap={4}>
                 <Input
                   id="personFirstName"
                   placeholder="First Name"
@@ -296,7 +271,7 @@ const DonationForm = () => {
                 />
               </Flex>
             </Flex>
-            <Flex alignItems="center" marginTop="5px" width="80%" marginLeft={-49}>
+            <Flex alignItems="center" marginTop="5px" width="80%" marginLeft={-55}>
               <FormLabel
                 itemName="EMAIL"
                 htmlFor="email"
@@ -315,7 +290,7 @@ const DonationForm = () => {
                 isRequired={true}
               />
             </Flex>
-            <Flex alignItems="center" marginTop="5px" width="80%" marginLeft={-49}>
+            <Flex alignItems="center" marginTop="5px" width="80%" marginLeft={-55}>
               <FormLabel
                 itemName="volunteer_hours"
                 htmlFor="hours"
@@ -327,7 +302,7 @@ const DonationForm = () => {
               </Text>
               <Input
                 id="volunteer_hours"
-                placeholder="Hours"
+                placeholder="Number of Hours Worked"
                 name="volunteer_hours"
                 width="820px"
                 onChange={handleChange}
@@ -339,7 +314,7 @@ const DonationForm = () => {
             <Heading as="h2" size="md" marginTop="30px" marginBottom="10px">
               {' '}
               {/* Increased top margin */}
-              DONATION INFO
+              Donation Information
             </Heading>
             <Text fontWeight="500" fontSize="14px" marginTop="10px" marginBottom="10px">
               Please select the category, amount, or weight of the items you are donating.
@@ -447,7 +422,7 @@ const DonationForm = () => {
               </Flex>
             </Flex>
             <Flex justifyContent={'flex-end'} marginRight="60px" marginTop="20px" gap="20px">
-              <Button type="button" onClick={submitForm}>
+              <Button type="button" onClick={handleCancelClick}>
                 Cancel
               </Button>
               <Button type="button" colorScheme="teal" onClick={submitForm}>
