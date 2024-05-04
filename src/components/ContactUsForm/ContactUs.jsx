@@ -26,7 +26,16 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
+  VStack,
 } from '@chakra-ui/react';
+import Supply_0 from './Supply_0.png';
+import Supply_1 from './Supply_1.png';
+import Supply_2 from './Supply_2.png';
+import Supply_3 from './Supply_3.png';
+import Supply_4 from './Supply_4.png';
+import Supply_5 from './Supply_5.png';
+import Supply_6 from './Supply_6.png';
+import Supply_7 from './Supply_7.png';
 
 const ContactUs = () => {
   const FPH_ID = 0;
@@ -46,6 +55,26 @@ const ContactUs = () => {
     'Donation Site Bin Decals',
     'Donation Envelopes',
     'Homeless Card 2',
+  ];
+  const supplyDescriptions = [
+    'Stickers to share with your Pet Food Provider.',
+    'Stickers that can be handed out and can be placed on water bottles, cars and more.',
+    'Cards to share with your Pet Food Provider who may have more direct contact with the homeless in need of emergency veterinary services.',
+    'Feeding Pets of the Homeless’ contact information cards.',
+    'Decals that indicate that you are a donation site.',
+    'Decorate your donation bins with these decals so donators know where to put their items. ',
+    'Envelopes to provide potential donators to make a direct donation.',
+    'Cards to share with your Pet Food Provider who may have more direct contact with the homeless who are in need of emergency veterinary services.',
+  ];
+  const suppliesImages = [
+    Supply_0,
+    Supply_1,
+    Supply_2,
+    Supply_3,
+    Supply_4,
+    Supply_5,
+    Supply_6,
+    Supply_7
   ];
 
   const [businessId, setBusinessId] = useState(null);
@@ -164,49 +193,89 @@ const ContactUs = () => {
     navigate('/BusinessDashboard');
   };
 
+    const showSupplyRequests = (startingIndex, endingIndex) => {
+      return (
+        <Stack flex="1" spacing="4">
+      {checkedThingies.slice(startingIndex, endingIndex).map((item, index) => (
+        <HStack marginTop="20px" key={index} align="top" spacing="0" width="476px" height="131px">
+          <Box
+            width="202px"
+            height="131px"
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Image
+              width="200px"
+              height="131px"
+              src={suppliesImages[startingIndex + index]}
+              alt={`Supply ${startingIndex + index}`}
+              objectFit="contain"
+            />
+          </Box>
+          <VStack align="stretch" justifyContent="center" spacing="1" flex="1">
+            <HStack spacing={4}>
+              <NumberInput size="sm" maxW="100px" defaultValue={0} min={0}
+                onChange={(valueString) => handleNumInputChange(startingIndex + index, valueString)}>
+                <NumberInputField />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+              <Text>{item}</Text>
+            </HStack>
+            <Text color="#718096" fontSize="sm" lineHeight="5" fontWeight="normal" fontFamily="Inter">
+              {supplyDescriptions[startingIndex + index]}
+            </Text>
+          </VStack>
+        </HStack>
+      ))}
+    </Stack>
+      );
+    }
+  
+
   return (
     <>
       <Flex>
         <Box bg="#F5F5F5" width={'100%'} height={'100%'}>
-          <Box marginLeft={'3%'} marginRight={'3%'} marginTop={'5%'} marginBottom={'5%'}>
+          <Box marginLeft={'1%'} marginRight={'3%'} marginTop={'5%'} marginBottom={'5%'}>
+          <Spacer margin={'2%'}>
             <Text fontSize="2xl" as="b">
               Supply Request
             </Text>
-            <Spacer margin={'2%'}></Spacer>
-            <Card width={'100%'}>
-              <Card width={'81%'} variant={'outline'} margin={'5%'} marginBottom={'0%'}>
+          </Spacer>
+
+            
+            <Card width={'81%'} variant={'outline'} margin={'2%'} marginBottom={'0%'}>
+                <Box
+                  marginTop={'2%'}
+                  marginLeft={'2%'}
+                >
+                  <Text fontWeight={'bold'} fontSize={'18px'}>Select Supplies Needed</Text>
+                </Box>
+                
                 <Box
                   p={4}
                   display="flex"
-                  mt="15"
+                  mt="0"
                   alignItems="top"
                   border="20%"
                   marginLeft={'3%'}
                   borderColor="gray.200"
                   borderRightRadius="1"
                 >
-                  <Stack>
-                    {checkedThingies.map((item, index) => (
-                      <HStack marginBottom={'17%'} key={index}>
-                        <NumberInput
-                          size="sm"
-                          maxW={20}
-                          defaultValue={0}
-                          min={0}
-                          onChange={e => handleNumInputChange(e, index)}
-                        >
-                          <NumberInputField />
-                          <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                          </NumberInputStepper>
-                        </NumberInput>
-                        <Text>{item}</Text>
-                      </HStack>
-                    ))}
-                  </Stack>
+                  <Flex mt="4">
+                    
+                    <Stack flex="1" spacing="4">
+                      {showSupplyRequests(0, 4)}
+                    </Stack>
+                    <Stack flex="1" spacing="4">
+                      {showSupplyRequests(4, 8)}
+                    </Stack>
+                  </Flex>
                 </Box>
-              </Card>
               <Box margin={'5%'}>
                 <Textarea
                   width={'90%'}
