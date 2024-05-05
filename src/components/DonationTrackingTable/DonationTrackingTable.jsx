@@ -179,7 +179,7 @@ const DonationTrackingTable = () => {
             <NotificationsDrawer notificationsData={notifications} />
           </div>
           <div className={classes.tabs}>
-            <Tabs isFitted="true">
+            <Tabs isFitted="true" colorScheme="teal">
               <TabList>
                 {tabHeaders.map((header, index) => {
                   if (header != 'all')
@@ -210,7 +210,7 @@ const DonationTrackingTable = () => {
               Download CSV
             </Button>
           </div>
-          <TableContainer sx={{ backgroundColor: '#FFFFFF' }}>
+          <TableContainer sx={{ backgroundColor: '#FFFFFF' }} className={classes.roundedTable}>
             <Table variant="striped" colorScheme="whiteAlpha">
               <Thead>
                 <Tr>

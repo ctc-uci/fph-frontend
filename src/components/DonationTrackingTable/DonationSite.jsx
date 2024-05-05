@@ -63,7 +63,7 @@ const DonationSite = ({ donation_site, checkSet, setCheck, topCheckBox }) => {
   };
 
   return (
-    <Tr>
+    <Tr sx={{ borderTop: '1px solid #EDF2F7' }}>
       <Checkbox
         isChecked={individualCheckBox}
         onChange={handleClick}

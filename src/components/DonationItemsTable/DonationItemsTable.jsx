@@ -11,6 +11,7 @@ import FemalePettingDog from '../../assets/FemalePettingDog.png';
 import MalePettingDog from '../../assets/MalePettingDog.png';
 import {
   Table,
+  TableContainer,
   Thead,
   Tbody,
   Tr,
@@ -60,7 +61,7 @@ const DonationItemsTable = () => {
             <Text>Donation Items</Text>
             <NotificationsDrawer notificationsData={notification} />
           </div>
-          <Tabs>
+          <Tabs colorScheme="teal">
             <div>
               <TabList w="185px" mb={-10}>
                 <Tab>All</Tab>
@@ -68,7 +69,7 @@ const DonationItemsTable = () => {
                 <Tab>Misc.</Tab>
               </TabList>
             </div>
-            <TabPanels>
+            <TabPanels >
               <TabPanel>
                 <DonationItems category="all" />
               </TabPanel>
@@ -171,49 +172,51 @@ const DonationItems = ({ category }) => {
           Add Item
         </Button>
       </Box>
-      <Table variant="simple" ml={-4} bg="white" borderRadius={10}>
-        <Thead>
-          <Tr>
-            {TABLE_HEADERS.map((header, index) => (
-              <Th key={index}>{header}</Th>
-            ))}
-          </Tr>
-        </Thead>
-        <Tbody>
-          {data.map((item, index) => (
-            <Tr key={index}>
-              {Object.keys(item).map(key => (
-                <Td key={key}>
-                  {typeof item[key] === 'boolean' ? (item[key] ? 'True' : 'False') : item[key]}
-                </Td>
+      <TableContainer sx={{ backgroundColor: '#FFFFFF' }} className={classes.roundedTable}>
+        <Table variant="striped" colorScheme="whiteAlpha">
+          <Thead>
+            <Tr>
+              {TABLE_HEADERS.map((header, index) => (
+                <Th key={index}>{header}</Th>
               ))}
-              <Td>
-                <Button
-                  sx={{ backgroundColor: 'transparent' }}
-                  onClick={() => {
-                    donationsModalOnOpen();
-                    setSelectedItem(item);
-                    setEditModal(true);
-                  }}
-                >
-                  <EditIcon />
-                </Button>
-                <Button
-                  sx={{ backgroundColor: 'transparent' }}
-                  onClick={() => {
-                    openDeleteModal(item);
-                  }}
-                >
-                  {index >= 4 ?
-                  <DeleteIcon color="red" />
-                  : null }
-
-                </Button>
-              </Td>
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
+          </Thead>
+          <Tbody>
+            {data.map((item, index) => (
+              <Tr key={index}>
+                {Object.keys(item).map(key => (
+                  <Td key={key}>
+                    {typeof item[key] === 'boolean' ? (item[key] ? 'True' : 'False') : item[key]}
+                  </Td>
+                ))}
+                <Td>
+                  <Button
+                    sx={{ backgroundColor: 'transparent' }}
+                    onClick={() => {
+                      donationsModalOnOpen();
+                      setSelectedItem(item);
+                      setEditModal(true);
+                    }}
+                  >
+                    <EditIcon />
+                  </Button>
+                  <Button
+                    sx={{ backgroundColor: 'transparent' }}
+                    onClick={() => {
+                      openDeleteModal(item);
+                    }}
+                  >
+                    {index >= 4 ?
+                    <DeleteIcon color="red" />
+                    : null }
+
+                  </Button>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
       <div className={classes.resultNavigation}>
         <Box>
           {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentItemNum)} of{' '}

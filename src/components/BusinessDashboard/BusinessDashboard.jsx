@@ -57,12 +57,14 @@ const BusinessDashboard = () => {
     'Donation Form Reminder': '/BusinessDonationTrackingForm',
     'Supply Request Shipped': '/',
     'Supply Request Received': '/',
+    'Submitted Form': '/',
   };
   const buttonText = {
     'Donation Form Confirmation': 'View Form',
     'Donation Form Reminder': 'Submit Form',
     'Supply Request Shipped': 'View Request',
     'Supply Request Received': 'View Request',
+    'Submitted Form': 'View Request',
   };
 
   const buttonIcon = {

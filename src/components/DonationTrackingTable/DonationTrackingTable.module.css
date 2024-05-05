@@ -15,7 +15,6 @@
   width: 43.5%;
   margin-top: 24px;
   margin-bottom: 24px;
-  background-color: var(--white, #ffffff);
 }
 
 .searchAndCSVContainer {
@@ -26,6 +25,15 @@
 
 .container {
   padding: 32px;
+}
+
+.roundedTable {
+  margin-top: var(--chakra-space-5);
+  padding: var(--chakra-space-3);
+  border-width: 1px;
+  border-radius: 12px;
+  overflow-x: auto;
+  background: var(--white, #fff);
 }
 
 .resultNavigation {
