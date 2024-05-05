@@ -35,6 +35,7 @@ import {
   MenuItem,
   Link as ChakraLink,
   MenuOptionGroup,
+  useToast
 } from '@chakra-ui/react';
 import {
   ChevronDownIcon,
@@ -94,6 +95,7 @@ const ViewBusiness = () => {
   const currentPageData = donationFormsData.slice(startIndex, endIndex);
 
   const { backend } = useBackend();
+  const toast = useToast();
 
   const fetchBusiness = async () => {
     try {
@@ -166,6 +168,36 @@ const ViewBusiness = () => {
   const handleSupplyStatusChange = async (status) => {
     setSelectedSupplyStatus(status);
     await backend.put(`business/${id}`, { supplyRequestStatus: status})
+  };
+
+  const handleSendReminder = async () => {
+    try {
+      const requestData = {
+        businessId: id,
+        businessName: data.name,
+        senderId: 0,
+        message: "Please submit your donation form by the due date!",
+        type: 'Not Submitted',
+        donationId: null,
+      };
+      await backend.post('/notification', requestData);
+      toast({
+        title: 'Success',
+        description: `Reminder sent to ${data.name}`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    } catch (error) {
+      console.error('Error sending reminders:', error);
+      toast({
+        title: 'Failed',
+        description: `Failed to send reminder to ${data.name}`,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
 
   useEffect(() => {
@@ -509,7 +541,7 @@ const ViewBusiness = () => {
                                 DONATION FORM STATUS
                               </Text>
                               <HStack spacing={4} mt={15}>
-                                <Button size="sm" variant="solid" colorScheme="teal">
+                                <Button size="sm" variant="solid" colorScheme="teal" onClick={handleSendReminder}>
                                   <box-icon name="envelope" size="14px" color="#ffffff"></box-icon>
                                   <Text fontSize="sm" ml="2">
                                     Send reminder
@@ -547,7 +579,7 @@ const ViewBusiness = () => {
                                 SUPPLY REQUEST
                               </Text>
                               <HStack spacing={4} mt={15}>
-                                <Button size="sm" variant="solid" colorScheme="teal">
+                                <Button size="sm" variant="solid" colorScheme="teal" isDisabled={lastRequest === ''} onClick={() => {navigate(`/ViewRequest/${data.id}`)}}>
                                   <box-icon name="package" size="14px" color="#ffffff"></box-icon>
                                   <Text fontSize="sm" ml="2">
                                     View request

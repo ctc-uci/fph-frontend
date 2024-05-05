@@ -60,7 +60,9 @@ const ViewRequest = () => {
       const message = response.data[0].message;
       setItemAmounts(JSON.parse(message));
       setDateRequested(formatDate(response.data[0].timestamp));
-      setBusinessName(response.data[0].business_name);
+
+      const businessNameResponse = await backend.get(`/business/${response.data[0].sender_id}`);
+      setBusinessName(businessNameResponse.data[0].name);
     } catch (error) {
       console.error(error);
     }

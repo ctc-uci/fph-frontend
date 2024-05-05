@@ -147,6 +147,7 @@ const ContactUs = () => {
       Notes: text,
     };
     const message = JSON.stringify(msg);
+    console.log(message)
     const updatedFormData = {
       businessId: FPH_ID,
       message: message,
