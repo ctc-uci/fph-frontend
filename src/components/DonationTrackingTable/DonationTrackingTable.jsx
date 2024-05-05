@@ -1,7 +1,7 @@
 import { useBackend } from '../../contexts/BackendContext';
 import { useState, useEffect } from 'react';
 import DonationSite from './DonationSite';
-import { Tabs, TabList, Tab, Button, Box, IconButton, Input } from '@chakra-ui/react';
+import { Tabs, TabList, Tab, Button, Box, IconButton, Input, useToast } from '@chakra-ui/react';
 import {
   ArrowDownIcon,
   ChevronRightIcon,
@@ -19,6 +19,7 @@ const DonationTrackingTable = () => {
   const navigate = useNavigate();
   const { backend } = useBackend();
   const { isAdmin } = useAuth();
+  const toast = useToast();
 
   const [donationTrackingTableData, setDonationTrackingTableData] = useState([]);
   const [checkedSet, setCheckedSet] = useState(new Set());
@@ -118,21 +119,35 @@ const DonationTrackingTable = () => {
 
   const handleDownloadCSV = () => {
     const ids = Array.from(checkedSet);
-    const headers = [
-      'business_id',
-      'donation_id',
-      'food_bank_donation',
-      'reporter',
-      'email',
-      'date',
-      'misc_items',
-      'volunteer_hours',
-      'canned_cat_food_quantity',
-      'canned_dog_food_quantity',
-      'dry_cat_food_quantity',
-      'dry_dog_food_quantity',
-    ];
-    DownloadCSV(headers, ids, 'donation_tracking');
+    try {
+      if (ids.length === 0) {
+        toast({
+          title: 'Downloaded CSV',
+          description: "Select a business first",
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+      } else {
+        DownloadCSV(ids, true);
+        const message = `For ${ids.length} ${ids.length > 1 ? `businesses` : ` business`}.`;
+        toast({
+          title: 'Downloaded CSV',
+          description: message,
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'Error Downloading CSV',
+        description: error.message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
 
   const handleSearch = event => {
