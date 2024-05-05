@@ -260,7 +260,7 @@ const BusinessTable = () => {
       }
     };
     getData();
-  }, [data, currentBusinessNum, pageLimit, search, currentTab, currentPageNum, backend]);
+  }, [search, currentTab, currentPageNum, backend]);
 
   const handleRowClick = async id => {
     navigate(`/ViewBusiness/${id}`);
@@ -387,9 +387,6 @@ const BusinessTable = () => {
                 ))}
               </Tr>
             </Thead>
-            {data.length == 0 ? (
-              <h1>Loading ...</h1>
-            ) : (
               <Tbody>
                 {data &&
                   data.map((item, index) => (
@@ -431,7 +428,6 @@ const BusinessTable = () => {
                     </Tr>
                   ))}
               </Tbody>
-            )}
           </Table>
         </Card>
         <Flex gap={4} justifyContent={'flex-end'} alignItems={'center'}>

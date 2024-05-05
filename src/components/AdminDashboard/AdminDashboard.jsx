@@ -13,7 +13,6 @@ const AdminDashboard = () => {
   const { backend } = useBackend();
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
-  //const [donationData, setDonationData] = useState([]);
   const [businessDictionary, setBusinessDictionary] = useState([]);
   const [pendingBusinesses, setPendingBusinesses] = useState([]);
   const [notification, setNotifications] = useState([]);
