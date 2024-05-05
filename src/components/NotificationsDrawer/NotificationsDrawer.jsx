@@ -20,6 +20,8 @@ import {
   MenuItem,
   Badge,
   Flex,
+  Heading,
+  useToast,
 } from '@chakra-ui/react';
 import { ChevronDownIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 import { useState } from 'react';
@@ -33,7 +35,7 @@ const NotificationsDrawer = ({ notificationsData }) => {
   const btnRef = React.useRef();
   const [sortState, setSortState] = useState('');
   const navigate = useNavigate();
-  //const toast = useToast();
+  const toast = useToast();
   const { backend } = useBackend();
 
   NotificationsDrawer.propTypes = {
@@ -69,10 +71,23 @@ const NotificationsDrawer = ({ notificationsData }) => {
         type: 'Not Submitted',
         donationId: null,
       };
-
       await backend.post('/notification', requestData);
+      toast({
+        title: 'Success',
+        description: `Reminder sent to ${businessName}`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
     } catch (error) {
       console.error('Error sending reminders:', error);
+      toast({
+        title: 'Failed',
+        description: `Failed to send reminder to ${businessName}`,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
@@ -106,38 +121,23 @@ const NotificationsDrawer = ({ notificationsData }) => {
     switch (sortState) {
       case 'New Application':
         return (
-          <>
-            <box-icon name="buildings" type="regular" color={'black'}></box-icon>
-            <Text>New application</Text>
-          </>
+          <Text>New application</Text>
         );
       case 'Not Submitted':
         return (
-          <>
-            <box-icon name="envelope" type="regular" color={'black'}></box-icon>
-            <Text>Send reminder</Text>
-          </>
+          <Text>Send reminder</Text>
         );
       case 'Submitted Form':
         return (
-          <>
-            <box-icon name="check" type="regular" color={'black'}></box-icon>
-            <Text>Submitted form</Text>
-          </>
+          <Text>Submitted form</Text>
         );
       case 'Supply Request':
         return (
-          <>
-            <box-icon name="package" type="regular" color={'black'}></box-icon>
-            <Text>Supply request</Text>
-          </>
+          <Text>Supply request</Text>
         );
       case 'Edited Information':
         return (
-          <>
-            <box-icon name="edit" type="regular" color={'black'}></box-icon>
-            <Text>Edited information</Text>
-          </>
+          <Text>Edited information</Text>
         );
       default:
         return <></>;
@@ -247,11 +247,18 @@ const NotificationsDrawer = ({ notificationsData }) => {
                 </MenuList>
               </Menu>
             </Flex>
-            <Flex marginLeft={'-24px'} width={'172px'}>
+            <Flex marginLeft={'-24px'} width={'200px'} marginRight={'-24px'}>
               {sortState === '' || (
-                <Badge width={'100%'} height={'100%'}>
-                  <Flex justifyContent={'space-evenly'} alignItems={'center'} height={'100%'}>
+                <Badge width={'100%'} height={'100%'} borderRadius={4}>
+                  <Flex justifyContent={'space-between'} alignItems={'center'} height={'100%'} marginLeft={2} gap={1}>
+                    {getNotifBadge(sortState)}
                     {getSortState()}
+                    <IconButton
+                      variant={'ghost'}
+                      colorScheme={'white'}
+                      icon={<box-icon name="x" type="solid" color={'black'}></box-icon>}
+                      onClick={() => setSortState('')}
+                    />
                   </Flex>
                 </Badge>
               )}
@@ -267,9 +274,10 @@ const NotificationsDrawer = ({ notificationsData }) => {
                     <Flex alignItems={'center'} justifyContent={'space-between'} gap={4}>
                       {getNotifBadge(notification.type)}
                       <Flex flexDirection={'column'} width={'75%'}>
+                        <Heading size='sm'>{notification.business_name}</Heading>
                         <Text>{getNotificationText(notification.type)}</Text>
                         <Text fontSize="sm">
-                          {new Date(notification.timestamp).toLocaleString()}
+                          {new Date(notification.timestamp).toLocaleDateString()}
                         </Text>
                       </Flex>
                       <Button

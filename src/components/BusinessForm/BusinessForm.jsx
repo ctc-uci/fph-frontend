@@ -37,6 +37,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import 'boxicons';
 import './BusinessForm.module.css';
 import { useBackend } from '../../contexts/BackendContext';
+import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer';
 
 const BusinessForm = ({ edit = true }) => {
   // State for each form field
@@ -90,6 +91,7 @@ const BusinessForm = ({ edit = true }) => {
   const [termsAndConditionsAccepted, setTermsAndConditionsAccepted] = useState(false);
   const [updatedBy, setUpdatedBy] = useState(null);
   const { backend } = useBackend();
+  const [notification, setNotification] = useState([]);
   useEffect(() => {
     const checkIsAdmin = async () => {
       if (!(await isAdmin())) {
@@ -100,6 +102,16 @@ const BusinessForm = ({ edit = true }) => {
     };
 
     checkIsAdmin();
+
+    const fetchNotifications = async () => {
+      const response = await backend.get('/notification/0');
+      setNotification(response.data);
+    }
+
+    if (notification.length === 0) {
+      fetchNotifications();
+    }
+
     if (edit) {
       fillOutPendingData();
     }
@@ -343,7 +355,7 @@ const BusinessForm = ({ edit = true }) => {
                 </ChakraLink>
                 <Text>/ {edit ? businessName : 'Add A Business'}</Text>
               </Flex>
-              <IconButton icon={<box-icon type="solid" name="bell"></box-icon>} />
+              <NotificationsDrawer notificationsData={notification} />
             </Flex>
             <Card maxW="100%" w="70vw" h="auto" p={6} mt="10">
               <CardHeader>

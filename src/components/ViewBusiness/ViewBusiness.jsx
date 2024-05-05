@@ -47,6 +47,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import 'boxicons';
 import PendingBusiness from '../PendingBusiness/PendingBusiness';
+import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer';
 
 const formatDateDFH = dateTimeString => {
   const date = new Date(dateTimeString);
@@ -83,6 +84,8 @@ const ViewBusiness = () => {
   const [lastRequest, setLastRequest] = useState('');
   const [isAdminUser, setIsAdminUser] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const [notification, setNotification] = useState([]);
 
   const itemsPerPage = 5;
   const totalPages = Math.ceil(donationFormsData.length / itemsPerPage);
@@ -178,7 +181,13 @@ const ViewBusiness = () => {
       }
     };
 
+    const fetchNotifications = async () => {
+      const response = await backend.get('/notification/0');
+      setNotification(response.data);
+    }
+
     checkIsAdmin();
+    fetchNotifications();
   }, [id]);
 
   if (error) {
@@ -219,8 +228,7 @@ const ViewBusiness = () => {
                     </ChakraLink>
                     <Text>/ {data.name}</Text>
                   </Flex>
-
-                  <IconButton icon={<box-icon type="solid" name="bell"></box-icon>} />
+                  <NotificationsDrawer notificationsData={notification} />
                 </Flex>
                 <Card maxW="100%" w="1089px" h="auto" p={6} mt="10">
                   <CardHeader>

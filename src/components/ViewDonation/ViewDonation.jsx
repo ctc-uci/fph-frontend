@@ -14,10 +14,9 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   Button,
-  IconButton,
 } from '@chakra-ui/react';
 import { ArrowDownIcon } from '@chakra-ui/icons';
-
+import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer';
 import DownloadCSV from '../../utils/downloadCSV';
 import PropTypes from 'prop-types';
 
@@ -26,6 +25,7 @@ const ViewDonation = () => {
   const { id } = useParams();
   const [donationData, setDonationData] = useState([]);
   const [businessName, setBusinessName] = useState('');
+  const [notification, setNotification] = useState([]);
   const navigate = useNavigate();
 
   const getData = async () => {
@@ -76,7 +76,19 @@ const ViewDonation = () => {
       await getBusinessName();
     };
     fetchData();
-  }, []);
+
+    const getNotifications = async () => {
+      try {
+        const notificationResponse = await backend.get('/notifications');
+        setNotification(notificationResponse.data);
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      }
+    };
+    if (notification.length === 0) {
+      getNotifications();
+    }
+  });
 
   return (
     <>
@@ -95,7 +107,7 @@ const ViewDonation = () => {
               <BreadcrumbLink href="#">{businessName}</BreadcrumbLink>
             </BreadcrumbItem>
           </Breadcrumb>
-          <IconButton icon={<box-icon type="solid" name="bell"></box-icon>} />
+          <NotificationsDrawer notificationsData={notification} />
         </Flex>
         <Flex alignItems="center" justifyContent={'space-between'} width={'75%'} pb={'5'} pt={'10'}>
           <Heading size="lg">{businessName}&rsquo;s Donation Summary</Heading>

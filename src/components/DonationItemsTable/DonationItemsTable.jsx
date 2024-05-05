@@ -28,10 +28,13 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
+import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer.jsx';
 
 const DonationItemsTable = () => {
   const { isAdmin } = useAuth();
   const [isAdminUser, setIsAdminUser] = useState(false);
+  const [notification, setNotification] = useState([]);
+  const { backend } = useBackend();
   const navigate = useNavigate();
   useEffect(() => {
     const checkIsAdmin = async () => {
@@ -42,14 +45,20 @@ const DonationItemsTable = () => {
       }
     };
 
+    const fetchNotifications = async () => {
+      const response = await backend.get('/notification/0');
+      setNotification(response.data);
+    }
     checkIsAdmin();
-  });
+    fetchNotifications();
+  }, [backend]);
   return (
     <>
       {isAdminUser && (
         <div className={classes.container}>
           <div className={classes.ditTitleContainer}>
             <Text>Donation Items</Text>
+            <NotificationsDrawer notificationsData={notification} />
           </div>
           <Tabs>
             <div>
