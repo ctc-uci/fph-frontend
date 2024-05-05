@@ -14,6 +14,7 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   Button,
+  useToast,
 } from '@chakra-ui/react';
 import { ArrowDownIcon } from '@chakra-ui/icons';
 import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer';
@@ -23,47 +24,31 @@ import PropTypes from 'prop-types';
 const ViewDonation = () => {
   const { backend } = useBackend();
   const { id } = useParams();
+  const toast = useToast();
   const [donationData, setDonationData] = useState([]);
   const [businessName, setBusinessName] = useState('');
   const [notification, setNotification] = useState([]);
   const navigate = useNavigate();
 
-  const getData = async () => {
-    try {
-      const donationResponse = await backend.get(`/donation/${id}`);
-      setDonationData(donationResponse.data[0]);
-    } catch (error) {
-      console.error('Error fetching donation data:', error);
-    }
-  };
-
-  const getBusinessName = async () => {
-    console.log('started getbusiness name');
-    try {
-      const businessResponse = await backend.get(`/business/${donationData.business_id}`);
-      console.log('businessResponse yessir');
-      setBusinessName(businessResponse.data[0].name);
-    } catch (error) {
-      console.error('Error fetching business name:', error);
-    }
-  };
-
   const handleDownloadCSV = () => {
-    const headers = [
-      'business_id',
-      'donation_id',
-      'food_bank_donation',
-      'reporter',
-      'email',
-      'date',
-      'misc_items',
-      'volunteer_hours',
-      'canned_cat_food_quantity',
-      'canned_dog_food_quantity',
-      'dry_cat_food_quantity',
-      'dry_dog_food_quantity',
-    ];
-    DownloadCSV(headers, id, 'donation_tracking');
+    try {
+      DownloadCSV([id], true);
+      toast({
+        title: 'Downloaded CSV',
+        description: `for ${businessName}`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: 'Error Downloading CSV',
+        description: error.message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
 
   const handleViewBusiness = () => {
@@ -71,11 +56,16 @@ const ViewDonation = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      await getData();
-      await getBusinessName();
+    const getData = async () => {
+      try {
+        const donationResponse = await backend.get(`/donation/${id}`);
+        const businessResponse = await backend.get(`/business/${donationResponse.data[0].business_id}`);
+        setBusinessName(businessResponse.data[0].name);
+        setDonationData(donationResponse.data[0]);
+      } catch (error) {
+        console.error('Error fetching donation data:', error);
+      }
     };
-    fetchData();
 
     const getNotifications = async () => {
       try {
@@ -88,7 +78,9 @@ const ViewDonation = () => {
     if (notification.length === 0) {
       getNotifications();
     }
-  });
+
+    getData();
+  }, []);
 
   return (
     <>
@@ -96,11 +88,11 @@ const ViewDonation = () => {
         <Flex alignItems="center" justifyContent={'space-between'} width={'75%'} pb={'5'}>
           <Breadcrumb>
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">Donation Tracking</BreadcrumbLink>
+              <BreadcrumbLink onClick={() => navigate('/DonationTrackingTable')}>Donation Tracking</BreadcrumbLink>
             </BreadcrumbItem>
 
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">View Business </BreadcrumbLink>
+              <BreadcrumbLink onClick={() => navigate(`/ViewBusiness/${donationData.business_id}`)}>View Business </BreadcrumbLink>
             </BreadcrumbItem>
 
             <BreadcrumbItem isCurrentPage>
@@ -156,7 +148,6 @@ const CustomRow = ({ title, info }) => {
     'Canned Cat Food QTY',
     'Dry Cat Food QTY',
   ].includes(title);
-  console.log(`${title}: ${shouldShowLb}`);
   return (
     <Box>
       <Flex alignContent={'center'} gap={300}>

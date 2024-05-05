@@ -23,10 +23,12 @@ import {
 import 'boxicons';
 import fphLogo from './fph-logo.png.png';
 import { useAuth } from '../../contexts/AuthContext';
+import { useBackend } from '../../contexts/BackendContext';
 import { useEffect, useState } from 'react';
 import { BiBuildingHouse, BiPhone, BiEnvelope } from 'react-icons/bi';
 
 function Sidebar() {
+  const { backend } = useBackend();
   const [isAdminUser, setIsAdminUser] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure(); // State management for modal
 
@@ -39,6 +41,11 @@ function Sidebar() {
 
     checkIsAdmin();
   });
+
+  useEffect(() => {
+    getBusinessName();
+  },
+  [backend]);
 
   const businessList = [
     { name: 'Home', path: '/BusinessDashboard', icon: 'home-smile' },
@@ -55,7 +62,15 @@ function Sidebar() {
   ];
 
   const navigate = useNavigate();
-  const { logout, isAdmin } = useAuth();
+  const { logout, isAdmin, currentUser } = useAuth();
+  const [businessName, setBusinessName] = useState();
+
+  const getBusinessName = async () => {
+    const businessIdResponse = await backend.get(`/businessUser/${currentUser.uid}`);
+    const businessContactResponse = await backend.get(`/business/${businessIdResponse.data[0].id}`);
+    const businessName = businessContactResponse.data[0].name;
+    setBusinessName(businessName);
+  };
 
   const authLogout = async () => {
     try {
@@ -83,7 +98,7 @@ function Sidebar() {
                   alt="FPH Logo"
                 />
                 <Text color="teal" width="13vh" fontWeight="bold">
-                  Feeding Pets of the Homeless
+                  {isAdminUser ? 'Feeding Pets of the Homeless' : businessName}
                 </Text>
               </HStack>
               <Divider

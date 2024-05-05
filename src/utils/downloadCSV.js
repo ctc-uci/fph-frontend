@@ -1,6 +1,6 @@
 // DownloadCSV.js
 
-async function DownloadCSV(ids) {
+async function DownloadCSV(ids, isDonation=false) {
   const headers = {
     'Business Name': 'name',
     'Business Phone': 'primary_phone',
@@ -16,13 +16,23 @@ async function DownloadCSV(ids) {
     'Volunteer Hours': 'volunteer_hours',
   };
   try {
-    const response = await fetch(
-      `http://localhost:3001/donation/selectByIds?ids=${ids.join(',')}`,
-      {
-        method: 'GET',
-      },
-    );
-
+    let response;
+    if (isDonation) {
+      response = await fetch(
+        `http://localhost:3001/donation/selectByIdsDonation?ids=${ids.join(',')}`,
+        {
+          method: 'GET',
+        },
+      );
+    } else {
+      response = await fetch(
+        `http://localhost:3001/donation/selectByIds?ids=${ids.join(',')}`,
+        {
+          method: 'GET',
+        },
+      );
+    }
+    
     if (!response.ok) {
       throw new Error('Failed to fetch data from the server');
     }

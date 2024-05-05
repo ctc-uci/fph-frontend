@@ -183,7 +183,7 @@ const BusinessTable = () => {
 
   const handleDownloadCSV = () => {
     const ids = Array.from(selectedBusinessIds);
-    var headers = [];
+    let headers = [];
     for (var i = 0; i < TABLE_HEADERS.length; i++) {
       headers.push(TABLE_HEADERS[i].toLowerCase().replace(' ', '_'));
     }
