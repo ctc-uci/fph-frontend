@@ -158,7 +158,7 @@ const ContactUs = () => {
     };
     const confirmationNotification = {
       businessId: businessId,
-      message: 'Your supply request has been sent!',
+      message: message,
       type: 'Supply Request',
       senderId: FPH_ID,
       businessName: null,

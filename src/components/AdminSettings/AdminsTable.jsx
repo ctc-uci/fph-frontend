@@ -131,6 +131,7 @@ const AdminsTable = () => {
           }}
           loadInfo={getAdminData}
           selectedItem={selectedAdmin}
+          toast={toast}
         />
         <AdminModal
           isOpen={adminModalIsOpen}
@@ -146,9 +147,10 @@ const AdminsTable = () => {
           <Table style={{ borderCollapse: 'collapse' }}>
             <Thead>
               <Tr>
-                <Th>Name</Th>
-                <Th>Email</Th>
-                <Th>Last Updated</Th>
+                <Th width='29%'>Name</Th>
+                <Th width='29%'>Email</Th>
+                <Th width='29%'>Last Updated</Th>
+                <Th width='13%'></Th>
               </Tr>
             </Thead>
             <Tbody>{displayAdminTable()}</Tbody>
@@ -165,12 +167,14 @@ const AdminsTable = () => {
           aria-label="Back button"
           isDisabled={currentPageNum <= 1}
           icon={<ChevronLeftIcon />}
+          variant='ghost'
           onClick={() => setCurrentPageNum(currentPageNum - 1)}
         />
         <IconButton
           aria-label="Next button"
           isDisabled={currentPageNum >= pageLimit}
           icon={<ChevronRightIcon />}
+          variant='ghost'
           onClick={() => setCurrentPageNum(currentPageNum + 1)}
         />
       </div>

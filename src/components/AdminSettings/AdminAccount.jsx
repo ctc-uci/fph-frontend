@@ -44,12 +44,11 @@ const AdminAccount = () => {
   }, [backend, currentUser]);
 
   const updateContactInfo = async () => {
-    const lastUpdated = new Date().toISOString();
 
     try {
+      console.log(adminContactInfo.firstName);
       await backend.put(`/adminuser/${adminContactInfo.email}`, {
         name: adminContactInfo.firstName + ' ' + adminContactInfo.lastName,
-        last_updated: lastUpdated,
       });
 
       toast({
@@ -116,7 +115,7 @@ const AdminAccount = () => {
               defaultValue={adminContactInfo.firstName}
               name="firstName"
               width={'34.5%'}
-              onChange={handleChange}
+              onChange={(e) => handleChange(e)}
             />
             <Input
               type="text"
@@ -124,7 +123,7 @@ const AdminAccount = () => {
               defaultValue={adminContactInfo.lastName}
               name="lastName"
               width={'34%'}
-              onChange={handleChange}
+              onChange={(e) => handleChange(e)}
             />
           </HStack>
           <HStack marginBottom={'3%'}>
@@ -143,7 +142,7 @@ const AdminAccount = () => {
               value={adminContactInfo.email}
               disabled={true}
               name="email"
-              onChange={handleChange}
+              onChange={(e) => handleChange(e)}
               width={'70%'}
             />
           </HStack>
