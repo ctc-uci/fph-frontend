@@ -155,7 +155,17 @@ const ContactUs = () => {
       businessName: businessName,
       donationId: null,
     };
+    const confirmationNotification = {
+      businessId: businessId,
+      message: 'Your supply request has been sent!',
+      type: 'Supply Request',
+      senderId: FPH_ID,
+      businessName: null,
+      donationId: null,
+    }
     await backend.post('/notification/', updatedFormData);
+    await backend.post('/notification/', confirmationNotification);
+    await backend.put(`/business/${businessId}`, { supply_request_status: "Pending" });
     setShowConfirmation(true);
   };
 

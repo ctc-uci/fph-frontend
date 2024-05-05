@@ -120,12 +120,12 @@ const ViewRequest = () => {
             <Tbody>
               {supplyItems.map(
                 (item, index) =>
-                  itemAmounts[item] != 0 && (
+                  itemAmounts[items[index]] != 0 && (
                     <Tr key={index}>
                       <Td>{item}</Td>
                       <Td>{itemAmounts[items[index]]}</Td>
                     </Tr>
-                  ),
+                  )
               )}
             </Tbody>
           </Table>
