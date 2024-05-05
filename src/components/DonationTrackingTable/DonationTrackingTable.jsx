@@ -210,8 +210,8 @@ const DonationTrackingTable = () => {
               Download CSV
             </Button>
           </div>
-          <TableContainer sx={{ backgroundColor: '#FFFFFF' }} className={classes.roundedTable}>
-            <Table variant="striped" colorScheme="whiteAlpha">
+          <TableContainer className={classes.roundedTable}>
+            <Table style={{ borderCollapse: 'collapse' }}>
               <Thead>
                 <Tr>
                   <div className={classes.checkBoxHeader}>

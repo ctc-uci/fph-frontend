@@ -61,7 +61,7 @@ const DonationItemsTable = () => {
             <Text>Donation Items</Text>
             <NotificationsDrawer notificationsData={notification} />
           </div>
-          <Tabs colorScheme="teal">
+          <Tabs marginTop="24px" isFitted="true" colorScheme="teal">
             <div>
               <TabList w="185px" mb={-10}>
                 <Tab>All</Tab>
@@ -70,13 +70,13 @@ const DonationItemsTable = () => {
               </TabList>
             </div>
             <TabPanels >
-              <TabPanel>
+              <TabPanel padding="0">
                 <DonationItems category="all" />
               </TabPanel>
-              <TabPanel>
+              <TabPanel padding="0">
                 <DonationItems category="Food" />
               </TabPanel>
-              <TabPanel>
+              <TabPanel padding="0">
                 <DonationItems category="Misc." />
               </TabPanel>
             </TabPanels>
@@ -172,8 +172,8 @@ const DonationItems = ({ category }) => {
           Add Item
         </Button>
       </Box>
-      <TableContainer sx={{ backgroundColor: '#FFFFFF' }} className={classes.roundedTable}>
-        <Table variant="striped" colorScheme="whiteAlpha">
+      <TableContainer className={classes.roundedTable}>
+        <Table style={{ borderCollapse: 'collapse' }}>
           <Thead>
             <Tr>
               {TABLE_HEADERS.map((header, index) => (
