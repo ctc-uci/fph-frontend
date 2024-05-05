@@ -91,20 +91,20 @@ const BusinessDashboard = () => {
     '"Homeless?" Card',
   ];
 
-  const formatDate = timestamp => {
-    const parsedTimestamp = Number(timestamp);
-    const date = new Date(isNaN(parsedTimestamp) ? timestamp : parsedTimestamp * 1000);
+  // const formatDate = timestamp => {
+  //   const parsedTimestamp = Number(timestamp);
+  //   const date = new Date(isNaN(parsedTimestamp) ? timestamp : parsedTimestamp * 1000);
 
-    if (!isNaN(date.getTime())) {
-      return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      });
-    } else {
-      return 'Invalid Date';
-    }
-  };
+  //   if (!isNaN(date.getTime())) {
+  //     return date.toLocaleDateString('en-US', {
+  //       year: 'numeric',
+  //       month: 'long',
+  //       day: 'numeric',
+  //     });
+  //   } else {
+  //     return 'Invalid Date';
+  //   }
+  // };
 
   useEffect(() => {
     const getData = async () => {
@@ -184,14 +184,17 @@ const BusinessDashboard = () => {
     (donationData['dry_dog_food_quantity'] || 0) * (priceData[1] ? priceData[1]['price'] : 0) +
     (donationData['canned_cat_food_quantity'] || 0) * (priceData[2] ? priceData[2]['price'] : 0) +
     (donationData['dry_cat_food_quantity'] || 0) * (priceData[3] ? priceData[3]['price'] : 0);
-return totalWorth.toFixed(2);
+    return totalWorth.toFixed(2);
 
 
   };
 
-
-
-
+ /*
+  // Bruh naw what is this CHANGE LATER
+  const calculateTotalWorth = () => {
+    return 99;
+  };
+*/
   const calculateTimeSince = () => {
     if (!(reminderData.length > 0)) {
       return 0;
@@ -200,7 +203,7 @@ return totalWorth.toFixed(2);
     const previousTime = new Date(reminderData[0].timestamp);
     const timeDifference = Math.abs(currentTime - previousTime);
     // Convert milliseconds to days
-    const daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+    const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
     return daysDifference;
   };
 
@@ -429,7 +432,7 @@ return totalWorth.toFixed(2);
 
                         <Stack marginLeft="1vh" marginTop="1.2vh">
                           <Text fontWeight="bold">{reminder['type']}</Text>
-                          <Text fontSize="1.2vh">{formatDate(reminder['timestamp'])}</Text>
+                          <Text fontSize="1.2vh">{new Date(reminder['timestamp']).toLocaleDateString('en-us', { timeZone: 'America/Los_Angeles' })}</Text>
                           <Text fontSize="1.5vh">{reminder['message'].slice(0, 158)}</Text>
                         </Stack>
                       </HStack>
