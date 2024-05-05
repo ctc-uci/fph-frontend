@@ -24,6 +24,7 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { BiDonateHeart, BiMoney, BiPackage } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
@@ -36,6 +37,7 @@ import {
   TimeIcon,
 } from '@chakra-ui/icons';
 import ViewDonationHistory from '../BusinessDonationHistory/ViewDonationHistory/ViewDonationHistory';
+import classes from './BusinessDashboard.module.css';
 
 // Currently, this whole component depends on each notification having its correct 'type' when created. We defined 4 types:
 // 1. Donation Form Confirmation
@@ -51,27 +53,36 @@ const BusinessDashboard = () => {
   const navigate = useNavigate();
   const [donationData, setDonationData] = useState([]);
   const [notifClicked, setNotifClicked] = useState(null);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  // const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const {
+    isOpen: requestDrawerIsOpen,
+    onOpen: requestDrawerOnOpen,
+    onClose: requestDrawerOnClose,
+  } = useDisclosure();
   const buttonPath = {
-    'Donation Form Confirmation': '/DonationTrackingTable',
+    'Donation Form Confirmation': `/BusinessDonationHistory`,
+    'Submitted Form': `/BusinessDonationHistory`,
     'Donation Form Reminder': '/BusinessDonationTrackingForm',
-    'Supply Request Shipped': '/',
-    'Supply Request Received': '/',
-    'Submitted Form': '/',
+    'Not Submitted': '/BusinessDonationTrackingForm',
+    // 'Supply Request Shipped': '/',
+    // 'Supply Request Received': '/',
   };
   const buttonText = {
     'Donation Form Confirmation': 'View Form',
+    'Submitted Form': 'View Form',
+    'Not Submitted': 'Submit Form',
     'Donation Form Reminder': 'Submit Form',
     'Supply Request Shipped': 'View Request',
     'Supply Request Received': 'View Request',
-    'Submitted Form': 'View Request',
   };
 
   const buttonIcon = {
-    'Donation Form Confirmation': WarningIcon,
-    'Donation Form Reminder': EmailIcon,
+    'Donation Form Confirmation': CheckCircleIcon,
+    'Submitted Form': CheckCircleIcon,
+    'Donation Form Reminder': WarningIcon,
+    'Not Submitted': WarningIcon,
     'Supply Request Shipped': EmailIcon,
-    'Supply Request Received': CheckCircleIcon,
+    'Supply Request Received': EmailIcon,
   };
   // *************************************************************************
   // CHANGE LATER: right now just making one big request for all of the
@@ -117,7 +128,6 @@ const BusinessDashboard = () => {
         // so that we can display the dashboard for various businesses
         // ***********************************************************************
         const businessIdResponse = await backend.get(`/businessUser/${currentUser.uid}`);
-        console.log(businessIdResponse, currentUser);
         const businessId = businessIdResponse.data[0].id;
 
         const donationResponse = await backend.get(`/donation/business/totals/${businessId}`);
@@ -128,7 +138,6 @@ const BusinessDashboard = () => {
 
         const priceResponse = await backend.get('/value');
         setPriceData(priceResponse.data);
-
 
         const reminderResponse = await backend.get(`/notification/${businessId}`);
         setReminderData(reminderResponse.data);
@@ -151,6 +160,7 @@ const BusinessDashboard = () => {
         notesFound = true;
       } else if (!notesFound) {
         const value = line.split(':')[1];
+        console.log(value);
         if (value !== undefined) {
           const numericValue = parseInt(value.trim(), 7);
           numbersList.push(numericValue);
@@ -191,12 +201,6 @@ const BusinessDashboard = () => {
 
   };
 
- /*
-  // Bruh naw what is this CHANGE LATER
-  const calculateTotalWorth = () => {
-    return 99;
-  };
-*/
   const calculateTimeSince = () => {
     if (!(reminderData.length > 0)) {
       return 0;
@@ -209,58 +213,12 @@ const BusinessDashboard = () => {
     return daysDifference;
   };
 
-  <Drawer isOpen={isDrawerOpen} placement="right" onClose={() => setIsDrawerOpen(false)} size="sm">
-    <DrawerOverlay />
-    <DrawerContent>
-      <DrawerCloseButton />
-      <DrawerHeader mt={2}>
-        <Flex justifyContent="start" alignItems="center">
-          <BiPackage size={30} />
-          <Text fontSize={20} marginLeft={2}>
-            Supply Request
-          </Text>
-        </Flex>
-      </DrawerHeader>
-
-      <DrawerBody p={2}>
-        <Box border="2px" borderColor="gray.200" borderRadius="lg" overflow="hidden">
-          <Table variant="simple" colorScheme="gray" size="md" borderRadius="sm" overflow="hidden">
-            <Thead>
-              <Tr>
-                <Th color="black" fontWeight={900}>
-                  Item
-                </Th>
-                <Th color="black" fontWeight={900}>
-                  Amount
-                </Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {supplyRequestItems.map((item, index) => (
-                <Tr key={index}>
-                  <Td>{item}</Td>
-                  <Td>{supplyRequest[index]}</Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </Box>
-
-        <Flex flexDirection="column" alignItems="flex-start" marginLeft={5} marginTop={5}>
-          <Text fontWeight={700}>Notes</Text>
-          {/* CHANGE THIS TO PARSED NOTES */}
-          <Text>{notes}</Text>
-        </Flex>
-      </DrawerBody>
-    </DrawerContent>
-  </Drawer>;
-
   return !notifClicked ? (
     <div>
       <Drawer
-        isOpen={isDrawerOpen}
+        isOpen={requestDrawerIsOpen}
         placement="right"
-        onClose={() => setIsDrawerOpen(false)}
+        onClose={requestDrawerOnClose}
         size="sm"
       >
         <DrawerOverlay />
@@ -423,19 +381,28 @@ const BusinessDashboard = () => {
           {reminderData.slice(0, 50).map((reminder, index) => (
             <Tr key={index}>
               <Td>
-                <Box height="11vh" borderWidth="2px" borderRadius="5px" borderColor="#359797">
+              <Box
+                height="11vh"
+                borderWidth="2px"
+                borderRadius="5px"
+                borderColor={reminder['type'] === "Not Submitted" ? "#F56565" : "#359797"}
+                className={reminder['type'] === "Not Submitted" ? classes.warningNotif : ""}
+              >
                   <HStack justifyContent={'space-between'}>
                     <Box margin="3px">
                       <HStack marginLeft="1vh">
                         <Box color={'#359797'}>
                           {' '}
-                          <Icon as={buttonIcon[reminder['type']]}></Icon>
+                          <Icon
+                            as={buttonIcon[reminder['type']]}
+                            color={reminder['type'] === "Not Submitted" ? "#E53E3E" : undefined}
+                          ></Icon>
                         </Box>
 
-                        <Stack marginLeft="1vh" marginTop="1.2vh">
+                        <Stack margin="1.3vh 1vh" spacing={0.3}>
                           <Text fontWeight="bold">{reminder['type']}</Text>
                           <Text fontSize="1.2vh">{new Date(reminder['timestamp']).toLocaleDateString('en-us', { timeZone: 'America/Los_Angeles' })}</Text>
-                          <Text fontSize="1.5vh">{reminder['message'].slice(0, 158)}</Text>
+                          <Text fontSize="1.5vh" >{reminder['message'].slice(0, 158)}</Text>
                         </Stack>
                       </HStack>
                     </Box>
@@ -445,11 +412,12 @@ const BusinessDashboard = () => {
                         color="#2D3748"
                         margin="15px"
                         onClick={() => {
-                          if (reminder['type'] === 'Donation Form Confirmation') {
+                          if (['Donation Form Confirmation', 'Submitted Form'].includes(reminder['type'])) {
                             setNotifClicked(reminder['notification_id']);
-                          } else if (reminder['type'] === 'Supply Request Shipped') {
+                            navigate(buttonPath[reminder['type']]);
+                          } else if (['Supply Request Shipped', 'Supply Request Received'].includes(reminder['type'])) {
                             parseSupplyRequestData(reminder['message']);
-                            setIsDrawerOpen(true);
+                            requestDrawerOnOpen();
                           } else {
                             navigate(buttonPath[reminder['type']]);
                           }

@@ -100,6 +100,8 @@ const DonationForm = () => {
       await backend.post('/donation', formData);
       console.log(formData);
 
+
+
       const fphNotificationData = {
         businessId: businessId,
         message: `Business ID: ${businessId} Donation Form Submission`,
@@ -109,7 +111,6 @@ const DonationForm = () => {
         been_dismissed: false,
         type: 'Submitted Form',
       };
-      console.log(fphNotificationData);
       await backend.post('/notification', fphNotificationData);
     } catch (error) {
       console.error('Form submission failed:', error);
