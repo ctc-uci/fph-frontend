@@ -29,7 +29,7 @@ const SecondForm = ({ formData, handleChange, prevStep, nextStep }) => {
           <Flex direction="column" align="stretch" gap={5}>
             <Flex direction="column" gap={4}>
               <Box paddingLeft="10vh" marginTop="8vh" textAlign="left">
-                <Text fontSize="2xl">Business Address</Text>
+                <Text fontSize="xl">Business Address</Text>
               </Box>
               <FormControl paddingLeft="10vh" paddingRight="10vh" id="business-address-1">
                 <FormLabel fontSize="small">Address Line 1</FormLabel>
@@ -132,7 +132,7 @@ const SecondForm = ({ formData, handleChange, prevStep, nextStep }) => {
                 width="9vh"
                 type="submit"
                 onClick={prevStep}
-                colorScheme="blue"
+                colorScheme="teal"
               >
                 Back
               </Button>
@@ -143,7 +143,7 @@ const SecondForm = ({ formData, handleChange, prevStep, nextStep }) => {
                 width="9vh"
                 type="submit"
                 onClick={nextStep}
-                colorScheme="blue"
+                colorScheme="teal"
               >
                 Next
               </Button>

@@ -1,37 +1,53 @@
 // DownloadCSV.js
 
-// import { useBackend } from '../contexts/BackendContext';
-
-async function DownloadCSV(headers, ids, tableName) {
-  // const { backend } = useBackend();
+async function DownloadCSV(ids, isDonation=false) {
+  const headers = {
+    'Business Name': 'name',
+    'Business Phone': 'primary_phone',
+    'Business Email': 'primary_email',
+    'Donation Submission Date': 'max_date',
+    'Donation Reporter': 'reporter',
+    'Food Bank Donation': 'food_bank_donation',
+    'Canned Dog Food Quantity': 'canned_dog_food_quantity',
+    'Dry Dog Food Quantity': 'dry_dog_food_quantity',
+    'Canned Cat Food Quantity': 'canned_cat_food_quantity',
+    'Dry Cat Food Quantity': 'dry_cat_food_quantity',
+    'Miscellaneous Items': 'miscellaneous_items',
+    'Volunteer Hours': 'volunteer_hours',
+  };
   try {
-    // Make a GET request to the backend API with the ids as query parameters
-    const response = await fetch(
-      `http://localhost:3001/donation/${tableName}/selectByIds?ids=${ids.join(',')}`,
-      {
-        method: 'GET',
-      },
-    );
-    // const response = await backend.get(`/donation/${tableName}/selectByIds?ids=${ids.join(',')}`);
-
+    let response;
+    if (isDonation) {
+      response = await fetch(
+        `http://localhost:3001/donation/selectByIdsDonation?ids=${ids.join(',')}`,
+        {
+          method: 'GET',
+        },
+      );
+    } else {
+      response = await fetch(
+        `http://localhost:3001/donation/selectByIds?ids=${ids.join(',')}`,
+        {
+          method: 'GET',
+        },
+      );
+    }
+    
     if (!response.ok) {
       throw new Error('Failed to fetch data from the server');
     }
 
     const data = await response.json();
-    // const data = response.data[0];
 
     // Create CSV string
     const csvRows = [];
 
-    // Add headers
-    csvRows.push(headers.join(','));
+    csvRows.push(Object.keys(headers).join(','));
 
-    // Add data
     data.forEach(row => {
-      const values = headers.map(header => {
-        const escaped = ('' + row[header]).replace(/"/g, '\\"'); // Escape double quotes
-        return `"${escaped}"`; // Encapsulate in quotes to handle commas in data
+      const values = Object.values(headers).map(key => {
+        const escaped = ('' + row[key]).replace(/"/g, '\\"');
+        return `"${escaped}"`;
       });
       csvRows.push(values.join(','));
     });
@@ -45,7 +61,7 @@ async function DownloadCSV(headers, ids, tableName) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `${tableName}_data.csv`; // Name of the file to download
+    link.download = `business_data.csv`; // Name of the file to download
     document.body.appendChild(link); // Required for Firefox
     link.click();
     document.body.removeChild(link); // Clean up

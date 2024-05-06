@@ -16,6 +16,7 @@ import {
   TableContainer,
   useDisclosure,
   Input,
+  useToast,
 } from '@chakra-ui/react';
 import { EditIcon, AddIcon, DeleteIcon, ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import { Button } from '@chakra-ui/react';
@@ -40,6 +41,7 @@ const AdminsTable = () => {
     onOpen: deleteModalOnOpen,
     onClose: deleteModalOnClose,
   } = useDisclosure();
+  const toast = useToast();
 
   useEffect(() => {
     getAdminData();
@@ -47,7 +49,9 @@ const AdminsTable = () => {
 
   const getAdminData = async () => {
     try {
-      const adminDataResponse = await backend.get(`/adminUser/paginate?itemsLimit=10&pageNum=${currentPageNum}&searchTerm=${searchTerm}`);
+      const adminDataResponse = await backend.get(
+        `/adminUser/paginate?itemsLimit=10&pageNum=${currentPageNum}&searchTerm=${searchTerm}`,
+      );
       setData(adminDataResponse.data);
     } catch (error) {
       console.log(error.message);
@@ -112,9 +116,7 @@ const AdminsTable = () => {
           onChange={handleSearch}
           sx={{ width: '222px', backgroundColor: '#FFFFFF' }}
         />
-        <Button
-          colorScheme="teal"
-          onClick={adminModalOnOpen}>
+        <Button colorScheme="teal" onClick={() => adminModalOnOpen()}>
           <AddIcon />
           Add Admin
         </Button>
@@ -123,23 +125,32 @@ const AdminsTable = () => {
       <div className={classes.roundedTable}>
         <DeleteAdminModal
           isOpen={deleteModalIsOpen}
-          onClose={() => {deleteModalOnClose(); setSelectedAdmin(null);}}
+          onClose={() => {
+            deleteModalOnClose();
+            setSelectedAdmin(null);
+          }}
           loadInfo={getAdminData}
           selectedItem={selectedAdmin}
+          toast={toast}
         />
         <AdminModal
           isOpen={adminModalIsOpen}
-          onClose={() => {adminModalOnClose(); setSelectedAdmin(null);}}
+          onClose={() => {
+            adminModalOnClose();
+            setSelectedAdmin(null);
+          }}
           data={selectedAdmin}
           loadInfo={getAdminData}
+          toast={toast}
         />
         <TableContainer>
           <Table style={{ borderCollapse: 'collapse' }}>
             <Thead>
               <Tr>
-                <Th>Name</Th>
-                <Th>Email</Th>
-                <Th>Last Updated</Th>
+                <Th width='29%'>Name</Th>
+                <Th width='29%'>Email</Th>
+                <Th width='29%'>Last Updated</Th>
+                <Th width='13%'></Th>
               </Tr>
             </Thead>
             <Tbody>{displayAdminTable()}</Tbody>
@@ -156,12 +167,14 @@ const AdminsTable = () => {
           aria-label="Back button"
           isDisabled={currentPageNum <= 1}
           icon={<ChevronLeftIcon />}
+          variant='ghost'
           onClick={() => setCurrentPageNum(currentPageNum - 1)}
         />
         <IconButton
           aria-label="Next button"
           isDisabled={currentPageNum >= pageLimit}
           icon={<ChevronRightIcon />}
+          variant='ghost'
           onClick={() => setCurrentPageNum(currentPageNum + 1)}
         />
       </div>

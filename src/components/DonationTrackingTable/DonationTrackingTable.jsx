@@ -1,7 +1,7 @@
 import { useBackend } from '../../contexts/BackendContext';
 import { useState, useEffect } from 'react';
 import DonationSite from './DonationSite';
-import { Tabs, TabList, Tab, Button, Box, IconButton, Input } from '@chakra-ui/react';
+import { Tabs, TabList, Tab, Button, Box, IconButton, Input, useToast } from '@chakra-ui/react';
 import {
   ArrowDownIcon,
   ChevronRightIcon,
@@ -14,11 +14,13 @@ import classes from './DonationTrackingTable.module.css';
 import DownloadCSV from '../../utils/downloadCSV';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer';
 
 const DonationTrackingTable = () => {
   const navigate = useNavigate();
   const { backend } = useBackend();
   const { isAdmin } = useAuth();
+  const toast = useToast();
 
   const [donationTrackingTableData, setDonationTrackingTableData] = useState([]);
   const [checkedSet, setCheckedSet] = useState(new Set());
@@ -45,6 +47,7 @@ const DonationTrackingTable = () => {
   const [pageLimit, setPageLimit] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [isAdminUser, setIsAdminUser] = useState(false);
+  const [notifications, setNotifications] = useState([]);
 
   const loadInfo = async () => {
     changePage();
@@ -78,6 +81,16 @@ const DonationTrackingTable = () => {
       }
     };
 
+    const getNotifications = async () => {
+      try{
+        const notificationResponse = await backend.get(`/notification/0`);
+        setNotifications(notificationResponse.data);
+      }
+      catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
     const checkIsAdmin = async () => {
       if (!(await isAdmin())) {
         navigate('/BusinessDashboard');
@@ -88,6 +101,9 @@ const DonationTrackingTable = () => {
 
     checkIsAdmin();
     getData();
+    if (notifications.length == 0){
+      getNotifications();
+    }
   }, [currentTab, currentPageNum, searchTerm]);
 
   const renderDonationTrackingTableData = () => {
@@ -118,21 +134,35 @@ const DonationTrackingTable = () => {
 
   const handleDownloadCSV = () => {
     const ids = Array.from(checkedSet);
-    const headers = [
-      'business_id',
-      'donation_id',
-      'food_bank_donation',
-      'reporter',
-      'email',
-      'date',
-      'misc_items',
-      'volunteer_hours',
-      'canned_cat_food_quantity',
-      'canned_dog_food_quantity',
-      'dry_cat_food_quantity',
-      'dry_dog_food_quantity',
-    ];
-    DownloadCSV(headers, ids, 'donation_tracking');
+    try {
+      if (ids.length === 0) {
+        toast({
+          title: 'Downloaded CSV',
+          description: "Select a business first",
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+      } else {
+        DownloadCSV(ids, true);
+        const message = `For ${ids.length} ${ids.length > 1 ? `businesses` : ` business`}.`;
+        toast({
+          title: 'Downloaded CSV',
+          description: message,
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'Error Downloading CSV',
+        description: error.message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
 
   const handleSearch = event => {
@@ -146,9 +176,10 @@ const DonationTrackingTable = () => {
         <div className={classes.container}>
           <div className={classes.dttTitleContainer}>
             <Text>Donation Tracking</Text>
+            <NotificationsDrawer notificationsData={notifications} />
           </div>
           <div className={classes.tabs}>
-            <Tabs isFitted="true">
+            <Tabs isFitted="true" colorScheme="teal">
               <TabList>
                 {tabHeaders.map((header, index) => {
                   if (header != 'all')
@@ -179,8 +210,8 @@ const DonationTrackingTable = () => {
               Download CSV
             </Button>
           </div>
-          <TableContainer sx={{ backgroundColor: '#FFFFFF' }}>
-            <Table variant="striped" colorScheme="whiteAlpha">
+          <TableContainer className={classes.roundedTable}>
+            <Table style={{ borderCollapse: 'collapse' }}>
               <Thead>
                 <Tr>
                   <div className={classes.checkBoxHeader}>

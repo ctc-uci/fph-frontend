@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useBackend } from '../../contexts/BackendContext';
+import { useAuth } from '../../contexts/AuthContext';
 import {
   Table,
   Thead,
@@ -19,14 +20,16 @@ import {
   Spacer,
   TableContainer,
 } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 import { ChevronRightIcon, ChevronLeftIcon, ArrowForwardIcon } from '@chakra-ui/icons';
-import ViewDonationHistory from './ViewDonationHistory/ViewDonationHistory';
-import './BusinessDonationHistory.module.css';
+import classes from './BusinessDonationHistory.module.css';
 
 const BusinessDonationHistory = () => {
   const { backend } = useBackend();
+  const { currentUser } = useAuth();
   const [data, setData] = useState([]);
   const [selectedDonationId, setSelectedDonationId] = useState(null);
+  const navigate = useNavigate();
 
   // for pagination
   const [currentTotalDonationNum, setCurrentTotalDonationNum] = useState(0);
@@ -42,17 +45,18 @@ const BusinessDonationHistory = () => {
   useEffect(() => {
     const getData = async () => {
       try {
+        // Fetch business ID from backend
+        const businessIdResponse = await backend.get(`/businessUser/${currentUser.uid}`);
         const response = await backend.get(
-          `/donation/filter/search/?searchTerm=${searchInput}&donationsLimit=${paginationNumber}&pageNum=${currentPageNum}`,
+          `/donation/filter/search/?businessId=${businessIdResponse.data[0].id}&searchTerm=${searchInput}&donationsLimit=${paginationNumber}&pageNum=${currentPageNum}`,
         );
-
         setData(response.data);
-
         const donationNumResponse = await backend.get(
-          `/donation/filter/searchCount/?searchTerm=${searchInput}`,
+          `/donation/filter/searchCount/?businessId=${businessIdResponse.data[0].id}&searchTerm=${searchInput}`,
         );
         setCurrentTotalDonationNum(donationNumResponse.data[0]['count']);
         setPageLimit(Math.ceil(donationNumResponse.data[0]['count'] / paginationNumber));
+
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -70,7 +74,7 @@ const BusinessDonationHistory = () => {
   };
 
   if (selectedDonationId) {
-    return <ViewDonationHistory id={selectedDonationId} />;
+    navigate(`/BusinessDonationHistory/${selectedDonationId}`);
   }
 
   const handleSearch = e => {
@@ -81,7 +85,7 @@ const BusinessDonationHistory = () => {
   return (
     <Box margin="0px 32px 0px 32px">
       <Flex alignItems="center" margin="48px 0px 37px 0px">
-        <Heading size="md"> Donations History </Heading>
+        <Heading size="md"> Donation Tracking </Heading>
         <Spacer></Spacer>
         <InputGroup size="sm" margin="auto" width="222px" height="32px">
           <Input
@@ -95,7 +99,7 @@ const BusinessDonationHistory = () => {
           />
         </InputGroup>
       </Flex>
-      <TableContainer border="1px" borderRadius="12px" borderColor="#E2E8F0" width="100%">
+      <TableContainer border="1px" borderRadius="12px" borderColor="#E2E8F0" width="100%" className={classes.roundedTable}>
         <Table>
           <Thead>
             <Tr>

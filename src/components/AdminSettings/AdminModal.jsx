@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useBackend } from '../../contexts/BackendContext';
 import PropTypes from 'prop-types';
+import { renderEmail } from 'react-html-email';
 import {
   Alert,
   AlertTitle,
@@ -17,10 +18,14 @@ import {
   ModalOverlay,
   ModalFooter,
 } from '@chakra-ui/react';
+import {
+  approvedEmailTemplateAdmin,
+  editedEmailTemplateAdmin,
+} from './AdminSettingsEmailTemplates';
 import { CloseIcon } from '@chakra-ui/icons';
 
 // TODO: Refactor states such that its a nested state
-const AdminModal = ({ isOpen, onClose, data, loadInfo }) => {
+const AdminModal = ({ isOpen, onClose, data, loadInfo, toast }) => {
   const { backend } = useBackend();
   const [alertVisible, setAlertVisible] = useState(false);
   const [nameData, setNameData] = useState('');
@@ -58,20 +63,51 @@ const AdminModal = ({ isOpen, onClose, data, loadInfo }) => {
       email: emailData,
       last_updated: lastUpdatedData,
     };
-    console.log(nameData);
-    console.log(emailData);
-    console.log(lastUpdatedData);
 
     if (nameData == '' || emailData == '' || lastUpdatedData == '') {
       setAlertVisible(true);
       return;
     } else {
-      if (data == null) {
-        console.log("add")
-        await backend.post(`/adminUser`, body);
-      } else {
-        console.log("edit")
-        await backend.put(`/adminUser/${data['email']}`, body);
+      const emailSubject =
+        data == null ? `FPH Has Added You As A User` : `FPH Has Edited Your Account`;
+      try {
+        const emailInfo = {
+          email: emailData,
+          messageHtml: renderEmail(
+            data == null ? approvedEmailTemplateAdmin : editedEmailTemplateAdmin,
+          ),
+          subject: emailSubject,
+        };
+
+        if (data == null) {
+          await backend.post(`/adminUser`, body);
+          toast({
+            title: 'Success',
+            description: 'Admin added successfully.',
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+          });
+        } else {
+          await backend.put(`/adminUser/${data['email']}`, body);
+          toast({
+            title: 'Success',
+            description: 'Successfully updated information.',
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+          });
+        }
+        await backend.post('/email/send', emailInfo);
+      } catch (error) {
+        console.error(error);
+        toast({
+          title: 'Error',
+          description: 'Your changes were not saved.',
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
       }
     }
     closeAndReset();
@@ -88,17 +124,27 @@ const AdminModal = ({ isOpen, onClose, data, loadInfo }) => {
           </Flex>
         </ModalHeader>
         <ModalBody>
-          <Text> Name </Text>
-          <Input type="text" name="name" value={nameData} onChange={e => setNameData(e.target.value)} />
+          <Text> First and Last Name </Text>
+          <Input
+            type="text"
+            name="name"
+            value={nameData}
+            onChange={e => setNameData(e.target.value)}
+          />
           <Text> Email </Text>
-          <Input type="text" name="email" value={emailData} onChange={e => setEmailData(e.target.value)} />
+          <Input
+            type="text"
+            name="email"
+            value={emailData}
+            onChange={e => setEmailData(e.target.value)}
+          />
         </ModalBody>
         {alertVisible && (
-            <Alert>
-              <AlertTitle>Missing necessary data!</AlertTitle>
-              <AlertDescription>Please make sure all textboxes are filed out</AlertDescription>
-            </Alert>
-          )}
+          <Alert>
+            <AlertTitle>Missing necessary data!</AlertTitle>
+            <AlertDescription>Please make sure all textboxes are filed out</AlertDescription>
+          </Alert>
+        )}
         <ModalFooter>
           <Button mr={3} onClick={closeAndReset}>
             Cancel
@@ -119,6 +165,7 @@ AdminModal.propTypes = {
   setData: PropTypes.func,
   setCurrentPageNum: PropTypes.func,
   loadInfo: PropTypes.func,
+  toast: PropTypes.func.isRequired,
 };
 
 export { AdminModal };

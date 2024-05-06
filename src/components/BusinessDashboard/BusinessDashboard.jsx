@@ -24,6 +24,7 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { BiDonateHeart, BiMoney, BiPackage } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
@@ -36,6 +37,7 @@ import {
   TimeIcon,
 } from '@chakra-ui/icons';
 import ViewDonationHistory from '../BusinessDonationHistory/ViewDonationHistory/ViewDonationHistory';
+import classes from './BusinessDashboard.module.css';
 
 // Currently, this whole component depends on each notification having its correct 'type' when created. We defined 4 types:
 // 1. Donation Form Confirmation
@@ -51,26 +53,40 @@ const BusinessDashboard = () => {
   const navigate = useNavigate();
   const [donationData, setDonationData] = useState([]);
   const [notifClicked, setNotifClicked] = useState(null);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [currentQuarter, setCurrentQuarter] = useState();
+  const {
+    isOpen: requestDrawerIsOpen,
+    onOpen: requestDrawerOnOpen,
+    onClose: requestDrawerOnClose,
+  } = useDisclosure();
   const buttonPath = {
-    'Donation Form Confirmation': '/DonationTrackingTable',
+    'Donation Form Confirmation': `/BusinessDonationHistory`,
+    'Submitted Form': `/BusinessDonationHistory`,
     'Donation Form Reminder': '/BusinessDonationTrackingForm',
-    'Supply Request Shipped': '/',
-    'Supply Request Received': '/',
+    'Not Submitted': '/BusinessDonationTrackingForm',
+    // 'Supply Request Shipped': '/',
+    // 'Supply Request Received': '/',
   };
   const buttonText = {
     'Donation Form Confirmation': 'View Form',
+    'Submitted Form': 'View Form',
+    'Not Submitted': 'Submit Form',
     'Donation Form Reminder': 'Submit Form',
+    'Supply Request': 'View Request',
     'Supply Request Shipped': 'View Request',
     'Supply Request Received': 'View Request',
   };
 
   const buttonIcon = {
-    'Donation Form Confirmation': WarningIcon,
-    'Donation Form Reminder': EmailIcon,
+    'Donation Form Confirmation': CheckCircleIcon,
+    'Submitted Form': CheckCircleIcon,
+    'Donation Form Reminder': WarningIcon,
+    'Not Submitted': WarningIcon,
     'Supply Request Shipped': EmailIcon,
-    'Supply Request Received': CheckCircleIcon,
+    'Supply Request Received': EmailIcon,
+    'Supply Request': EmailIcon,
   };
+
   // *************************************************************************
   // CHANGE LATER: right now just making one big request for all of the
   // rows in the fair_market_value table since it is just full of dummy data.
@@ -82,29 +98,30 @@ const BusinessDashboard = () => {
   const [supplyRequest, setSupplyRequest] = useState([0, 0, 0, 0, 0, 0, 0]);
   const [notes, setNotes] = useState('');
   const supplyRequestItems = [
-    'Donation Site Decal',
-    'Rack Cards',
-    'Donation Envelopes',
-    'Business Cards',
-    'Stickers',
-    'Bin Decals',
-    '"Homeless?" Card',
+    "Pet Food Decal",
+    "Decal",
+    "Homeless Card",
+    "Business Card",
+    "Donation Site Decal",
+    "Donation Site Bin Decals",
+    "Donation Envelopes",
+    "Homeless Card 2"
   ];
 
-  const formatDate = timestamp => {
-    const parsedTimestamp = Number(timestamp);
-    const date = new Date(isNaN(parsedTimestamp) ? timestamp : parsedTimestamp * 1000);
+  // const formatDate = timestamp => {
+  //   const parsedTimestamp = Number(timestamp);
+  //   const date = new Date(isNaN(parsedTimestamp) ? timestamp : parsedTimestamp * 1000);
 
-    if (!isNaN(date.getTime())) {
-      return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      });
-    } else {
-      return 'Invalid Date';
-    }
-  };
+  //   if (!isNaN(date.getTime())) {
+  //     return date.toLocaleDateString('en-US', {
+  //       year: 'numeric',
+  //       month: 'long',
+  //       day: 'numeric',
+  //     });
+  //   } else {
+  //     return 'Invalid Date';
+  //   }
+  // };
 
   useEffect(() => {
     const getData = async () => {
@@ -136,25 +153,25 @@ const BusinessDashboard = () => {
   }, []);
 
   const parseSupplyRequestData = async message => {
-    const lines = message.split('\n');
+    const lines = message.split(',');
     const numbersList = [];
     let notes = '';
     let notesFound = false;
 
     lines.forEach(line => {
-      if (line.startsWith('Notes:')) {
-        notes = line.substring(line.indexOf(':') + 1).trim();
+      if (line.startsWith('"Notes":')) {
+        notes = line.substring(line.indexOf(':') + 2).trim().split('"')[0];
         notesFound = true;
       } else if (!notesFound) {
         const value = line.split(':')[1];
         if (value !== undefined) {
-          const numericValue = parseInt(value.trim(), 7);
+          const numericValue = parseInt(value.trim());
           numbersList.push(numericValue);
         }
       }
     });
 
-    setSupplyRequest(numbersList.slice(1));
+    setSupplyRequest(numbersList);
     setNotes(notes);
   };
 
@@ -167,26 +184,24 @@ const BusinessDashboard = () => {
     );
   };
 
-  /*
+
   const calculateTotalWorth = () => {
     // ***********************************************************************
     // CHANGE LATER: Right now the prices are just the first four rows of the
     // fair_market_value table, thus if the table has less than four tables
     // this function will break
     // ***********************************************************************
-    return donationData['canned_dog_food_quantity'] && priceData.length > 0
-      ? donationData['canned_dog_food_quantity'] * priceData[0]['price'] +
-          donationData['dry_dog_food_quantity'] * priceData[1]['price'] +
-          donationData['canned_cat_food_quantity'] * priceData[2]['price'] +
-          donationData['dry_cat_food_quantity'] * priceData[3]['price']
-      : 0;
-  };
-  */
+    //return donationData['canned_dog_food_quantity'] && priceData.length > 0
+    // ?
+    //: 0;
+    const totalWorth =
+    (donationData['canned_dog_food_quantity'] || 0) * (priceData[0] ? priceData[0]['price'] : 0) +
+    (donationData['dry_dog_food_quantity'] || 0) * (priceData[1] ? priceData[1]['price'] : 0) +
+    (donationData['canned_cat_food_quantity'] || 0) * (priceData[2] ? priceData[2]['price'] : 0) +
+    (donationData['dry_cat_food_quantity'] || 0) * (priceData[3] ? priceData[3]['price'] : 0);
+    return totalWorth.toFixed(2);
 
-  // Bruh naw what is this CHANGE LATER
-  const calculateTotalWorth = () => {
-    console.log(priceData);
-    return 99;
+
   };
 
   const calculateTimeSince = () => {
@@ -197,62 +212,60 @@ const BusinessDashboard = () => {
     const previousTime = new Date(reminderData[0].timestamp);
     const timeDifference = Math.abs(currentTime - previousTime);
     // Convert milliseconds to days
-    const daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+    const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
     return daysDifference;
   };
 
-  <Drawer isOpen={isDrawerOpen} placement="right" onClose={() => setIsDrawerOpen(false)} size="sm">
-    <DrawerOverlay />
-    <DrawerContent>
-      <DrawerCloseButton />
-      <DrawerHeader mt={2}>
-        <Flex justifyContent="start" alignItems="center">
-          <BiPackage size={30} />
-          <Text fontSize={20} marginLeft={2}>
-            Supply Request
-          </Text>
-        </Flex>
-      </DrawerHeader>
+  const isUrgentNotif = () => {
+    const currentTime = new Date();
+    const currentYear = currentTime.getFullYear();
+    let dueDate = new Date();
 
-      <DrawerBody p={2}>
-        <Box border="2px" borderColor="gray.200" borderRadius="lg" overflow="hidden">
-          <Table variant="simple" colorScheme="gray" size="md" borderRadius="sm" overflow="hidden">
-            <Thead>
-              <Tr>
-                <Th color="black" fontWeight={900}>
-                  Item
-                </Th>
-                <Th color="black" fontWeight={900}>
-                  Amount
-                </Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {supplyRequestItems.map((item, index) => (
-                <Tr key={index}>
-                  <Td>{item}</Td>
-                  <Td>{supplyRequest[index]}</Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </Box>
+    if (currentTime.getMonth() <= 2) {
+      dueDate = new Date(currentYear, 3, 1);
+      setCurrentQuarter('Q1');
+    } else if (currentTime.getMonth() <= 5) {
+      dueDate = new Date(currentYear, 4, 9);
+      setCurrentQuarter('Q2');
+    } else if (currentTime.getMonth() <= 8) {
+      dueDate = new Date(currentYear, 9, 1);
+      setCurrentQuarter('Q3');
+    } else {
+      dueDate = new Date(currentYear, 0, 1);
+      setCurrentQuarter('Q4');
+    }
 
-        <Flex flexDirection="column" alignItems="flex-start" marginLeft={5} marginTop={5}>
-          <Text fontWeight={700}>Notes</Text>
-          {/* CHANGE THIS TO PARSED NOTES */}
-          <Text>{notes}</Text>
-        </Flex>
-      </DrawerBody>
-    </DrawerContent>
-  </Drawer>;
+    const timeDifference = Math.abs(currentTime - dueDate);
+    const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    return daysDifference < 3;
+  };
+
+  const isRedNotif = (reminder) => {
+    return reminder['type'] === "Not Submitted" && isUrgentNotif(reminder['timestamp']);
+  }
+
+  const getNotifText = (reminder) => {
+    const notifDate = new Date(reminder['timestamp']);
+    console.log(notifDate);
+    const formattedDate = notifDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+    const notifText = {
+      'Donation Form Confirmation': `Donation form has been submitted for ${currentQuarter}. Thank you!`,
+      'Submitted Form': `Donation form has been submitted for ${currentQuarter}. Thank you!`,
+      'Donation Form Reminder': 'Please submit your donation form by the due date!',
+      'Not Submitted': 'Please submit your donation form by the due date!',
+      'Supply Request Shipped': `Supply request submitted from ${formattedDate} has been shipped.`,
+      'Supply Request Received': 'Supplies will be shipped in 3-5 business days.',
+      'Supply Request': 'Supplies will be shipped in 3-5 business days.',
+    }
+    return notifText[reminder['type']];
+  };
 
   return !notifClicked ? (
     <div>
       <Drawer
-        isOpen={isDrawerOpen}
+        isOpen={requestDrawerIsOpen}
         placement="right"
-        onClose={() => setIsDrawerOpen(false)}
+        onClose={requestDrawerOnClose}
         size="sm"
       >
         <DrawerOverlay />
@@ -415,33 +428,48 @@ const BusinessDashboard = () => {
           {reminderData.slice(0, 50).map((reminder, index) => (
             <Tr key={index}>
               <Td>
-                <Box height="11vh" borderWidth="2px" borderRadius="5px" borderColor="#359797">
+                <Box
+                  borderWidth="1px"
+                  borderRadius="5px"
+                  borderColor={() => isRedNotif(reminder) ? "#F56565" : "#359797"}
+                  backgroundColor={() => isRedNotif(reminder) ? "#FED7D7" : ""}
+                  className={() => isRedNotif(reminder) ? classes.warningNotif : ""}
+                >
                   <HStack justifyContent={'space-between'}>
-                    <Box margin="3px">
+                    <Box margin=".5vh">
                       <HStack marginLeft="1vh">
                         <Box color={'#359797'}>
                           {' '}
-                          <Icon as={buttonIcon[reminder['type']]}></Icon>
+                          <Icon
+                            as={buttonIcon[reminder['type']]}
+                            color={() => isRedNotif(reminder) ? "#E53E3E" : undefined}
+                          ></Icon>
                         </Box>
 
-                        <Stack marginLeft="1vh" marginTop="1.2vh">
+                        <Stack margin="1.3vh 1vh" spacing={0.3}>
                           <Text fontWeight="bold">{reminder['type']}</Text>
-                          <Text fontSize="1.2vh">{formatDate(reminder['timestamp'])}</Text>
-                          <Text fontSize="1.5vh">{reminder['message'].slice(0, 158)}</Text>
+                          <Text fontSize="1.2vh">{new Date(reminder['timestamp']).toLocaleDateString('en-us', {
+                            timeZone: 'America/Los_Angeles',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'  })}
+                          </Text>
+                          <Text fontSize="1.5vh" >{getNotifText(reminder)}</Text>
                         </Stack>
                       </HStack>
                     </Box>
-                    <Box>
+                    <Box height="3vh" display="flex" alignItems="center" justifyContent="center">
                       <Button
                         variant="link"
                         color="#2D3748"
-                        margin="15px"
+                        marginRight="15"
                         onClick={() => {
-                          if (reminder['type'] === 'Donation Form Confirmation') {
+                          if (['Donation Form Confirmation', 'Submitted Form'].includes(reminder['type'])) {
                             setNotifClicked(reminder['notification_id']);
-                          } else if (reminder['type'] === 'Supply Request Shipped') {
+                            navigate(buttonPath[reminder['type']]);
+                          } else if (['Supply Request Shipped', 'Supply Request Received', 'Supply Request'].includes(reminder['type'])) {
                             parseSupplyRequestData(reminder['message']);
-                            setIsDrawerOpen(true);
+                            requestDrawerOnOpen();
                           } else {
                             navigate(buttonPath[reminder['type']]);
                           }

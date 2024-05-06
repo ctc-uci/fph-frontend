@@ -11,22 +11,22 @@ const DropZone = ({ onClose }) => {
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: '.csv',
-    onDrop: async ( [file] ) => {
+    onDrop: async ([file]) => {
       setFile(file);
       var reader = new FileReader();
       reader.onload = async function (e) {
         setContents(e.target.result);
       };
       reader.readAsText(file);
-    }
+    },
   });
 
   const handleUpload = async () => {
     await UploadCSV(contents);
-  }
+  };
 
   return (
-    <Flex className="container" gap = {4} flexDirection={'column'}>
+    <Flex className="container" gap={4} flexDirection={'column'}>
       <Flex
         {...getRootProps({ className: 'dropzone' })}
         p={5}
@@ -41,21 +41,31 @@ const DropZone = ({ onClose }) => {
         justifyContent={'center'}
       >
         <Input {...getInputProps()} />
-        <Text fontFamily={'Inter'} as={'b'} color={'gray.600'}>Drag files here, or</Text>
-        <Button colorScheme='teal' variant={'outline'} w={40}><box-icon name={'upload'} color={'teal'}></box-icon><Text marginLeft={2}>Upload File</Text></Button>
-        
+        <Text fontFamily={'Inter'} as={'b'} color={'gray.600'}>
+          Drag files here, or
+        </Text>
+        <Button colorScheme="teal" variant={'outline'} w={40}>
+          <box-icon name={'upload'} color={'teal'}></box-icon>
+          <Text marginLeft={2}>Upload File</Text>
+        </Button>
       </Flex>
-      {file && <Box bg={'#f3fafa'} p={4} borderRadius={4} textAlign={'center'}>{file.name}</Box>}
+      {file && (
+        <Box bg={'#f3fafa'} p={4} borderRadius={4} textAlign={'center'}>
+          {file.name}
+        </Box>
+      )}
       <Flex gap={4} width={'100%'} justifyContent={'flex-end'}>
-          <Button colorScheme="teal" onClick={handleUpload}>Upload</Button>
-          <Button onClick={onClose}>Cancel</Button>
+        <Button colorScheme="teal" onClick={handleUpload}>
+          Upload
+        </Button>
+        <Button onClick={onClose}>Cancel</Button>
       </Flex>
     </Flex>
   );
-}
+};
 
 DropZone.propTypes = {
   onClose: PropTypes.func.isRequired,
-}
+};
 
 export default DropZone;

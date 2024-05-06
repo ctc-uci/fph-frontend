@@ -43,7 +43,7 @@ export function AuthProvider({ children }) {
     return sendPasswordResetEmail(auth, email);
   };
 
-  const isAdmin = async ( user=currentUser ) => {
+  const isAdmin = async (user = currentUser) => {
     console.log(user);
     if (user !== null) {
       try {

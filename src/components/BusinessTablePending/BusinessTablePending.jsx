@@ -2,7 +2,19 @@ import { useEffect, useState } from 'react';
 import { useBackend } from '../../contexts/BackendContext';
 import ViewBusiness from '../ViewBusiness/ViewBusiness';
 import { BusinessForm } from '../BusinessForm/BusinessForm';
-import { Table, Thead, Tbody, Tr, Td, Checkbox, Button, Th, Input, Card, Badge } from '@chakra-ui/react';
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Td,
+  Checkbox,
+  Button,
+  Th,
+  Input,
+  Card,
+  Badge,
+} from '@chakra-ui/react';
 import { FaPlus } from 'react-icons/fa6';
 import DownloadCSV from '../../utils/downloadCSV';
 import { ArrowDownIcon } from '@chakra-ui/icons';
@@ -217,12 +229,16 @@ const BusinessTablePending = businessData => {
               {/* Add an empty header for the checkbox column */}
               <Th key="checkbox">
                 <Checkbox
-                  isChecked={selectedBusinessIds.size > 0 && selectedBusinessIds.size === data.length}
+                  isChecked={
+                    selectedBusinessIds.size > 0 && selectedBusinessIds.size === data.length
+                  }
                   onChange={handleSelectAllChange}
                 ></Checkbox>
               </Th>
               {tableHeaders.map((header, index) => (
-                <Th key={index} style={{ whiteSpace: 'nowrap' }}>{header}</Th>
+                <Th key={index} style={{ whiteSpace: 'nowrap' }}>
+                  {header}
+                </Th>
               ))}
             </Tr>
           </Thead>
@@ -237,13 +253,17 @@ const BusinessTablePending = businessData => {
                   ></Checkbox>
                 </Td>
                 <Td>{item.name}</Td>
-                <Td>{item.city}, {item.state}</Td>
+                <Td>
+                  {item.city}, {item.state}
+                </Td>
                 <Td>{item.primary_email}</Td>
                 <Td>{getStatusBadge(item.status)}</Td>
                 {/* Not correct date to use? */}
                 <Td>{formatDateDFH(item.join_date)}</Td>
                 <Td key="Application">
-                  <Button size="xs" onClick={() => handleViewApplication(item.id)}>View Application</Button>
+                  <Button size="xs" onClick={() => handleViewApplication(item.id)}>
+                    View Application
+                  </Button>
                 </Td>
               </Tr>
             ))}

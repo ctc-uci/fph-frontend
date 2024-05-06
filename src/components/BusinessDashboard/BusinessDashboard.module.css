@@ -31,3 +31,9 @@
 .prettyTable tr:hover {
   background-color: #ddd; /* Highlight on hover */
 }
+
+.warningNotif {
+  border-radius: 6px;
+  border: 1px solid var(--red-400, #F56565);
+  background: #FED7D7;
+}

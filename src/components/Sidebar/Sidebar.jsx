@@ -10,15 +10,28 @@ import {
   Box,
   Text,
   HStack,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  Spacer,
+  Icon,
 } from '@chakra-ui/react';
 import 'boxicons';
 import fphLogo from './fph-logo.png.png';
 import { useAuth } from '../../contexts/AuthContext';
+import { useBackend } from '../../contexts/BackendContext';
 import { useEffect, useState } from 'react';
+import { BiBuildingHouse, BiPhone, BiEnvelope } from 'react-icons/bi';
 
 function Sidebar() {
-  const { isAdmin } = useAuth();
+  const { backend } = useBackend();
   const [isAdminUser, setIsAdminUser] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure(); // State management for modal
+
   useEffect(() => {
     const checkIsAdmin = async () => {
       if (await isAdmin()) {
@@ -29,9 +42,14 @@ function Sidebar() {
     checkIsAdmin();
   });
 
+  useEffect(() => {
+    getBusinessName();
+  },
+  [backend]);
+
   const businessList = [
     { name: 'Home', path: '/BusinessDashboard', icon: 'home-smile' },
-    { name: 'Donation History', path: '/BusinessDonationTrackingForm', icon: 'heart-circle' },
+    { name: 'Donation History', path: '/BusinessDonationHistory', icon: 'heart-circle' },
     { name: 'Supply Request', path: '/ContactUs', icon: 'package' },
     { name: 'Account', path: '/EditContactInformation', icon: 'user' },
   ];
@@ -44,12 +62,20 @@ function Sidebar() {
   ];
 
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, isAdmin, currentUser } = useAuth();
+  const [businessName, setBusinessName] = useState();
+
+  const getBusinessName = async () => {
+    const businessIdResponse = await backend.get(`/businessUser/${currentUser.uid}`);
+    const businessContactResponse = await backend.get(`/business/${businessIdResponse.data[0].id}`);
+    const businessName = businessContactResponse.data[0].name;
+    setBusinessName(businessName);
+  };
 
   const authLogout = async () => {
     try {
       logout();
-      navigate('/login')
+      navigate('/login');
     } catch (error) {
       console.log(error.message);
     }
@@ -72,7 +98,7 @@ function Sidebar() {
                   alt="FPH Logo"
                 />
                 <Text color="teal" width="13vh" fontWeight="bold">
-                  Feeding Pets of the Homeless
+                  {isAdminUser ? 'Feeding Pets of the Homeless' : businessName}
                 </Text>
               </HStack>
               <Divider
@@ -106,9 +132,10 @@ function Sidebar() {
             </Flex>
             <Flex width="35vh" flexDirection="column">
               <VStack>
-                {!isAdmin && (
-                  <Link to={'/ContactUs'} style={{ width: '100%', display: 'block' }}>
+                {!isAdminUser && (
+                  <Link style={{ width: '100%', display: 'block' }}>
                     <Button
+                      onClick={onOpen}
                       width="full"
                       marginLeft="3vh"
                       justifyContent="flex-start"
@@ -155,6 +182,48 @@ function Sidebar() {
             </Flex>
           </VStack>
         </Flex>
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Contact Information</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Flex alignItems="center">
+                <Box color={'#359797'}>
+                  <Icon as={BiBuildingHouse} />
+                </Box>
+                <Text as="b" ml={2}>
+                  Address
+                </Text>{' '}
+                {/* Added margin left for spacing */}
+              </Flex>
+              <Text>710 W Washington St, Carson City, NV 89703</Text>
+              <Spacer height="4" />
+              <Flex alignItems="center">
+                <Box color={'#359797'}>
+                  <Icon as={BiPhone} />
+                </Box>
+                <Text as="b" ml={2}>
+                  Phone Number
+                </Text>{' '}
+                {/* Added margin left for spacing */}
+              </Flex>
+              <Text>(775) 841-7463</Text>
+              <Spacer height="4" />
+              <Flex alignItems="center">
+                <Box color={'#359797'}>
+                  <Icon as={BiEnvelope} />
+                </Box>
+                <Text as="b" ml={2}>
+                  Email
+                </Text>{' '}
+                {/* Added margin left for spacing */}
+              </Flex>
+              <Text>info@petsofthehomeless.org</Text>
+              <br />
+            </ModalBody>
+          </ModalContent>
+        </Modal>
       </>
     </ChakraProvider>
   );

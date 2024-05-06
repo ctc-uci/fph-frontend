@@ -30,17 +30,19 @@ const ViewRequest = () => {
     'Donation Envelopes',
     '"Homeless?" Card 2',
   ];
+  const items = [
+    'Get Pet Food Decal',
+    'Decal',
+    'Homeless Card',
+    'Business Card',
+    'Donation Site Decal',
+    'Donation Site Bin Decals',
+    'Donation Envelopes',
+    'Homeless Card 2',
+  ];
   const [itemAmounts, setItemAmounts] = useState({});
-  const [notes, setNotes] = useState('');
-  //const [status, setStatus] = useState(false);
   const [businessName, setBusinessName] = useState('');
-  //const [notificationID, setNotificationID] = useState(0);
   const [dateRequested, setDateRequested] = useState('');
-
-  const findBusinessId = message => {
-    const regex = new RegExp(`id: *[0-9]+`, 'i');
-    return message.match(regex, 'i')[0].split(':')[1].trim();
-  };
 
   function formatDate(dateTimeString) {
     const date = new Date(dateTimeString);
@@ -54,22 +56,13 @@ const ViewRequest = () => {
 
   const fetchRequest = async () => {
     try {
-      var temp = {};
       const response = await backend.get(`/notification/request/${id}`);
       const message = response.data[0].message;
-      const lines = message.split('\n');
-      supplyItems.map((item, index) => {
-        const matchAmount = lines[index + 1].split(': ')[1];
-        temp[item] = matchAmount;
-      });
-      //setNotificationID(response.data[0].notification_id);
-      //setStatus(response.data[0].been_dismissed);
+      setItemAmounts(JSON.parse(message));
       setDateRequested(formatDate(response.data[0].timestamp));
-      setNotes(lines.slice(11).join('\n'));
-      setItemAmounts({ ...temp });
-      const businessId = findBusinessId(message);
-      const businessResponse = await backend.get(`/business/${businessId}`);
-      setBusinessName(businessResponse.data[0].name);
+
+      const businessNameResponse = await backend.get(`/business/${response.data[0].sender_id}`);
+      setBusinessName(businessNameResponse.data[0].name);
     } catch (error) {
       console.error(error);
     }
@@ -81,18 +74,6 @@ const ViewRequest = () => {
   const handleClick = () => {
     navigate(`/ViewBusiness/${id}`);
   };
-
-  // const handleStatusChange = async (e) => {
-  //     setStatus(e.target.value);
-  //     try{
-  //         await backend.put(`/notification/${notificationID}`, {
-  //             been_dismissed: e.target.value,
-  //         });
-  //     }
-  //     catch(error){
-  //         console.error(error);
-  //     }
-  // }
 
   return (
     <ChakraProvider>
@@ -141,12 +122,12 @@ const ViewRequest = () => {
             <Tbody>
               {supplyItems.map(
                 (item, index) =>
-                  itemAmounts[item] != 0 && (
+                  itemAmounts[items[index]] != 0 && (
                     <Tr key={index}>
                       <Td>{item}</Td>
-                      <Td>{itemAmounts[item]}</Td>
+                      <Td>{itemAmounts[items[index]]}</Td>
                     </Tr>
-                  ),
+                  )
               )}
             </Tbody>
           </Table>
@@ -160,7 +141,7 @@ const ViewRequest = () => {
             </Thead>
             <Tbody>
               <Tr>
-                <Td>{notes}</Td>
+                <Td>{itemAmounts['Notes']}</Td>
               </Tr>
             </Tbody>
           </Table>
