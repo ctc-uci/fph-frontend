@@ -57,6 +57,8 @@ const EditContactInformation = () => {
   });
 
   const [businessId, setBusinessId] = useState(null);
+  const FPH_ID = 0;
+
   function showToast() {
     if (!toastOpen) {
       setToastOpen(true);
@@ -80,11 +82,12 @@ const EditContactInformation = () => {
 
   const updateContactInfo = async () => {
     try {
+      const formattedPhoneNumber = businessContactInfo.phoneNumber.replace(/-/g, '');
       setInitialBusinessContactInfo(businessContactInfo);
       await backend.put(`/business/${businessId}`, {
         name: businessContactInfo.businessName,
         contact_name: `${businessContactInfo.firstName} ${businessContactInfo.lastName}`,
-        primary_phone: businessContactInfo.phoneNumber,
+        primary_phone: formattedPhoneNumber,
         primary_email: businessContactInfo.email,
         website: businessContactInfo.website,
         street: businessContactInfo.street,
@@ -93,6 +96,16 @@ const EditContactInformation = () => {
         state: businessContactInfo.state,
         business_hours: businessContactInfo.business_hours,
       });
+
+      const notificationData = {
+        businessId: FPH_ID,
+        message: "Edited their business information.",
+        type: 'Edited Information',
+        senderId: businessId,
+        businessName: businessContactInfo.businessName,
+        donationId: null,
+      }
+      await backend.post('/notification', notificationData);
 
       return toast({
         title: 'Saved Changes',
@@ -119,10 +132,15 @@ const EditContactInformation = () => {
         const name = businessContact.contact_name.split(' ');
         const firstName = name[0];
         const lastName = name[1];
+        
+        let formattedPhoneNumber = '';
+        if (businessContact.primary_phone !== '') {
+          formattedPhoneNumber = businessContact.primary_phone.slice(0, 3) + '-' + businessContact.primary_phone.slice(3, 6) + '-' + businessContact.primary_phone.slice(6);
+        }
 
         setBusinessContactInfo({
           businessName: businessContact.name,
-          phoneNumber: businessContact.contact_phone,
+          phoneNumber: formattedPhoneNumber,
           email: businessContact.primary_email,
           website: businessContact.website,
           street: businessContact.street,
@@ -136,7 +154,7 @@ const EditContactInformation = () => {
 
         setInitialBusinessContactInfo({
           businessName: businessContact.name,
-          phoneNumber: businessContact.contact_phone,
+          phoneNumber: formattedPhoneNumber,
           email: businessContact.primary_email,
           website: businessContact.website,
           street: businessContact.street,

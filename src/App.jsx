@@ -32,13 +32,19 @@ const App = () => {
     <BackendProvider>
       <AuthProvider>
         <div className={styles.appLayout}>
-          {currentRoute == '/signupadmin' ||
+          {currentRoute == '/onboarding' ||
+            currentRoute == '/signupadmin' ||
             currentRoute == '/signupbusiness' ||
             currentRoute == '/login' ||
             currentRoute == '/forgotpassword' ||
             currentRoute == '/businessform' || <Sidebar isAdmin={false} />}
           <div className={styles.mainContent}>
             <Routes>
+              <Route
+                exact
+                path="/Onboarding"
+                element={<BusinessFormMaster />}
+              />
               <Route
                 exact
                 path="/SignupAdmin"
@@ -102,11 +108,6 @@ const App = () => {
                 exact
                 path="/DonationTrackingTable"
                 element={<ProtectedRoute Component={DonationTrackingTable} />}
-              />
-              <Route
-                exact
-                path="/BusinessForm"
-                element={<ProtectedRoute Component={BusinessFormMaster} />}
               />
               <Route
                 exact

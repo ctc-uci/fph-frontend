@@ -77,7 +77,17 @@ const FirstForm = ({ admin, nextStep }) => {
           );
         }
       } else {
-        await signup(email, password);
+        if (id) {
+          signup(email, password);
+        } else {
+          toast({
+            title: 'Business Not Found',
+            description: 'You need to apply to become a donation site on the FPH website first!',
+            status: 'error',
+            duration: 5000, // Duration of the toast
+            isClosable: true, // Allow the user to close the toast manually
+          });
+        }
       }
     } catch (err) {
       console.log(err);
