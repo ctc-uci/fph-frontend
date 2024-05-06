@@ -45,6 +45,8 @@ const DonationForm = () => {
   const navigate = useNavigate();
 
   const [businessId, setBusinessId] = useState(null);
+  const FPH_ID = 0;
+  const [businessName, setBusinessName] = useState('');
 
   const [formData, setFormData] = useState({
     business_id: businessId,
@@ -67,9 +69,12 @@ const DonationForm = () => {
       } else {
         try {
           const businessIdResponse = await backend.get(`/businessUser/${currentUser.uid}`);
+          console.log(businessIdResponse)
           const fetchedBusinessId = businessIdResponse.data[0].id;
           setBusinessId(fetchedBusinessId);
           setFormData(prevState => ({ ...prevState, business_id: fetchedBusinessId }));
+          const businessNameResponse = await backend.get(`/business/${fetchedBusinessId}`);
+          setBusinessName(businessNameResponse.data[0].name);
         } catch (error) {
           console.error('Error fetching business ID:', error);
         }
@@ -99,20 +104,18 @@ const DonationForm = () => {
     // DO TYPE IN THE DATABASE/CODE HERE, BUT THE DATA ASE DOES NOT SUPPORT SOMEONE HELP, CURRENTLY SHOWS AS TYPE:null
 
     try {
-      await backend.post('/donation', formData);
-      console.log(formData);
-
-
-
+      const donation_data = await backend.post('/donation', formData);
+      const donationId = donation_data.data[0].donation_id;
+      console.log('Donation data:', donation_data.data[0]);
       const fphNotificationData = {
-        businessId: businessId,
-        message: `Business ID: ${businessId} Donation Form Submission`,
-        timestamp: new Date().toLocaleString('en-US', {
-          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        }),
-        been_dismissed: false,
+        businessId: FPH_ID,
+        senderId: formData.business_id,
+        businessName,
+        donationId: donationId,
+        message: null,
         type: 'Submitted Form',
       };
+      console.log('Notification data:', fphNotificationData);
       await backend.post('/notification', fphNotificationData);
     } catch (error) {
       console.error('Form submission failed:', error);

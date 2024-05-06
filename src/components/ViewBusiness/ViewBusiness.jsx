@@ -383,7 +383,7 @@ const ViewBusiness = () => {
                                     </Td>
                                     <Td>
                                       <Text fontSize="xs" color="500">
-                                        {data.primary_phone.replace(
+                                        {data.primary_phone && data.primary_phone.replace(
                                           /(\d{3})(\d{3})(\d{4})/,
                                           '$1-$2-$3',
                                         )}
@@ -423,7 +423,7 @@ const ViewBusiness = () => {
                                         Phone for FPOTH Website
                                       </Text>
                                       <Text fontSize="xs" color="500">
-                                        {data.fph_phone.replace(
+                                        {data.fph_phone && data.fph_phone.replace(
                                           /(\d{3})(\d{3})(\d{4})/,
                                           '$1-$2-$3',
                                         )}
@@ -642,10 +642,10 @@ const ViewBusiness = () => {
                             </Box>
                           </Flex>
                         </Card>
-                        <Card mt="6" ml="6" height="60%">
+                        <Card mt="6" ml="6" maxHeight="58%">
                           <Flex direction="column" align="left" w="full">
-                            <Box mt="6" ml="6" mb="4">
-                              <Text fontSize="sm" mb="4" as="b" whiteSpace="normal">
+                            <Box mt="6" ml="6" mb={0}>
+                              <Text fontSize="sm" mb={0} as="b" whiteSpace="normal">
                                 DONATION FORM HISTORY
                               </Text>
                               <CardBody pt="0" pl="0">
@@ -654,8 +654,8 @@ const ViewBusiness = () => {
                                   {currentPageData.map((item, index) => (
                                     <Box
                                       key={index}
-                                      marginBottom="30px"
-                                      marginTop="30px"
+                                      marginBottom="20px"
+                                      marginTop="20px"
                                       cursor="pointer"
                                       color="gray.700"
                                       fontWeight="600"
@@ -671,7 +671,7 @@ const ViewBusiness = () => {
                                     </Box>
                                   ))}
                                 </div>
-                                <Box ml="90px">
+                                <Box ml="90px" mt={-2} mb={-2}>
                                   <Flex alignContent={'center'}>
                                     <Box
                                       sx={{
