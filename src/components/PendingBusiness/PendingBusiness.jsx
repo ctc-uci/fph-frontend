@@ -242,12 +242,14 @@ const PendingBusiness = ({ data, handleHome }) => {
                                     </Text>
                                   </Td>
                                   <Td>
+                                  {data.primary_phone && (
                                     <Text fontSize="xs" color="500">
                                       {data.primary_phone.replace(
                                         /(\d{3})(\d{3})(\d{4})/,
                                         '$1-$2-$3',
                                       )}
                                     </Text>
+                                  )}
                                   </Td>
                                 </Flex>
                               </Tr>
