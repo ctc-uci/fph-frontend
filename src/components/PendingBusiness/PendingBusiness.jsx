@@ -10,6 +10,9 @@ import {
   Flex,
   IconButton,
   Box,
+  Breadcrumb,
+  BreadcrumbLink,
+  BreadcrumbItem,
   Card,
   CardHeader,
   CardBody,
@@ -23,7 +26,6 @@ import {
   Select,
   SimpleGrid,
   Tbody,
-  Link as ChakraLink,
   ButtonGroup,
   useToast,
 } from '@chakra-ui/react';
@@ -98,27 +100,26 @@ const PendingBusiness = ({ data, handleHome }) => {
     <>
       {data ? (
         <>
-          <Flex
-            justify="flex-end"
-            wrap="nowrap"
-            maxW="80%"
-            mx="auto"
-            flexDirection={'column'}
-            ml="39"
+          <Flex pl={10} flexDirection={'column'} pt={10}
           >
-            <Flex justifyContent={'space-between'} mr="auto" w="70vw" marginTop={4}>
-              <Flex gap={1}>
-                <ChakraLink onClick={handleHome} color="blue.500" decoration="underline">
-                  Home{' '}
-                </ChakraLink>
-                <Text>/ {data.name}</Text>
-              </Flex>
+            <Flex alignItems="center" justifyContent={'space-between'} width={'75%'} pb={'5'}>
+            <Breadcrumb spacing="1">
+              <BreadcrumbItem>
+                <BreadcrumbLink color="#245F61" onClick={handleHome}>
+                  Home
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+
+              <BreadcrumbItem isCurrentPage>
+                <BreadcrumbLink>{data.name}</BreadcrumbLink>
+              </BreadcrumbItem>
+            </Breadcrumb>
 
               <IconButton icon={<box-icon type="solid" name="bell"></box-icon>} />
+              </Flex>
             </Flex>
-          </Flex>
 
-          <Card maxW="100%" w="64vw" h="auto" p={6} mt="10" ml="10" mb="10">
+          <Card maxW="100%" w="64vw" h="auto" p={6} ml="10" mb="10">
             <CardHeader>
               <Flex justify="space-between" align="center" w="full">
                 <Flex align="center" gap="4">

@@ -33,7 +33,9 @@ import {
   ModalFooter,
   MenuItemOption,
   MenuItem,
-  Link as ChakraLink,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
   MenuOptionGroup,
   useToast
 } from '@chakra-ui/react';
@@ -173,10 +175,10 @@ const ViewBusiness = () => {
       const notificationResponse = await backend.get(`/notification/request/${id}`);
 
       const date = new Date(notificationResponse.data[0].timestamp);
-      const month = date.toLocaleString('default', { month: 'long' }); 
+      const month = date.toLocaleString('default', { month: 'long' });
       const day = date.getDate();
       const formattedDate = `${month} ${day}`;
-      
+
       const requestData = {
         businessId: id,
         message: `Supply request submitted from ${formattedDate} has been shipped.`,
@@ -272,17 +274,22 @@ const ViewBusiness = () => {
                   </ModalFooter>
                 </ModalContent>
               </Modal>
-              <Flex justify="flex-end" wrap="nowrap" maxW="80%" mx="auto" flexDirection={'column'}>
-                <Flex justifyContent={'space-between'} mr="auto" w="1089px" marginTop={4}>
-                  <Flex gap={1}>
-                    <ChakraLink onClick={handleHome} color="blue.500" decoration="underline">
-                      Home{' '}
-                    </ChakraLink>
-                    <Text>/ {data.name}</Text>
-                  </Flex>
+              <Flex pl={10} pt={10} justify="flex-end" wrap="nowrap" maxW="80%" flexDirection={'column'}>
+                <Flex alignItems="center" justifyContent={'space-between'} mr="auto" w="1089px"  pb={'5'}>
+                  <Breadcrumb>
+                    <BreadcrumbItem>
+                      <BreadcrumbLink color="#245F61" onClick={handleHome}>
+                        Home
+                      </BreadcrumbLink>
+                    </BreadcrumbItem>
+
+                    <BreadcrumbItem isCurrentPage>
+                      <BreadcrumbLink href="#">{data.name}</BreadcrumbLink>
+                    </BreadcrumbItem>
+                  </Breadcrumb>
                   <NotificationsDrawer notificationsData={notification} />
                 </Flex>
-                <Card maxW="100%" w="1089px" h="auto" p={6} mt="10">
+                <Card maxW="100%" w="1089px" h="auto" p={6} mt="6">
                   <CardHeader>
                     <Flex justify="space-between" align="center" w="full">
                       <Flex align="center" gap="4">

@@ -277,7 +277,12 @@ const NotificationsDrawer = ({ notificationsData }) => {
                         <Heading size='sm'>{notification.business_name}</Heading>
                         <Text>{getNotificationText(notification.type)}</Text>
                         <Text fontSize="sm">
-                          {new Date(notification.timestamp).toLocaleDateString()}
+                          {new Date(notification.timestamp).toLocaleDateString('en-US', {
+                            timeZone: 'America/Los_Angeles',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                          })}
                         </Text>
                       </Flex>
                       <Button
