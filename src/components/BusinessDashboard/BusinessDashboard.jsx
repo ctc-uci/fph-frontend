@@ -215,6 +215,32 @@ const BusinessDashboard = () => {
     return daysDifference;
   };
 
+  const isUrgentNotif = () => {
+    const currentTime = new Date();
+    const currentYear = currentTime.getFullYear();
+    let dueDate = new Date();
+
+    if (currentTime.getMonth() <= 2) {
+      dueDate = new Date(currentYear, 3, 1);
+    } else if (currentTime.getMonth() <= 5) {
+      dueDate = new Date(currentYear, 6, 1);
+    } else if (currentTime.getMonth() <= 8) {
+      dueDate = new Date(currentYear, 9, 1);
+    } else {
+      dueDate = new Date(currentYear, 0, 1);
+    }
+
+    const timeDifference = Math.abs(currentTime - dueDate);
+    const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    console.log(currentTime);
+    console.log(dueDate);
+    return daysDifference < 3;
+  };
+
+  const isRedNotif = (reminder) => {
+    return reminder['type'] === "Not Submitted" && isUrgentNotif(reminder['timestamp']);
+  }
+
   return !notifClicked ? (
     <div>
       <Drawer
@@ -387,8 +413,8 @@ const BusinessDashboard = () => {
                 height="11vh"
                 borderWidth="2px"
                 borderRadius="5px"
-                borderColor={reminder['type'] === "Not Submitted" ? "#F56565" : "#359797"}
-                className={reminder['type'] === "Not Submitted" ? classes.warningNotif : ""}
+                borderColor={isRedNotif(reminder) ? "#F56565" : "#359797"}
+                className={isRedNotif(reminder) ? classes.warningNotif : ""}
               >
                   <HStack justifyContent={'space-between'}>
                     <Box margin="3px">
@@ -397,7 +423,7 @@ const BusinessDashboard = () => {
                           {' '}
                           <Icon
                             as={buttonIcon[reminder['type']]}
-                            color={reminder['type'] === "Not Submitted" ? "#E53E3E" : undefined}
+                            color={isRedNotif(reminder) ? "#E53E3E" : undefined}
                           ></Icon>
                         </Box>
 
