@@ -92,6 +92,7 @@ const BusinessForm = ({ edit = true }) => {
   const [updatedBy, setUpdatedBy] = useState(null);
   const { backend } = useBackend();
   const [notification, setNotification] = useState([]);
+
   useEffect(() => {
     const checkIsAdmin = async () => {
       if (!(await isAdmin())) {
