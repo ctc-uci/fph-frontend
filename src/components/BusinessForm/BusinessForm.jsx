@@ -4,6 +4,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import {
   Box,
   Button,
+  Breadcrumb,
+  BreadcrumbLink,
+  BreadcrumbItem,
   Flex,
   Text,
   IconButton,
@@ -23,6 +26,7 @@ import {
   Textarea,
   Select,
   Checkbox,
+  Heading,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -31,13 +35,13 @@ import {
   ModalFooter,
   ModalHeader,
   Stack,
-  Link as ChakraLink,
 } from '@chakra-ui/react';
 import { useAuth } from '../../contexts/AuthContext';
 import 'boxicons';
 import './BusinessForm.module.css';
 import { useBackend } from '../../contexts/BackendContext';
 import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer';
+import classes from './BusinessForm.module.css';
 
 const BusinessForm = ({ edit = true }) => {
   // State for each form field
@@ -348,17 +352,24 @@ const BusinessForm = ({ edit = true }) => {
               </ModalOverlay>
             </Modal>
           </>
-          <Flex justify="flex-end" wrap="nowrap" maxW="80%" mx="auto" flexDirection={'column'}>
+          <Flex pl={10} pt={10} justify="flex-end" wrap="nowrap" maxW="93%" flexDirection={'column'}>
             <Flex justifyContent={'space-between'} mr="auto" w="1089px" marginTop={4}>
-              <Flex gap={1}>
-                <ChakraLink onClick={handleHome} color="blue.500" decoration="underline">
-                  Home{' '}
-                </ChakraLink>
-                <Text>/ {edit ? businessName : 'Add A Business'}</Text>
-              </Flex>
+            <Breadcrumb spacing="1">
+              <BreadcrumbItem>
+                <BreadcrumbLink color="#245F61" onClick={handleHome}>
+                  Home
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+
+              <BreadcrumbItem isCurrentPage>
+                <BreadcrumbLink>{edit ? businessName : 'Add Business'}</BreadcrumbLink>
+              </BreadcrumbItem>
+            </Breadcrumb>
+
               <NotificationsDrawer notificationsData={notification} />
             </Flex>
-            <Card maxW="100%" w="70vw" h="auto" p={6} mt="10">
+            <Heading size="lg" className={classes.titleText}>Add Business Form</Heading>
+            <Card maxW="100%" w="100%" h="auto" p={6} mt="5" flex={1}>
               <CardHeader>
                 <Flex justify="space-between" align="center" w="full">
                   <Flex flexGrow={true} alignItems="flex-start" gap="4" flexDirection="column">
@@ -391,14 +402,14 @@ const BusinessForm = ({ edit = true }) => {
               </CardHeader>
               <CardBody>
                 <Flex direction="row">
-                  <Box flex="4">
-                    <Card w="61vw">
+                  <Box flex="4" w="100">
+                    <Card>
                       <Flex alignItems="left">
                         <TableContainer>
                           <Table variant="unstyled">
                             <Thead></Thead>
                             <Tbody>
-                              <Tr>
+                              <Tr w="100%">
                                 <Td>
                                   <Text fontSize="xs" color="500" as="b">
                                     NAME OF BUSINESS

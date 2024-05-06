@@ -20,6 +20,7 @@ import { ArrowDownIcon } from '@chakra-ui/icons';
 import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer';
 import DownloadCSV from '../../utils/downloadCSV';
 import PropTypes from 'prop-types';
+import classes from './ViewDonation.module.css';
 
 const ViewDonation = () => {
   const { backend } = useBackend();
@@ -88,11 +89,11 @@ const ViewDonation = () => {
         <Flex alignItems="center" justifyContent={'space-between'} width={'75%'} pb={'5'}>
           <Breadcrumb>
             <BreadcrumbItem>
-              <BreadcrumbLink onClick={() => navigate('/DonationTrackingTable')}>Donation Tracking</BreadcrumbLink>
+              <BreadcrumbLink color="#245F61" onClick={() => navigate('/DonationTrackingTable')}>Donation Tracking</BreadcrumbLink>
             </BreadcrumbItem>
 
             <BreadcrumbItem>
-              <BreadcrumbLink onClick={() => navigate(`/ViewBusiness/${donationData.business_id}`)}>View Business </BreadcrumbLink>
+              <BreadcrumbLink color="#245F61" onClick={() => navigate(`/ViewBusiness/${donationData.business_id}`)}>View Business </BreadcrumbLink>
             </BreadcrumbItem>
 
             <BreadcrumbItem isCurrentPage>
@@ -101,10 +102,10 @@ const ViewDonation = () => {
           </Breadcrumb>
           <NotificationsDrawer notificationsData={notification} />
         </Flex>
-        <Flex alignItems="center" justifyContent={'space-between'} width={'75%'} pb={'5'} pt={'10'}>
-          <Heading size="lg">{businessName}&rsquo;s Donation Summary</Heading>
+        <Flex alignItems="center" justifyContent={'space-between'} width={'75%'} pb={'5'}>
+          <Heading size="lg" className={classes.titleText}>{businessName}&rsquo;s Donation Submission</Heading>
           <Flex gap="3">
-            <Button colorScheme="teal" onClick={handleViewBusiness} sx={{ width: '172px' }}>
+            <Button onClick={handleViewBusiness} sx={{ width: '172', borderRadius: '6px', border: '1px solid var(--fph-teal-500-primary, #359797)', color: 'var(--fph-teal-500-primary, #359797)', backgroundColor: 'transparent' }}>
               View Business Details
             </Button>
             <Button colorScheme="teal" onClick={handleDownloadCSV} sx={{ width: '172px' }}>
