@@ -428,15 +428,14 @@ const BusinessDashboard = () => {
           {reminderData.slice(0, 50).map((reminder, index) => (
             <Tr key={index}>
               <Td>
-              <Box
-                height="11vh"
-                borderWidth="2px"
-                borderRadius="5px"
-                borderColor={() => isRedNotif(reminder) ? "#F56565" : "#359797"}
-                className={() => isRedNotif(reminder) ? classes.warningNotif : ""}
-              >
+                <Box
+                  borderWidth="2px"
+                  borderRadius="5px"
+                  borderColor={() => isRedNotif(reminder) ? "#F56565" : "#359797"}
+                  className={() => isRedNotif(reminder) ? classes.warningNotif : ""}
+                >
                   <HStack justifyContent={'space-between'}>
-                    <Box margin="3px">
+                    <Box margin=".5vh">
                       <HStack marginLeft="1vh">
                         <Box color={'#359797'}>
                           {' '}
@@ -453,11 +452,11 @@ const BusinessDashboard = () => {
                         </Stack>
                       </HStack>
                     </Box>
-                    <Box>
+                    <Box height="3vh" display="flex" alignItems="center" justifyContent="center"> 
                       <Button
                         variant="link"
                         color="#2D3748"
-                        margin="15px"
+                        marginRight="15"
                         onClick={() => {
                           if (['Donation Form Confirmation', 'Submitted Form'].includes(reminder['type'])) {
                             setNotifClicked(reminder['notification_id']);
