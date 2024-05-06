@@ -32,14 +32,18 @@ const PendingBusiness = ({ data, handleHome }) => {
   const navigate = useNavigate();
   const toast = useToast();
 
-  const [pendingStatus, setPendingStatus] = useState();
+  const [residentialStatus, setResidentialStatus] = useState();
 
   useEffect(() => {
     const getResidentialStatus = async () => {
       try {
         const businessResponse = await backend.get(`/business/${data.id}`);
         const residentialStatus = businessResponse.data[0].residential;
-        setPendingStatus(residentialStatus.toUpperCase());
+        if (!residentialStatus) {
+          setResidentialStatus("PENDING");
+        } else {
+          setResidentialStatus(residentialStatus.toUpperCase());
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -80,14 +84,13 @@ const PendingBusiness = ({ data, handleHome }) => {
       console.error('Error fetching data:', error);
     }
   };
-
   const handleChange = event => {
-    setPendingStatus(event.target.value);
+    setResidentialStatus(event.target.value);
   };
 
   const handleSave = async () => {
     await backend.put(`/business/${data.id}`, {
-      residential: pendingStatus,
+      residential: residentialStatus,
     });
   };
 
@@ -188,7 +191,7 @@ const PendingBusiness = ({ data, handleHome }) => {
                                   <Td>
                                     <Select
                                       placeholder="Select status"
-                                      value={pendingStatus}
+                                      value={residentialStatus}
                                       onChange={handleChange}
                                     >
                                       <option value="PENDING">PENDING</option>
@@ -207,7 +210,7 @@ const PendingBusiness = ({ data, handleHome }) => {
                                   </Td>
                                   <Td>
                                     <Text fontSize="xs" color="500">
-                                      {data.street + ' ' + data.qb_city_state_zip}
+                                      {data.find_out}
                                     </Text>
                                   </Td>
                                 </Flex>

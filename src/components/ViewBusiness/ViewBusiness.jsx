@@ -96,6 +96,7 @@ const ViewBusiness = () => {
 
   const { backend } = useBackend();
   const toast = useToast();
+  const FPH_ID = 0;
 
   const fetchBusiness = async () => {
     try {
@@ -167,7 +168,26 @@ const ViewBusiness = () => {
 
   const handleSupplyStatusChange = async (status) => {
     setSelectedSupplyStatus(status);
-    await backend.put(`business/${id}`, { supplyRequestStatus: status})
+    await backend.put(`business/${id}`, { supplyRequestStatus: status});
+    if (status === "Sent") {
+      const notificationResponse = await backend.get(`/notification/request/${id}`);
+
+      const date = new Date(notificationResponse.data[0].timestamp);
+      const month = date.toLocaleString('default', { month: 'long' }); 
+      const day = date.getDate();
+      const formattedDate = `${month} ${day}`;
+      
+      const requestData = {
+        businessId: id,
+        message: `Supply request submitted from ${formattedDate} has been shipped.`,
+        timestamp: new Date().toISOString(),
+        beenDismissed: false,
+        type: 'Supply Request',
+        senderId: FPH_ID
+      };
+
+      await backend.post('/notification', requestData);
+    }
   };
 
   const handleSendReminder = async () => {

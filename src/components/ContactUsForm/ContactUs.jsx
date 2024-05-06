@@ -88,7 +88,7 @@ const ContactUs = () => {
         const businessIdResponse = await backend.get(`/businessUser/${currentUser.uid}`);
         const fetchedBusinessId = businessIdResponse.data[0].id;
         const businessNameResponse = await backend.get(`/business/${fetchedBusinessId}`);
-        const fetchedBusinessName = businessNameResponse.data[0].business_name;
+        const fetchedBusinessName = businessNameResponse.data[0].name;
         // Set the fetched business ID in state
         setBusinessId(fetchedBusinessId);
         setBusinessName(fetchedBusinessName);
@@ -147,7 +147,6 @@ const ContactUs = () => {
       Notes: text,
     };
     const message = JSON.stringify(msg);
-    console.log(message)
     const updatedFormData = {
       businessId: FPH_ID,
       message: message,

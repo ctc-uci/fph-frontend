@@ -72,6 +72,7 @@ const BusinessDashboard = () => {
     'Submitted Form': 'View Form',
     'Not Submitted': 'Submit Form',
     'Donation Form Reminder': 'Submit Form',
+    'Supply Request': 'View Request',
     'Supply Request Shipped': 'View Request',
     'Supply Request Received': 'View Request',
   };
@@ -83,6 +84,7 @@ const BusinessDashboard = () => {
     'Not Submitted': WarningIcon,
     'Supply Request Shipped': EmailIcon,
     'Supply Request Received': EmailIcon,
+    'Supply Request': EmailIcon,
   };
   // *************************************************************************
   // CHANGE LATER: right now just making one big request for all of the
@@ -415,7 +417,7 @@ const BusinessDashboard = () => {
                           if (['Donation Form Confirmation', 'Submitted Form'].includes(reminder['type'])) {
                             setNotifClicked(reminder['notification_id']);
                             navigate(buttonPath[reminder['type']]);
-                          } else if (['Supply Request Shipped', 'Supply Request Received'].includes(reminder['type'])) {
+                          } else if (['Supply Request Shipped', 'Supply Request Received', 'Supply Request'].includes(reminder['type'])) {
                             parseSupplyRequestData(reminder['message']);
                             requestDrawerOnOpen();
                           } else {

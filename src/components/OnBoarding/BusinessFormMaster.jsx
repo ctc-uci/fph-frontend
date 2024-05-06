@@ -39,6 +39,7 @@ const BusinessFormMaster = ({ setFormOpen }) => {
     const PENDING_STATUS = 'Pending';
     const DUMMY_DATE = new Date().toISOString().split('T')[0];
     const DUMMY_BOOL = false;
+    const formattedPhoneNumber = formData['phoneNumber'].replace(/-/g, '');
 
     const businessData = {
       name: formData['businessName'],
@@ -49,8 +50,8 @@ const BusinessFormMaster = ({ setFormOpen }) => {
       city: formData['city'],
       website: formData['website'],
       businessHours: JSON.stringify(formData['businessHours']),
-      primaryPhone: formData['phoneNumber'],
-      primaryEmail: formData['email'],
+      primaryPhone: formattedPhoneNumber,
+      primaryEmail: formData['personEmail'],
       findOut: formData['heardAbout'],
       type: DUMMY_STRING,
       qbVendorName: DUMMY_STRING,
@@ -97,19 +98,22 @@ const BusinessFormMaster = ({ setFormOpen }) => {
       createdDate: new Date(),
     };
 
-    const notification_data = {
-      businessId: 0,
-      message: `New Donation Site Application from ${formData['businessName']}`,
-      timestamp: new Date().toLocaleString('en-US', {
-        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      }),
-      type: 'New Application',
-      beenDismissed: false,
-    };
-
     try {
       if (formData['termsAndConditionsAccepted'] === true) {
-        await backend.post('/business', businessData);
+        const businessResponse = await backend.post('/business', businessData);
+        const businessId = businessResponse.data[0].id;
+        const businessName = businessResponse.data[0].name;
+        const notification_data = {
+          businessId: 0,
+          message: `New Donation Site Application from ${formData['businessName']}`,
+          timestamp: new Date().toLocaleString('en-US', {
+            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          }),
+          type: 'New Application',
+          senderId: businessId,
+          businessName: businessName,
+          beenDismissed: false,
+        };
         await backend.post('/notification', notification_data);
         nextStep();
       }

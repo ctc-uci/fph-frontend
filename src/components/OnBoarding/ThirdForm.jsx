@@ -191,7 +191,8 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit, setFormData
                 >
                   <Text fontSize="xl">Phone Number</Text>
                   <Input
-                    maxLength="10"
+                    maxLength="12"
+                    placeHolder="000-000-0000"
                     name="phoneNumber"
                     type="text"
                     value={formData['phoneNumber']}
