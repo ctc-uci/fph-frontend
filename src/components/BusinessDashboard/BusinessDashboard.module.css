@@ -1,0 +1,39 @@
+.vstack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Aligns items to the left */
+  margin-left: 5px;
+}
+
+.prettyTable {
+  border-collapse: collapse;
+  width: 100%;
+  border: 2px solid grey;
+  border-radius: 8px;
+  overflow: hidden; /* Ensures the border-radius applies properly */
+}
+
+.prettyTable th,
+.prettyTable td {
+  text-align: left;
+  padding: 8px;
+}
+
+.prettyTable th {
+  background-color: #f2f2f2; /* Light grey background for header */
+}
+
+/* Zebra striping for rows */
+.prettyTable tr:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+.prettyTable tr:hover {
+  background-color: #ddd; /* Highlight on hover */
+}
+
+.warningNotif {
+  border-radius: 6px;
+  border: 1px solid var(--red-400, #F56565);
+  background: #FED7D7;
+}

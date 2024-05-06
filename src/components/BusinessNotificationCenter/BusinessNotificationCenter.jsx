@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useBackend } from '../../contexts/BackendContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { SearchIcon, PlusSquareIcon, BellIcon, HamburgerIcon } from '@chakra-ui/icons';
 import {
   Text,
@@ -30,20 +31,22 @@ import {
 const App = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { backend } = useBackend();
+  const { currentUser } = useAuth();
   const [data, setData] = useState([]);
 
-  const getData = async () => {
-    try {
-      const id = '5';
-      const response = await backend.get(`/notification/${id}`);
-      setData(response.data);
-      console.log(data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
   useEffect(() => {
+    const getData = async () => {
+      try {
+        const businessIdResponse = await backend.get(`/businessUser/${currentUser.uid}`);
+        const businessId = businessIdResponse.data[0].id;
+
+        const response = await backend.get(`/notification/${businessId}`);
+        setData(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
     getData();
   }, []);
 

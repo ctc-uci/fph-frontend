@@ -1,79 +1,72 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   Box,
-  FormControl,
-  FormLabel,
-  Input,
   Button,
+  Breadcrumb,
+  BreadcrumbLink,
+  BreadcrumbItem,
   Flex,
-  Select,
-  Stack,
-  Heading,
   Text,
-  UnorderedList,
-  ListItem,
+  IconButton,
+  ChakraProvider,
+  Card,
+  CardHeader,
+  CardBody,
+  TableContainer,
+  Td,
+  Tr,
+  Thead,
+  Tbody,
+  Table,
+  CardFooter,
+  Input,
+  Spacer,
+  Textarea,
+  Select,
+  Checkbox,
+  Heading,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalOverlay,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Stack,
 } from '@chakra-ui/react';
+import { useAuth } from '../../contexts/AuthContext';
+import 'boxicons';
+import './BusinessForm.module.css';
 import { useBackend } from '../../contexts/BackendContext';
-import RegisterSuccessPage from '../RegisterBusinessForm/RegisterSuccessPage';
+import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer';
+import classes from './BusinessForm.module.css';
 
-const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
-const TimeInput = ({ label, value, onChange, isReadOnly }) => (
-  <Stack direction="row" align="center">
-    <FormLabel mb="0">{label}</FormLabel>
-    <Select
-      value={value.hour}
-      onChange={e => onChange({ ...value, hour: e.target.value })}
-      w="auto"
-      disabled={isReadOnly}
-    >
-      {[...Array(12).keys()].map(h => (
-        <option key={h} value={h + 1}>
-          {h + 1}
-        </option>
-      ))}
-    </Select>
-    <Select
-      value={value.minute}
-      onChange={e => onChange({ ...value, minute: e.target.value })}
-      w="auto"
-      disabled={isReadOnly}
-    >
-      {['00', '15', '30', '45'].map(m => (
-        <option key={m} value={m}>
-          {m}
-        </option>
-      ))}
-    </Select>
-    <Select
-      value={value.ampm}
-      onChange={e => onChange({ ...value, ampm: e.target.value })}
-      w="auto"
-      disabled={isReadOnly}
-    >
-      {['AM', 'PM'].map(ampm => (
-        <option key={ampm} value={ampm}>
-          {ampm}
-        </option>
-      ))}
-    </Select>
-  </Stack>
-);
-
-TimeInput.propTypes = {
-  label: PropTypes.string.isRequired,
-  value: PropTypes.shape({
-    hour: PropTypes.string.isRequired,
-    minute: PropTypes.string.isRequired,
-    ampm: PropTypes.string.isRequired,
-  }).isRequired,
-  onChange: PropTypes.func.isRequired,
-  isReadOnly: PropTypes.bool.isRequired,
-};
-
-const BusinessForm = ({ pending, pendingData }) => {
+const BusinessForm = ({ edit = true }) => {
   // State for each form field
+  const additionalInfoItems = [
+    'Pet Food Provider Site',
+    'Entered in QB',
+    'Donation Site',
+    'Inactive',
+    'Shelter',
+    'Final Check',
+    'Domestic Violence Shelter',
+    'ER Boarding',
+    'Families Only Shelter',
+    'Senior Citizens Only',
+    'Wellness Clinics',
+    'Cancer Specific',
+    'Spay Neuter',
+    'Dog Specific',
+    'Financial Assistance',
+    'Cat Specific',
+    'Rehome Foster',
+  ];
+  const { id } = useParams();
+  const { isAdmin, currentUser } = useAuth();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [businessName, setBusinessName] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -82,345 +75,671 @@ const BusinessForm = ({ pending, pendingData }) => {
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [zip, setZip] = useState('');
-  const [country, setCountry] = useState('');
   const [website, setWebsite] = useState('');
+  const [countrycode, setCountryCode] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [howHeard, setHowHeard] = useState('');
-  const [registrationSuccess, setRegistrationSuccess] = useState(false);
-
-  const [businessHours, setBusinessHours] = useState(
-    daysOfWeek.reduce(
-      (acc, day) => ({
-        ...acc,
-        [day]: {
-          start: { hour: '9', minute: '00', ampm: 'AM' },
-          end: { hour: '5', minute: '00', ampm: 'PM' },
-        },
-      }),
-      {},
-    ),
-  );
+  const navigate = useNavigate();
+  const [businessHours, setBusinessHours] = useState('');
+  const [checkedAddedInfo, setCheckedAddedInfo] = useState({});
+  const [webNotes, setWebNotes] = useState('');
+  const [published, setPublished] = useState(false);
+  const [webDateInit, setWebDateInit] = useState(new Date());
+  const [internalNotes, setInternalNotes] = useState('');
+  const [fphPhone, setFPHPhone] = useState('');
+  const [vendorType, setVendorType] = useState('');
+  const [serviceRequest, setServiceRequest] = useState(false);
+  const [isAdminUser, setIsAdminUser] = useState(false);
+  const [termsAndConditionsIsOpened, setTermsAndConditionsIsOpened] = useState(false);
+  const [termsAndConditionsAccepted, setTermsAndConditionsAccepted] = useState(false);
+  const [updatedBy, setUpdatedBy] = useState(null);
+  const { backend } = useBackend();
+  const [notification, setNotification] = useState([]);
 
   useEffect(() => {
-    if (pending) {
+    const checkIsAdmin = async () => {
+      if (!(await isAdmin())) {
+        navigate('/BusinessDashboard');
+      } else {
+        setIsAdminUser(true);
+      }
+    };
+
+    checkIsAdmin();
+
+    const fetchNotifications = async () => {
+      const response = await backend.get('/notification/0');
+      setNotification(response.data);
+    }
+
+    if (notification.length === 0) {
+      fetchNotifications();
+    }
+
+    if (edit) {
       fillOutPendingData();
     }
-  });
 
-  const handleTimeChange = (day, period, value) => {
-    setBusinessHours({ ...businessHours, [day]: { ...businessHours[day], [period]: value } });
-  };
+    const getAdminUser = async () => {
+      try {
+        const adminUserResponse = await backend.get(`adminUser/${currentUser.email}`);
+        setUpdatedBy(adminUserResponse.data[0].name);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    if (currentUser) {
+      getAdminUser();
+    }
+  }, [backend]);
 
-  const handleZipChange = e => {
-    setZip(e.target.value);
-  };
-
-  const { backend } = useBackend();
   const handleSubmit = async e => {
     e.preventDefault();
 
-    const DUMMY_STRING = 'STRING';
-    const DUMMY_DATE = new Date().toISOString().split('T')[0];
-    const DUMMY_BOOL = false;
-
-    const businessData = {
-      name: businessName,
-      contactName: firstName + ' ' + lastName,
-      street: addressLine1 + ' ' + addressLine2,
-      zipCode: zip,
-      state: state,
-      city: city,
-      website: website,
-      businessHours: JSON.stringify(businessHours),
-      primaryPhone: phone,
-      primaryEmail: email,
-      findOut: howHeard,
-      type: DUMMY_STRING,
-      qbVendorName: DUMMY_STRING,
-      qbCityStateZip: DUMMY_STRING,
-      backupPhone: DUMMY_STRING,
-      comments: DUMMY_STRING,
-      faxPhone: DUMMY_STRING,
-      onboardingStatus: DUMMY_STRING,
-      joinDate: DUMMY_DATE,
-      inputTypeStatus: DUMMY_STRING,
-      vendorType: DUMMY_STRING,
-      status: DUMMY_STRING,
-      petsOfTheHomelessDiscount: DUMMY_BOOL,
-      updatedBy: DUMMY_STRING,
-      updatedDateTime: DUMMY_DATE,
-      syncToQb: DUMMY_BOOL,
-      veterinary: DUMMY_BOOL,
-      resource: DUMMY_BOOL,
-      food: DUMMY_BOOL,
-      donation: DUMMY_BOOL,
-      familyShelter: DUMMY_BOOL,
-      wellness: DUMMY_BOOL,
-      spayNeuter: DUMMY_BOOL,
-      financial: DUMMY_BOOL,
-      reHome: DUMMY_BOOL,
-      erBoarding: DUMMY_BOOL,
-      senior: DUMMY_BOOL,
-      cancer: DUMMY_BOOL,
-      dog: DUMMY_BOOL,
-      cat: DUMMY_BOOL,
-      fphPhone: DUMMY_STRING,
-      contactPhone: DUMMY_STRING,
-      webNotes: DUMMY_STRING,
-      internalNotes: DUMMY_STRING,
-      published: DUMMY_BOOL,
-      shelter: DUMMY_BOOL,
-      domesticViolence: DUMMY_BOOL,
-      webDateInit: DUMMY_DATE,
-      entQb: DUMMY_BOOL,
-      serviceRequest: DUMMY_BOOL,
-      inactive: DUMMY_BOOL,
-      finalCheck: DUMMY_BOOL,
-      createdBy: DUMMY_DATE,
-      createdDate: DUMMY_DATE,
-    };
-
     try {
-      await backend.post('/business', businessData);
-      setRegistrationSuccess(true);
+      const parsedPhone = phone.replace(/-/g, '');
+
+      const data = {
+        name: businessName,
+        contactName: firstName + ' ' + lastName,
+        street: addressLine1 + ' ' + addressLine2,
+        zipCode: zip,
+        state: state,
+        city: city,
+        website: website,
+        businessHours: businessHours,
+        primaryPhone: parsedPhone,
+        primaryEmail: email,
+        findOut: howHeard,
+        food: checkedAddedInfo['Pet Food Provider Site'],
+        donation: checkedAddedInfo['Donation Site'],
+        familyShelter: checkedAddedInfo['Family Shelter'],
+        wellness: checkedAddedInfo['Wellness Clinics'],
+        spayNeuter: checkedAddedInfo['Spay Neuter'],
+        financial: checkedAddedInfo['Financial Assistance'],
+        reHome: checkedAddedInfo['Rehome Foster'],
+        erBoarding: checkedAddedInfo['ER Boarding'],
+        senior: checkedAddedInfo['Senior Citzens Only'],
+        cancer: checkedAddedInfo['Cancer Specific'],
+        dog: checkedAddedInfo['Dog Specific'],
+        cat: checkedAddedInfo['Cat Specific'],
+        fphPhone: fphPhone,
+        webNotes: webNotes,
+        internalNotes: internalNotes,
+        published: published,
+        shelter: checkedAddedInfo['Shelter'],
+        domesticViolence: checkedAddedInfo['Domestic Violence'],
+        webDateInit: webDateInit,
+        entQb: checkedAddedInfo['Entered In QB'],
+        serviceRequest: serviceRequest,
+        inactive: checkedAddedInfo['Inactive'],
+        finalCheck: checkedAddedInfo['Final Check'],
+        type: vendorType,
+        status: 'Active',
+        onboardingStatus: 'Active',
+        updatedDateTime: new Date(),
+        updatedBy: updatedBy,
+      };
+      if (edit) {
+        await backend.put(`/business/${id}`, data);
+      } else {
+        await backend.post('/business', data);
+      }
+
+      if (edit) {
+        navigate(`/ViewBusiness/${id}`);
+      } else {
+        navigate('/AdminDashboard');
+      }
     } catch (error) {
       console.error('Error in business registration:', error);
     }
-    setRegistrationSuccess(true);
   };
 
-  if (!pending && registrationSuccess) {
-    return <RegisterSuccessPage />;
-  }
+  const handleHome = () => {
+    navigate(`/AdminDashboard`);
+  };
 
-  const fillOutPendingData = () => {
-    setBusinessName(pendingData.name ? pendingData.name : '');
-    if (pendingData.contact_name === null) {
+  const handleDeleteModalClick = () => {
+    backend.delete(`/business/${id}`);
+    setIsDeleteModalOpen(false);
+    navigate('/AdminDashboard');
+  };
+
+  const fillOutPendingData = async () => {
+    const business = await backend.get(`/business/${id}`);
+    const business_data = business.data[0];
+    setBusinessName(business_data.name ? business_data.name : '');
+    if (business_data.contact_name === null) {
       setFirstName('');
       setLastName('');
     } else {
-      setFirstName(pendingData.contact_name.split(' ')[0]);
-      setLastName(
-        pendingData.contact_name.split(' ')[1] ? pendingData.contact_name.split(' ')[1] : '',
-      );
+      setFirstName(business_data.contact_name.split(' ')[0]);
+      setLastName(business_data.contact_name.split(' ')[1] || '');
     }
-    if (pendingData.street === null) {
+    if (business_data.street === null) {
       setAddressLine1('');
       setAddressLine2('');
     } else {
-      setAddressLine1(pendingData.street.split(' ')[0]);
-      setAddressLine2(pendingData.street.split(' ')[1] ? pendingData.street.split(' ')[1] : '');
+      setAddressLine1(business_data.street.split(' ')[0]);
+      setAddressLine2(business_data.street.split(' ')[1] || '');
     }
 
-    setCity(pendingData.city ? pendingData.city : '');
-    setState(pendingData.state ? pendingData.state : '');
-    setZip(pendingData.zip_code ? pendingData.zip_code : '');
-    setCountry('USA');
-    setWebsite(pendingData.website ? pendingData.website : '');
-    setPhone(pendingData.primary_phone ? pendingData.primary_phone : '');
-    setEmail(pendingData.primary_email ? pendingData.primary_email : '');
-    setHowHeard(pendingData.find_out ? pendingData.find_out : '');
+    setCity(business_data.city || '');
+    setState(business_data.state || '');
+    setZip(business_data.zip_code || '');
+    setWebsite(business_data.website || '');
+    setPhone(business_data.primary_phone || '');
+    setEmail(business_data.primary_email || '');
+    setHowHeard(business_data.find_out || '');
+    setWebNotes(business_data.web_notes || '');
+    setPublished(business_data.published || false);
+    setWebDateInit(business_data.web_date_init || '');
+    setBusinessHours(business_data.business_hours || '');
+    setVendorType(business_data.type || '');
+    setCheckedAddedInfo({
+      ...checkedAddedInfo,
+      ['Pet Food Provider Site']: business_data.food,
+      ['Donation Site']: business_data.donation,
+      ['Shelter']: business_data.shelter,
+      ['Domestic Violence Shelter']: business_data.domestic_violence,
+      ['Families Only Shelter']: business_data.family_shelter,
+      ['Wellness Clinics']: business_data.wellness,
+      ['Spay Neuter']: business_data.spay_neuter,
+      ['Financial Assistance']: business_data.financial,
+      ['Rehome Foster']: business_data.re_home,
+      ['Entered in QB']: business_data.ent_qb,
+      ['Inactive']: business_data.inactive,
+      ['Final Check']: business_data.final_check,
+      ['ER Boarding']: business_data.er_boarding,
+      ['Senior Citizens Only']: business_data.senior,
+      ['Cancer Specific']: business_data.cancer,
+      ['Dog Specific']: business_data.dog,
+      ['Cat Specific']: business_data.cat,
+    });
+    setFPHPhone(business_data.fph_phone || '');
+    setServiceRequest(business_data.service_request || false);
+  };
+
+  const handleCheckboxChange = event => {
+    const { name, checked } = event.target;
+    setCheckedAddedInfo({ ...checkedAddedInfo, [name]: checked });
+  };
+
+  const handleCancel = () => {
+    navigate(`/ViewBusiness/${id}`);
+  };
+
+  const handleToggleTerms = () => {
+    setTermsAndConditionsAccepted(!termsAndConditionsAccepted);
   };
 
   return (
-    <Box p={5}>
-      <Flex direction="column" align="stretch" gap={5}>
-        {pending ? (
+    <ChakraProvider>
+      {isAdminUser && (
+        <>
           <>
-            <Flex justifyContent="space-between">
-              <Heading as="h1" size="lg" textAlign="center">
-                BUSINESS NAME
-              </Heading>
-            </Flex>
-          </>
-        ) : (
-          <>
-            <Flex justifyContent="space-between">
-              <Heading as="h1" size="lg" textAlign="center">
-                BUSINESS DONOR
-              </Heading>
-            </Flex>
-            <Box textAlign="left" paddingLeft={8}>
-              <Text fontSize="2xl">FPH</Text>
-            </Box>
-            <Box>
-              <Heading as="h2" size="lg" textAlign="center" paddingBottom={4}>
-                WHY JOIN?
-              </Heading>
-              <UnorderedList textAlign="center" paddingLeft={40} paddingRight={40}>
-                <ListItem>Some inspiring reason to join the platform...</ListItem>
-                <ListItem>Another compelling argument...</ListItem>
-                <ListItem>More information about benefits...</ListItem>
-              </UnorderedList>
-            </Box>
-          </>
-        )}
+            <Modal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>Delete business</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>Are you sure? You can’t undo this action afterwards.</ModalBody>
+                <ModalFooter>
+                  <Button colorScheme="gray" mr={3} onClick={() => setIsDeleteModalOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button colorScheme="red" onClick={handleDeleteModalClick}>
+                    Delete
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+            <Modal isOpen={termsAndConditionsIsOpened} isCentered>
+              <ModalOverlay>
+                <ModalContent width="80%" maxWidth="800px" top="5vw">
+                  <ModalHeader>
+                    &nbsp;
+                    <Stack direction="row" justifyContent="space-between">
+                      <Text fontWeight="bold" fontSize="2xl">
+                        Terms and Conditions&nbsp;
+                      </Text>
 
-        <form onSubmit={handleSubmit}>
-          <Flex direction="column" gap={4}>
-            <FormControl id="business-name">
-              <FormLabel>Business/Org Name</FormLabel>
-              <Input
-                type="text"
-                value={businessName}
-                onChange={e => setBusinessName(e.target.value)}
-                isReadOnly={pending}
-              />
-            </FormControl>
-            <Flex gap={4}>
-              <FormControl id="first-name" flex="1">
-                <FormLabel>First Name</FormLabel>
-                <Input
-                  type="text"
-                  value={firstName}
-                  onChange={e => setFirstName(e.target.value)}
-                  isReadOnly={pending}
-                />
-              </FormControl>
-              <FormControl id="last-name" flex="1">
-                <FormLabel>Last Name</FormLabel>
-                <Input
-                  type="text"
-                  value={lastName}
-                  onChange={e => setLastName(e.target.value)}
-                  isReadOnly={pending}
-                />
-              </FormControl>
+                      <ModalCloseButton
+                        onClick={() => {
+                          setTermsAndConditionsIsOpened(false);
+                        }}
+                      />
+                    </Stack>
+                  </ModalHeader>
+                  <ModalBody alignItems="center" overflow={'scroll'}>
+                    <Text fontSize="xl">
+                      I hereby acknowledge and agree to serve as a member/volunteer for Feeding Pets
+                      of the Homeless, 710 West Washington Street, Carson City, NV 89703. I give my
+                      consent and agree to release, indemnify and hold harmless Feeding Pets of the
+                      Homeless (DBA: Pets of the Homeless) and all personnel, including but not
+                      limited to its officers, agents and/or employees, other participants,
+                      sponsors, advertisers, I hereby assume all of the risks of participating as a
+                      volunteer, with respect to any and all injury, disability, death or loss or
+                      damage of person or property, whether arising from negligence of the releases
+                      or otherwise, to the fullest extent permitted by law. I agree to comply with
+                      the guidelines and conditions for participation. See Fundraising Policies
+                      here:
+                      http://www.petsofthehomeless.org/fundraising-policy-for-pets-of-the-homeless/
+                      Pets of the Homeless reserves the right to terminate this agreement at any
+                      time. I also grant Feeding Pets of the Homeless the right to use photographs
+                      of me at events and activities and use the photographs in future advertising
+                      including online webpage. <br />
+                      <br />I acknowledge that all information regarding Pets of the Homeless&apos;
+                      operations, procedures, contacts, volunteers, recipients and donors is of a
+                      proprietary nature and should not be disclosed or used for any purposes other
+                      than the direct benefit of the organization
+                      <br />
+                      <br />I HAVE READ THIS RELEASE OF LIABILITY AND FULLY UNDERSTAND ITS TERMS AND
+                      CONDITIONS.
+                      <br />
+                      <br />I acknowledge that I am not authorized to speak to the media. I agree to
+                      refer all media inquiries to Headquarters, 775-841-7463.
+                    </Text>
+                    <Text fontsize="sm" marginTop="5vh">
+                      By checking the &quot;I Accept the Terms and Conditions&quot; box and clicking
+                      the &quot;Save&quot; button on this page, you acknowledge you have read and
+                      agree to the above.
+                    </Text>
+                  </ModalBody>
+                </ModalContent>
+              </ModalOverlay>
+            </Modal>
+          </>
+          <Flex pl={10} pt={10} justify="flex-end" wrap="nowrap" maxW="93%" flexDirection={'column'}>
+            <Flex justifyContent={'space-between'} mr="auto" w="1089px" marginTop={4}>
+            <Breadcrumb spacing="1">
+              <BreadcrumbItem>
+                <BreadcrumbLink color="#245F61" onClick={handleHome}>
+                  Home
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+
+              <BreadcrumbItem isCurrentPage>
+                <BreadcrumbLink>{edit ? businessName : 'Add Business'}</BreadcrumbLink>
+              </BreadcrumbItem>
+            </Breadcrumb>
+
+              <NotificationsDrawer notificationsData={notification} />
             </Flex>
-            <FormControl id="address-line1">
-              <FormLabel>Address Line 1</FormLabel>
-              <Input
-                type="text"
-                value={addressLine1}
-                onChange={e => setAddressLine1(e.target.value)}
-                isReadOnly={pending}
-              />
-            </FormControl>
-            <FormControl id="address-line2">
-              <FormLabel>Address Line 2</FormLabel>
-              <Input
-                type="text"
-                value={addressLine2}
-                onChange={e => setAddressLine2(e.target.value)}
-                isReadOnly={pending}
-              />
-            </FormControl>
-            <Flex gap={4}>
-              <FormControl id="city" flex="1">
-                <FormLabel>City</FormLabel>
-                <Input
-                  type="text"
-                  value={city}
-                  onChange={e => setCity(e.target.value)}
-                  isReadOnly={pending}
-                />
-              </FormControl>
-              <FormControl id="state" flex="1">
-                <FormLabel>State</FormLabel>
-                <Input
-                  type="text"
-                  value={state}
-                  onChange={e => setState(e.target.value)}
-                  isReadOnly={pending}
-                />
-              </FormControl>
-            </Flex>
-            <Flex gap={4}>
-              <FormControl id="zip_code" flex="1">
-                <FormLabel>Zip Code</FormLabel>
-                <Input type="text" value={zip} onChange={handleZipChange} isReadOnly={pending} />
-              </FormControl>
-              <FormControl id="country" flex="1">
-                <FormLabel>Country</FormLabel>
-                <Input
-                  type="text"
-                  value={country}
-                  onChange={e => setCountry(e.target.value)}
-                  isReadOnly={pending}
-                />
-              </FormControl>
-            </Flex>
-            <FormControl id="website">
-              <FormLabel>Website</FormLabel>
-              <Input
-                type="url"
-                value={website}
-                onChange={e => setWebsite(e.target.value)}
-                isReadOnly={pending}
-              />
-            </FormControl>
-            <FormControl id="business-hours">
-              <FormLabel>Business Hours</FormLabel>
-              {daysOfWeek.map(day => (
-                <Flex key={day} justify="space-between" align="center">
-                  <Box flexBasis="100px">{day}</Box>
-                  <TimeInput
-                    label="From"
-                    value={businessHours[day].start}
-                    onChange={value => handleTimeChange(day, 'start', value)}
-                    isReadOnly={pending}
-                  />
-                  <TimeInput
-                    label="To"
-                    value={businessHours[day].end}
-                    onChange={value => handleTimeChange(day, 'end', value)}
-                    isReadOnly={pending}
-                  />
+            <Heading size="lg" className={classes.titleText}>Add Business Form</Heading>
+            <Card maxW="100%" w="100%" h="auto" p={6} mt="5" flex={1}>
+              <CardHeader>
+                <Flex justify="space-between" align="center" w="full">
+                  <Flex flexGrow={true} alignItems="flex-start" gap="4" flexDirection="column">
+                    <Text fontSize="2xl" fontWeight="700" color="gray.700">
+                      Donation Site Information
+                    </Text>
+                    <Text>
+                      {edit ? '' : 'Please fill the following form to add a new donation site.'}
+                    </Text>
+                  </Flex>
+                  {edit && (
+                    <Flex>
+                      <Button
+                        variant="outline"
+                        colorScheme="gray"
+                        rightIcon={<box-icon name="pencil" />}
+                      >
+                        Editing
+                      </Button>
+                      <IconButton
+                        variant="regular"
+                        colorScheme="red"
+                        aria-label="Delete menu"
+                        icon={<box-icon name="trash" color="#d30000"></box-icon>}
+                        onClick={() => setIsDeleteModalOpen(true)}
+                      />
+                    </Flex>
+                  )}
                 </Flex>
-              ))}
-            </FormControl>
-            <FormControl id="phone">
-              <FormLabel>Phone</FormLabel>
-              <Input
-                type="tel"
-                value={phone}
-                onChange={e => setPhone(e.target.value)}
-                isReadOnly={pending}
-              />
-            </FormControl>
-            <FormControl id="email">
-              <FormLabel>Email</FormLabel>
-              <Input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                isReadOnly={pending}
-              />
-            </FormControl>
-            <FormControl id="how-heard">
-              <FormLabel>How did you hear about us?</FormLabel>
-              <Select value={howHeard} onChange={e => setHowHeard(e.target.value)}>
-                <option value="internet">Internet</option>
-                <option value="friend">Friend</option>
-                <option value="advertisement">Advertisement</option>
-                <option value="other">Other</option>
-              </Select>
-            </FormControl>
-            {pending ? (
-              <>
-                <Button onClick={null} colorScheme="blue">
-                  Approve
+              </CardHeader>
+              <CardBody>
+                <Flex direction="row">
+                  <Box flex="4" w="100">
+                    <Card>
+                      <Flex alignItems="left">
+                        <TableContainer>
+                          <Table variant="unstyled">
+                            <Thead></Thead>
+                            <Tbody>
+                              <Tr w="100%">
+                                <Td>
+                                  <Text fontSize="xs" color="500" as="b">
+                                    NAME OF BUSINESS
+                                  </Text>
+                                </Td>
+                                <Td>
+                                  <Input
+                                    value={businessName}
+                                    onChange={e => setBusinessName(e.target.value)}
+                                    placeholder="Business"
+                                  />
+                                </Td>
+                              </Tr>
+                              <Tr>
+                                <Td>
+                                  <Text fontSize="xs" color="500" as="b">
+                                    NAME
+                                  </Text>
+                                </Td>
+                                <Td>
+                                  <Flex gap={4}>
+                                    <Input
+                                      value={firstName}
+                                      onChange={e => {
+                                        setFirstName(e.target.value);
+                                      }}
+                                      placeholder="First Name"
+                                    />
+                                    <Input
+                                      value={lastName}
+                                      onChange={e => {
+                                        setLastName(e.target.value);
+                                      }}
+                                      placeholder="Last Name"
+                                    />
+                                  </Flex>
+                                </Td>
+                              </Tr>
+                              <Tr>
+                                <Td>
+                                  <Text fontSize="xs" color="500" as="b">
+                                    EMAIL
+                                  </Text>
+                                </Td>
+                                <Td>
+                                  <Input
+                                    value={email}
+                                    onChange={e => {
+                                      setEmail(e.target.value);
+                                    }}
+                                    placeholder="Email"
+                                  />
+                                </Td>
+                              </Tr>
+                              <Tr>
+                                <Td>
+                                  <Text fontSize="xs" color="500" as="b">
+                                    WEBSITE
+                                  </Text>
+                                </Td>
+                                <Td>
+                                  <Input
+                                    value={website}
+                                    onChange={e => {
+                                      setWebsite(e.target.value);
+                                    }}
+                                    placeholder="Website"
+                                  />
+                                </Td>
+                              </Tr>
+                              <Tr>
+                                <Td>
+                                  <Text fontSize="xs" color="500" as="b">
+                                    LOCATION
+                                  </Text>
+                                </Td>
+                                <Td>
+                                  <Flex flexFlow={'row wrap'} gap={2}>
+                                    <Flex gap={4}>
+                                      <Input
+                                        value={addressLine1}
+                                        onChange={e => {
+                                          setAddressLine1(e.target.value);
+                                        }}
+                                        w="42vw"
+                                        placeholder="Street"
+                                      />
+                                      <Input
+                                        value={addressLine2}
+                                        onChange={e => {
+                                          setAddressLine2(e.target.value);
+                                        }}
+                                        placeholder="Unit or Apartment Number"
+                                      />
+                                    </Flex>
+                                    <Flex gap={4}>
+                                      <Flex gap={4}>
+                                        <Input
+                                          value={city}
+                                          onChange={e => {
+                                            setCity(e.target.value);
+                                          }}
+                                          placeholder="City"
+                                        />
+                                        <Input
+                                          value={state}
+                                          onChange={e => {
+                                            setState(e.target.value);
+                                          }}
+                                          placeholder="State"
+                                        />
+                                      </Flex>
+                                      <Flex>
+                                        <Input
+                                          value={zip}
+                                          onChange={e => {
+                                            setZip(e.target.value);
+                                          }}
+                                          placeholder="Zip/Postal"
+                                        />
+                                      </Flex>
+                                    </Flex>
+                                  </Flex>
+                                </Td>
+                              </Tr>
+                              <Tr>
+                                <Td>
+                                  <Text fontSize="xs" color="500" as="b">
+                                    NUMBER OF CONTACT
+                                  </Text>
+                                </Td>
+                                <Td>
+                                  <Flex gap={4}>
+                                    <Input
+                                      flex={'1 0 15%'}
+                                      value={countrycode}
+                                      onChange={e => {
+                                        setCountryCode(e.target.value);
+                                      }}
+                                      placeholder="+1"
+                                    />
+                                    <Input
+                                      flex={'1 0 80%'}
+                                      value={phone}
+                                      onChange={e => {
+                                        setPhone(e.target.value);
+                                      }}
+                                      placeholder="000-000-0000"
+                                    />
+                                  </Flex>
+                                </Td>
+                              </Tr>
+                              <Tr>
+                                <Td>
+                                  <Text fontSize="xs" color="500" as="b">
+                                    BUSINESS HOURS
+                                  </Text>
+                                </Td>
+                                <Td>
+                                  <Input
+                                    value={businessHours}
+                                    onChange={e => {
+                                      setBusinessHours(e.target.value);
+                                    }}
+                                    placeholder="Business Hours"
+                                  />
+                                </Td>
+                              </Tr>
+                              <Tr>
+                                <Td>
+                                  <Flex flexDirection="column">
+                                    <Text fontSize="xs" color="500" as="b">
+                                      HOW DID THIS BUSINESS
+                                    </Text>
+                                    <Text fontSize="xs" color="500" as="b">
+                                      HEAR OF US?
+                                    </Text>
+                                  </Flex>
+                                </Td>
+                                <Td>
+                                  <Input
+                                    value={howHeard}
+                                    onChange={e => {
+                                      setHowHeard(e.target.value);
+                                    }}
+                                    placeholder="LinkedIn, Google, etc."
+                                  />
+                                </Td>
+                              </Tr>
+                            </Tbody>
+                          </Table>
+                        </TableContainer>
+                      </Flex>
+                    </Card>
+                    <Card marginTop="6">
+                      <Flex alignItems="left">
+                        <TableContainer flex="1" mr="3">
+                          <Table variant="unstyled">
+                            <Tbody>
+                              <Tr>
+                                <Td>
+                                  <Text fontSize="xs" color="500" as="b">
+                                    ADDITIONAL INFORMATION
+                                  </Text>
+                                </Td>
+                              </Tr>
+                              <Tr>
+                                <Td colSpan={2}>
+                                  <Flex flexDirection={'row'} flexWrap={'wrap'} gap={2}>
+                                    {additionalInfoItems.map((item, index) => (
+                                      <Flex
+                                        key={index}
+                                        justifyContent={'space-between'}
+                                        flex={'1 0 34%'}
+                                        maxWidth={'49%'}
+                                      >
+                                        <Text>{item}</Text>
+                                        <Checkbox
+                                          name={item}
+                                          isChecked={checkedAddedInfo[item] || false}
+                                          onChange={handleCheckboxChange}
+                                        />
+                                      </Flex>
+                                    ))}
+                                  </Flex>
+                                </Td>
+                              </Tr>
+                              <Tr>
+                                <Flex alignItems="center">
+                                  <Td>
+                                    <Text fontSize="xs" color="500" as="b">
+                                      TYPE
+                                    </Text>
+                                    <Select
+                                      placeholder="Type"
+                                      value={vendorType}
+                                      onChange={e => setVendorType(e.target.value)}
+                                      w="20vw"
+                                    >
+                                      <option value={'School'}>School</option>
+                                      <option value={'hospitHospitalal'}>Hospital</option>
+                                      <option value={'Grocery store'}>Grocery Store</option>
+                                      <option value={'Private institution'}>
+                                        Private Institution
+                                      </option>
+                                      <option value={'Other'}>Other</option>
+                                    </Select>
+                                  </Td>
+                                  <Td>
+                                    <Flex gap={10} mt={2}>
+                                      <Text>Valid for Service Request</Text>
+                                      <Checkbox
+                                        isChecked={serviceRequest}
+                                        onChange={() => setServiceRequest(!serviceRequest)}
+                                      ></Checkbox>
+                                    </Flex>
+                                  </Td>
+                                </Flex>
+                              </Tr>
+                              <Tr>
+                                <Td>
+                                  <Text fontSize="xs" color="500" as="b" whiteSpace="normal">
+                                    Internal Notes
+                                  </Text>
+                                  <Textarea
+                                    value={internalNotes}
+                                    onChange={e => {
+                                      setInternalNotes(e.target.value);
+                                    }}
+                                    placeholder="Internal Notes"
+                                  />
+                                </Td>
+                              </Tr>
+                            </Tbody>
+                          </Table>
+                        </TableContainer>
+                      </Flex>
+                    </Card>
+                  </Box>
+                  <Spacer maxW={'sm'}></Spacer>
+                </Flex>
+              </CardBody>
+              <Flex gap={2} ml="1vw">
+                <Checkbox isChecked={termsAndConditionsAccepted} onChange={handleToggleTerms} />
+                <Flex gap={1}>
+                  <Text>Accepted the</Text>
+                  <Text
+                    textDecoration="underline"
+                    cursor="pointer"
+                    onClick={() => {
+                      setTermsAndConditionsIsOpened(true);
+                    }}
+                  >
+                    Terms and Conditions
+                  </Text>
+                </Flex>
+              </Flex>
+              <Flex gap={4} ml="auto" mr="1vw">
+                <Button onClick={handleCancel}>Cancel</Button>
+                <Button
+                  onClick={handleSubmit}
+                  colorScheme="teal"
+                  isDisabled={!termsAndConditionsAccepted}
+                >
+                  Save
                 </Button>
-                <Button onClick={null} colorScheme="blue">
-                  Deny
-                </Button>
-              </>
-            ) : (
-              <Button type="submit" colorScheme="blue">
-                Register
-              </Button>
-            )}
+              </Flex>
+              <CardFooter
+                justify="space-between"
+                flexWrap="wrap"
+                sx={{
+                  '& > button': {
+                    minW: '136px',
+                  },
+                }}
+              ></CardFooter>
+            </Card>
           </Flex>
-        </form>
-      </Flex>
-    </Box>
+        </>
+      )}
+    </ChakraProvider>
   );
 };
 
 BusinessForm.propTypes = {
-  pending: PropTypes.bool.isRequired,
-  pendingData: PropTypes.object,
+  edit: PropTypes.bool,
 };
 
-export default BusinessForm;
+const AddBusinessForm = () => {
+  return <BusinessForm edit={false} />;
+};
+
+export { AddBusinessForm, BusinessForm };

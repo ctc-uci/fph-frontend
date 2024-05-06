@@ -1,0 +1,43 @@
+.ditTitleContainer {
+  color: var(--gray-700, #2d3748);
+  /* text-3xl/lineHeight-9/font-bold */
+  font-family: Inter;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 36px; /* 120% */
+  margin-top: 32px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.tableRows {
+  border-top: 1.5px solid rgb(217, 217, 217);
+}
+
+.addItemContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.container {
+  padding: 32px;
+}
+
+.roundedTable {
+  margin-top: var(--chakra-space-5);
+  padding: var(--chakra-space-3);
+  border-width: 1px;
+  border-radius: 12px;
+  overflow-x: auto;
+  background: var(--white, #fff);
+}
+
+.resultNavigation {
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+  margin-top: 8px;
+  align-items: center;
+}
