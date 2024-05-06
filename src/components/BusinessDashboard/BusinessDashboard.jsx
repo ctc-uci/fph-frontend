@@ -53,7 +53,7 @@ const BusinessDashboard = () => {
   const navigate = useNavigate();
   const [donationData, setDonationData] = useState([]);
   const [notifClicked, setNotifClicked] = useState(null);
-  // const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [currentQuarter, setCurrentQuarter] = useState();
   const {
     isOpen: requestDrawerIsOpen,
     onOpen: requestDrawerOnOpen,
@@ -86,6 +86,7 @@ const BusinessDashboard = () => {
     'Supply Request Received': EmailIcon,
     'Supply Request': EmailIcon,
   };
+
   // *************************************************************************
   // CHANGE LATER: right now just making one big request for all of the
   // rows in the fair_market_value table since it is just full of dummy data.
@@ -97,13 +98,14 @@ const BusinessDashboard = () => {
   const [supplyRequest, setSupplyRequest] = useState([0, 0, 0, 0, 0, 0, 0]);
   const [notes, setNotes] = useState('');
   const supplyRequestItems = [
-    'Donation Site Decal',
-    'Rack Cards',
-    'Donation Envelopes',
-    'Business Cards',
-    'Stickers',
-    'Bin Decals',
-    '"Homeless?" Card',
+    "Pet Food Decal",
+    "Decal",
+    "Homeless Card",
+    "Business Card",
+    "Donation Site Decal",
+    "Donation Site Bin Decals",
+    "Donation Envelopes",
+    "Homeless Card 2"
   ];
 
   // const formatDate = timestamp => {
@@ -151,26 +153,25 @@ const BusinessDashboard = () => {
   }, []);
 
   const parseSupplyRequestData = async message => {
-    const lines = message.split('\n');
+    const lines = message.split(',');
     const numbersList = [];
     let notes = '';
     let notesFound = false;
 
     lines.forEach(line => {
-      if (line.startsWith('Notes:')) {
-        notes = line.substring(line.indexOf(':') + 1).trim();
+      if (line.startsWith('"Notes":')) {
+        notes = line.substring(line.indexOf(':') + 2).trim().split('"')[0];
         notesFound = true;
       } else if (!notesFound) {
         const value = line.split(':')[1];
-        console.log(value);
         if (value !== undefined) {
-          const numericValue = parseInt(value.trim(), 7);
+          const numericValue = parseInt(value.trim());
           numbersList.push(numericValue);
         }
       }
     });
 
-    setSupplyRequest(numbersList.slice(1));
+    setSupplyRequest(numbersList);
     setNotes(notes);
   };
 
@@ -222,24 +223,42 @@ const BusinessDashboard = () => {
 
     if (currentTime.getMonth() <= 2) {
       dueDate = new Date(currentYear, 3, 1);
+      setCurrentQuarter('Q1');
     } else if (currentTime.getMonth() <= 5) {
       dueDate = new Date(currentYear, 6, 1);
+      setCurrentQuarter('Q2');
     } else if (currentTime.getMonth() <= 8) {
       dueDate = new Date(currentYear, 9, 1);
+      setCurrentQuarter('Q3');
     } else {
       dueDate = new Date(currentYear, 0, 1);
+      setCurrentQuarter('Q4');
     }
 
     const timeDifference = Math.abs(currentTime - dueDate);
     const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-    console.log(currentTime);
-    console.log(dueDate);
     return daysDifference < 3;
   };
 
   const isRedNotif = (reminder) => {
     return reminder['type'] === "Not Submitted" && isUrgentNotif(reminder['timestamp']);
   }
+
+  const getNotifText = (reminder) => {
+    const notifDate = new Date(reminder['timestamp']);
+    console.log(notifDate);
+    const formattedDate = notifDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+    const notifText = {
+      'Donation Form Confirmation': `Donation form has been submitted for ${currentQuarter}. Thank you!`,
+      'Submitted Form': `Donation form has been submitted for ${currentQuarter}. Thank you!`,
+      'Donation Form Reminder': 'Please submit your donation form by the due date!',
+      'Not Submitted': 'Please submit your donation form by the due date!',
+      'Supply Request Shipped': `Supply request submitted from ${formattedDate} has been shipped.`,
+      'Supply Request Received': 'Supplies will be shipped in 3-5 business days.',
+      'Supply Request': 'Supplies will be shipped in 3-5 business days.',
+    }
+    return notifText[reminder['type']];
+  };
 
   return !notifClicked ? (
     <div>
@@ -413,8 +432,8 @@ const BusinessDashboard = () => {
                 height="11vh"
                 borderWidth="2px"
                 borderRadius="5px"
-                borderColor={isRedNotif(reminder) ? "#F56565" : "#359797"}
-                className={isRedNotif(reminder) ? classes.warningNotif : ""}
+                borderColor={() => isRedNotif(reminder) ? "#F56565" : "#359797"}
+                className={() => isRedNotif(reminder) ? classes.warningNotif : ""}
               >
                   <HStack justifyContent={'space-between'}>
                     <Box margin="3px">
@@ -423,14 +442,14 @@ const BusinessDashboard = () => {
                           {' '}
                           <Icon
                             as={buttonIcon[reminder['type']]}
-                            color={isRedNotif(reminder) ? "#E53E3E" : undefined}
+                            color={() => isRedNotif(reminder) ? "#E53E3E" : undefined}
                           ></Icon>
                         </Box>
 
                         <Stack margin="1.3vh 1vh" spacing={0.3}>
                           <Text fontWeight="bold">{reminder['type']}</Text>
                           <Text fontSize="1.2vh">{new Date(reminder['timestamp']).toLocaleDateString('en-us', { timeZone: 'America/Los_Angeles' })}</Text>
-                          <Text fontSize="1.5vh" >{reminder['message'].slice(0, 158)}</Text>
+                          <Text fontSize="1.5vh" >{getNotifText(reminder)}</Text>
                         </Stack>
                       </HStack>
                     </Box>
