@@ -225,7 +225,7 @@ const BusinessDashboard = () => {
       dueDate = new Date(currentYear, 3, 1);
       setCurrentQuarter('Q1');
     } else if (currentTime.getMonth() <= 5) {
-      dueDate = new Date(currentYear, 6, 1);
+      dueDate = new Date(currentYear, 4, 9);
       setCurrentQuarter('Q2');
     } else if (currentTime.getMonth() <= 8) {
       dueDate = new Date(currentYear, 9, 1);
@@ -429,9 +429,10 @@ const BusinessDashboard = () => {
             <Tr key={index}>
               <Td>
                 <Box
-                  borderWidth="2px"
+                  borderWidth="1px"
                   borderRadius="5px"
                   borderColor={() => isRedNotif(reminder) ? "#F56565" : "#359797"}
+                  backgroundColor={() => isRedNotif(reminder) ? "#FED7D7" : ""}
                   className={() => isRedNotif(reminder) ? classes.warningNotif : ""}
                 >
                   <HStack justifyContent={'space-between'}>
@@ -447,12 +448,17 @@ const BusinessDashboard = () => {
 
                         <Stack margin="1.3vh 1vh" spacing={0.3}>
                           <Text fontWeight="bold">{reminder['type']}</Text>
-                          <Text fontSize="1.2vh">{new Date(reminder['timestamp']).toLocaleDateString('en-us', { timeZone: 'America/Los_Angeles' })}</Text>
+                          <Text fontSize="1.2vh">{new Date(reminder['timestamp']).toLocaleDateString('en-us', {
+                            timeZone: 'America/Los_Angeles',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'  })}
+                          </Text>
                           <Text fontSize="1.5vh" >{getNotifText(reminder)}</Text>
                         </Stack>
                       </HStack>
                     </Box>
-                    <Box height="3vh" display="flex" alignItems="center" justifyContent="center"> 
+                    <Box height="3vh" display="flex" alignItems="center" justifyContent="center">
                       <Button
                         variant="link"
                         color="#2D3748"
