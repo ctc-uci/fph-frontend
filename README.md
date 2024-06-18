@@ -1,6 +1,10 @@
-# npo-frontend-template
+# Feeding Pets of the Homeless Frontend
 
-This template will be used to create all NPO frontend repos
+This is the frontend for the Feeding Pets of the Homeless Project.
+
+## Project Description
+Feeding Pets of the Homeless® is the first national nonprofit providing pet food and emergency veterinary care to pets that belong to people experiencing homelessness. The organization finds volunteer dondation centers for food to participate. These donation centers will then assist in distributing food to food banks. This project expedites the onboarding and donation reporting processes for donation sites by providing a unified platform where donation sites can register themselves and subsequently submit their donation sheets. Using this data, donation sites can track their contributions with ease.Furthermore, Feeding Pets of the Homeless can access a view of all participating donation sites, monitor their onboarding status and review their latest donation submissions. To streamline communication and reduce operational friction, the website also features an automated reminder system. This mitigates the need for the organization to make frequent calls or dispatch representatives, ensuring a seamless collaboration between itself and participating partners.
+
 
 ## Setting up development environment
 
@@ -29,11 +33,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
-### `yarn storybook`
-
-Runs Storybook.\
-Open [http://localhost:6006/](http://localhost:6006) to view it in the browser.
-
 ### `yarn format`
 
 Formats `.js`, `.jsx`, `.css` files with Prettier.\
@@ -48,20 +47,6 @@ The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Storybook
-
-This project has Storybook installed to help build UI components and pages in isolation. Read more about Storybook [here](https://storybook.js.org/).
 
 ## ESLint and Prettier
 
@@ -95,8 +80,8 @@ The configuration for lint-staged is inside the `lint-staged` object inside of `
 
 The configuration for husky is in the `.husky` directory, located in the root of the project. Learn more about husky [here](https://typicode.github.io/husky/).
 
-## Learn More about Create React App and React
+## Learn More about Vite and React
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+You can learn more in the [Vite documentation](https://vitejs.dev/).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
