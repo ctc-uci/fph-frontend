@@ -2,6 +2,10 @@
 
 This is the frontend for the Feeding Pets of the Homeless Project.
 
+## Project Description
+Feeding Pets of the Homeless® is the first national nonprofit providing pet food and emergency veterinary care to pets that belong to people experiencing homelessness. The organization finds volunteer dondation centers for food to participate. These donation centers will then assist in distributing food to food banks. This project expedites the onboarding and donation reporting processes for donation sites by providing a unified platform where donation sites can register themselves and subsequently submit their donation sheets. Using this data, donation sites can track their contributions with ease.Furthermore, Feeding Pets of the Homeless can access a view of all participating donation sites, monitor their onboarding status and review their latest donation submissions. To streamline communication and reduce operational friction, the website also features an automated reminder system. This mitigates the need for the organization to make frequent calls or dispatch representatives, ensuring a seamless collaboration between itself and participating partners.
+
+
 ## Setting up development environment
 
 To start working on with this project, follow these steps:
