@@ -1,14 +1,14 @@
 import { Route, Routes, useLocation } from 'react-router-dom';
-import { BackendProvider } from './contexts/BackendContext';
+import { BackendProvider } from './contexts/BackendContext.jsx';
 import Sidebar from './components/Sidebar/Sidebar';
-import BusinessDashboard from './components/BusinessDashboard/BusinessDashboard';
-import DonationForm from './components/DonationForm/DonationForm';
-import BusinessNotificationCenter from './components/BusinessNotificationCenter/BusinessNotificationCenter';
-import AdminDashboard from './components/AdminDashboard/AdminDashboard';
-import EditContactInformation from './components/EditContactInformation';
+import BusinessDashboard from './components/BusinessDashboard/BusinessDashboard.jsx';
+import DonationForm from './components/DonationForm/DonationForm.jsx';
+import BusinessNotificationCenter from './components/BusinessNotificationCenter/BusinessNotificationCenter.jsx';
+import AdminDashboard from './components/AdminDashboard/AdminDashboard.jsx';
+import EditContactInformation from './components/EditContactInformation.jsx';
 import BusinessDonationHistory from './components/BusinessDonationHistory/BusinessDonationHistory.jsx';
 import ViewDonationHistory from './components/BusinessDonationHistory/ViewDonationHistory/ViewDonationHistory.jsx';
-import ContactUs from './components/ContactUsForm/ContactUs';
+import ContactUs from './components/ContactUsForm/ContactUs.jsx';
 import DonationTrackingTable from './components/DonationTrackingTable/DonationTrackingTable.jsx';
 import styles from './App.module.css';
 import DonationItemsTable from './components/DonationItemsTable/DonationItemsTable.jsx';
@@ -16,7 +16,7 @@ import BusinessSetupPageMaster from './components/SetUp/BusinessSetupPageMaster.
 import Login from './components/Authentication/Login.jsx';
 import BusinessFormMaster from './components/OnBoarding/BusinessFormMaster.jsx';
 import ForgotPassword from './components/Authentication/ForgotPassword.jsx';
-import { AuthProvider } from './contexts/AuthContext';
+import { AuthProvider } from './contexts/AuthContext.jsx';
 import ProtectedRoute from './utils/ProtectedRoute.jsx';
 import ViewBusiness from './components/ViewBusiness/ViewBusiness.jsx';
 import { AddBusinessForm, BusinessForm } from './components/BusinessForm/BusinessForm.jsx';
@@ -24,117 +24,96 @@ import Congrats from './components/DonationForm/Congrats.jsx';
 import ViewRequest from './components/ViewRequest/ViewRequest.jsx';
 import AdminSettingsMaster from './components/AdminSettings/AdminSettingsMaster.jsx';
 import ViewDonation from './components/ViewDonation/ViewDonation.jsx';
+import CatchAll from './components/CatchAll';
 
 const App = () => {
   const location = useLocation();
   const currentRoute = location.pathname.toLowerCase();
+
+  const shouldShowSidebar = !(
+    currentRoute == '/onboarding' ||
+    currentRoute == '/signupadmin' ||
+    currentRoute == '/signupbusiness' ||
+    currentRoute == '/login' ||
+    currentRoute == '/forgotpassword' ||
+    currentRoute == '/businessform'
+  );
+
   return (
     <BackendProvider>
       <AuthProvider>
         <div className={styles.appLayout}>
-          {currentRoute == '/onboarding' ||
-            currentRoute == '/signupadmin' ||
-            currentRoute == '/signupbusiness' ||
-            currentRoute == '/login' ||
-            currentRoute == '/forgotpassword' ||
-            currentRoute == '/businessform' || <Sidebar isAdmin={false} />}
+          {shouldShowSidebar ? <Sidebar /> : null}
           <div className={styles.mainContent}>
             <Routes>
-              <Route exact path="/Onboarding" element={<BusinessFormMaster />} />
+              <Route path="/Onboarding" element={<BusinessFormMaster />} />
+              <Route path="/SignupAdmin" element={<BusinessSetupPageMaster isAdmin={true} />} />
+              <Route path="/SignupBusiness" element={<BusinessSetupPageMaster isAdmin={false} />} />
+              <Route path="/Login" element={<Login isAdmin={true} />} />
+              <Route path="/ForgotPassword" element={<ForgotPassword />} />
+              <Route path="/ContactUs" element={<ProtectedRoute Component={ContactUs} />} />
+              <Route path="/Congrats" element={<ProtectedRoute Component={Congrats} />} />
               <Route
-                exact
-                path="/SignupAdmin"
-                element={<BusinessSetupPageMaster isAdmin={true} />}
-              />
-              <Route
-                exact
-                path="/SignupBusiness"
-                element={<BusinessSetupPageMaster isAdmin={false} />}
-              />
-              <Route exact path="/Login" element={<Login isAdmin={true} />} />
-              <Route exact path="/ForgotPassword" element={<ForgotPassword />} />
-              <Route exact path="/ContactUs" element={<ProtectedRoute Component={ContactUs} />} />
-              <Route exact path="/Congrats" element={<ProtectedRoute Component={Congrats} />} />
-              <Route
-                exact
                 path="/AdminDashboard"
                 element={<ProtectedRoute Component={AdminDashboard} />}
               />
               <Route
-                exact
                 path="/AdminSettings"
                 element={<ProtectedRoute Component={AdminSettingsMaster} />}
               />
               <Route
-                exact
                 path="/EditContactInformation"
                 element={<ProtectedRoute Component={EditContactInformation} />}
               />
               <Route
-                exact
                 path="/BusinessDashboard"
                 element={<ProtectedRoute Component={BusinessDashboard} />}
               />
               <Route
-                exact
                 path="/BusinessDonationTrackingForm"
                 element={<ProtectedRoute Component={DonationForm} />}
               />
               <Route
-                exact
                 path="/BusinessDonationHistory"
                 element={<ProtectedRoute Component={BusinessDonationHistory} />}
               ></Route>
               <Route
-                exact
                 path="/BusinessNotificationCenter"
                 element={<ProtectedRoute Component={BusinessNotificationCenter} />}
               ></Route>
               <Route
-                exact
                 path="/EditContactInformation"
                 element={<ProtectedRoute Component={EditContactInformation} />}
               ></Route>
               <Route
-                exact
                 path="/DonationItemsTable"
                 element={<ProtectedRoute Component={DonationItemsTable} />}
               />
               <Route
-                exact
                 path="/DonationTrackingTable"
                 element={<ProtectedRoute Component={DonationTrackingTable} />}
               />
               <Route
-                exact
                 path="/ViewBusiness/:id"
                 element={<ProtectedRoute Component={ViewBusiness} />}
               />
               <Route
-                exact
                 path="/EditBusiness/:id"
                 element={<ProtectedRoute Component={BusinessForm} />}
               />
+              <Route path="/ViewRequest/:id" element={<ProtectedRoute Component={ViewRequest} />} />
               <Route
-                exact
-                path="/ViewRequest/:id"
-                element={<ProtectedRoute Component={ViewRequest} />}
-              />
-              <Route
-                exact
                 path="/ViewDonation/:id"
                 element={<ProtectedRoute Component={ViewDonation} />}
               />
               <Route
-                exact
                 path="/BusinessDonationHistory/:id"
                 element={<ProtectedRoute Component={ViewDonationHistory} />}
               />
-              <Route
-                exact
-                path="/AddBusiness"
-                element={<ProtectedRoute Component={AddBusinessForm} />}
-              />
+              <Route path="/AddBusiness" element={<ProtectedRoute Component={AddBusinessForm} />} />
+
+              {/* Catch-all route */}
+              <Route path="*" element={<ProtectedRoute Component={CatchAll} />} />
             </Routes>
           </div>
         </div>

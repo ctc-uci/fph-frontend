@@ -89,11 +89,7 @@ const Signup = ({ isAdmin }) => {
 
         <Text mt={4} textAlign="center">
           Already have an account?{' '}
-          <Link
-            to={isAdmin ? '/LoginAdmin' : '/LoginBusiness'}
-            color="blue.500"
-            fontWeight="semibold"
-          >
+          <Link to={'/login'} color="blue.500" fontWeight="semibold">
             Log In
           </Link>
         </Text>

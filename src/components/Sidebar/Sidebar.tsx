@@ -1,5 +1,4 @@
 import { Link, useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import {
   Button,
   VStack,
@@ -172,9 +171,5 @@ function Sidebar() {
     </>
   );
 }
-
-Sidebar.propTypes = {
-  isAdmin: PropTypes.bool.isRequired,
-};
 
 export default Sidebar;

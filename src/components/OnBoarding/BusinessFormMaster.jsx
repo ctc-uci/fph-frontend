@@ -5,13 +5,12 @@ import ThirdForm from './ThirdForm';
 import FourthForm from './FourthForm';
 import { useBackend } from '../../contexts/BackendContext';
 import { Box, Text, SimpleGrid, Stack, Image, Flex } from '@chakra-ui/react';
-import propTypes from 'prop-types';
 import ICON1 from './icon1.png';
 import ICON2 from './icon2.png';
 import ICON3 from './icon3.png';
 import ICON4 from './icon4.png';
 
-const BusinessFormMaster = ({ setFormOpen }) => {
+const BusinessFormMaster = () => {
   const { backend } = useBackend();
   const [formData, setFormData] = useState({
     businessName: '',
@@ -156,13 +155,7 @@ const BusinessFormMaster = ({ setFormOpen }) => {
       handleSubmit={handleSubmit}
       setFormData={setFormData}
     />,
-    <FourthForm
-      key={3}
-      handleChange={handleChange}
-      nextStep={nextStep}
-      prevStep={prevStep}
-      setFormOpen={setFormOpen}
-    />,
+    <FourthForm key={3} handleChange={handleChange} nextStep={nextStep} prevStep={prevStep} />,
   ];
 
   return (
@@ -301,10 +294,6 @@ const BusinessFormMaster = ({ setFormOpen }) => {
       )}
     </div>
   );
-};
-
-BusinessFormMaster.propTypes = {
-  setFormOpen: propTypes.func.isRequired,
 };
 
 export default BusinessFormMaster;

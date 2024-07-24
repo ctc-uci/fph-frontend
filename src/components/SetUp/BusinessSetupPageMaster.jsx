@@ -87,7 +87,7 @@ const BusinessSetupPageMaster = ({ isAdmin }) => {
 };
 
 BusinessSetupPageMaster.propTypes = {
-  isAdmin: propTypes.func.isRequired,
+  isAdmin: propTypes.bool.isRequired,
 };
 
 export default BusinessSetupPageMaster;

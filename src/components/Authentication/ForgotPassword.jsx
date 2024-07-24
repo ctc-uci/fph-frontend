@@ -14,7 +14,6 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { useAuth } from '../../contexts/AuthContext';
-import PropTypes from 'prop-types';
 import LOGO from './fph_logo.png';
 
 const ForgotPassword = () => {
@@ -73,10 +72,6 @@ const ForgotPassword = () => {
       </Box>
     </HStack>
   );
-};
-
-ForgotPassword.propTypes = {
-  isAdmin: PropTypes.bool.isRequired,
 };
 
 export default ForgotPassword;
