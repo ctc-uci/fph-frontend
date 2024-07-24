@@ -1,6 +1,6 @@
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { BackendProvider } from './contexts/BackendContext';
-import Sidebar from './components/Sidebar/Sidebar.jsx';
+import Sidebar from './components/Sidebar/Sidebar';
 import BusinessDashboard from './components/BusinessDashboard/BusinessDashboard';
 import DonationForm from './components/DonationForm/DonationForm';
 import BusinessNotificationCenter from './components/BusinessNotificationCenter/BusinessNotificationCenter';
@@ -40,11 +40,7 @@ const App = () => {
             currentRoute == '/businessform' || <Sidebar isAdmin={false} />}
           <div className={styles.mainContent}>
             <Routes>
-              <Route
-                exact
-                path="/Onboarding"
-                element={<BusinessFormMaster />}
-              />
+              <Route exact path="/Onboarding" element={<BusinessFormMaster />} />
               <Route
                 exact
                 path="/SignupAdmin"
