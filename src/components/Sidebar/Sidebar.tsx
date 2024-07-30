@@ -25,6 +25,8 @@ import {
   BiHomeSmile,
   BiUser,
   BiHelpCircle,
+  BiBuildingHouse,
+  BiCog,
 } from 'react-icons/bi';
 import { ContactInformationModal } from './ContactInformationModal';
 import React from 'react';
@@ -56,10 +58,10 @@ function Sidebar() {
   ];
 
   const adminList = [
-    { name: 'Home', path: '/AdminDashboard', icon: 'home-smile' },
-    { name: 'Donation Tracking', path: '/DonationTrackingTable', icon: 'building-house' },
-    { name: 'Donation Items', path: '/DonationItemsTable', icon: 'heart-circle' },
-    { name: 'Settings', path: '/AdminSettings', icon: 'cog' },
+    { name: 'Home', path: '/AdminDashboard', icon: BiHomeSmile },
+    { name: 'Donation Tracking', path: '/DonationTrackingTable', icon: BiBuildingHouse },
+    { name: 'Donation Items', path: '/DonationItemsTable', icon: BiHeartCircle },
+    { name: 'Settings', path: '/AdminSettings', icon: BiCog },
   ];
 
   const navigate = useNavigate();
@@ -107,7 +109,6 @@ function Sidebar() {
 
             <VStack>
               {navList.map(item => {
-                console.log(item.icon);
                 return (
                   <Link to={item.path} key={item.name} style={{ width: '100%', display: 'block' }}>
                     <Button width="full" justifyContent="flex-start" variant="ghost" gap={2}>
