@@ -15,21 +15,6 @@
   padding: 32px;
 }
 
-.roundedTable {
-  margin-top: var(--chakra-space-5);
-  padding: var(--chakra-space-3);
-  border-width: 1px;
-  border-radius: 12px;
-  overflow-x: auto;
-  background: var(--white, #fff);
-}
-
-.addAdminContainer {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
 .tabs {
   margin-top: 24px;
   margin-bottom: 3%;
