@@ -7,7 +7,6 @@ import {
   Flex,
   VStack,
   Box,
-  Spacer,
   Card,
   HStack,
   Tabs,
@@ -21,6 +20,13 @@ import { useEffect, useState } from 'react';
 import { useBackend } from '../contexts/BackendContext';
 import { useAuth } from '../contexts/AuthContext';
 import ReferenceGuide from '../components/ReferenceGuide.jsx';
+
+const formLabelStyles = {
+  minWidth: '150px',
+  fontSize: '16px',
+  fontWeight: 'bold',
+  alignItems: 'center',
+};
 
 const EditContactInformation = () => {
   const { backend } = useBackend();
@@ -185,8 +191,6 @@ const EditContactInformation = () => {
             <Heading fontSize="3xl" textAlign={'left'}>
               Settings
             </Heading>
-
-            <Spacer />
           </Box>
 
           <Tabs colorScheme="teal">
@@ -197,12 +201,10 @@ const EditContactInformation = () => {
 
             <TabPanels>
               <TabPanel display={'flex'} flexDirection={'column'} padding={0} gap={4}>
-                <Card padding={3}>
-                  <FormControl>
+                <Card paddingX={6} paddingY={4}>
+                  <FormControl sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                     <HStack>
-                      <FormLabel fontSize={'16px'} fontWeight={'bold'} alignItems={'center'}>
-                        BUSINESS NAME
-                      </FormLabel>
+                      <FormLabel sx={formLabelStyles}>BUSINESS NAME</FormLabel>
                       <Input
                         type="text"
                         placeholder="Enter Business Name"
@@ -217,9 +219,7 @@ const EditContactInformation = () => {
                       />
                     </HStack>
                     <HStack>
-                      <FormLabel fontSize={'16px'} fontWeight={'bold'} alignItems={'center'}>
-                        NAME
-                      </FormLabel>
+                      <FormLabel sx={formLabelStyles}>NAME</FormLabel>
                       <Input
                         type="text"
                         placeholder="Enter First Name"
@@ -236,9 +236,7 @@ const EditContactInformation = () => {
                       />
                     </HStack>
                     <HStack>
-                      <FormLabel fontSize={'16px'} fontWeight={'bold'} alignItems={'center'}>
-                        EMAIL
-                      </FormLabel>
+                      <FormLabel sx={formLabelStyles}>EMAIL</FormLabel>
                       <Input
                         type="text"
                         placeholder="example@email.com"
@@ -248,9 +246,7 @@ const EditContactInformation = () => {
                       />
                     </HStack>
                     <HStack>
-                      <FormLabel fontSize={'16px'} fontWeight={'bold'} alignItems={'center'}>
-                        WEBSITE
-                      </FormLabel>
+                      <FormLabel sx={formLabelStyles}>WEBSITE</FormLabel>
                       <Input
                         type="text"
                         placeholder="example.com"
@@ -260,9 +256,7 @@ const EditContactInformation = () => {
                       />
                     </HStack>
                     <HStack>
-                      <FormLabel fontSize={'16px'} fontWeight={'bold'} alignItems={'center'}>
-                        LOCATION
-                      </FormLabel>
+                      <FormLabel sx={formLabelStyles}>LOCATION</FormLabel>
                       <Input
                         type="text"
                         placeholder="123 Address Lane"
@@ -272,9 +266,7 @@ const EditContactInformation = () => {
                       />
                     </HStack>
                     <HStack>
-                      <FormLabel fontSize={'16px'} fontWeight={'bold'} alignItems={'center'}>
-                        CITY
-                      </FormLabel>
+                      <FormLabel sx={formLabelStyles}>CITY</FormLabel>
                       <Input
                         type="text"
                         placeholder="City"
@@ -310,9 +302,7 @@ const EditContactInformation = () => {
                       />
                     </HStack>
                     <HStack>
-                      <FormLabel fontSize={'16px'} fontWeight={'bold'} alignItems={'center'}>
-                        PHONE
-                      </FormLabel>
+                      <FormLabel sx={formLabelStyles}>PHONE</FormLabel>
                       <Input
                         type="text"
                         placeholder="(xxx) xxx-xxxx"
@@ -322,9 +312,7 @@ const EditContactInformation = () => {
                       />
                     </HStack>
                     <HStack>
-                      <FormLabel fontSize={'16px'} fontWeight={'bold'} alignItems={'center'}>
-                        BUSINESS HOURS
-                      </FormLabel>
+                      <FormLabel sx={formLabelStyles}>BUSINESS HOURS</FormLabel>
                       <Input
                         type="text"
                         placeholder="M-F 8:00 am - 10:00 pm"
@@ -359,7 +347,7 @@ const EditContactInformation = () => {
                 </Box>
               </TabPanel>
 
-              <TabPanel>
+              <TabPanel padding={0}>
                 <ReferenceGuide />
               </TabPanel>
             </TabPanels>

@@ -38,9 +38,9 @@ const ReferenceGuide = () => {
   return (
     <Card width={'100%'}>
       <CardBody>
-        <Text padding={'0px 0px 20px 0px'} display={'flex'}>
-          Refer to the following if you have any questions, otherwise contact us at
-          <Text pl={1} textDecoration={'underline'}>
+        <Text paddingBottom={5} display={'inline-block'} as={'span'}>
+          Refer to the following if you have any questions, otherwise contact us at&nbsp;
+          <Text textDecoration={'underline'} display={'inline'} as={'p'}>
             info@petsofthehomeless.org
           </Text>
         </Text>
