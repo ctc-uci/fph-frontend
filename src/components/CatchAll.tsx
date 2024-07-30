@@ -18,7 +18,7 @@ const CatchAll = () => {
     checkIsAdmin();
   }, []);
 
-  return null;
+  return <p>Route not found... redirecting...</p>;
 };
 
 export default CatchAll;
