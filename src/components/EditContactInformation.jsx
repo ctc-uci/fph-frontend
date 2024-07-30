@@ -99,12 +99,12 @@ const EditContactInformation = () => {
 
       const notificationData = {
         businessId: FPH_ID,
-        message: "Edited their business information.",
+        message: 'Edited their business information.',
         type: 'Edited Information',
         senderId: businessId,
         businessName: businessContactInfo.businessName,
         donationId: null,
-      }
+      };
       await backend.post('/notification', notificationData);
 
       return toast({
@@ -132,10 +132,15 @@ const EditContactInformation = () => {
         const name = businessContact.contact_name.split(' ');
         const firstName = name[0];
         const lastName = name[1];
-        
+
         let formattedPhoneNumber = '';
         if (businessContact.primary_phone !== '') {
-          formattedPhoneNumber = businessContact.primary_phone.slice(0, 3) + '-' + businessContact.primary_phone.slice(3, 6) + '-' + businessContact.primary_phone.slice(6);
+          formattedPhoneNumber =
+            businessContact.primary_phone.slice(0, 3) +
+            '-' +
+            businessContact.primary_phone.slice(3, 6) +
+            '-' +
+            businessContact.primary_phone.slice(6);
         }
 
         setBusinessContactInfo({
@@ -174,37 +179,33 @@ const EditContactInformation = () => {
 
   return (
     <>
-      <Flex alignContent={'flex-start'}>
-        <VStack alignItems={'left'} margin={'3%'} width={'100%'}>
+      <Flex sx={{ paddingY: 12, paddingX: 8 }}>
+        <VStack alignItems={'left'} width={'100%'}>
           <Box>
             <Heading fontSize="3xl" textAlign={'left'}>
               Settings
             </Heading>
-            <Spacer marginBottom={'2%'}></Spacer>
+
+            <Spacer />
           </Box>
-          <Tabs marginBottom={'3%'} colorScheme="teal">
-            <TabList width={'250px'}>
+
+          <Tabs colorScheme="teal">
+            <TabList width={'250px'} marginBottom={6}>
               <Tab>Business</Tab>
               <Tab>Reference Guide</Tab>
             </TabList>
+
             <TabPanels>
-              <TabPanel>
-                <Card width={'65%'}>
-                  <FormControl margin={'5%'} width={'90%'}>
-                    <HStack marginBottom={'3%'}>
-                      <FormLabel
-                        marginStart={'1.5%'}
-                        fontSize={'15px'}
-                        fontWeight={'bold'}
-                        width={'26%'}
-                        alignItems={'center'}
-                      >
+              <TabPanel display={'flex'} flexDirection={'column'} padding={0} gap={4}>
+                <Card padding={3}>
+                  <FormControl>
+                    <HStack>
+                      <FormLabel fontSize={'16px'} fontWeight={'bold'} alignItems={'center'}>
                         BUSINESS NAME
                       </FormLabel>
                       <Input
                         type="text"
                         placeholder="Enter Business Name"
-                        width={'70%'}
                         value={businessContactInfo.businessName}
                         onChange={e => {
                           setBusinessContactInfo({
@@ -215,14 +216,8 @@ const EditContactInformation = () => {
                         }}
                       />
                     </HStack>
-                    <HStack marginBottom={'3%'}>
-                      <FormLabel
-                        marginStart={'1.5%'}
-                        fontSize={'15px'}
-                        fontWeight={'bold'}
-                        width={'26%'}
-                        alignItems={'center'}
-                      >
+                    <HStack>
+                      <FormLabel fontSize={'16px'} fontWeight={'bold'} alignItems={'center'}>
                         NAME
                       </FormLabel>
                       <Input
@@ -230,7 +225,6 @@ const EditContactInformation = () => {
                         placeholder="Enter First Name"
                         value={businessContactInfo.firstName}
                         name="firstName"
-                        width={'34.5%'}
                         onChange={handleChange}
                       />
                       <Input
@@ -238,18 +232,11 @@ const EditContactInformation = () => {
                         placeholder="Enter Last Name"
                         value={businessContactInfo.lastName}
                         name="lastName"
-                        width={'34%'}
                         onChange={handleChange}
                       />
                     </HStack>
-                    <HStack marginBottom={'3%'}>
-                      <FormLabel
-                        marginStart={'1.5%'}
-                        fontSize={'15px'}
-                        fontWeight={'bold'}
-                        width={'26%'}
-                        alignItems={'center'}
-                      >
+                    <HStack>
+                      <FormLabel fontSize={'16px'} fontWeight={'bold'} alignItems={'center'}>
                         EMAIL
                       </FormLabel>
                       <Input
@@ -258,17 +245,10 @@ const EditContactInformation = () => {
                         value={businessContactInfo.email}
                         name="email"
                         onChange={handleChange}
-                        width={'70%'}
                       />
                     </HStack>
-                    <HStack marginBottom={'3%'}>
-                      <FormLabel
-                        marginStart={'1.5%'}
-                        fontSize={'15px'}
-                        fontWeight={'bold'}
-                        width={'26%'}
-                        alignItems={'center'}
-                      >
+                    <HStack>
+                      <FormLabel fontSize={'16px'} fontWeight={'bold'} alignItems={'center'}>
                         WEBSITE
                       </FormLabel>
                       <Input
@@ -277,17 +257,10 @@ const EditContactInformation = () => {
                         value={businessContactInfo.website}
                         name="website"
                         onChange={handleChange}
-                        width={'70%'}
                       />
                     </HStack>
-                    <HStack marginBottom={'3%'}>
-                      <FormLabel
-                        marginStart={'1.5%'}
-                        fontSize={'15px'}
-                        fontWeight={'bold'}
-                        width={'26%'}
-                        alignItems={'center'}
-                      >
+                    <HStack>
+                      <FormLabel fontSize={'16px'} fontWeight={'bold'} alignItems={'center'}>
                         LOCATION
                       </FormLabel>
                       <Input
@@ -296,21 +269,15 @@ const EditContactInformation = () => {
                         value={businessContactInfo.street}
                         name="street"
                         onChange={handleChange}
-                        width={'70%'}
                       />
                     </HStack>
-                    <HStack marginBottom={'3%'}>
-                      <FormLabel
-                        marginStart={'1.5%'}
-                        fontSize={'15px'}
-                        fontWeight={'bold'}
-                        width={'26%'}
-                        alignItems={'center'}
-                      ></FormLabel>
+                    <HStack>
+                      <FormLabel fontSize={'16px'} fontWeight={'bold'} alignItems={'center'}>
+                        CITY
+                      </FormLabel>
                       <Input
                         type="text"
                         placeholder="City"
-                        width={'28%'}
                         value={businessContactInfo.city}
                         onChange={e => {
                           setBusinessContactInfo({
@@ -323,7 +290,6 @@ const EditContactInformation = () => {
                       <Input
                         type="text"
                         placeholder="State"
-                        width={'18%'}
                         value={businessContactInfo.state}
                         onChange={e => {
                           setBusinessContactInfo({
@@ -336,7 +302,6 @@ const EditContactInformation = () => {
                       <Input
                         type="text"
                         placeholder="Zip Code"
-                        width={'21.5%'}
                         value={businessContactInfo.zip}
                         onChange={e => {
                           setBusinessContactInfo({ ...businessContactInfo, zip: e.target.value });
@@ -344,14 +309,8 @@ const EditContactInformation = () => {
                         }}
                       />
                     </HStack>
-                    <HStack marginBottom={'3%'}>
-                      <FormLabel
-                        marginStart={'1.5%'}
-                        fontSize={'15px'}
-                        fontWeight={'bold'}
-                        width={'26%'}
-                        alignItems={'center'}
-                      >
+                    <HStack>
+                      <FormLabel fontSize={'16px'} fontWeight={'bold'} alignItems={'center'}>
                         PHONE
                       </FormLabel>
                       <Input
@@ -360,23 +319,15 @@ const EditContactInformation = () => {
                         value={businessContactInfo.phoneNumber}
                         name="phoneNumber"
                         onChange={handleChange}
-                        width={'70%'}
                       />
                     </HStack>
-                    <HStack marginBottom={'1%'}>
-                      <FormLabel
-                        marginStart={'1.5%'}
-                        fontSize={'15px'}
-                        fontWeight={'bold'}
-                        width={'26%'}
-                        alignItems={'center'}
-                      >
+                    <HStack>
+                      <FormLabel fontSize={'16px'} fontWeight={'bold'} alignItems={'center'}>
                         BUSINESS HOURS
                       </FormLabel>
                       <Input
                         type="text"
                         placeholder="M-F 8:00 am - 10:00 pm"
-                        width={'70%'}
                         value={businessContactInfo.business_hours}
                         onChange={e => {
                           setBusinessContactInfo({
@@ -389,30 +340,28 @@ const EditContactInformation = () => {
                     </HStack>
                   </FormControl>
                 </Card>
+
                 <Box alignContent={'left'}>
-                  <HStack marginBottom={'3%'} marginTop={'2%'} alignItems={'left'}>
+                  <HStack alignItems={'left'}>
                     <Button
                       color="black"
                       bg="gray.100"
                       variant="solid"
-                      width={'11%'}
-                      marginRight={'1%'}
                       onClick={() => setBusinessContactInfo(initialBusinessContactInfo)}
                     >
                       Undo Changes
                     </Button>
-                    <Button
-                      colorScheme="teal"
-                      variant="solid"
-                      width={'6.5%'}
-                      onClick={updateContactInfo}
-                    >
+
+                    <Button colorScheme="teal" variant="solid" onClick={updateContactInfo}>
                       Save
                     </Button>
                   </HStack>
                 </Box>
               </TabPanel>
-              <ReferenceGuide />
+
+              <TabPanel>
+                <ReferenceGuide />
+              </TabPanel>
             </TabPanels>
           </Tabs>
         </VStack>
