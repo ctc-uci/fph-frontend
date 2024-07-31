@@ -1,7 +1,7 @@
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { BackendProvider } from './contexts/BackendContext.jsx';
 import Sidebar from './components/Sidebar/Sidebar';
-import BusinessDashboard from './components/BusinessDashboard/BusinessDashboard.jsx';
+import { BusinessDashboard } from './components/BusinessDashboard/BusinessDashboard';
 import DonationForm from './components/DonationForm/DonationForm.jsx';
 import BusinessNotificationCenter from './components/BusinessNotificationCenter/BusinessNotificationCenter.jsx';
 import AdminDashboard from './components/AdminDashboard/AdminDashboard.jsx';
