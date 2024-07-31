@@ -44,7 +44,6 @@ export function AuthProvider({ children }) {
   };
 
   const isAdmin = async (user = currentUser) => {
-    console.log(user);
     if (user !== null) {
       try {
         let response = await backend.get(`/adminUser/${user.email}`);
