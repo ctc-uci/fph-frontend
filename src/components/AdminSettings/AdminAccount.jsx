@@ -11,8 +11,15 @@ import {
   Input,
   useToast,
 } from '@chakra-ui/react';
-import classes from './AdminSettings.module.css';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
+
+// duplicated from EditContactInformation
+const formLabelStyles = {
+  minWidth: '150px',
+  fontSize: '16px',
+  fontWeight: 'bold',
+  alignItems: 'center',
+};
 
 const AdminAccount = () => {
   const toast = useToast();
@@ -44,9 +51,7 @@ const AdminAccount = () => {
   }, [backend, currentUser]);
 
   const updateContactInfo = async () => {
-
     try {
-      console.log(adminContactInfo.firstName);
       await backend.put(`/adminuser/${adminContactInfo.email}`, {
         name: adminContactInfo.firstName + ' ' + adminContactInfo.lastName,
       });
@@ -96,103 +101,64 @@ const AdminAccount = () => {
   };
 
   return (
-    <>
-      <Card className={classes.roundedTable} alignItems={'left'} width={'65%'}>
-        <FormControl margin={'3%'} width={'90%'}>
-          <HStack marginBottom={'3%'}>
-            <FormLabel
-              marginStart={'1.5%'}
-              fontSize={'15px'}
-              fontWeight={'bold'}
-              width={'26%'}
-              alignItems={'center'}
-            >
-              NAME
-            </FormLabel>
+    <Box display={'flex'} flexDirection={'column'} gap={4}>
+      <Card paddingX={6} paddingY={4} marginTop={3}>
+        <FormControl sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <HStack>
+            <FormLabel sx={formLabelStyles}>NAME</FormLabel>
             <Input
               type="text"
               placeholder="First"
               defaultValue={adminContactInfo.firstName}
               name="firstName"
-              width={'34.5%'}
-              onChange={(e) => handleChange(e)}
+              onChange={handleChange}
             />
             <Input
               type="text"
               placeholder="Last"
               defaultValue={adminContactInfo.lastName}
               name="lastName"
-              width={'34%'}
-              onChange={(e) => handleChange(e)}
+              onChange={handleChange}
             />
           </HStack>
-          <HStack marginBottom={'3%'}>
-            <FormLabel
-              marginStart={'1.5%'}
-              fontSize={'15px'}
-              fontWeight={'bold'}
-              width={'26%'}
-              alignItems={'center'}
-            >
-              EMAIL
-            </FormLabel>
+          <HStack>
+            <FormLabel sx={formLabelStyles}>EMAIL</FormLabel>
             <Input
               type="text"
               placeholder="example@email.com"
               value={adminContactInfo.email}
               disabled={true}
               name="email"
-              onChange={(e) => handleChange(e)}
-              width={'70%'}
+              onChange={handleChange}
             />
           </HStack>
           <HStack>
-            <FormLabel
-              marginStart={'1.5%'}
-              fontSize={'15px'}
-              fontWeight={'bold'}
-              width={'26%'}
-              alignItems={'center'}
-              onClick={changePassword}
-            >
+            <FormLabel sx={formLabelStyles} onClick={changePassword}>
               PASSWORD
             </FormLabel>
             <Button
               style={{
                 backgroundColor: 'transparent',
-                padding: '0',
                 justifyContent: 'flex-start',
                 textAlign: 'right',
               }}
-              width={'70%'}
+              variant={'link'}
               color={'teal'}
               align
               onClick={changePassword}
             >
               Change Password
-              <ArrowForwardIcon style={{ marginLeft: '3px' }} />
+              <ArrowForwardIcon />
             </Button>
           </HStack>
         </FormControl>
       </Card>
-      <Box alignContent={'left'}>
-        <HStack marginBottom={'3%'} marginTop={'5%'} alignItems={'left'}>
-          {/* <Button
-            color="black"
-            bg="gray.100"
-            variant="solid"
-            width={'21.5%'}
-            marginRight={'1%'}
-            onClick={updateContactInfo}
-          >
-            Undo Changes
-          </Button> */}
-          <Button colorScheme="teal" variant="solid" width={'11%'} onClick={updateContactInfo}>
-            Save
-          </Button>
-        </HStack>
+      <Box>
+        <Button colorScheme="teal" variant="solid" onClick={updateContactInfo}>
+          Save
+        </Button>
       </Box>
-    </>
+    </Box>
   );
 };
 

@@ -8,6 +8,7 @@ import {
   Flex,
   IconButton,
   Table,
+  Text,
   Thead,
   Tbody,
   Tr,
@@ -25,7 +26,6 @@ import classes from './AdminSettings.module.css';
 const AdminsTable = () => {
   const { backend } = useBackend();
   const [data, setData] = useState([]);
-  // const [editEmail, setEditEmail] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [currentItemNum, setCurrentItemNum] = useState(0);
   const [currentPageNum, setCurrentPageNum] = useState(1);
@@ -110,19 +110,32 @@ const AdminsTable = () => {
 
   return (
     <>
-      <div className={classes.addAdminContainer}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+          marginY: 3,
+          gap: 2,
+        }}
+      >
         <Input
           placeholder="Search"
           onChange={handleSearch}
-          sx={{ width: '222px', backgroundColor: '#FFFFFF' }}
+          sx={{ width: '300px', backgroundColor: '#FFFFFF' }}
         />
-        <Button colorScheme="teal" onClick={() => adminModalOnOpen()}>
-          <AddIcon />
-          Add Admin
-        </Button>
-      </div>
 
-      <div className={classes.roundedTable}>
+        <Button
+          colorScheme="teal"
+          onClick={() => adminModalOnOpen()}
+          sx={{ display: 'flex', gap: 2 }}
+        >
+          <AddIcon />
+          <Text as="p">Add Admin</Text>
+        </Button>
+      </Box>
+
+      <Box sx={{ borderWidth: '1px', borderRadius: 3, overflowX: 'auto', background: 'white' }}>
         <DeleteAdminModal
           isOpen={deleteModalIsOpen}
           onClose={() => {
@@ -143,20 +156,21 @@ const AdminsTable = () => {
           loadInfo={getAdminData}
           toast={toast}
         />
+
         <TableContainer>
           <Table style={{ borderCollapse: 'collapse' }}>
             <Thead>
               <Tr>
-                <Th width='29%'>Name</Th>
-                <Th width='29%'>Email</Th>
-                <Th width='29%'>Last Updated</Th>
-                <Th width='13%'></Th>
+                <Th width="29%">Name</Th>
+                <Th width="29%">Email</Th>
+                <Th width="29%">Last Updated</Th>
+                <Th width="13%"></Th>
               </Tr>
             </Thead>
             <Tbody>{displayAdminTable()}</Tbody>
           </Table>
         </TableContainer>
-      </div>
+      </Box>
 
       <div className={classes.resultNavigation}>
         <Box>
@@ -167,14 +181,14 @@ const AdminsTable = () => {
           aria-label="Back button"
           isDisabled={currentPageNum <= 1}
           icon={<ChevronLeftIcon />}
-          variant='ghost'
+          variant="ghost"
           onClick={() => setCurrentPageNum(currentPageNum - 1)}
         />
         <IconButton
           aria-label="Next button"
           isDisabled={currentPageNum >= pageLimit}
           icon={<ChevronRightIcon />}
-          variant='ghost'
+          variant="ghost"
           onClick={() => setCurrentPageNum(currentPageNum + 1)}
         />
       </div>

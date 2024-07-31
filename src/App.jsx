@@ -22,7 +22,7 @@ import ViewBusiness from './components/ViewBusiness/ViewBusiness.jsx';
 import { AddBusinessForm, BusinessForm } from './components/BusinessForm/BusinessForm.jsx';
 import Congrats from './components/DonationForm/Congrats.jsx';
 import ViewRequest from './components/ViewRequest/ViewRequest.jsx';
-import AdminSettingsMaster from './components/AdminSettings/AdminSettingsMaster.jsx';
+import { AdminSettingsMaster } from './components/AdminSettings/AdminSettingsMaster.jsx';
 import ViewDonation from './components/ViewDonation/ViewDonation.jsx';
 import CatchAll from './components/CatchAll';
 

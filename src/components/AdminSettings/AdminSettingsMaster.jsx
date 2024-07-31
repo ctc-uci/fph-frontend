@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer.jsx';
 import classes from './AdminSettings.module.css';
 
-const AdminSettingsMaster = () => {
+export const AdminSettingsMaster = () => {
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
   const [notification, setNotification] = useState([]);
@@ -24,7 +24,7 @@ const AdminSettingsMaster = () => {
     const fetchNotifications = async () => {
       const response = await backend.get('/notification/0');
       setNotification(response.data);
-    }
+    };
     fetchNotifications();
   }, [isAdmin, navigate]);
 
@@ -41,10 +41,10 @@ const AdminSettingsMaster = () => {
         </TabList>
 
         <TabPanels>
-          <TabPanel padding="16px 0px">
+          <TabPanel padding={0}>
             <AdminsTable />
           </TabPanel>
-          <TabPanel>
+          <TabPanel padding={0}>
             <AdminAccount />
           </TabPanel>
         </TabPanels>
@@ -52,5 +52,3 @@ const AdminSettingsMaster = () => {
     </div>
   );
 };
-
-export default AdminSettingsMaster;
