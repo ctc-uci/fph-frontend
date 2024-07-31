@@ -1,8 +1,8 @@
 import { TimeIcon } from '@chakra-ui/icons';
 import { Center, Divider, Flex, Icon, Text, useBreakpointValue } from '@chakra-ui/react';
-import React from 'react';
 import { BiDonateHeart, BiMoney } from 'react-icons/bi';
 import { Notification } from '../../types/notification';
+import { Fragment } from 'react/jsx-runtime';
 
 interface BusinessTotalsProps {
   donationData: any;
@@ -73,7 +73,7 @@ export const BusinessTotals = ({ donationData, reminderData, priceData }: Busine
       bg="#FFFFFF"
     >
       {stats.map((stat, index) => (
-        <React.Fragment key={index}>
+        <Fragment key={index}>
           <Flex justifyContent="center" alignItems="center" gap={4}>
             <Icon as={stat.icon} color="teal" width={8} height={8} display={displayIcon} />
 
@@ -91,7 +91,7 @@ export const BusinessTotals = ({ donationData, reminderData, priceData }: Busine
               <Divider orientation="vertical" color="#E2E8F0" />
             </Center>
           )}
-        </React.Fragment>
+        </Fragment>
       ))}
     </Flex>
   );

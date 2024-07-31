@@ -9,23 +9,22 @@ import BusinessTable from '../BusinessTable/BusinessTable.jsx';
 import { BiBuildingHouse, BiDonateHeart, BiFile, BiTime } from 'react-icons/bi';
 
 const AdminDashboard = () => {
-  // Created the use states
   const { backend } = useBackend();
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
-  const [businessDictionary, setBusinessDictionary] = useState([]);
+  const [businesses, setBusinesses] = useState([]);
   const [pendingBusinesses, setPendingBusinesses] = useState([]);
   const [notification, setNotifications] = useState([]);
 
   useEffect(() => {
     const getData = async () => {
       try {
-        checkIsAdmin();
-        // fetches the business table to be used in pending &total #
-        const businessResponse = await backend.get('/business/filter/All');
-        setBusinessDictionary(businessResponse.data);
+        const businessResponse = await backend.get('/business');
+        setBusinesses(businessResponse.data);
+
         const numPending = await backend.get('/business/totalBusinesses?tab=Pending');
         setPendingBusinesses(numPending.data[0]['count']);
+
         const notificationResponse = await backend.get(`/notification/0`);
         setNotifications(notificationResponse.data);
       } catch (error) {
@@ -53,8 +52,8 @@ const AdminDashboard = () => {
     //   }
     // }
     var submittedBusinesses = 0;
-    for (const [value] of Object.entries(businessDictionary)) {
-      const status = businessDictionary[value].submitted;
+    for (const [value] of Object.entries(businesses)) {
+      const status = businesses[value].submitted;
       if (status) {
         submittedBusinesses += 1;
       }
@@ -65,7 +64,7 @@ const AdminDashboard = () => {
 
   // Counts number of Donation Sites
   const calculateTotalDonationSites = () => {
-    return Object.keys(businessDictionary).length;
+    return Object.keys(businesses).length;
   };
 
   // Calculates number of pending applications from businesses

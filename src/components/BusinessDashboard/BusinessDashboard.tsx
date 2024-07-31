@@ -31,7 +31,6 @@ import { ArrowForwardIcon, WarningIcon, EmailIcon, CheckCircleIcon } from '@chak
 import ViewDonationHistory from '../BusinessDonationHistory/ViewDonationHistory/ViewDonationHistory';
 // @ts-expect-error CSS file exists
 import classes from './BusinessDashboard.module.css';
-import React from 'react';
 import type { Notification } from '../../types/notification';
 import { BusinessTotals } from './BusinessTotals';
 
@@ -233,7 +232,7 @@ export const BusinessDashboard = () => {
   };
 
   return !notifClicked ? (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4, padding: 8 }}>
+    <Flex sx={{ flexDirection: 'column', gap: 4, padding: 8 }}>
       <Drawer
         isOpen={requestDrawerIsOpen}
         placement="right"
@@ -392,7 +391,7 @@ export const BusinessDashboard = () => {
           ))}
         </Tbody>
       </Table>
-    </Box>
+    </Flex>
   ) : (
     <ViewDonationHistory />
   );

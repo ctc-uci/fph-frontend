@@ -12,7 +12,7 @@ import ContactUs from './components/ContactUsForm/ContactUs.jsx';
 import DonationTrackingTable from './components/DonationTrackingTable/DonationTrackingTable.jsx';
 import styles from './App.module.css';
 import DonationItemsTable from './components/DonationItemsTable/DonationItemsTable.jsx';
-import BusinessSetupPageMaster from './components/SetUp/BusinessSetupPageMaster.jsx';
+import { BusinessSetupPage } from './components/BusinessSetup/BusinessSetupPage';
 import Login from './components/Authentication/Login.jsx';
 import BusinessFormMaster from './components/OnBoarding/BusinessFormMaster.jsx';
 import ForgotPassword from './components/Authentication/ForgotPassword.jsx';
@@ -47,8 +47,8 @@ const App = () => {
           <div className={styles.mainContent}>
             <Routes>
               <Route path="/Onboarding" element={<BusinessFormMaster />} />
-              <Route path="/SignupAdmin" element={<BusinessSetupPageMaster isAdmin={true} />} />
-              <Route path="/SignupBusiness" element={<BusinessSetupPageMaster isAdmin={false} />} />
+              <Route path="/SignupAdmin" element={<BusinessSetupPage isAdmin={true} />} />
+              <Route path="/SignupBusiness" element={<BusinessSetupPage isAdmin={false} />} />
               <Route path="/Login" element={<Login isAdmin={true} />} />
               <Route path="/ForgotPassword" element={<ForgotPassword />} />
               <Route path="/ContactUs" element={<ProtectedRoute Component={ContactUs} />} />

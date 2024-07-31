@@ -15,28 +15,34 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+// @ts-expect-error file exists
 import LOGO from './fph_logo.png';
 import { useAuth } from '../../contexts/AuthContext';
 import { useBackend } from '../../contexts/BackendContext';
-import PropTypes from 'prop-types'; // Import PropTypes
 
-const FirstForm = ({ admin, nextStep }) => {
-  const { isAdmin, currentUser } = useAuth();
+interface SetUpFirstFormProps {
+  admin: boolean;
+  nextStep: () => void;
+}
+
+export const SetupSignup = ({ admin, nextStep }: SetUpFirstFormProps) => {
+  const { isAdmin, currentUser, signup, logout } = useAuth();
   const { backend } = useBackend();
+  const navigate = useNavigate();
+  const toast = useToast();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [id, setId] = useState('');
-  const { signup, logout } = useAuth();
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const toast = useToast();
 
   useEffect(() => {
     const setUp = async () => {
       const urlParams = new URLSearchParams(window.location.search);
       const idFromUrl = urlParams.get('id');
-      setId(idFromUrl);
+
+      setId(idFromUrl ?? '');
       await logout();
     };
 
@@ -78,7 +84,7 @@ const FirstForm = ({ admin, nextStep }) => {
         }
       } else {
         if (id) {
-          signup(email, password);
+          await signup(email, password);
         } else {
           toast({
             title: 'Business Not Found',
@@ -173,10 +179,3 @@ const FirstForm = ({ admin, nextStep }) => {
     </HStack>
   );
 };
-
-FirstForm.propTypes = {
-  admin: PropTypes.bool.isRequired,
-  nextStep: PropTypes.bool.isRequired,
-};
-
-export default FirstForm;
