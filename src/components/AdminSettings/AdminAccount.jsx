@@ -13,6 +13,14 @@ import {
 } from '@chakra-ui/react';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 
+// duplicated from EditContactInformation
+const formLabelStyles = {
+  minWidth: '150px',
+  fontSize: '16px',
+  fontWeight: 'bold',
+  alignItems: 'center',
+};
+
 const AdminAccount = () => {
   const toast = useToast();
   const { backend } = useBackend();
@@ -44,7 +52,6 @@ const AdminAccount = () => {
 
   const updateContactInfo = async () => {
     try {
-      console.log(adminContactInfo.firstName);
       await backend.put(`/adminuser/${adminContactInfo.email}`, {
         name: adminContactInfo.firstName + ' ' + adminContactInfo.lastName,
       });
@@ -94,13 +101,11 @@ const AdminAccount = () => {
   };
 
   return (
-    <>
-      <Card alignItems={'left'} paddingTop={3}>
-        <FormControl>
+    <Box display={'flex'} flexDirection={'column'} gap={4}>
+      <Card paddingX={6} paddingY={4} marginTop={3}>
+        <FormControl sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
           <HStack>
-            <FormLabel fontSize={'15px'} fontWeight={'bold'} alignItems={'center'}>
-              NAME
-            </FormLabel>
+            <FormLabel sx={formLabelStyles}>NAME</FormLabel>
             <Input
               type="text"
               placeholder="First"
@@ -116,10 +121,8 @@ const AdminAccount = () => {
               onChange={handleChange}
             />
           </HStack>
-          <HStack marginBottom={'3%'}>
-            <FormLabel fontSize={'15px'} fontWeight={'bold'} alignItems={'center'}>
-              EMAIL
-            </FormLabel>
+          <HStack>
+            <FormLabel sx={formLabelStyles}>EMAIL</FormLabel>
             <Input
               type="text"
               placeholder="example@email.com"
@@ -130,12 +133,7 @@ const AdminAccount = () => {
             />
           </HStack>
           <HStack>
-            <FormLabel
-              fontSize={'15px'}
-              fontWeight={'bold'}
-              alignItems={'center'}
-              onClick={changePassword}
-            >
+            <FormLabel sx={formLabelStyles} onClick={changePassword}>
               PASSWORD
             </FormLabel>
             <Button
@@ -144,6 +142,7 @@ const AdminAccount = () => {
                 justifyContent: 'flex-start',
                 textAlign: 'right',
               }}
+              variant={'link'}
               color={'teal'}
               align
               onClick={changePassword}
@@ -154,12 +153,12 @@ const AdminAccount = () => {
           </HStack>
         </FormControl>
       </Card>
-      <Box alignContent={'left'}>
+      <Box>
         <Button colorScheme="teal" variant="solid" onClick={updateContactInfo}>
           Save
         </Button>
       </Box>
-    </>
+    </Box>
   );
 };
 

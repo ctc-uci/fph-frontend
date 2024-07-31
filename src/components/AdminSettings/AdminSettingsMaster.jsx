@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer.jsx';
 import classes from './AdminSettings.module.css';
 
-const AdminSettingsMaster = () => {
+export const AdminSettingsMaster = () => {
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
   const [notification, setNotification] = useState([]);
@@ -52,5 +52,3 @@ const AdminSettingsMaster = () => {
     </div>
   );
 };
-
-export default AdminSettingsMaster;
