@@ -15,7 +15,6 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-// @ts-expect-error file exists
 import LOGO from '../../../public/fph_logo_no_bg.png';
 import { useAuth } from '../../contexts/AuthContext';
 import { useBackend } from '../../contexts/BackendContext';

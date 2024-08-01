@@ -1,5 +1,4 @@
 import { VStack, Text, Image, Center } from '@chakra-ui/react';
-//@ts-expect-error file exists
 import LOGO from '../../../public/fph_logo_no_bg.png';
 
 export const Welcome = () => {

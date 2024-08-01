@@ -29,7 +29,6 @@ import { BiPackage } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
 import { ArrowForwardIcon, WarningIcon, EmailIcon, CheckCircleIcon } from '@chakra-ui/icons';
 import ViewDonationHistory from '../BusinessDonationHistory/ViewDonationHistory/ViewDonationHistory';
-// @ts-expect-error CSS file exists
 import classes from './BusinessDashboard.module.css';
 import type { Notification } from '../../types/notification';
 import { BusinessTotals } from './BusinessTotals';

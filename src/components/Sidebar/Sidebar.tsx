@@ -13,7 +13,6 @@ import {
   IconButton,
 } from '@chakra-ui/react';
 
-// @ts-expect-error this image path does exist
 import fphLogo from '/fph_logo.png';
 import { useAuth } from '../../contexts/AuthContext';
 import { useBackend } from '../../contexts/BackendContext';
