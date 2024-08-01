@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { createContext, useState, useEffect, useContext } from 'react';
 import { auth } from '../utils/firebaseAuthUtil';
 import { useBackend } from './BackendContext';
 import {
@@ -8,7 +8,7 @@ import {
   sendPasswordResetEmail,
 } from 'firebase/auth';
 
-const AuthContext = React.createContext();
+const AuthContext = createContext();
 
 export function useAuth() {
   return useContext(AuthContext);
@@ -44,7 +44,6 @@ export function AuthProvider({ children }) {
   };
 
   const isAdmin = async (user = currentUser) => {
-    console.log(user);
     if (user !== null) {
       try {
         let response = await backend.get(`/adminUser/${user.email}`);

@@ -16,8 +16,6 @@ import {
   Text,
   Icon,
   Flex,
-  Divider,
-  Center,
   Drawer,
   DrawerBody,
   DrawerHeader,
@@ -25,19 +23,16 @@ import {
   DrawerContent,
   DrawerCloseButton,
   useDisclosure,
+  Heading,
 } from '@chakra-ui/react';
-import { BiDonateHeart, BiMoney, BiPackage } from 'react-icons/bi';
+import { BiPackage } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
-import 'boxicons';
-import {
-  ArrowForwardIcon,
-  WarningIcon,
-  EmailIcon,
-  CheckCircleIcon,
-  TimeIcon,
-} from '@chakra-ui/icons';
+import { ArrowForwardIcon, WarningIcon, EmailIcon, CheckCircleIcon } from '@chakra-ui/icons';
 import ViewDonationHistory from '../BusinessDonationHistory/ViewDonationHistory/ViewDonationHistory';
+// @ts-expect-error CSS file exists
 import classes from './BusinessDashboard.module.css';
+import type { Notification } from '../../types/notification';
+import { BusinessTotals } from './BusinessTotals';
 
 // Currently, this whole component depends on each notification having its correct 'type' when created. We defined 4 types:
 // 1. Donation Form Confirmation
@@ -46,14 +41,14 @@ import classes from './BusinessDashboard.module.css';
 // 4. Donation Request Receieved
 // However, none of the current code anywhere does this, and the type for all notifications is null by default. Either that has to be fixed
 // or this will need to be changed so that it doesn't rely on a notification having a type.
-const BusinessDashboard = () => {
+export const BusinessDashboard = () => {
   const [userName, setUserName] = useState('');
   const { backend } = useBackend();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [donationData, setDonationData] = useState([]);
   const [notifClicked, setNotifClicked] = useState(null);
-  const [currentQuarter, setCurrentQuarter] = useState();
+  const [currentQuarter, setCurrentQuarter] = useState<string>();
   const {
     isOpen: requestDrawerIsOpen,
     onOpen: requestDrawerOnOpen,
@@ -94,18 +89,18 @@ const BusinessDashboard = () => {
   // request to efficiently pull the prices of dry and canned dog and cat food
   // *************************************************************************
   const [priceData, setPriceData] = useState([]);
-  const [reminderData, setReminderData] = useState([]);
+  const [reminderData, setReminderData] = useState<Notification[]>([]);
   const [supplyRequest, setSupplyRequest] = useState([0, 0, 0, 0, 0, 0, 0]);
   const [notes, setNotes] = useState('');
   const supplyRequestItems = [
-    "Pet Food Decal",
-    "Decal",
-    "Homeless Card",
-    "Business Card",
-    "Donation Site Decal",
-    "Donation Site Bin Decals",
-    "Donation Envelopes",
-    "Homeless Card 2"
+    'Pet Food Decal',
+    'Decal',
+    'Homeless Card',
+    'Business Card',
+    'Donation Site Decal',
+    'Donation Site Bin Decals',
+    'Donation Envelopes',
+    'Homeless Card 2',
   ];
 
   // const formatDate = timestamp => {
@@ -152,15 +147,32 @@ const BusinessDashboard = () => {
     getData();
   }, []);
 
+  useEffect(() => {
+    const currentTime = new Date();
+
+    if (currentTime.getMonth() <= 2) {
+      setCurrentQuarter('Q1');
+    } else if (currentTime.getMonth() <= 5) {
+      setCurrentQuarter('Q2');
+    } else if (currentTime.getMonth() <= 8) {
+      setCurrentQuarter('Q3');
+    } else {
+      setCurrentQuarter('Q4');
+    }
+  }, [setCurrentQuarter]);
+
   const parseSupplyRequestData = async message => {
     const lines = message.split(',');
-    const numbersList = [];
+    const numbersList: number[] = [];
     let notes = '';
     let notesFound = false;
 
     lines.forEach(line => {
       if (line.startsWith('"Notes":')) {
-        notes = line.substring(line.indexOf(':') + 2).trim().split('"')[0];
+        notes = line
+          .substring(line.indexOf(':') + 2)
+          .trim()
+          .split('"')[0];
         notesFound = true;
       } else if (!notesFound) {
         const value = line.split(':')[1];
@@ -173,47 +185,6 @@ const BusinessDashboard = () => {
 
     setSupplyRequest(numbersList);
     setNotes(notes);
-  };
-
-  const calculateTotalPounds = () => {
-    return (
-      donationData['canned_dog_food_quantity'] +
-      donationData['dry_dog_food_quantity'] +
-      donationData['canned_cat_food_quantity'] +
-      donationData['dry_cat_food_quantity']
-    );
-  };
-
-
-  const calculateTotalWorth = () => {
-    // ***********************************************************************
-    // CHANGE LATER: Right now the prices are just the first four rows of the
-    // fair_market_value table, thus if the table has less than four tables
-    // this function will break
-    // ***********************************************************************
-    //return donationData['canned_dog_food_quantity'] && priceData.length > 0
-    // ?
-    //: 0;
-    const totalWorth =
-    (donationData['canned_dog_food_quantity'] || 0) * (priceData[0] ? priceData[0]['price'] : 0) +
-    (donationData['dry_dog_food_quantity'] || 0) * (priceData[1] ? priceData[1]['price'] : 0) +
-    (donationData['canned_cat_food_quantity'] || 0) * (priceData[2] ? priceData[2]['price'] : 0) +
-    (donationData['dry_cat_food_quantity'] || 0) * (priceData[3] ? priceData[3]['price'] : 0);
-    return totalWorth.toFixed(2);
-
-
-  };
-
-  const calculateTimeSince = () => {
-    if (!(reminderData.length > 0)) {
-      return 0;
-    }
-    const currentTime = new Date();
-    const previousTime = new Date(reminderData[0].timestamp);
-    const timeDifference = Math.abs(currentTime - previousTime);
-    // Convert milliseconds to days
-    const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-    return daysDifference;
   };
 
   const isUrgentNotif = () => {
@@ -235,18 +206,17 @@ const BusinessDashboard = () => {
       setCurrentQuarter('Q4');
     }
 
-    const timeDifference = Math.abs(currentTime - dueDate);
+    const timeDifference = Math.abs(currentTime.getTime() - dueDate.getTime());
     const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
     return daysDifference < 3;
   };
 
-  const isRedNotif = (reminder) => {
-    return reminder['type'] === "Not Submitted" && isUrgentNotif(reminder['timestamp']);
-  }
+  const isRedNotif = (reminder: Notification) => {
+    return reminder['type'] === 'Not Submitted' && isUrgentNotif();
+  };
 
-  const getNotifText = (reminder) => {
+  const getNotifText = (reminder: Notification) => {
     const notifDate = new Date(reminder['timestamp']);
-    console.log(notifDate);
     const formattedDate = notifDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
     const notifText = {
       'Donation Form Confirmation': `Donation form has been submitted for ${currentQuarter}. Thank you!`,
@@ -256,12 +226,13 @@ const BusinessDashboard = () => {
       'Supply Request Shipped': `Supply request submitted from ${formattedDate} has been shipped.`,
       'Supply Request Received': 'Supplies will be shipped in 3-5 business days.',
       'Supply Request': 'Supplies will be shipped in 3-5 business days.',
-    }
+    };
+
     return notifText[reminder['type']];
   };
 
   return !notifClicked ? (
-    <div>
+    <Flex sx={{ flexDirection: 'column', gap: 4, padding: 8 }}>
       <Drawer
         isOpen={requestDrawerIsOpen}
         placement="right"
@@ -318,108 +289,31 @@ const BusinessDashboard = () => {
           </DrawerBody>
         </DrawerContent>
       </Drawer>
-      <Flex margin="4vh 0 0 3vh" justifyContent="space-between" alignItems="center">
-        {
-          <Stack>
-            <Text fontSize="30px" color="teal" fontWeight="bold">
-              Welcome Back, {`${userName}`}
-            </Text>
-          </Stack>
-        }
 
-        {
-          <Button
-            colorScheme="teal"
-            size="md"
-            marginRight="3vh"
-            onClick={() => navigate('/BusinessDonationTrackingForm')}
-          >
-            Submit Donation Form
-          </Button>
-        }
+      <Flex justifyContent="space-between" alignItems="center" paddingY={4}>
+        <Heading color="teal" fontWeight="bold">
+          Welcome Back, {userName}
+        </Heading>
+
+        <Button
+          colorScheme="teal"
+          size="md"
+          onClick={() => navigate('/BusinessDonationTrackingForm')}
+        >
+          Submit Donation Form
+        </Button>
       </Flex>
 
-      <Flex
-        margin="4vh 3vh 0 3vh"
-        borderRadius="16px"
-        justifyContent="space-around"
-        p={5}
-        border="1px"
-        borderColor="gray.200"
-        bg="#FFFFFF"
-      >
-        <Flex justifyContent="center" alignItems="center">
-          {<BiMoney color="teal" size={30} />}
-          {
-            <div className="vstack">
-              <div style={{ marginLeft: '12px' }}>
-                <Box>
-                  <Text fontSize={25} fontWeight={500}>
-                    ${calculateTotalWorth()}
-                  </Text>
-                </Box>
-                <Box>
-                  <Text color="gray" mt={-2}>
-                    Worth of Donation Supplies
-                  </Text>
-                </Box>
-              </div>
-            </div>
-          }
-        </Flex>
-        {
-          <Center height="50px">
-            <Divider orientation="vertical" color="#E2E8F0" />
-          </Center>
-        }
-        <Flex justifyContent="center" alignItems="center">
-          {<BiDonateHeart color="teal" size={30} />}
-          {
-            <div className="vstack">
-              <div style={{ marginLeft: '12px' }}>
-                <Box>
-                  <Text fontSize={25} fontWeight={500}>
-                    {calculateTotalPounds()}
-                  </Text>
-                </Box>
-                <Box>
-                  <Text color="gray" mt={-2}>
-                    Pounds of Food Donated
-                  </Text>
-                </Box>
-              </div>
-            </div>
-          }
-        </Flex>
-        {
-          <Center height="50px">
-            <Divider orientation="vertical" color="#E2E8F0" />
-          </Center>
-        }
-        <Flex justifyContent="center" alignItems="center">
-          {<TimeIcon color="teal" boxSize={6} />}
-          {
-            <div className="vstack">
-              <div style={{ marginLeft: '12px' }}>
-                <Box>
-                  <Text fontSize={25} fontWeight={500}>
-                    {calculateTimeSince()}
-                  </Text>
-                </Box>
-                <Text color="gray" mt={-2}>
-                  Days Since Last Submission
-                </Text>
-              </div>
-            </div>
-          }
-        </Flex>
-      </Flex>
+      <BusinessTotals
+        donationData={donationData}
+        reminderData={reminderData}
+        priceData={priceData}
+      />
 
-      <Table margin="2vh 3vh 0 3vh" width="95.5%" bg="#FFFFFF" borderRadius={'1%'}>
+      <Table bg="#FFFFFF">
         <Thead>
           <Tr>
-            <Th color="#2D3748" fontSize="15px">
-              {' '}
+            <Th color="#2D3748" fontSize={16}>
               Notifications
             </Th>
           </Tr>
@@ -431,43 +325,54 @@ const BusinessDashboard = () => {
                 <Box
                   borderWidth="1px"
                   borderRadius="5px"
-                  borderColor={() => isRedNotif(reminder) ? "#F56565" : "#359797"}
-                  backgroundColor={() => isRedNotif(reminder) ? "#FED7D7" : ""}
-                  className={() => isRedNotif(reminder) ? classes.warningNotif : ""}
+                  borderColor={isRedNotif(reminder) ? '#F56565' : '#359797'}
+                  backgroundColor={isRedNotif(reminder) ? '#FED7D7' : ''}
+                  className={isRedNotif(reminder) ? classes.warningNotif : ''}
                 >
                   <HStack justifyContent={'space-between'}>
-                    <Box margin=".5vh">
-                      <HStack marginLeft="1vh">
+                    <Box>
+                      <HStack>
                         <Box color={'#359797'}>
                           {' '}
                           <Icon
                             as={buttonIcon[reminder['type']]}
-                            color={() => isRedNotif(reminder) ? "#E53E3E" : undefined}
-                          ></Icon>
+                            color={isRedNotif(reminder) ? '#E53E3E' : undefined}
+                          />
                         </Box>
 
-                        <Stack margin="1.3vh 1vh" spacing={0.3}>
+                        <Stack spacing={0.3}>
                           <Text fontWeight="bold">{reminder['type']}</Text>
-                          <Text fontSize="1.2vh">{new Date(reminder['timestamp']).toLocaleDateString('en-us', {
-                            timeZone: 'America/Los_Angeles',
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'  })}
+                          <Text>
+                            {new Date(reminder['timestamp']).toLocaleDateString('en-us', {
+                              timeZone: 'America/Los_Angeles',
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric',
+                            })}
                           </Text>
-                          <Text fontSize="1.5vh" >{getNotifText(reminder)}</Text>
+                          <Text>{getNotifText(reminder)}</Text>
                         </Stack>
                       </HStack>
                     </Box>
-                    <Box height="3vh" display="flex" alignItems="center" justifyContent="center">
+                    <Box display="flex" alignItems="center" justifyContent="center">
                       <Button
                         variant="link"
                         color="#2D3748"
-                        marginRight="15"
                         onClick={() => {
-                          if (['Donation Form Confirmation', 'Submitted Form'].includes(reminder['type'])) {
+                          if (
+                            ['Donation Form Confirmation', 'Submitted Form'].includes(
+                              reminder['type'],
+                            )
+                          ) {
                             setNotifClicked(reminder['notification_id']);
                             navigate(buttonPath[reminder['type']]);
-                          } else if (['Supply Request Shipped', 'Supply Request Received', 'Supply Request'].includes(reminder['type'])) {
+                          } else if (
+                            [
+                              'Supply Request Shipped',
+                              'Supply Request Received',
+                              'Supply Request',
+                            ].includes(reminder['type'])
+                          ) {
                             parseSupplyRequestData(reminder['message']);
                             requestDrawerOnOpen();
                           } else {
@@ -486,10 +391,8 @@ const BusinessDashboard = () => {
           ))}
         </Tbody>
       </Table>
-    </div>
+    </Flex>
   ) : (
-    <ViewDonationHistory id={notifClicked} />
+    <ViewDonationHistory />
   );
 };
-
-export default BusinessDashboard;
