@@ -43,18 +43,18 @@ const calculateTimeSince = (reminderData: Notification[]) => {
 };
 
 export const BusinessTotals = ({ donationData, reminderData, priceData }: BusinessTotalsProps) => {
-  const displayIcon = useBreakpointValue({ base: 'block', lg: 'none', xl: 'block' });
+  const displayIcon = useBreakpointValue({ base: 'none', lg: 'none', xl: 'block' });
 
   const stats = [
     {
       icon: BiMoney,
       value: `$${calculateTotalWorth(donationData, priceData)}`,
-      label: 'Worth of Donation Supplies',
+      label: 'In Donation Supplies',
     },
     {
       icon: BiDonateHeart,
       value: calculateTotalPounds(donationData),
-      label: 'Pounds of Food Donated',
+      label: 'Pounds Donated',
     },
     {
       icon: TimeIcon,

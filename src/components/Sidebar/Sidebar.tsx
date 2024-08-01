@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 
 // @ts-expect-error this image path does exist
-import fphLogo from '/fph-logo.png';
+import fphLogo from '/fph_logo.png';
 import { useAuth } from '../../contexts/AuthContext';
 import { useBackend } from '../../contexts/BackendContext';
 import { useEffect, useState } from 'react';
@@ -29,7 +29,6 @@ import {
   BiCog,
 } from 'react-icons/bi';
 import { ContactInformationModal } from './ContactInformationModal';
-import React from 'react';
 
 function Sidebar() {
   const { backend } = useBackend();
