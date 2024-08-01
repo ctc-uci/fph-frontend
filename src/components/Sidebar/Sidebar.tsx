@@ -87,7 +87,15 @@ function Sidebar() {
 
   return (
     <>
-      <Flex sx={{ width: '275px', paddingX: '16px', paddingTop: '32px', paddingBottom: '24px' }}>
+      <Flex
+        sx={{
+          width: '275px',
+          minWidth: '275px',
+          paddingX: '16px',
+          paddingTop: '32px',
+          paddingBottom: '24px',
+        }}
+      >
         <VStack justifyContent={'space-between'}>
           <Flex flexDirection="column">
             <HStack>
