@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { SetupSignup } from './SetupSignup';
 import { Welcome } from './Welcome';
-import { Information } from './Information';
-import FourthForm from './FourthForm';
+import { InformationFirst } from './InformationFirst';
+import { InformationSecond } from './InformationSecond';
 import { useNavigate } from 'react-router-dom';
-import FifthForm from './FifthForm';
-import { Box, Flex } from '@chakra-ui/react';
-import { Button } from '@chakra-ui/react';
+import { Tips } from './Tips';
+import { Box, Flex, Button } from '@chakra-ui/react';
 
 export const BusinessSetupPage = ({ isAdmin }) => {
   const navigate = useNavigate();
@@ -18,26 +17,31 @@ export const BusinessSetupPage = ({ isAdmin }) => {
   ];
 
   const [activeStep, setActiveStep] = useState(0);
-  const [step, setStep] = useState(0);
 
   const nextStep = () => {
     setActiveStep(prevState => prevState + 1);
-    setStep(prevState => prevState + 1);
   };
 
   const stepsComponents = [
     <SetupSignup admin={isAdmin} nextStep={nextStep} />,
     <Welcome />,
-    <Information />,
-    <FourthForm nextStep={nextStep} />,
-    <FifthForm nextStep={nextStep} />,
+    <InformationFirst />,
+    <InformationSecond />,
+    <Tips />,
   ];
 
   return (
     <Flex sx={{ flexDirection: 'column', height: '100vh' }}>
-      {stepsComponents[step]}
-      {step !== 0 ? (
-        <Flex bg="white" justifyContent={'center'} paddingBottom={16}>
+      {stepsComponents[activeStep]}
+      {activeStep !== 0 ? (
+        <Box
+          justifyContent={'center'}
+          position={'fixed'}
+          bottom={6}
+          left={'50%'}
+          transform={'auto'}
+          translateX={'-50%'}
+        >
           <Flex justifyContent="space-between" alignItems="center" gap={4}>
             {steps.map((_, index) => (
               <Box
@@ -46,15 +50,16 @@ export const BusinessSetupPage = ({ isAdmin }) => {
                 bg={index === activeStep - 1 ? '#D9D9D9' : '#F5F5F5'}
                 color={index === activeStep - 1 ? 'white' : 'black'}
                 borderRadius="md"
+                borderWidth={1.5}
+                borderColor={'teal'}
                 key={index}
               />
             ))}
 
             <Button
               colorScheme="teal"
-              size="sm"
               onClick={() => {
-                if (step < stepsComponents.length - 1) {
+                if (activeStep < stepsComponents.length - 1) {
                   nextStep();
                 } else {
                   if (isAdmin) {
@@ -65,10 +70,10 @@ export const BusinessSetupPage = ({ isAdmin }) => {
                 }
               }}
             >
-              {step < stepsComponents.length - 1 ? 'Next' : 'Finish'}
+              {activeStep < stepsComponents.length - 1 ? 'Next' : 'Finish'}
             </Button>
           </Flex>
-        </Flex>
+        </Box>
       ) : null}
     </Flex>
   );

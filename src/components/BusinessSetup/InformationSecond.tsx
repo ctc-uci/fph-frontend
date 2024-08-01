@@ -1,29 +1,29 @@
-import { Box, VStack, Text, HStack, Flex } from '@chakra-ui/react';
+import { Box, VStack, Text, Flex } from '@chakra-ui/react';
 
 const steps = [
   {
-    id: 1,
+    id: 5,
     description:
-      'Visit our website to familiarize yourself with our mission, donation sites and pet food providers in your area, and other useful info.',
+      'Report Monthly: Each month log your donations. You will be entered in our quarterly drawing for a $50 Starbucks gift card.',
+    words: 2,
+  },
+  {
+    id: 6,
+    description:
+      'Add this verbiage to your email signature: “We are a Feeding Pets of the Homeless® Donation Site! Please bring by dog or cat food, treats or supplies to help!” Feeding Pets of the Homeless® is the first and only national animal organization focused completely on feeding and providing emergency veterinary care to pets that belong to homeless people.',
+    words: 7,
+  },
+  {
+    id: 7,
+    description:
+      'Do not accept cash! Check should be addressed to Feeding Pets of the Homeless® and sent to headquarters.',
     words: 3,
   },
   {
-    id: 2,
+    id: 8,
     description:
-      'Set up a donation bin in an accessible area around your business. We accept donations of pet food (cat, dog, canned & dry, NOT expired) and gently used and new pet supplies, such as leashes, collars, bowls, harnesses, beds, etc. Open bags okay, please tape up. We do not accept donations of prescription medications. Over the counter medications are okay.',
-    words: 5,
-  },
-  {
-    id: 3,
-    description:
-      'Reach out to Pet Food Providers in your area and set up a pick up or drop off schedule for your donations.',
+      'If a donor requests a donation receipt, please use form included in the startup kit and return to us. We will then send an official receipt to them from headquarters.',
     words: 6,
-  },
-  {
-    id: 4,
-    description:
-      'Spread the word on social media and let your customers know you have become a Feeding Pets of the Homeless® Donation Site.',
-    words: 3,
   },
 ];
 
@@ -37,10 +37,17 @@ const splitDescription = (description: string, n: number) => {
   };
 };
 
-export const Information = () => {
+export const InformationSecond = () => {
   return (
-    <Flex justifyContent="center" alignItems="center" bg="white" flexGrow={1} padding={8}>
-      <VStack spacing={8} maxWidth={1000}>
+    <Flex
+      justifyContent="center"
+      alignItems="center"
+      bg="white"
+      flexGrow={1}
+      padding={8}
+      paddingTop={0}
+    >
+      <VStack spacing={4} maxWidth={1000}>
         <Text color="teal" fontSize="5xl" fontWeight="bold">
           Let&apos;s Get You Set Up!
         </Text>
