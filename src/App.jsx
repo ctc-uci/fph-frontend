@@ -8,7 +8,7 @@ import AdminDashboard from './components/AdminDashboard/AdminDashboard.jsx';
 import EditContactInformation from './components/EditContactInformation.jsx';
 import BusinessDonationHistory from './components/BusinessDonationHistory/BusinessDonationHistory.jsx';
 import ViewDonationHistory from './components/BusinessDonationHistory/ViewDonationHistory/ViewDonationHistory.jsx';
-import ContactUs from './components/ContactUsForm/ContactUs.jsx';
+import { SupplyRequestsPage } from './components/SupplyRequests/SupplyRequestsPage';
 import DonationTrackingTable from './components/DonationTrackingTable/DonationTrackingTable.jsx';
 import styles from './App.module.css';
 import DonationItemsTable from './components/DonationItemsTable/DonationItemsTable.jsx';
@@ -51,7 +51,10 @@ const App = () => {
               <Route path="/SignupBusiness" element={<BusinessSetupPage isAdmin={false} />} />
               <Route path="/Login" element={<Login isAdmin={true} />} />
               <Route path="/ForgotPassword" element={<ForgotPassword />} />
-              <Route path="/ContactUs" element={<ProtectedRoute Component={ContactUs} />} />
+              <Route
+                path="/ContactUs"
+                element={<ProtectedRoute Component={SupplyRequestsPage} />}
+              />
               <Route path="/Congrats" element={<ProtectedRoute Component={Congrats} />} />
               <Route
                 path="/AdminDashboard"
