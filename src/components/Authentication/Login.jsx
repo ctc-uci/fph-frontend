@@ -1,22 +1,23 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
+  Flex,
   FormControl,
   FormLabel,
-  Input,
-  VStack,
   Heading,
+  HStack,
+  Image,
+  Input,
   Link,
   useToast,
-  HStack,
-  Flex,
-  Image,
+  VStack,
 } from '@chakra-ui/react';
-import LOGO from './fph_logo.png';
-import { useAuth } from '../../contexts/AuthContext';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
+
+import { useAuth } from '../../contexts/AuthContext';
+import LOGO from './fph_logo.png';
 
 const Login = ({ isAdmin }) => {
   // React states for input fields
@@ -30,7 +31,7 @@ const Login = ({ isAdmin }) => {
 
   const navigate = useNavigate();
   const toast = useToast();
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setError('');
@@ -73,11 +74,11 @@ const Login = ({ isAdmin }) => {
           </Heading>
           <FormControl id="email">
             <FormLabel>Email</FormLabel>
-            <Input type="email" value={email} onChange={e => setEmail(e.target.value)} />
+            <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           </FormControl>
           <FormControl id="password">
             <FormLabel>Password</FormLabel>
-            <Input type="password" value={password} onChange={e => setPassword(e.target.value)} />
+            <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
           </FormControl>
           <Flex flex={'row'} justifyContent={'flex-end'} w="100%">
             <Link
@@ -89,7 +90,7 @@ const Login = ({ isAdmin }) => {
               Forgot Password?
             </Link>
           </Flex>
-          <Button colorScheme="teal" w="full" disabled={loading} onClick={e => handleSubmit(e)}>
+          <Button colorScheme="teal" w="full" disabled={loading} onClick={(e) => handleSubmit(e)}>
             Login
           </Button>
         </VStack>

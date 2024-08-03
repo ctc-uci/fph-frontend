@@ -1,44 +1,47 @@
 import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { useNavigate, useParams } from 'react-router-dom';
 import {
   Box,
-  Button,
   Breadcrumb,
-  BreadcrumbLink,
   BreadcrumbItem,
-  Flex,
-  Text,
-  IconButton,
-  ChakraProvider,
+  BreadcrumbLink,
+  Button,
   Card,
-  CardHeader,
   CardBody,
-  TableContainer,
-  Td,
-  Tr,
-  Thead,
-  Tbody,
-  Table,
   CardFooter,
-  Input,
-  Spacer,
-  Textarea,
-  Select,
+  CardHeader,
+  ChakraProvider,
   Checkbox,
+  Flex,
   Heading,
+  IconButton,
+  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
-  ModalOverlay,
   ModalContent,
   ModalFooter,
   ModalHeader,
+  ModalOverlay,
+  Select,
+  Spacer,
   Stack,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
+  Text,
+  Textarea,
+  Thead,
+  Tr,
 } from '@chakra-ui/react';
+import PropTypes from 'prop-types';
+import { useNavigate, useParams } from 'react-router-dom';
+
 import { useAuth } from '../../contexts/AuthContext';
+
 import 'boxicons';
 import './BusinessForm.module.css';
+
 import { useBackend } from '../../contexts/BackendContext';
 import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer';
 import classes from './BusinessForm.module.css';
@@ -134,7 +137,7 @@ const BusinessForm = ({ edit = true }) => {
     }
   }, [backend]);
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
@@ -262,7 +265,7 @@ const BusinessForm = ({ edit = true }) => {
     setServiceRequest(business_data.service_request || false);
   };
 
-  const handleCheckboxChange = event => {
+  const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
     setCheckedAddedInfo({ ...checkedAddedInfo, [name]: checked });
   };
@@ -427,7 +430,7 @@ const BusinessForm = ({ edit = true }) => {
                                 <Td>
                                   <Input
                                     value={businessName}
-                                    onChange={e => setBusinessName(e.target.value)}
+                                    onChange={(e) => setBusinessName(e.target.value)}
                                     placeholder="Business"
                                   />
                                 </Td>
@@ -442,14 +445,14 @@ const BusinessForm = ({ edit = true }) => {
                                   <Flex gap={4}>
                                     <Input
                                       value={firstName}
-                                      onChange={e => {
+                                      onChange={(e) => {
                                         setFirstName(e.target.value);
                                       }}
                                       placeholder="First Name"
                                     />
                                     <Input
                                       value={lastName}
-                                      onChange={e => {
+                                      onChange={(e) => {
                                         setLastName(e.target.value);
                                       }}
                                       placeholder="Last Name"
@@ -466,7 +469,7 @@ const BusinessForm = ({ edit = true }) => {
                                 <Td>
                                   <Input
                                     value={email}
-                                    onChange={e => {
+                                    onChange={(e) => {
                                       setEmail(e.target.value);
                                     }}
                                     placeholder="Email"
@@ -482,7 +485,7 @@ const BusinessForm = ({ edit = true }) => {
                                 <Td>
                                   <Input
                                     value={website}
-                                    onChange={e => {
+                                    onChange={(e) => {
                                       setWebsite(e.target.value);
                                     }}
                                     placeholder="Website"
@@ -500,7 +503,7 @@ const BusinessForm = ({ edit = true }) => {
                                     <Flex gap={4}>
                                       <Input
                                         value={addressLine1}
-                                        onChange={e => {
+                                        onChange={(e) => {
                                           setAddressLine1(e.target.value);
                                         }}
                                         w="42vw"
@@ -508,7 +511,7 @@ const BusinessForm = ({ edit = true }) => {
                                       />
                                       <Input
                                         value={addressLine2}
-                                        onChange={e => {
+                                        onChange={(e) => {
                                           setAddressLine2(e.target.value);
                                         }}
                                         placeholder="Unit or Apartment Number"
@@ -518,14 +521,14 @@ const BusinessForm = ({ edit = true }) => {
                                       <Flex gap={4}>
                                         <Input
                                           value={city}
-                                          onChange={e => {
+                                          onChange={(e) => {
                                             setCity(e.target.value);
                                           }}
                                           placeholder="City"
                                         />
                                         <Input
                                           value={state}
-                                          onChange={e => {
+                                          onChange={(e) => {
                                             setState(e.target.value);
                                           }}
                                           placeholder="State"
@@ -534,7 +537,7 @@ const BusinessForm = ({ edit = true }) => {
                                       <Flex>
                                         <Input
                                           value={zip}
-                                          onChange={e => {
+                                          onChange={(e) => {
                                             setZip(e.target.value);
                                           }}
                                           placeholder="Zip/Postal"
@@ -555,7 +558,7 @@ const BusinessForm = ({ edit = true }) => {
                                     <Input
                                       flex={'1 0 15%'}
                                       value={countrycode}
-                                      onChange={e => {
+                                      onChange={(e) => {
                                         setCountryCode(e.target.value);
                                       }}
                                       placeholder="+1"
@@ -563,7 +566,7 @@ const BusinessForm = ({ edit = true }) => {
                                     <Input
                                       flex={'1 0 80%'}
                                       value={phone}
-                                      onChange={e => {
+                                      onChange={(e) => {
                                         setPhone(e.target.value);
                                       }}
                                       placeholder="000-000-0000"
@@ -580,7 +583,7 @@ const BusinessForm = ({ edit = true }) => {
                                 <Td>
                                   <Input
                                     value={businessHours}
-                                    onChange={e => {
+                                    onChange={(e) => {
                                       setBusinessHours(e.target.value);
                                     }}
                                     placeholder="Business Hours"
@@ -601,7 +604,7 @@ const BusinessForm = ({ edit = true }) => {
                                 <Td>
                                   <Input
                                     value={howHeard}
-                                    onChange={e => {
+                                    onChange={(e) => {
                                       setHowHeard(e.target.value);
                                     }}
                                     placeholder="LinkedIn, Google, etc."
@@ -655,7 +658,7 @@ const BusinessForm = ({ edit = true }) => {
                                     <Select
                                       placeholder="Type"
                                       value={vendorType}
-                                      onChange={e => setVendorType(e.target.value)}
+                                      onChange={(e) => setVendorType(e.target.value)}
                                       w="20vw"
                                     >
                                       <option value={'School'}>School</option>
@@ -685,7 +688,7 @@ const BusinessForm = ({ edit = true }) => {
                                   </Text>
                                   <Textarea
                                     value={internalNotes}
-                                    onChange={e => {
+                                    onChange={(e) => {
                                       setInternalNotes(e.target.value);
                                     }}
                                     placeholder="Internal Notes"

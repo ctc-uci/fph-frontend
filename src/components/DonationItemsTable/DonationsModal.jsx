@@ -1,24 +1,25 @@
 import { useEffect, useState } from 'react';
-import { useBackend } from '../../contexts/BackendContext';
-import PropTypes from 'prop-types';
+import { CloseIcon } from '@chakra-ui/icons';
 import {
-  Input,
-  Text,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalOverlay,
-  ModalFooter,
-  IconButton,
-  Button,
-  Select,
   Alert,
-  AlertTitle,
   AlertDescription,
+  AlertTitle,
+  Button,
+  IconButton,
+  Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Select,
+  Text,
   useToast,
 } from '@chakra-ui/react';
-import { CloseIcon } from '@chakra-ui/icons';
+import PropTypes from 'prop-types';
+
+import { useBackend } from '../../contexts/BackendContext';
 
 // TODO: Refactor states such that its a nested state
 const DonationsModal = ({ isOpen, onClose, data, setCurrentPageNum, loadInfo, isEdit }) => {
@@ -127,7 +128,7 @@ const DonationsModal = ({ isOpen, onClose, data, setCurrentPageNum, loadInfo, is
               placeholder="Type"
               size="lg"
               name="reporter"
-              onChange={e => setTypeData(e.target.value)}
+              onChange={(e) => setTypeData(e.target.value)}
               mb={4}
             />
             <Text>Price</Text>
@@ -137,7 +138,7 @@ const DonationsModal = ({ isOpen, onClose, data, setCurrentPageNum, loadInfo, is
               placeholder="Price"
               size="lg"
               name="reporter"
-              onChange={e => setPriceData(e.target.value)}
+              onChange={(e) => setPriceData(e.target.value)}
               mb={4}
             />
             <Text>Category</Text>
@@ -145,7 +146,7 @@ const DonationsModal = ({ isOpen, onClose, data, setCurrentPageNum, loadInfo, is
               id="category"
               value={categoryData}
               size="lg"
-              onChange={e => setCategoryData(e.target.value)}
+              onChange={(e) => setCategoryData(e.target.value)}
               mb={4}
             >
               <option value="Food">Food</option>
@@ -156,7 +157,7 @@ const DonationsModal = ({ isOpen, onClose, data, setCurrentPageNum, loadInfo, is
               id="weight"
               value={weightData}
               size="lg"
-              onChange={e => setWeightData(e.target.value)}
+              onChange={(e) => setWeightData(e.target.value)}
               mb={4}
             >
               <option value="lbs">Pounds (lbs)</option>
@@ -172,7 +173,7 @@ const DonationsModal = ({ isOpen, onClose, data, setCurrentPageNum, loadInfo, is
           <ModalFooter justifyContent="flex-end" gap={4}>
             <Button onClick={closeAndReset}>Cancel</Button>
             <Button
-              onClick={event => {
+              onClick={(event) => {
                 submitForm(event, priceData);
               }}
               colorScheme="teal"

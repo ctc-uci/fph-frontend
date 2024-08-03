@@ -1,4 +1,5 @@
-import { Box, Link, Text, Image, Flex, Stack } from '@chakra-ui/react';
+import { Box, Flex, Image, Link, Stack, Text } from '@chakra-ui/react';
+
 import FPH_LOGO from './fph_logo.png';
 
 const FourthForm = () => {

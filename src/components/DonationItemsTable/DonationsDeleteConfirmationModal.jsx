@@ -1,15 +1,16 @@
 import { useRef } from 'react';
-import { useBackend } from '../../contexts/BackendContext';
 import {
-  Button,
   AlertDialog,
-  AlertDialogOverlay,
-  AlertDialogContent,
-  AlertDialogHeader,
   AlertDialogBody,
+  AlertDialogContent,
   AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  Button,
 } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
+
+import { useBackend } from '../../contexts/BackendContext';
 
 function DonationsDeleteConfirmationModal({ isOpen, onClose, loadInfo, selectedItem }) {
   const { backend } = useBackend();

@@ -1,34 +1,36 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from 'react';
-import { useBackend } from '../../contexts/BackendContext';
-import { useNavigate } from 'react-router-dom';
-import { renderEmail } from 'react-html-email';
-import approvedEmailTemplate from '../../templates/ApprovedBusinessTemplate';
-import deniedEmailTemplate from '../../templates/DeniedBusinessEmailTemplate';
 import {
-  Text,
-  Flex,
-  IconButton,
   Box,
   Breadcrumb,
-  BreadcrumbLink,
   BreadcrumbItem,
-  Card,
-  CardHeader,
-  CardBody,
-  Heading,
-  Td,
-  Tr,
+  BreadcrumbLink,
   Button,
-  Table,
-  Thead,
-  TableContainer,
+  ButtonGroup,
+  Card,
+  CardBody,
+  CardHeader,
+  Flex,
+  Heading,
+  IconButton,
   Select,
   SimpleGrid,
+  Table,
+  TableContainer,
   Tbody,
-  ButtonGroup,
+  Td,
+  Text,
+  Thead,
+  Tr,
   useToast,
 } from '@chakra-ui/react';
+import { renderEmail } from 'react-html-email';
+import { useNavigate } from 'react-router-dom';
+
+import { useBackend } from '../../contexts/BackendContext';
+import approvedEmailTemplate from '../../templates/ApprovedBusinessTemplate';
+import deniedEmailTemplate from '../../templates/DeniedBusinessEmailTemplate';
+
 const PendingBusiness = ({ data, handleHome }) => {
   const { backend } = useBackend();
   const navigate = useNavigate();
@@ -42,7 +44,7 @@ const PendingBusiness = ({ data, handleHome }) => {
         const businessResponse = await backend.get(`/business/${data.id}`);
         const residentialStatus = businessResponse.data[0].residential;
         if (!residentialStatus) {
-          setResidentialStatus("PENDING");
+          setResidentialStatus('PENDING');
         } else {
           setResidentialStatus(residentialStatus.toUpperCase());
         }
@@ -63,7 +65,7 @@ const PendingBusiness = ({ data, handleHome }) => {
     });
   };
 
-  const handleApproveDeny = async action => {
+  const handleApproveDeny = async (action) => {
     const emailSubject =
       action === 'Active' ? `FPH Has Approved Your Application` : `FPH Has Denied Your Application`;
     console.log(data);
@@ -86,7 +88,7 @@ const PendingBusiness = ({ data, handleHome }) => {
       console.error('Error fetching data:', error);
     }
   };
-  const handleChange = event => {
+  const handleChange = (event) => {
     setResidentialStatus(event.target.value);
   };
 
@@ -100,24 +102,23 @@ const PendingBusiness = ({ data, handleHome }) => {
     <>
       {data ? (
         <>
-          <Flex pl={10} flexDirection={'column'} pt={10}
-          >
+          <Flex pl={10} flexDirection={'column'} pt={10}>
             <Flex alignItems="center" justifyContent={'space-between'} width={'75%'} pb={'5'}>
-            <Breadcrumb spacing="1">
-              <BreadcrumbItem>
-                <BreadcrumbLink color="#245F61" onClick={handleHome}>
-                  Home
-                </BreadcrumbLink>
-              </BreadcrumbItem>
+              <Breadcrumb spacing="1">
+                <BreadcrumbItem>
+                  <BreadcrumbLink color="#245F61" onClick={handleHome}>
+                    Home
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
 
-              <BreadcrumbItem isCurrentPage>
-                <BreadcrumbLink>{data.name}</BreadcrumbLink>
-              </BreadcrumbItem>
-            </Breadcrumb>
+                <BreadcrumbItem isCurrentPage>
+                  <BreadcrumbLink>{data.name}</BreadcrumbLink>
+                </BreadcrumbItem>
+              </Breadcrumb>
 
               <IconButton icon={<box-icon type="solid" name="bell"></box-icon>} />
-              </Flex>
             </Flex>
+          </Flex>
 
           <Card maxW="100%" w="64vw" h="auto" p={6} ml="10" mb="10">
             <CardHeader>
@@ -243,14 +244,14 @@ const PendingBusiness = ({ data, handleHome }) => {
                                     </Text>
                                   </Td>
                                   <Td>
-                                  {data.primary_phone && (
-                                    <Text fontSize="xs" color="500">
-                                      {data.primary_phone.replace(
-                                        /(\d{3})(\d{3})(\d{4})/,
-                                        '$1-$2-$3',
-                                      )}
-                                    </Text>
-                                  )}
+                                    {data.primary_phone && (
+                                      <Text fontSize="xs" color="500">
+                                        {data.primary_phone.replace(
+                                          /(\d{3})(\d{3})(\d{4})/,
+                                          '$1-$2-$3',
+                                        )}
+                                      </Text>
+                                    )}
                                   </Td>
                                 </Flex>
                               </Tr>

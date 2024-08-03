@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
+    "@ianvs/prettier-plugin-sort-imports": "^4.3.1",
     "add": "^2.0.6",
     "boxicons": "^2.1.4",
     "lint-staged": "^14.0.1",

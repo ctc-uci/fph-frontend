@@ -1,25 +1,26 @@
-import { useBackend } from '../../contexts/BackendContext';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { ArrowDownIcon } from '@chakra-ui/icons';
 import {
-  Card,
-  Heading,
-  CardBody,
-  Stack,
   Box,
-  Text,
-  StackDivider,
-  Flex,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   Button,
+  Card,
+  CardBody,
+  Flex,
+  Heading,
+  Stack,
+  StackDivider,
+  Text,
   useToast,
 } from '@chakra-ui/react';
-import { ArrowDownIcon } from '@chakra-ui/icons';
-import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer';
-import DownloadCSV from '../../utils/downloadCSV';
 import PropTypes from 'prop-types';
+import { useNavigate, useParams } from 'react-router-dom';
+
+import { useBackend } from '../../contexts/BackendContext';
+import DownloadCSV from '../../utils/downloadCSV';
+import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer';
 import classes from './ViewDonation.module.css';
 
 const ViewDonation = () => {
@@ -60,7 +61,9 @@ const ViewDonation = () => {
     const getData = async () => {
       try {
         const donationResponse = await backend.get(`/donation/${id}`);
-        const businessResponse = await backend.get(`/business/${donationResponse.data[0].business_id}`);
+        const businessResponse = await backend.get(
+          `/business/${donationResponse.data[0].business_id}`,
+        );
         setBusinessName(businessResponse.data[0].name);
         setDonationData(donationResponse.data[0]);
       } catch (error) {
@@ -89,11 +92,18 @@ const ViewDonation = () => {
         <Flex alignItems="center" justifyContent={'space-between'} width={'75%'} pb={'5'}>
           <Breadcrumb>
             <BreadcrumbItem>
-              <BreadcrumbLink color="#245F61" onClick={() => navigate('/DonationTrackingTable')}>Donation Tracking</BreadcrumbLink>
+              <BreadcrumbLink color="#245F61" onClick={() => navigate('/DonationTrackingTable')}>
+                Donation Tracking
+              </BreadcrumbLink>
             </BreadcrumbItem>
 
             <BreadcrumbItem>
-              <BreadcrumbLink color="#245F61" onClick={() => navigate(`/ViewBusiness/${donationData.business_id}`)}>View Business </BreadcrumbLink>
+              <BreadcrumbLink
+                color="#245F61"
+                onClick={() => navigate(`/ViewBusiness/${donationData.business_id}`)}
+              >
+                View Business{' '}
+              </BreadcrumbLink>
             </BreadcrumbItem>
 
             <BreadcrumbItem isCurrentPage>
@@ -103,9 +113,20 @@ const ViewDonation = () => {
           <NotificationsDrawer notificationsData={notification} />
         </Flex>
         <Flex alignItems="center" justifyContent={'space-between'} width={'75%'} pb={'5'}>
-          <Heading size="lg" className={classes.titleText}>{businessName}&rsquo;s Donation Submission</Heading>
+          <Heading size="lg" className={classes.titleText}>
+            {businessName}&rsquo;s Donation Submission
+          </Heading>
           <Flex gap="3">
-            <Button onClick={handleViewBusiness} sx={{ width: '172', borderRadius: '6px', border: '1px solid var(--fph-teal-500-primary, #359797)', color: 'var(--fph-teal-500-primary, #359797)', backgroundColor: 'transparent' }}>
+            <Button
+              onClick={handleViewBusiness}
+              sx={{
+                width: '172',
+                borderRadius: '6px',
+                border: '1px solid var(--fph-teal-500-primary, #359797)',
+                color: 'var(--fph-teal-500-primary, #359797)',
+                backgroundColor: 'transparent',
+              }}
+            >
               View Business Details
             </Button>
             <Button colorScheme="teal" onClick={handleDownloadCSV} sx={{ width: '172px' }}>

@@ -1,36 +1,38 @@
 import './BusinessDashboard.module.css';
-import { useBackend } from '../../contexts/BackendContext';
-import { useAuth } from '../../contexts/AuthContext';
+
 import { useEffect, useState } from 'react';
+import { ArrowForwardIcon, CheckCircleIcon, EmailIcon, WarningIcon } from '@chakra-ui/icons';
 import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Button,
   Box,
-  HStack,
-  Stack,
-  Text,
-  Icon,
-  Flex,
+  Button,
   Drawer,
   DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
   DrawerHeader,
   DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
-  useDisclosure,
+  Flex,
   Heading,
+  HStack,
+  Icon,
+  Stack,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { BiPackage } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
-import { ArrowForwardIcon, WarningIcon, EmailIcon, CheckCircleIcon } from '@chakra-ui/icons';
+
+import { useAuth } from '../../contexts/AuthContext';
+import { useBackend } from '../../contexts/BackendContext';
+import type { Notification } from '../../types/notification';
 import ViewDonationHistory from '../BusinessDonationHistory/ViewDonationHistory/ViewDonationHistory';
 import classes from './BusinessDashboard.module.css';
-import type { Notification } from '../../types/notification';
 import { BusinessTotals } from './BusinessTotals';
 
 // Currently, this whole component depends on each notification having its correct 'type' when created. We defined 4 types:
@@ -160,13 +162,13 @@ export const BusinessDashboard = () => {
     }
   }, [setCurrentQuarter]);
 
-  const parseSupplyRequestData = async message => {
+  const parseSupplyRequestData = async (message) => {
     const lines = message.split(',');
     const numbersList: number[] = [];
     let notes = '';
     let notesFound = false;
 
-    lines.forEach(line => {
+    lines.forEach((line) => {
       if (line.startsWith('"Notes":')) {
         notes = line
           .substring(line.indexOf(':') + 2)

@@ -1,12 +1,14 @@
 {
   "quoteProps": "as-needed",
   "singleQuote": true,
-  "arrowParens": "avoid",
   "tabWidth": 2,
   "useTabs": false,
   "printWidth": 100,
   "proseWrap": "always",
   "trailingComma": "all",
+  "endOfLine": "lf",
   "semi": true,
-  "jsxSingleQuote": false
+  "jsxSingleQuote": false,
+  "plugins": ["@ianvs/prettier-plugin-sort-imports"],
+  "importOrder": ["^(react/(.*)$)|^(react$)", "<THIRD_PARTY_MODULES>", "", "^[./]"]
 }

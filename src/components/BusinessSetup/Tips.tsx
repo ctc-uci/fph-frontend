@@ -1,4 +1,4 @@
-import { Box, VStack, Text, HStack, Flex, Icon } from '@chakra-ui/react';
+import { Box, Flex, HStack, Icon, Text, VStack } from '@chakra-ui/react';
 import { BiBone, BiCalendar, BiCar, BiChat, BiCopy } from 'react-icons/bi';
 
 const tips = [

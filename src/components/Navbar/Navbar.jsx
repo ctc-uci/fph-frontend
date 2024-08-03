@@ -1,10 +1,9 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { IconButton, Button } from '@chakra-ui/react';
 import { ChevronLeftIcon } from '@chakra-ui/icons';
-import { useNavigate } from 'react-router-dom';
+import { Button, IconButton } from '@chakra-ui/react';
+import PropTypes from 'prop-types';
+import { Link, useNavigate } from 'react-router-dom';
 
 // Navbar is a container with a single button for Contact Us
 

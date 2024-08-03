@@ -1,4 +1,4 @@
-import { Box, VStack, Text, Flex } from '@chakra-ui/react';
+import { Box, Flex, Text, VStack } from '@chakra-ui/react';
 
 const steps = [
   {

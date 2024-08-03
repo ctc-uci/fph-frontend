@@ -1,18 +1,18 @@
 import {
-  Flex,
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
   Box,
   Card,
   CardBody,
+  Flex,
+  Icon,
   Text,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
 } from '@chakra-ui/react';
-import { Icon } from '@chakra-ui/react';
-import { BiCalendar, BiBone, BiCar, BiCopyAlt, BiConversation } from 'react-icons/bi';
 import { PropTypes } from 'prop-types';
+import { BiBone, BiCalendar, BiCar, BiConversation, BiCopyAlt } from 'react-icons/bi';
 
 const ReferenceGuide = () => {
   const CustomAccordionItem = ({ title, panelInfo }) => (

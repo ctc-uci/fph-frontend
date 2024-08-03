@@ -1,12 +1,13 @@
-import { useState, useEffect } from 'react';
-import { Tabs, TabList, TabPanels, Tab, TabPanel, Text } from '@chakra-ui/react';
-import AdminsTable from './AdminsTable.jsx';
-import AdminAccount from './AdminAccount.jsx';
+import { useEffect, useState } from 'react';
+import { Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
+
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import { useBackend } from '../../contexts/BackendContext.jsx';
-import { useNavigate } from 'react-router-dom';
 import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer.jsx';
+import AdminAccount from './AdminAccount.jsx';
 import classes from './AdminSettings.module.css';
+import AdminsTable from './AdminsTable.jsx';
 
 export const AdminSettingsMaster = () => {
   const { isAdmin } = useAuth();

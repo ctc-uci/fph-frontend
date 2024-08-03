@@ -1,4 +1,5 @@
-import { VStack, Text, Image, Center } from '@chakra-ui/react';
+import { Center, Image, Text, VStack } from '@chakra-ui/react';
+
 import LOGO from '../../../public/fph_logo_no_bg.png';
 
 export const Welcome = () => {

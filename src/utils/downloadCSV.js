@@ -1,6 +1,6 @@
 // DownloadCSV.js
 
-async function DownloadCSV(ids, isDonation=false) {
+async function DownloadCSV(ids, isDonation = false) {
   const headers = {
     'Business Name': 'name',
     'Business Phone': 'primary_phone',
@@ -25,14 +25,11 @@ async function DownloadCSV(ids, isDonation=false) {
         },
       );
     } else {
-      response = await fetch(
-        `http://localhost:3001/donation/selectByIds?ids=${ids.join(',')}`,
-        {
-          method: 'GET',
-        },
-      );
+      response = await fetch(`http://localhost:3001/donation/selectByIds?ids=${ids.join(',')}`, {
+        method: 'GET',
+      });
     }
-    
+
     if (!response.ok) {
       throw new Error('Failed to fetch data from the server');
     }
@@ -44,8 +41,8 @@ async function DownloadCSV(ids, isDonation=false) {
 
     csvRows.push(Object.keys(headers).join(','));
 
-    data.forEach(row => {
-      const values = Object.values(headers).map(key => {
+    data.forEach((row) => {
+      const values = Object.values(headers).map((key) => {
         const escaped = ('' + row[key]).replace(/"/g, '\\"');
         return `"${escaped}"`;
       });

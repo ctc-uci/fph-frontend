@@ -1,6 +1,6 @@
-import { Email, Item, Span, A } from 'react-html-email';
+import { A, Email, Item, Span } from 'react-html-email';
 
-const approvedEmailTemplate = id => (
+const approvedEmailTemplate = (id) => (
   <Email title="Congradulations!">
     <Item align="center">
       <Span fontSize={20}>

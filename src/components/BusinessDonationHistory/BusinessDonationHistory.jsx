@@ -1,27 +1,28 @@
 /* eslint-disable react/prop-types */
 
 import { useEffect, useState } from 'react';
-import { useBackend } from '../../contexts/BackendContext';
-import { useAuth } from '../../contexts/AuthContext';
+import { ArrowForwardIcon, ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Td,
-  Button,
-  Th,
   Box,
-  IconButton,
-  InputGroup,
-  Input,
-  Heading,
+  Button,
   Flex,
+  Heading,
+  IconButton,
+  Input,
+  InputGroup,
   Spacer,
+  Table,
   TableContainer,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronRightIcon, ChevronLeftIcon, ArrowForwardIcon } from '@chakra-ui/icons';
+
+import { useAuth } from '../../contexts/AuthContext';
+import { useBackend } from '../../contexts/BackendContext';
 import classes from './BusinessDonationHistory.module.css';
 
 const BusinessDonationHistory = () => {
@@ -56,7 +57,6 @@ const BusinessDonationHistory = () => {
         );
         setCurrentTotalDonationNum(donationNumResponse.data[0]['count']);
         setPageLimit(Math.ceil(donationNumResponse.data[0]['count'] / paginationNumber));
-
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -64,7 +64,7 @@ const BusinessDonationHistory = () => {
     getData();
   }, [backend, currentPageNum, searchInput, paginationNumber]);
 
-  const handleButtonClick = async id => {
+  const handleButtonClick = async (id) => {
     try {
       setSelectedDonationId(id);
       await backend.get(`/donation/${id}`);
@@ -77,7 +77,7 @@ const BusinessDonationHistory = () => {
     navigate(`/BusinessDonationHistory/${selectedDonationId}`);
   }
 
-  const handleSearch = e => {
+  const handleSearch = (e) => {
     setSearchInput(e.target.value);
     setCurrentPageNum(1);
   };
@@ -93,13 +93,19 @@ const BusinessDonationHistory = () => {
             placeholder="Search"
             size="sm"
             value={searchInput}
-            onChange={e => handleSearch(e)}
+            onChange={(e) => handleSearch(e)}
             height="40px"
             borderRadius="md"
           />
         </InputGroup>
       </Flex>
-      <TableContainer border="1px" borderRadius="12px" borderColor="#E2E8F0" width="100%" className={classes.roundedTable}>
+      <TableContainer
+        border="1px"
+        borderRadius="12px"
+        borderColor="#E2E8F0"
+        width="100%"
+        className={classes.roundedTable}
+      >
         <Table>
           <Thead>
             <Tr>

@@ -1,14 +1,15 @@
 import { useState } from 'react';
-import FirstForm from './FirstForm';
-import SecondForm from './SecondForm';
-import ThirdForm from './ThirdForm';
-import FourthForm from './FourthForm';
+import { Box, Flex, Image, SimpleGrid, Stack, Text } from '@chakra-ui/react';
+
 import { useBackend } from '../../contexts/BackendContext';
-import { Box, Text, SimpleGrid, Stack, Image, Flex } from '@chakra-ui/react';
+import FirstForm from './FirstForm';
+import FourthForm from './FourthForm';
 import ICON1 from './icon1.png';
 import ICON2 from './icon2.png';
 import ICON3 from './icon3.png';
 import ICON4 from './icon4.png';
+import SecondForm from './SecondForm';
+import ThirdForm from './ThirdForm';
 
 const BusinessFormMaster = () => {
   const { backend } = useBackend();
@@ -31,7 +32,7 @@ const BusinessFormMaster = () => {
     termsAndConditionsAccepted: false,
   });
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const DUMMY_STRING = '';
@@ -123,18 +124,18 @@ const BusinessFormMaster = () => {
 
   const [step, setStep] = useState(0);
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     const name = event.target.name;
     var value = event.target.value;
-    setFormData(prevState => ({ ...prevState, [name]: value }));
+    setFormData((prevState) => ({ ...prevState, [name]: value }));
   };
 
   const nextStep = () => {
-    setStep(prevState => prevState + 1);
+    setStep((prevState) => prevState + 1);
   };
 
   const prevStep = () => {
-    setStep(prevState => prevState - 1);
+    setStep((prevState) => prevState - 1);
   };
 
   const stepsComponents = [

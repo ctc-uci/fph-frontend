@@ -1,16 +1,17 @@
 import {
+  Button,
+  Image,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Stack,
   Text,
-  Image,
-  Button,
 } from '@chakra-ui/react';
+
 import logo from '../../../public/fph_logo_no_bg.png';
 
 interface ConfirmationDialogProps {

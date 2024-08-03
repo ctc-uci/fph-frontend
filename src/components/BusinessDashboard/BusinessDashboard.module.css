@@ -34,6 +34,6 @@
 
 .warningNotif {
   border-radius: 6px;
-  border: 1px solid var(--red-400, #F56565);
-  background: #FED7D7;
+  border: 1px solid var(--red-400, #f56565);
+  background: #fed7d7;
 }

@@ -1,20 +1,21 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useBackend } from '../../contexts/BackendContext';
 import {
   Box,
   Button,
   Card,
   ChakraProvider,
   Flex,
-  Table,
   Heading,
-  Thead,
+  Table,
   Tbody,
-  Th,
-  Tr,
   Td,
+  Th,
+  Thead,
+  Tr,
 } from '@chakra-ui/react';
+import { useNavigate, useParams } from 'react-router-dom';
+
+import { useBackend } from '../../contexts/BackendContext';
 
 const ViewRequest = () => {
   const { backend } = useBackend();
@@ -127,7 +128,7 @@ const ViewRequest = () => {
                       <Td>{item}</Td>
                       <Td>{itemAmounts[items[index]]}</Td>
                     </Tr>
-                  )
+                  ),
               )}
             </Tbody>
           </Table>

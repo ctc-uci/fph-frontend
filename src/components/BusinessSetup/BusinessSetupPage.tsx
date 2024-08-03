@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { SetupSignup } from './SetupSignup';
-import { Welcome } from './Welcome';
+import { Box, Button, Flex } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
+
 import { InformationFirst } from './InformationFirst';
 import { InformationSecond } from './InformationSecond';
-import { useNavigate } from 'react-router-dom';
+import { SetupSignup } from './SetupSignup';
 import { Tips } from './Tips';
-import { Box, Flex, Button } from '@chakra-ui/react';
+import { Welcome } from './Welcome';
 
 export const BusinessSetupPage = ({ isAdmin }) => {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ export const BusinessSetupPage = ({ isAdmin }) => {
   const [activeStep, setActiveStep] = useState(0);
 
   const nextStep = () => {
-    setActiveStep(prevState => prevState + 1);
+    setActiveStep((prevState) => prevState + 1);
   };
 
   const stepsComponents = [

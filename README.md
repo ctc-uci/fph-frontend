@@ -3,23 +3,39 @@
 This is the frontend for the Feeding Pets of the Homeless Project.
 
 ## Project Description
-Feeding Pets of the Homeless® is the first national nonprofit providing pet food and emergency veterinary care to pets that belong to people experiencing homelessness. The organization finds volunteer dondation centers for food to participate. These donation centers will then assist in distributing food to food banks. This project expedites the onboarding and donation reporting processes for donation sites by providing a unified platform where donation sites can register themselves and subsequently submit their donation sheets. Using this data, donation sites can track their contributions with ease.Furthermore, Feeding Pets of the Homeless can access a view of all participating donation sites, monitor their onboarding status and review their latest donation submissions. To streamline communication and reduce operational friction, the website also features an automated reminder system. This mitigates the need for the organization to make frequent calls or dispatch representatives, ensuring a seamless collaboration between itself and participating partners.
 
+Feeding Pets of the Homeless® is the first national nonprofit providing pet food and emergency
+veterinary care to pets that belong to people experiencing homelessness. The organization finds
+volunteer dondation centers for food to participate. These donation centers will then assist in
+distributing food to food banks. This project expedites the onboarding and donation reporting
+processes for donation sites by providing a unified platform where donation sites can register
+themselves and subsequently submit their donation sheets. Using this data, donation sites can track
+their contributions with ease.Furthermore, Feeding Pets of the Homeless can access a view of all
+participating donation sites, monitor their onboarding status and review their latest donation
+submissions. To streamline communication and reduce operational friction, the website also features
+an automated reminder system. This mitigates the need for the organization to make frequent calls or
+dispatch representatives, ensuring a seamless collaboration between itself and participating
+partners.
 
 ## Setting up development environment
 
 To start working on with this project, follow these steps:
+
 1. Install the [EditorConfig plugin](https://editorconfig.org/#download) for your IDE.
 1. Add the `.env` file stored in your projects Google Drive folder to the root of the project.
-1. Install NodeJS and yarn following the [instructions here](https://classic.yarnpkg.com/lang/en/docs/install).
+1. Install NodeJS and yarn following the
+   [instructions here](https://classic.yarnpkg.com/lang/en/docs/install).
 1. Navigate to the project folder in your terminal and run `yarn` to install required packages.
 
 ## Project branching structure
 
-Due to complications with some of the GitHub Actions this project uses, the git branch structure is non-standard.
+Due to complications with some of the GitHub Actions this project uses, the git branch structure is
+non-standard.
 
-1. `dev`: This is the main branch of the project. All PRs should be merged into this branch, as if it was "main".
-1. `main`: This is the "production-ready" branch of the project; `dev` should only be merged into `main` when it is at a presentable state.
+1. `dev`: This is the main branch of the project. All PRs should be merged into this branch, as if
+   it was "main".
+1. `main`: This is the "production-ready" branch of the project; `dev` should only be merged into
+   `main` when it is at a presentable state.
 
 ## Available Scripts
 
@@ -46,15 +62,18 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for
+more information.
 
 ## ESLint and Prettier
 
-This project uses ESLint and Prettier to enforce the [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript).
+This project uses ESLint and Prettier to enforce the
+[Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript).
 
 ### ESLint Plugins
 
 Currently, the following ESLint plugins are installed:
+
 1. [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react)
 1. [eslint-plugin-prettier](https://github.com/prettier/eslint-plugin-prettier)
 
@@ -62,9 +81,11 @@ Visit the links to learn more about each plugin.
 
 ### Configuration
 
-The configuration for ESLint is inside the `.eslintrc.json` file, located in the root of the project. Learn more about ESLint [here](https://eslint.org/).
+The configuration for ESLint is inside the `.eslintrc.json` file, located in the root of the
+project. Learn more about ESLint [here](https://eslint.org/).
 
-The configuration for Prettier is inside the `.prettierrc` file, located in the root of the project. Learn more about Prettier [here](https://prettier.io/docs/en/index.html).
+The configuration for Prettier is inside the `.prettierrc` file, located in the root of the project.
+Learn more about Prettier [here](https://prettier.io/docs/en/index.html).
 
 ## Husky and lint-staged
 
@@ -72,13 +93,16 @@ This project uses lint-staged and husky to run ESLint checks before all commits.
 
 ### Skipping pre-commit checks
 
-Use the `--no-verify` option to skip pre-commit checks, but please note that this is **strongly discouraged**. 
+Use the `--no-verify` option to skip pre-commit checks, but please note that this is **strongly
+discouraged**.
 
 ### Configuration
 
-The configuration for lint-staged is inside the `lint-staged` object inside of `package.json`. Learn more about lint-staged [here](https://github.com/okonet/lint-staged).
+The configuration for lint-staged is inside the `lint-staged` object inside of `package.json`. Learn
+more about lint-staged [here](https://github.com/okonet/lint-staged).
 
-The configuration for husky is in the `.husky` directory, located in the root of the project. Learn more about husky [here](https://typicode.github.io/husky/).
+The configuration for husky is in the `.husky` directory, located in the root of the project. Learn
+more about husky [here](https://typicode.github.io/husky/).
 
 ## Learn More about Vite and React
 

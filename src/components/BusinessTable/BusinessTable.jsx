@@ -1,42 +1,46 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useBackend } from '../../contexts/BackendContext';
-import { BiEnvelope } from 'react-icons/bi';
 import { ArrowDownIcon } from '@chakra-ui/icons';
-import DownloadCSV from '../../utils/downloadCSV';
+import { BiEnvelope } from 'react-icons/bi';
 import { FaPlus } from 'react-icons/fa6';
+import { useNavigate } from 'react-router-dom';
+
+import { useBackend } from '../../contexts/BackendContext';
+import DownloadCSV from '../../utils/downloadCSV';
+
 import 'boxicons';
+
+import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Td,
-  Checkbox,
+  Badge,
+  Box,
   Button,
-  Th,
+  Card,
+  Checkbox,
+  Flex,
+  Heading,
+  IconButton,
+  Input,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Heading,
-  Text,
-  useDisclosure,
-  Input,
-  Card,
-  Badge,
-  Flex,
-  Box,
-  IconButton,
-  Tabs,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Tab,
+  Table,
   TabList,
+  Tabs,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+  useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import { ChevronRightIcon, ChevronLeftIcon } from '@chakra-ui/icons';
+
 import DropZone from '../BusinessTable/DropZone';
 
 const BusinessTable = () => {
@@ -64,7 +68,7 @@ const BusinessTable = () => {
 
   const [headers, setHeaders] = useState(TABLE_HEADERS);
 
-  const changeTab = async tab => {
+  const changeTab = async (tab) => {
     setCurrentTab(tab);
     setSelectedBusinessIds(new Set());
     setCurrentPageNum(1);
@@ -124,8 +128,8 @@ const BusinessTable = () => {
     navigate('/AddBusiness');
   };
 
-  const handleCheckboxChange = businessId => {
-    setSelectedBusinessIds(prevSelectedIds => {
+  const handleCheckboxChange = (businessId) => {
+    setSelectedBusinessIds((prevSelectedIds) => {
       const newSelectedIds = new Set(prevSelectedIds);
       if (newSelectedIds.has(businessId)) {
         newSelectedIds.delete(businessId);
@@ -137,16 +141,16 @@ const BusinessTable = () => {
   };
 
   const handleSelectAllChange = () => {
-    setSelectedBusinessIds(prevSelectedIds => {
+    setSelectedBusinessIds((prevSelectedIds) => {
       const newSelectedIds = new Set(prevSelectedIds);
-      const allBusinessIds = data.map(business => business.id);
+      const allBusinessIds = data.map((business) => business.id);
 
       if (newSelectedIds.size === allBusinessIds.length) {
         // If all are selected, unselect all
         newSelectedIds.clear();
       } else {
         // Otherwise, select all
-        allBusinessIds.forEach(id => newSelectedIds.add(id));
+        allBusinessIds.forEach((id) => newSelectedIds.add(id));
       }
 
       return newSelectedIds;
@@ -208,7 +212,7 @@ const BusinessTable = () => {
     }
   };
 
-  const getResidentialStatusBadge = status => {
+  const getResidentialStatusBadge = (status) => {
     if (status === 'Pending') {
       return (
         <Badge colorScheme="orange" px="2">
@@ -262,7 +266,7 @@ const BusinessTable = () => {
     getData();
   }, [search, currentTab, currentPageNum, backend]);
 
-  const handleRowClick = async id => {
+  const handleRowClick = async (id) => {
     navigate(`/ViewBusiness/${id}`);
   };
 
@@ -311,7 +315,7 @@ const BusinessTable = () => {
               backgroundColor="white"
               marginRight={4}
               value={search}
-              onChange={e => setSearch(e.target.value)}
+              onChange={(e) => setSearch(e.target.value)}
             />
             <Button
               width="161px"
@@ -387,47 +391,47 @@ const BusinessTable = () => {
                 ))}
               </Tr>
             </Thead>
-              <Tbody>
-                {data &&
-                  data.map((item, index) => (
-                    <Tr key={index}>
-                      <Td key="checkbox">
-                        <Checkbox
-                          isChecked={selectedBusinessIds.has(item.id)}
-                          onChange={() => handleCheckboxChange(item.id)}
-                        ></Checkbox>
-                      </Td>
-                      <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
-                        {item.name}
-                      </Td>
-                      <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
-                        {item.city}, {item.state}
-                      </Td>
-                      <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
-                        {item.primary_email}
-                      </Td>
-                      {currentTab === 'Pending' ? (
-                        <>
-                          <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
-                            {getResidentialStatusBadge(item.residential)}
-                          </Td>
-                          <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
-                            {formatDateDFH(item.join_date)}
-                          </Td>
-                        </>
-                      ) : (
-                        <>
-                          <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
-                            {getStatusBadge(item.status, item.submitted, item.notified)}
-                          </Td>
-                          <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
-                            {formatDateDFH(item.max_date)}
-                          </Td>
-                        </>
-                      )}
-                    </Tr>
-                  ))}
-              </Tbody>
+            <Tbody>
+              {data &&
+                data.map((item, index) => (
+                  <Tr key={index}>
+                    <Td key="checkbox">
+                      <Checkbox
+                        isChecked={selectedBusinessIds.has(item.id)}
+                        onChange={() => handleCheckboxChange(item.id)}
+                      ></Checkbox>
+                    </Td>
+                    <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
+                      {item.name}
+                    </Td>
+                    <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
+                      {item.city}, {item.state}
+                    </Td>
+                    <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
+                      {item.primary_email}
+                    </Td>
+                    {currentTab === 'Pending' ? (
+                      <>
+                        <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
+                          {getResidentialStatusBadge(item.residential)}
+                        </Td>
+                        <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
+                          {formatDateDFH(item.join_date)}
+                        </Td>
+                      </>
+                    ) : (
+                      <>
+                        <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
+                          {getStatusBadge(item.status, item.submitted, item.notified)}
+                        </Td>
+                        <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
+                          {formatDateDFH(item.max_date)}
+                        </Td>
+                      </>
+                    )}
+                  </Tr>
+                ))}
+            </Tbody>
           </Table>
         </Card>
         <Flex gap={4} justifyContent={'flex-end'} alignItems={'center'}>

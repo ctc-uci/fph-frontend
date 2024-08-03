@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
+
 import { useAuth } from '../contexts/AuthContext';
 
 // eslint-disable-next-line react/prop-types

@@ -1,34 +1,35 @@
+import { useEffect, useState } from 'react';
+import { CloseIcon, DownloadIcon } from '@chakra-ui/icons';
 import {
-  FormControl,
-  FormLabel,
-  Input,
-  Select,
-  Button,
+  Box,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
-  Box,
-  Flex,
-  Heading,
-  Text,
-  Textarea,
-  VStack,
+  Button,
   Checkbox,
+  Divider,
+  Flex,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
+  Select,
   Spacer,
-  Divider,
+  Text,
+  Textarea,
+  VStack,
 } from '@chakra-ui/react';
-import { CloseIcon, DownloadIcon } from '@chakra-ui/icons';
-import { useBackend } from '../../contexts/BackendContext';
-import { useAuth } from '../../contexts/AuthContext';
-import { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+import { useAuth } from '../../contexts/AuthContext';
+import { useBackend } from '../../contexts/BackendContext';
 import classes from './DonationForm.module.css';
-import { useNavigate, useLocation } from 'react-router-dom';
 
 const DonationForm = () => {
   const { backend } = useBackend();
@@ -63,13 +64,13 @@ const DonationForm = () => {
   useEffect(() => {
     const fetchBusinessId = async () => {
       if (paramId) {
-        setFormData(prevState => ({ ...prevState, business_id: paramId }));
+        setFormData((prevState) => ({ ...prevState, business_id: paramId }));
       } else {
         try {
           const businessIdResponse = await backend.get(`/businessUser/${currentUser.uid}`);
           const fetchedBusinessId = businessIdResponse.data[0].id;
           setBusinessId(fetchedBusinessId);
-          setFormData(prevState => ({ ...prevState, business_id: fetchedBusinessId }));
+          setFormData((prevState) => ({ ...prevState, business_id: fetchedBusinessId }));
         } catch (error) {
           console.error('Error fetching business ID:', error);
         }
@@ -87,7 +88,7 @@ const DonationForm = () => {
     }
   };
 
-  const submitForm = async event => {
+  const submitForm = async (event) => {
     event.preventDefault();
     console.log(formData);
 
@@ -101,8 +102,6 @@ const DonationForm = () => {
     try {
       await backend.post('/donation', formData);
       console.log(formData);
-
-
 
       const fphNotificationData = {
         businessId: businessId,
@@ -120,11 +119,11 @@ const DonationForm = () => {
     if (!paramId) {
       navigate('/Congrats');
     } else {
-      navigate(`/ViewBusiness/${paramId}`)
+      navigate(`/ViewBusiness/${paramId}`);
     }
   };
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     const name = event.target.name;
     var value = event.target.value;
     console.log(name, value);
@@ -132,7 +131,7 @@ const DonationForm = () => {
     if (event.target.type === 'number') {
       value = value ? parseInt(value, 10) : '';
     }
-    setFormData(prevState => ({ ...prevState, [name]: value }));
+    setFormData((prevState) => ({ ...prevState, [name]: value }));
   };
 
   function CustomBox({ itemName }) {
@@ -155,8 +154,8 @@ const DonationForm = () => {
             maxW="66px"
             marginRight={2}
             name={itemName}
-            onChange={value => {
-              setFormData(prevState => ({
+            onChange={(value) => {
+              setFormData((prevState) => ({
                 ...prevState,
                 [labels[itemName]]: parseInt(value),
               }));
@@ -177,7 +176,7 @@ const DonationForm = () => {
             marginRight={4}
             cursor="pointer"
             onClick={() => {
-              setFormData(prevState => ({
+              setFormData((prevState) => ({
                 ...prevState,
                 [labels[itemName]]: 0,
               }));
@@ -350,9 +349,9 @@ const DonationForm = () => {
                   height="40px"
                   width="480px"
                   textColor={'gray.500'}
-                  onChange={event => {
+                  onChange={(event) => {
                     const selectedItem = event.target.value;
-                    setFormData(prevState => ({
+                    setFormData((prevState) => ({
                       ...prevState,
                       [labels[selectedItem]]: 1, // Set the initial quantity to 1 when an item is selected
                     }));

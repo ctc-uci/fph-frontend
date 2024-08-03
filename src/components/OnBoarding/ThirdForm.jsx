@@ -1,30 +1,31 @@
-import { useState, useEffect } from 'react';
-import propTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  Button,
-  Checkbox,
-  Text,
-  Box,
-  Flex,
-  FormLabel,
-  FormControl,
-  Input,
-  Stack,
-  Select,
   Alert,
   AlertIcon,
-  Link,
   AlertTitle,
+  Box,
+  Button,
+  Checkbox,
+  Flex,
+  FormControl,
+  FormLabel,
   HStack,
   Image,
-  Textarea,
+  Input,
+  Link,
+  Modal,
+  ModalBody,
   ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Select,
+  Stack,
+  Text,
+  Textarea,
 } from '@chakra-ui/react';
+import propTypes from 'prop-types';
+
 import FPH_LOGO from './fph_logo.png';
 
 const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit, setFormData }) => {
@@ -38,11 +39,11 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit, setFormData
       <FormLabel mb="0">{label}</FormLabel>
       <Select
         value={value.hour}
-        onChange={e => onChange({ ...value, hour: e.target.value })}
+        onChange={(e) => onChange({ ...value, hour: e.target.value })}
         w="auto"
         disabled={isReadOnly}
       >
-        {[...Array(12).keys()].map(h => (
+        {[...Array(12).keys()].map((h) => (
           <option key={h} value={h + 1}>
             {h + 1}
           </option>
@@ -50,11 +51,11 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit, setFormData
       </Select>
       <Select
         value={value.minute}
-        onChange={e => onChange({ ...value, minute: e.target.value })}
+        onChange={(e) => onChange({ ...value, minute: e.target.value })}
         w="auto"
         disabled={isReadOnly}
       >
-        {['00', '15', '30', '45'].map(m => (
+        {['00', '15', '30', '45'].map((m) => (
           <option key={m} value={m}>
             {m}
           </option>
@@ -62,11 +63,11 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit, setFormData
       </Select>
       <Select
         value={value.ampm}
-        onChange={e => onChange({ ...value, ampm: e.target.value })}
+        onChange={(e) => onChange({ ...value, ampm: e.target.value })}
         w="auto"
         disabled={isReadOnly}
       >
-        {['AM', 'PM'].map(ampm => (
+        {['AM', 'PM'].map((ampm) => (
           <option key={ampm} value={ampm}>
             {ampm}
           </option>
@@ -86,7 +87,7 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit, setFormData
     isReadOnly: propTypes.bool.isRequired,
   };
 
-  const handleTimeChange = e => {
+  const handleTimeChange = (e) => {
     setBusinessHours(e.target.value);
   };
 
@@ -196,7 +197,7 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit, setFormData
                     name="phoneNumber"
                     type="text"
                     value={formData['phoneNumber']}
-                    onChange={e => {
+                    onChange={(e) => {
                       handleChange(e);
                     }}
                   />
@@ -215,7 +216,7 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit, setFormData
                     height="12vh"
                     name="heardAbout"
                     value={formData['heardAbout']}
-                    onChange={e => {
+                    onChange={(e) => {
                       handleChange(e);
                     }}
                   />
@@ -229,7 +230,7 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit, setFormData
                     name="termsAndConditionsAccepted"
                     defaultChecked={formData['termsAndConditionsAccepted']}
                     value={termsAndConditionsAccepted}
-                    onChange={e => {
+                    onChange={(e) => {
                       const checked = e.target.checked;
                       const syntheticEvent = {
                         target: {
@@ -276,7 +277,7 @@ const ThirdForm = ({ formData, handleChange, prevStep, handleSubmit, setFormData
                 <Button
                   background="#319795"
                   width="9vh"
-                  onClick={async e => {
+                  onClick={async (e) => {
                     if (!termsAndConditionsAccepted) {
                       changeSubmitAndAcceptedFalse(true);
                     } else {

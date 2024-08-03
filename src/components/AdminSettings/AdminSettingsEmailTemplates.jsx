@@ -1,4 +1,4 @@
-import { Email, Item, Span, A } from 'react-html-email';
+import { A, Email, Item, Span } from 'react-html-email';
 
 export const approvedEmailTemplateAdmin = (
   <Email title="Congratulations!">

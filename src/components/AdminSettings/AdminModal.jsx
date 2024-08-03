@@ -1,28 +1,29 @@
 import { useEffect, useState } from 'react';
-import { useBackend } from '../../contexts/BackendContext';
-import PropTypes from 'prop-types';
-import { renderEmail } from 'react-html-email';
+import { CloseIcon } from '@chakra-ui/icons';
 import {
   Alert,
-  AlertTitle,
   AlertDescription,
+  AlertTitle,
   Button,
+  Flex,
   IconButton,
   Input,
-  Flex,
-  Text,
   Modal,
-  ModalContent,
-  ModalHeader,
   ModalBody,
-  ModalOverlay,
+  ModalContent,
   ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Text,
 } from '@chakra-ui/react';
+import PropTypes from 'prop-types';
+import { renderEmail } from 'react-html-email';
+
+import { useBackend } from '../../contexts/BackendContext';
 import {
   approvedEmailTemplateAdmin,
   editedEmailTemplateAdmin,
 } from './AdminSettingsEmailTemplates';
-import { CloseIcon } from '@chakra-ui/icons';
 
 // TODO: Refactor states such that its a nested state
 const AdminModal = ({ isOpen, onClose, data, loadInfo, toast }) => {
@@ -56,7 +57,7 @@ const AdminModal = ({ isOpen, onClose, data, loadInfo, toast }) => {
     loadInfo();
   };
 
-  const submitForm = async event => {
+  const submitForm = async (event) => {
     event.preventDefault();
     const body = {
       name: nameData,
@@ -129,14 +130,14 @@ const AdminModal = ({ isOpen, onClose, data, loadInfo, toast }) => {
             type="text"
             name="name"
             value={nameData}
-            onChange={e => setNameData(e.target.value)}
+            onChange={(e) => setNameData(e.target.value)}
           />
           <Text> Email </Text>
           <Input
             type="text"
             name="email"
             value={emailData}
-            onChange={e => setEmailData(e.target.value)}
+            onChange={(e) => setEmailData(e.target.value)}
           />
         </ModalBody>
         {alertVisible && (
@@ -149,7 +150,7 @@ const AdminModal = ({ isOpen, onClose, data, loadInfo, toast }) => {
           <Button mr={3} onClick={closeAndReset}>
             Cancel
           </Button>
-          <Button colorScheme="teal" mr={3} onClick={e => submitForm(e)}>
+          <Button colorScheme="teal" mr={3} onClick={(e) => submitForm(e)}>
             Submit
           </Button>
         </ModalFooter>

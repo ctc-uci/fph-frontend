@@ -2,17 +2,18 @@ import { useState } from 'react';
 import {
   Box,
   Button,
+  Flex,
   FormControl,
   FormLabel,
-  Input,
-  VStack,
   Heading,
   HStack,
-  Flex,
   Image,
-  useToast,
+  Input,
   Text,
+  useToast,
+  VStack,
 } from '@chakra-ui/react';
+
 import { useAuth } from '../../contexts/AuthContext';
 import LOGO from './fph_logo.png';
 
@@ -26,7 +27,7 @@ const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const toast = useToast();
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
@@ -63,9 +64,9 @@ const ForgotPassword = () => {
           </Text>
           <FormControl id="email">
             <FormLabel>Email</FormLabel>
-            <Input type="email" value={email} onChange={e => setEmail(e.target.value)} />
+            <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           </FormControl>
-          <Button colorScheme="teal" w="full" disabled={loading} onClick={e => handleSubmit(e)}>
+          <Button colorScheme="teal" w="full" disabled={loading} onClick={(e) => handleSubmit(e)}>
             Send Link
           </Button>
         </VStack>

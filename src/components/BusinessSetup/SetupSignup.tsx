@@ -2,19 +2,20 @@ import { useEffect, useState } from 'react';
 import {
   Box,
   Button,
+  Flex,
   FormControl,
   FormLabel,
-  Input,
-  VStack,
   Heading,
-  Text,
-  Link,
   HStack,
   Image,
-  Flex,
+  Input,
+  Link,
+  Text,
   useToast,
+  VStack,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+
 import LOGO from '../../../public/fph_logo_no_bg.png';
 import { useAuth } from '../../contexts/AuthContext';
 import { useBackend } from '../../contexts/BackendContext';
@@ -63,7 +64,7 @@ export const SetupSignup = ({ admin, nextStep }: SetUpFirstFormProps) => {
     }
   }, [currentUser]);
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
@@ -136,18 +137,18 @@ export const SetupSignup = ({ admin, nextStep }: SetUpFirstFormProps) => {
           )}
           <FormControl id="email">
             <FormLabel>Email</FormLabel>
-            <Input type="email" value={email} onChange={e => setEmail(e.target.value)} />
+            <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           </FormControl>
           <FormControl id="password">
             <FormLabel>Password</FormLabel>
-            <Input type="password" value={password} onChange={e => setPassword(e.target.value)} />
+            <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
           </FormControl>
           <FormControl id="confirm-password">
             <FormLabel>Confirm Password</FormLabel>
             <Input
               type="password"
               value={confirmPassword}
-              onChange={e => setConfirmPassword(e.target.value)}
+              onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </FormControl>
           <Button
@@ -157,7 +158,7 @@ export const SetupSignup = ({ admin, nextStep }: SetUpFirstFormProps) => {
             variant="solid"
             w="full"
             disabled={loading}
-            onClick={e => handleSubmit(e)}
+            onClick={(e) => handleSubmit(e)}
           >
             Create Account
           </Button>

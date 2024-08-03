@@ -1,58 +1,61 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from 'react';
 import {
-  ChakraProvider,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Flex,
-  Box,
-  Heading,
-  IconButton,
-  Text,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Td,
-  TableContainer,
-  HStack,
-  Divider,
-  Menu,
-  MenuList,
-  MenuButton,
-  Button,
-  Checkbox,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalCloseButton,
-  ModalFooter,
-  MenuItemOption,
-  MenuItem,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  MenuOptionGroup,
-  useToast
-} from '@chakra-ui/react';
-import {
-  ChevronDownIcon,
   ArrowForwardIcon,
+  ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
 } from '@chakra-ui/icons';
-import { useBackend } from '../../contexts/BackendContext';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import 'boxicons';
-import PendingBusiness from '../PendingBusiness/PendingBusiness';
-import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer';
+import {
+  Box,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  ChakraProvider,
+  Checkbox,
+  Divider,
+  Flex,
+  Heading,
+  HStack,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItemOption,
+  MenuList,
+  MenuOptionGroup,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
+  Text,
+  Thead,
+  Tr,
+  useToast,
+} from '@chakra-ui/react';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const formatDateDFH = dateTimeString => {
+import { useAuth } from '../../contexts/AuthContext';
+import { useBackend } from '../../contexts/BackendContext';
+
+import 'boxicons';
+
+import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer';
+import PendingBusiness from '../PendingBusiness/PendingBusiness';
+
+const formatDateDFH = (dateTimeString) => {
   const date = new Date(dateTimeString);
   const options = {
     year: 'numeric',
@@ -62,13 +65,13 @@ const formatDateDFH = dateTimeString => {
   return date.toLocaleDateString('en-US', options);
 };
 
-const formatCreatedBy = createdBy => {
+const formatCreatedBy = (createdBy) => {
   if (!createdBy) {
     return '';
   }
 
   const nameWords = createdBy.split(' ');
-  const initials = nameWords.map(word => word.charAt(0).toUpperCase() + '.');
+  const initials = nameWords.map((word) => word.charAt(0).toUpperCase() + '.');
   return initials.join('');
 };
 
@@ -131,7 +134,7 @@ const ViewBusiness = () => {
     }
   };
 
-  const formatDate = dateString => {
+  const formatDate = (dateString) => {
     const parts = dateString.split('-');
     const formattedDate = `${parts[1]}/${parts[2]}/${parts[0]}`;
 
@@ -152,16 +155,16 @@ const ViewBusiness = () => {
     navigate(`/AdminDashboard`);
   };
 
-  const handleFormClick = id => {
+  const handleFormClick = (id) => {
     navigate(`/ViewDonation/${id}`);
   };
 
   const handlePrevClick = () => {
-    setCurrentPage(prevPage => Math.max(prevPage - 1, 1));
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
   const handleNextClick = () => {
-    setCurrentPage(prevPage => Math.min(prevPage + 1, totalPages));
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
   };
 
   const handleManualDonationForm = () => {
@@ -170,8 +173,8 @@ const ViewBusiness = () => {
 
   const handleSupplyStatusChange = async (status) => {
     setSelectedSupplyStatus(status);
-    await backend.put(`business/${id}`, { supplyRequestStatus: status});
-    if (status === "Sent") {
+    await backend.put(`business/${id}`, { supplyRequestStatus: status });
+    if (status === 'Sent') {
       const notificationResponse = await backend.get(`/notification/request/${id}`);
 
       const date = new Date(notificationResponse.data[0].timestamp);
@@ -185,7 +188,7 @@ const ViewBusiness = () => {
         timestamp: new Date().toISOString(),
         beenDismissed: false,
         type: 'Supply Request',
-        senderId: FPH_ID
+        senderId: FPH_ID,
       };
 
       await backend.post('/notification', requestData);
@@ -198,7 +201,7 @@ const ViewBusiness = () => {
         businessId: id,
         businessName: data.name,
         senderId: 0,
-        message: "Please submit your donation form by the due date!",
+        message: 'Please submit your donation form by the due date!',
         type: 'Not Submitted',
         donationId: null,
       };
@@ -238,7 +241,7 @@ const ViewBusiness = () => {
     const fetchNotifications = async () => {
       const response = await backend.get('/notification/0');
       setNotification(response.data);
-    }
+    };
 
     checkIsAdmin();
     fetchNotifications();
@@ -274,8 +277,21 @@ const ViewBusiness = () => {
                   </ModalFooter>
                 </ModalContent>
               </Modal>
-              <Flex pl={10} pt={10} justify="flex-end" wrap="nowrap" maxW="80%" flexDirection={'column'}>
-                <Flex alignItems="center" justifyContent={'space-between'} mr="auto" w="1089px"  pb={'5'}>
+              <Flex
+                pl={10}
+                pt={10}
+                justify="flex-end"
+                wrap="nowrap"
+                maxW="80%"
+                flexDirection={'column'}
+              >
+                <Flex
+                  alignItems="center"
+                  justifyContent={'space-between'}
+                  mr="auto"
+                  w="1089px"
+                  pb={'5'}
+                >
                   <Breadcrumb>
                     <BreadcrumbItem>
                       <BreadcrumbLink color="#245F61" onClick={handleHome}>
@@ -568,7 +584,12 @@ const ViewBusiness = () => {
                                 DONATION FORM STATUS
                               </Text>
                               <HStack spacing={4} mt={15}>
-                                <Button size="sm" variant="solid" colorScheme="teal" onClick={handleSendReminder}>
+                                <Button
+                                  size="sm"
+                                  variant="solid"
+                                  colorScheme="teal"
+                                  onClick={handleSendReminder}
+                                >
                                   <box-icon name="envelope" size="14px" color="#ffffff"></box-icon>
                                   <Text fontSize="sm" ml="2">
                                     Send reminder
@@ -606,7 +627,15 @@ const ViewBusiness = () => {
                                 SUPPLY REQUEST
                               </Text>
                               <HStack spacing={4} mt={15}>
-                                <Button size="sm" variant="solid" colorScheme="teal" isDisabled={lastRequest === ''} onClick={() => {navigate(`/ViewRequest/${data.id}`)}}>
+                                <Button
+                                  size="sm"
+                                  variant="solid"
+                                  colorScheme="teal"
+                                  isDisabled={lastRequest === ''}
+                                  onClick={() => {
+                                    navigate(`/ViewRequest/${data.id}`);
+                                  }}
+                                >
                                   <box-icon name="package" size="14px" color="#ffffff"></box-icon>
                                   <Text fontSize="sm" ml="2">
                                     View request
@@ -622,21 +651,35 @@ const ViewBusiness = () => {
                                   STATUS
                                 </Text>
                                 <Box mt="2" ml="3">
-                                <Menu closeOnSelect={false}>
-                                  <MenuButton as={Button} rightIcon={<ChevronDownIcon />} size="xs">
-                                    {selectedSupplyStatus}
-                                  </MenuButton>
-                                  <MenuList>
-                                  <MenuOptionGroup type="radio" value={selectedSupplyStatus} onChange={handleSupplyStatusChange}>
-                                    <MenuItemOption value='Pending' defaultChecked={selectedSupplyStatus === 'Pending'}>
-                                      Pending
-                                    </MenuItemOption>
-                                    <MenuItemOption value='Sent' defaultChecked={selectedSupplyStatus === 'Sent'}>
-                                      Sent
-                                    </MenuItemOption>
-                                  </MenuOptionGroup>
-                                  </MenuList>
-                                </Menu>
+                                  <Menu closeOnSelect={false}>
+                                    <MenuButton
+                                      as={Button}
+                                      rightIcon={<ChevronDownIcon />}
+                                      size="xs"
+                                    >
+                                      {selectedSupplyStatus}
+                                    </MenuButton>
+                                    <MenuList>
+                                      <MenuOptionGroup
+                                        type="radio"
+                                        value={selectedSupplyStatus}
+                                        onChange={handleSupplyStatusChange}
+                                      >
+                                        <MenuItemOption
+                                          value="Pending"
+                                          defaultChecked={selectedSupplyStatus === 'Pending'}
+                                        >
+                                          Pending
+                                        </MenuItemOption>
+                                        <MenuItemOption
+                                          value="Sent"
+                                          defaultChecked={selectedSupplyStatus === 'Sent'}
+                                        >
+                                          Sent
+                                        </MenuItemOption>
+                                      </MenuOptionGroup>
+                                    </MenuList>
+                                  </Menu>
                                 </Box>
                               </Flex>
                             </Box>
