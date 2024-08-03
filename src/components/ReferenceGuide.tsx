@@ -11,30 +11,9 @@ import {
   Icon,
   Text,
 } from '@chakra-ui/react';
-import { PropTypes } from 'prop-types';
 import { BiBone, BiCalendar, BiCar, BiConversation, BiCopyAlt } from 'react-icons/bi';
 
-const ReferenceGuide = () => {
-  const CustomAccordionItem = ({ title, panelInfo }) => (
-    <AccordionItem borderTopWidth={'0px'} borderBottomWidth={'1px'} borderColor={'#E2E8F0'}>
-      <Text>
-        <AccordionButton>
-          <Box as="span" flex="1" textAlign={'left'}>
-            <Text fontWeight={'700'} fontSize={'16px'}>
-              {title}
-            </Text>
-          </Box>
-          <AccordionIcon />
-        </AccordionButton>
-      </Text>
-      <AccordionPanel pb={4}>{panelInfo}</AccordionPanel>
-    </AccordionItem>
-  );
-
-  CustomAccordionItem.propTypes = {
-    title: PropTypes.string.isRequired,
-    panelInfo: PropTypes.string.isRequired,
-  };
+export const ReferenceGuide = () => {
   return (
     <Card width={'100%'}>
       <CardBody>
@@ -126,4 +105,18 @@ const ReferenceGuide = () => {
   );
 };
 
-export default ReferenceGuide;
+const CustomAccordionItem = ({ title, panelInfo }: { title: string; panelInfo: string }) => (
+  <AccordionItem borderTopWidth={'0px'} borderBottomWidth={'1px'} borderColor={'#E2E8F0'}>
+    <Text>
+      <AccordionButton>
+        <Box as="span" flex="1" textAlign={'left'}>
+          <Text fontWeight={'700'} fontSize={'16px'}>
+            {title}
+          </Text>
+        </Box>
+        <AccordionIcon />
+      </AccordionButton>
+    </Text>
+    <AccordionPanel pb={4}>{panelInfo}</AccordionPanel>
+  </AccordionItem>
+);

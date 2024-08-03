@@ -18,9 +18,9 @@ import {
   VStack,
 } from '@chakra-ui/react';
 
-import ReferenceGuide from '../components/ReferenceGuide.jsx';
-import { useAuth } from '../contexts/AuthContext';
-import { useBackend } from '../contexts/BackendContext';
+import { useAuth } from '../contexts/AuthContext.jsx';
+import { useBackend } from '../contexts/BackendContext.jsx';
+import { ReferenceGuide } from './ReferenceGuide';
 
 const formLabelStyles = {
   minWidth: '150px',
@@ -29,7 +29,7 @@ const formLabelStyles = {
   alignItems: 'center',
 };
 
-const EditContactInformation = () => {
+export const EditContactInformation = () => {
   const { backend } = useBackend();
   const { currentUser } = useAuth();
   const [toastOpen, setToastOpen] = useState(false);
@@ -358,5 +358,3 @@ const EditContactInformation = () => {
     </>
   );
 };
-
-export default EditContactInformation;

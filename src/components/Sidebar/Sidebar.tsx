@@ -42,7 +42,7 @@ export const Sidebar = () => {
     };
 
     checkIsAdmin();
-  });
+  }, []);
 
   useEffect(() => {
     getBusinessName();
@@ -108,7 +108,7 @@ export const Sidebar = () => {
 
               {/* fix me */}
               <Text color="teal" fontWeight="bold">
-                {true || isAdminUser ? 'Feeding Pets of the Homeless' : businessName}
+                {isAdminUser ? 'Feeding Pets of the Homeless' : businessName}
               </Text>
             </HStack>
 

@@ -16,7 +16,7 @@ import Congrats from './components/DonationForm/Congrats.jsx';
 import DonationForm from './components/DonationForm/DonationForm.jsx';
 import DonationItemsTable from './components/DonationItemsTable/DonationItemsTable.jsx';
 import DonationTrackingTable from './components/DonationTrackingTable/DonationTrackingTable.jsx';
-import EditContactInformation from './components/EditContactInformation.jsx';
+import { EditContactInformation } from './components/EditContactInformation';
 import BusinessFormMaster from './components/OnBoarding/BusinessFormMaster.jsx';
 import { Sidebar } from './components/Sidebar/Sidebar';
 import { SupplyRequestsPage } from './components/SupplyRequests/SupplyRequestsPage';
