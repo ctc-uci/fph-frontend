@@ -12,6 +12,8 @@ import {
   HStack,
   Card,
   SimpleGrid,
+  useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
 
 import { ConfirmationDialog } from './ConfirmationDialog';
@@ -22,12 +24,14 @@ export const SupplyRequestsPage = () => {
   const { backend } = useBackend();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
+  const toast = useToast();
+
+  const confirmationDisclosure = useDisclosure();
 
   const FPH_ID = 0;
 
   const [text, setText] = useState('');
   const [checkedItems, setCheckedItems] = useState([0, 0, 0, 0, 0, 0, 0, 0]);
-  const [showConfirmation, setShowConfirmation] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
 
   const [businessId, setBusinessId] = useState(null);
@@ -54,7 +58,7 @@ export const SupplyRequestsPage = () => {
     fetchBusinessId();
   }, []);
 
-  const SubmitForm = async () => {
+  const handleSubmit = async () => {
     const msg = {
       'Get Pet Food Decal': checkedItems[0],
       Decal: checkedItems[1],
@@ -83,10 +87,24 @@ export const SupplyRequestsPage = () => {
       businessName: null,
       donationId: null,
     };
-    await backend.post('/notification/', updatedFormData);
-    await backend.post('/notification/', confirmationNotification);
-    await backend.put(`/business/${businessId}`, { supply_request_status: 'Pending' });
-    setShowConfirmation(true);
+
+    try {
+      await Promise.all([
+        backend.post('/notification/', updatedFormData),
+        backend.post('/notification/', confirmationNotification),
+        backend.put(`/business/${businessId}`, { supply_request_status: 'Pending' }),
+      ]);
+
+      confirmationDisclosure.onOpen();
+    } catch (error) {
+      toast({
+        title: 'An error occurred.',
+        description: error.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
 
   const isFormFilled = (newText?: string) => {
@@ -100,7 +118,8 @@ export const SupplyRequestsPage = () => {
   };
 
   const handleCancelButtonClick = () => {
-    navigate('/BusinessDashboard');
+    setCheckedItems([0, 0, 0, 0, 0, 0, 0, 0]);
+    setText('');
   };
 
   const handleNumInputChange = (index: number, value: string) => {
@@ -116,14 +135,12 @@ export const SupplyRequestsPage = () => {
       <Card variant={'outline'} sx={{ padding: 4, gap: 4 }}>
         <Text sx={{ fontSize: 20, fontWeight: 'medium' }}>Select supplies needed</Text>
         <SupplyRequests handleChange={handleNumInputChange} />
-
         <Textarea
           sx={{ height: 150, marginTop: 4 }}
           value={text}
           placeholder="Notes..."
           onChange={handleTextInputChange}
         />
-
         <HStack justify="flex-end">
           <Button variant="ghost" onClick={handleCancelButtonClick}>
             Cancel
@@ -131,7 +148,7 @@ export const SupplyRequestsPage = () => {
           <Button
             isDisabled={!isFormValid}
             colorScheme={isFormValid ? 'teal' : undefined}
-            onClick={SubmitForm}
+            onClick={handleSubmit}
           >
             Send Request
           </Button>
@@ -139,8 +156,8 @@ export const SupplyRequestsPage = () => {
       </Card>
 
       <ConfirmationDialog
-        isOpen={showConfirmation}
-        onClose={() => setShowConfirmation(false)}
+        isOpen={confirmationDisclosure.isOpen}
+        onClose={confirmationDisclosure.onClose}
         onCancel={handleCancelButtonClick}
       />
     </Flex>

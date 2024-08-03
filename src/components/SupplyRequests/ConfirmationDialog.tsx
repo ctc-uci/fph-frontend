@@ -11,6 +11,7 @@ import {
   Image,
   Button,
 } from '@chakra-ui/react';
+import logo from '../../../public/fph_logo_no_bg.png';
 
 interface ConfirmationDialogProps {
   isOpen: boolean;
@@ -25,12 +26,12 @@ export const ConfirmationDialog = ({ isOpen, onClose, onCancel }: ConfirmationDi
       <ModalContent>
         <Stack align="center">
           <ModalHeader mt="25">
-            <Image src="src/components/ContactUsForm/fph_logo.png" boxSize="200px" alt="fph Logo" />
+            <Image src={logo} boxSize="200px" alt="fph Logo" />
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Stack align="center">
-              <Text fontSize="3xl" color="teal">
+              <Text fontSize="3xl" fontWeight="semibold" color="teal">
                 Supply Request Sent!
               </Text>
               <Text>Your supplies will be shipped in 5-7 business days.</Text>

@@ -74,26 +74,19 @@ interface SupplyRequestProps {
 
 export const SupplyRequests = ({ handleChange }: SupplyRequestProps) => {
   return (
-    <SimpleGrid columns={2} spacing={4}>
+    <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={4} spacingY={10}>
       {SUPPLIES.map((supply, index) => (
-        <HStack key={index} marginTop="20px" align="top" spacing="0" width="476px" height="131px">
-          <Box
-            width="202px"
-            height="131px"
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Image
-              width="200px"
-              height="131px"
-              src={supply.image}
-              alt={`Supply ${index}`}
-              objectFit="contain"
-            />
-          </Box>
-          <VStack align="stretch" justifyContent="center" spacing="1" flex="1">
-            <HStack spacing={4}>
+        <HStack key={index} align="start" spacing="2">
+          <Image
+            width={150}
+            height={150}
+            src={supply.image}
+            alt={`Supply ${index}`}
+            objectFit="contain"
+          />
+
+          <VStack alignItems="stretch" justifyContent="center" spacing="1" flex="1">
+            <HStack spacing={4} flexWrap={'wrap'}>
               <NumberInput
                 size="sm"
                 maxW="100px"
@@ -109,12 +102,14 @@ export const SupplyRequests = ({ handleChange }: SupplyRequestProps) => {
               </NumberInput>
               <Text>{supply.type}</Text>
             </HStack>
+
             <Text
-              color="#718096"
+              color="gray.500"
               fontSize="sm"
               lineHeight="5"
               fontWeight="normal"
               fontFamily="Inter"
+              maxWidth={300}
             >
               {supply.description}
             </Text>
