@@ -1,6 +1,6 @@
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { BackendProvider } from './contexts/BackendContext.jsx';
-import Sidebar from './components/Sidebar/Sidebar';
+import { Sidebar } from './components/Sidebar/Sidebar';
 import { BusinessDashboard } from './components/BusinessDashboard/BusinessDashboard';
 import DonationForm from './components/DonationForm/DonationForm.jsx';
 import BusinessNotificationCenter from './components/BusinessNotificationCenter/BusinessNotificationCenter.jsx';
@@ -10,7 +10,6 @@ import BusinessDonationHistory from './components/BusinessDonationHistory/Busine
 import ViewDonationHistory from './components/BusinessDonationHistory/ViewDonationHistory/ViewDonationHistory.jsx';
 import { SupplyRequestsPage } from './components/SupplyRequests/SupplyRequestsPage';
 import DonationTrackingTable from './components/DonationTrackingTable/DonationTrackingTable.jsx';
-import styles from './App.module.css';
 import DonationItemsTable from './components/DonationItemsTable/DonationItemsTable.jsx';
 import { BusinessSetupPage } from './components/BusinessSetup/BusinessSetupPage';
 import Login from './components/Authentication/Login.jsx';
@@ -25,6 +24,7 @@ import ViewRequest from './components/ViewRequest/ViewRequest.jsx';
 import { AdminSettingsMaster } from './components/AdminSettings/AdminSettingsMaster.jsx';
 import ViewDonation from './components/ViewDonation/ViewDonation.jsx';
 import CatchAll from './components/CatchAll';
+import { Box, Flex } from '@chakra-ui/react';
 
 const App = () => {
   const location = useLocation();
@@ -42,9 +42,15 @@ const App = () => {
   return (
     <BackendProvider>
       <AuthProvider>
-        <div className={styles.appLayout}>
+        <Flex
+          sx={{
+            flexDirection: 'row',
+            height: '100vh',
+            overflow: 'hidden',
+          }}
+        >
           {shouldShowSidebar ? <Sidebar /> : null}
-          <div className={styles.mainContent}>
+          <Box sx={{ backgroundColor: '#F9F8F7', flex: 1, overflow: 'scroll' }}>
             <Routes>
               <Route path="/Onboarding" element={<BusinessFormMaster />} />
               <Route path="/SignupAdmin" element={<BusinessSetupPage isAdmin={true} />} />
@@ -118,8 +124,8 @@ const App = () => {
               {/* Catch-all route */}
               <Route path="*" element={<ProtectedRoute Component={CatchAll} />} />
             </Routes>
-          </div>
-        </div>
+          </Box>
+        </Flex>
       </AuthProvider>
     </BackendProvider>
   );

@@ -1,5 +1,5 @@
 import { useBackend } from '../../contexts/BackendContext';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -16,6 +16,7 @@ import {
 
 import { ConfirmationDialog } from './ConfirmationDialog';
 import { SupplyRequests } from './SupplyRequests';
+import { pageStyle, pageTitleStyle } from '../../styles/sharedStyles';
 
 export const SupplyRequestsPage = () => {
   const { backend } = useBackend();
@@ -88,24 +89,14 @@ export const SupplyRequestsPage = () => {
     setShowConfirmation(true);
   };
 
-  const isFormFilled = () => {
-    return checkedItems.some(value => value !== 0) || text.length > 0;
+  const isFormFilled = (newText?: string) => {
+    return checkedItems.some(value => value !== 0) || (newText ?? text).length > 0;
   };
 
-  const textInputHandler = e => {
+  const handleTextInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const newText = e.target.value;
     setText(newText);
-    isFormFilled();
-    setIsFormValid(checkedItems.some(value => value !== 0) || text.length > 0);
-  };
-
-  const buttonStyles = {
-    ...(isFormFilled()
-      ? { colorScheme: 'teal' } // Styles for 'teal' state
-      : {
-          backgroundColor: 'blackAlpha.300',
-          color: 'white',
-        }),
+    setIsFormValid(isFormFilled(newText));
   };
 
   const handleCancelButtonClick = () => {
@@ -119,65 +110,39 @@ export const SupplyRequestsPage = () => {
   };
 
   return (
-    <>
-      <Flex>
-        <Box>
-          <Text fontSize="2xl" as="b">
-            Supply Request
-          </Text>
+    <Flex sx={pageStyle}>
+      <Text sx={pageTitleStyle}>Supply Request</Text>
 
-          <Card variant={'outline'}>
-            <Box>
-              <Text fontWeight={'bold'} fontSize={'18px'}>
-                Select Supplies Needed
-              </Text>
-            </Box>
+      <Card variant={'outline'} sx={{ padding: 4, gap: 4 }}>
+        <Text sx={{ fontSize: 20, fontWeight: 'medium' }}>Select supplies needed</Text>
+        <SupplyRequests handleChange={handleNumInputChange} />
 
-            <Box
-              p={4}
-              display="flex"
-              mt="0"
-              alignItems="top"
-              borderColor="gray.200"
-              borderRightRadius="1"
-            >
-              <SupplyRequests handleChange={handleNumInputChange} />
-            </Box>
-            <Box>
-              <Textarea
-                h={'150px'}
-                value={text}
-                placeholder="Notes..."
-                onChange={textInputHandler}
-              />
-            </Box>
-            <HStack justify="flex-end">
-              <Button
-                colorScheme="teal"
-                variant="outline"
-                width="130px"
-                onClick={handleCancelButtonClick}
-              >
-                Cancel
-              </Button>
-              <Button
-                {...buttonStyles}
-                isDisabled={!isFormValid}
-                width="130px"
-                onClick={SubmitForm}
-              >
-                Send
-              </Button>
-            </HStack>
-          </Card>
+        <Textarea
+          sx={{ height: 150, marginTop: 4 }}
+          value={text}
+          placeholder="Notes..."
+          onChange={handleTextInputChange}
+        />
 
-          <ConfirmationDialog
-            isOpen={showConfirmation}
-            onClose={() => setShowConfirmation(false)}
-            onCancel={handleCancelButtonClick}
-          />
-        </Box>
-      </Flex>
-    </>
+        <HStack justify="flex-end">
+          <Button variant="ghost" onClick={handleCancelButtonClick}>
+            Cancel
+          </Button>
+          <Button
+            isDisabled={!isFormValid}
+            colorScheme={isFormValid ? 'teal' : undefined}
+            onClick={SubmitForm}
+          >
+            Send Request
+          </Button>
+        </HStack>
+      </Card>
+
+      <ConfirmationDialog
+        isOpen={showConfirmation}
+        onClose={() => setShowConfirmation(false)}
+        onCancel={handleCancelButtonClick}
+      />
+    </Flex>
   );
 };

@@ -111,7 +111,7 @@ const BusinessForm = ({ edit = true }) => {
     const fetchNotifications = async () => {
       const response = await backend.get('/notification/0');
       setNotification(response.data);
-    }
+    };
 
     if (notification.length === 0) {
       fetchNotifications();
@@ -128,7 +128,7 @@ const BusinessForm = ({ edit = true }) => {
       } catch (error) {
         console.log(error);
       }
-    }
+    };
     if (currentUser) {
       getAdminUser();
     }
@@ -352,23 +352,32 @@ const BusinessForm = ({ edit = true }) => {
               </ModalOverlay>
             </Modal>
           </>
-          <Flex pl={10} pt={10} justify="flex-end" wrap="nowrap" maxW="93%" flexDirection={'column'}>
+          <Flex
+            pl={10}
+            pt={10}
+            justify="flex-end"
+            wrap="nowrap"
+            maxW="93%"
+            flexDirection={'column'}
+          >
             <Flex justifyContent={'space-between'} mr="auto" w="1089px" marginTop={4}>
-            <Breadcrumb spacing="1">
-              <BreadcrumbItem>
-                <BreadcrumbLink color="#245F61" onClick={handleHome}>
-                  Home
-                </BreadcrumbLink>
-              </BreadcrumbItem>
+              <Breadcrumb spacing="1">
+                <BreadcrumbItem>
+                  <BreadcrumbLink color="#245F61" onClick={handleHome}>
+                    Home
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
 
-              <BreadcrumbItem isCurrentPage>
-                <BreadcrumbLink>{edit ? businessName : 'Add Business'}</BreadcrumbLink>
-              </BreadcrumbItem>
-            </Breadcrumb>
+                <BreadcrumbItem isCurrentPage>
+                  <BreadcrumbLink>{edit ? businessName : 'Add Business'}</BreadcrumbLink>
+                </BreadcrumbItem>
+              </Breadcrumb>
 
               <NotificationsDrawer notificationsData={notification} />
             </Flex>
-            <Heading size="lg" className={classes.titleText}>Add Business Form</Heading>
+            <Heading size="lg" className={classes.titleText}>
+              Add Business Form
+            </Heading>
             <Card maxW="100%" w="100%" h="auto" p={6} mt="5" flex={1}>
               <CardHeader>
                 <Flex justify="space-between" align="center" w="full">

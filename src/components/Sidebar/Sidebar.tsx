@@ -29,7 +29,7 @@ import {
 } from 'react-icons/bi';
 import { ContactInformationModal } from './ContactInformationModal';
 
-function Sidebar() {
+export const Sidebar = () => {
   const { backend } = useBackend();
   const [isAdminUser, setIsAdminUser] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure(); // State management for modal
@@ -93,9 +93,10 @@ function Sidebar() {
           paddingX: '16px',
           paddingTop: '32px',
           paddingBottom: '24px',
+          overflowY: 'scroll',
         }}
       >
-        <VStack justifyContent={'space-between'}>
+        <VStack justifyContent={'space-between'} minHeight={500}>
           <Flex flexDirection="column">
             <HStack>
               <Image
@@ -177,6 +178,4 @@ function Sidebar() {
       <ContactInformationModal isOpen={isOpen} onClose={onClose} />
     </>
   );
-}
-
-export default Sidebar;
+};
