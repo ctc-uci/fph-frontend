@@ -1,7 +1,8 @@
-import { Box, Flex, Heading, Text, Image } from '@chakra-ui/react';
 import { ArrowBackIcon, QuestionOutlineIcon } from '@chakra-ui/icons';
-import Congratulations from '../../../public/congratulations.png';
+import { Box, Flex, Heading, Image, Text } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+
+import Congratulations from '../../../public/congratulations.png';
 
 const Congrats = () => {
   return (

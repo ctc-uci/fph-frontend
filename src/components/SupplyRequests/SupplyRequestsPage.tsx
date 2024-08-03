@@ -1,24 +1,24 @@
-import { useBackend } from '../../contexts/BackendContext';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import {
-  Flex,
-  Text,
-  Textarea,
-  Stack,
   Box,
   Button,
-  HStack,
   Card,
+  Flex,
+  HStack,
   SimpleGrid,
+  Stack,
+  Text,
+  Textarea,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
+import { useAuth } from '../../contexts/AuthContext';
+import { useBackend } from '../../contexts/BackendContext';
+import { pageStyle, pageTitleStyle } from '../../styles/sharedStyles';
 import { ConfirmationDialog } from './ConfirmationDialog';
 import { SupplyRequests } from './SupplyRequests';
-import { pageStyle, pageTitleStyle } from '../../styles/sharedStyles';
 
 export const SupplyRequestsPage = () => {
   const { backend } = useBackend();
@@ -108,7 +108,7 @@ export const SupplyRequestsPage = () => {
   };
 
   const isFormFilled = (newText?: string) => {
-    return checkedItems.some(value => value !== 0) || (newText ?? text).length > 0;
+    return checkedItems.some((value) => value !== 0) || (newText ?? text).length > 0;
   };
 
   const handleTextInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {

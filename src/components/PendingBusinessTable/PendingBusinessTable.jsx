@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
-import { useBackend } from '../../contexts/BackendContext';
-import { Button, Table, Thead, Tbody, Tr, Td } from '@chakra-ui/react';
-import { PENDING_TABLE_HEADERS } from '../../utils/constants';
+import { Button, Table, Tbody, Td, Thead, Tr } from '@chakra-ui/react';
 import propTypes from 'prop-types';
+
+import { useBackend } from '../../contexts/BackendContext';
+import { PENDING_TABLE_HEADERS } from '../../utils/constants';
 
 const PendingBusinessTable = ({ goToBusinessForm }) => {
   const { backend } = useBackend();
   const [data, setData] = useState([]);
 
-  const tableHeaders = PENDING_TABLE_HEADERS.map(tableHeader => (
+  const tableHeaders = PENDING_TABLE_HEADERS.map((tableHeader) => (
     <th key={tableHeader}>{tableHeader}</th>
   ));
   useEffect(() => {
@@ -32,7 +33,7 @@ const PendingBusinessTable = ({ goToBusinessForm }) => {
         <Tbody>
           {data.map((item, index) => (
             <Tr key={index}>
-              {Object.keys(item).map(key => (
+              {Object.keys(item).map((key) => (
                 <Td key={key}>
                   {typeof item[key] === 'boolean' ? (item[key] ? 'True' : 'False') : item[key]}
                 </Td>

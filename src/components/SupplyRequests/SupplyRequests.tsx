@@ -1,17 +1,18 @@
 import {
-  Text,
+  Box,
   HStack,
+  Image,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  Stack,
-  VStack,
-  Box,
-  Image,
   SimpleGrid,
+  Stack,
+  Text,
+  VStack,
 } from '@chakra-ui/react';
+
 import Supply_0 from './Supply_0.png';
 import Supply_1 from './Supply_1.png';
 import Supply_2 from './Supply_2.png';
@@ -92,7 +93,7 @@ export const SupplyRequests = ({ handleChange }: SupplyRequestProps) => {
                 maxW="100px"
                 defaultValue={0}
                 min={0}
-                onChange={value => handleChange(index, value)}
+                onChange={(value) => handleChange(index, value)}
               >
                 <NumberInputField />
                 <NumberInputStepper>

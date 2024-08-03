@@ -1,27 +1,28 @@
 import { useEffect, useState } from 'react';
-import { useBackend } from '../../contexts/BackendContext';
-import ViewBusiness from '../ViewBusiness/ViewBusiness';
-import { BusinessForm } from '../BusinessForm/BusinessForm';
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Td,
-  Checkbox,
-  Button,
-  Th,
-  Input,
-  Card,
-  Badge,
-} from '@chakra-ui/react';
-import { FaPlus } from 'react-icons/fa6';
-import DownloadCSV from '../../utils/downloadCSV';
 import { ArrowDownIcon } from '@chakra-ui/icons';
+import {
+  Badge,
+  Button,
+  Card,
+  Checkbox,
+  Input,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from '@chakra-ui/react';
 import { BiEnvelope } from 'react-icons/bi';
+import { FaPlus } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
 
-const BusinessTablePending = businessData => {
+import { useBackend } from '../../contexts/BackendContext';
+import DownloadCSV from '../../utils/downloadCSV';
+import { BusinessForm } from '../BusinessForm/BusinessForm';
+import ViewBusiness from '../ViewBusiness/ViewBusiness';
+
+const BusinessTablePending = (businessData) => {
   const { backend } = useBackend();
   const [data, setData] = useState([]);
   const [selectedBusinessId, setBusinessId] = useState(null);
@@ -39,7 +40,7 @@ const BusinessTablePending = businessData => {
     'Last Submitted',
     'Application',
   ];
-  const tableHeaders = TABLE_HEADERS.map(tableHeader => <th key={tableHeader}>{tableHeader}</th>);
+  const tableHeaders = TABLE_HEADERS.map((tableHeader) => <th key={tableHeader}>{tableHeader}</th>);
   const [selectedBusinessIds, setSelectedBusinessIds] = useState(new Set());
 
   function formatDateDFH(dateTimeString) {
@@ -84,8 +85,8 @@ const BusinessTablePending = businessData => {
     navigate('/AddBusiness');
   };
 
-  const handleCheckboxChange = businessId => {
-    setSelectedBusinessIds(prevSelectedIds => {
+  const handleCheckboxChange = (businessId) => {
+    setSelectedBusinessIds((prevSelectedIds) => {
       const newSelectedIds = new Set(prevSelectedIds);
       if (newSelectedIds.has(businessId)) {
         newSelectedIds.delete(businessId);
@@ -97,16 +98,16 @@ const BusinessTablePending = businessData => {
   };
 
   const handleSelectAllChange = () => {
-    setSelectedBusinessIds(prevSelectedIds => {
+    setSelectedBusinessIds((prevSelectedIds) => {
       const newSelectedIds = new Set(prevSelectedIds);
-      const allBusinessIds = data.map(business => business.id);
+      const allBusinessIds = data.map((business) => business.id);
 
       if (newSelectedIds.size === allBusinessIds.length) {
         // If all are selected, unselect all
         newSelectedIds.clear();
       } else {
         // Otherwise, select all
-        allBusinessIds.forEach(id => newSelectedIds.add(id));
+        allBusinessIds.forEach((id) => newSelectedIds.add(id));
       }
 
       return newSelectedIds;
@@ -140,7 +141,7 @@ const BusinessTablePending = businessData => {
     }
   };
 
-  const handleViewApplication = async businessId => {
+  const handleViewApplication = async (businessId) => {
     try {
       const response = await backend.get(`/business/${businessId}`);
       setPendingData(response);
@@ -161,7 +162,7 @@ const BusinessTablePending = businessData => {
     getData();
   }, [businessData]);
 
-  const handleRowClick = async id => {
+  const handleRowClick = async (id) => {
     try {
       setBusinessId(id);
       const response = await backend.get(`/business/${id}`);

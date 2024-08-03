@@ -1,25 +1,26 @@
+import { useEffect, useState } from 'react';
 import {
+  Box,
+  Button,
+  Card,
+  Flex,
   FormControl,
   FormLabel,
-  Input,
   Heading,
-  Button,
-  Flex,
-  VStack,
-  Box,
-  Card,
   HStack,
-  Tabs,
-  TabList,
+  Input,
   Tab,
-  useToast,
-  TabPanels,
+  TabList,
   TabPanel,
+  TabPanels,
+  Tabs,
+  useToast,
+  VStack,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
-import { useBackend } from '../contexts/BackendContext';
-import { useAuth } from '../contexts/AuthContext';
+
 import ReferenceGuide from '../components/ReferenceGuide.jsx';
+import { useAuth } from '../contexts/AuthContext';
+import { useBackend } from '../contexts/BackendContext';
 
 const formLabelStyles = {
   minWidth: '150px',
@@ -79,10 +80,10 @@ const EditContactInformation = () => {
     }
   }
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     const name = event.target.name;
     var value = event.target.value;
-    setBusinessContactInfo(prevState => ({ ...prevState, [name]: value }));
+    setBusinessContactInfo((prevState) => ({ ...prevState, [name]: value }));
     showToast();
   };
 
@@ -209,7 +210,7 @@ const EditContactInformation = () => {
                         type="text"
                         placeholder="Enter Business Name"
                         value={businessContactInfo.businessName}
-                        onChange={e => {
+                        onChange={(e) => {
                           setBusinessContactInfo({
                             ...businessContactInfo,
                             businessName: e.target.value,
@@ -271,7 +272,7 @@ const EditContactInformation = () => {
                         type="text"
                         placeholder="City"
                         value={businessContactInfo.city}
-                        onChange={e => {
+                        onChange={(e) => {
                           setBusinessContactInfo({
                             ...businessContactInfo,
                             city: e.target.value,
@@ -283,7 +284,7 @@ const EditContactInformation = () => {
                         type="text"
                         placeholder="State"
                         value={businessContactInfo.state}
-                        onChange={e => {
+                        onChange={(e) => {
                           setBusinessContactInfo({
                             ...businessContactInfo,
                             state: e.target.value,
@@ -295,7 +296,7 @@ const EditContactInformation = () => {
                         type="text"
                         placeholder="Zip Code"
                         value={businessContactInfo.zip}
-                        onChange={e => {
+                        onChange={(e) => {
                           setBusinessContactInfo({ ...businessContactInfo, zip: e.target.value });
                           showToast();
                         }}
@@ -317,7 +318,7 @@ const EditContactInformation = () => {
                         type="text"
                         placeholder="M-F 8:00 am - 10:00 pm"
                         value={businessContactInfo.business_hours}
-                        onChange={e => {
+                        onChange={(e) => {
                           setBusinessContactInfo({
                             ...businessContactInfo,
                             business_hours: e.target.value,

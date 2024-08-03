@@ -1,17 +1,18 @@
-import propTypes from 'prop-types';
 import {
   Box,
-  FormControl,
-  FormLabel,
-  Input,
   Button,
   Flex,
-  Text,
+  FormControl,
+  FormLabel,
   HStack,
   Image,
-  Stack,
+  Input,
   SimpleGrid,
+  Stack,
+  Text,
 } from '@chakra-ui/react';
+import propTypes from 'prop-types';
+
 import FPH_LOGO from './fph_logo.png';
 
 const SecondForm = ({ formData, handleChange, prevStep, nextStep }) => {
@@ -37,7 +38,7 @@ const SecondForm = ({ formData, handleChange, prevStep, nextStep }) => {
                   name="businessAddress1"
                   type="text"
                   value={formData['businessAddress1']}
-                  onChange={e => {
+                  onChange={(e) => {
                     handleChange(e);
                   }}
                 />
@@ -54,7 +55,7 @@ const SecondForm = ({ formData, handleChange, prevStep, nextStep }) => {
                     name="businessAddress2"
                     type="text"
                     value={formData['businessAddress2']}
-                    onChange={e => {
+                    onChange={(e) => {
                       handleChange(e);
                     }}
                   />
@@ -72,7 +73,7 @@ const SecondForm = ({ formData, handleChange, prevStep, nextStep }) => {
                 name="city"
                 type="text"
                 value={formData['city']}
-                onChange={e => {
+                onChange={(e) => {
                   handleChange(e);
                 }}
               />
@@ -86,7 +87,7 @@ const SecondForm = ({ formData, handleChange, prevStep, nextStep }) => {
                 name="state"
                 type="text"
                 value={formData['state']}
-                onChange={e => {
+                onChange={(e) => {
                   const upperCaseValue = e.target.value.toUpperCase();
                   handleChange({ ...e, target: { name: e.target.name, value: upperCaseValue } });
                 }}
@@ -102,7 +103,7 @@ const SecondForm = ({ formData, handleChange, prevStep, nextStep }) => {
                 name="postalCode"
                 type="text"
                 value={formData['postalCode']}
-                onChange={e => {
+                onChange={(e) => {
                   handleChange(e);
                 }}
               />
@@ -116,7 +117,7 @@ const SecondForm = ({ formData, handleChange, prevStep, nextStep }) => {
                 name="country"
                 type="text"
                 value={formData['country']}
-                onChange={e => {
+                onChange={(e) => {
                   handleChange(e);
                 }}
               />

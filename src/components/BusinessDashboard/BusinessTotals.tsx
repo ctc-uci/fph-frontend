@@ -1,8 +1,9 @@
+import { Fragment } from 'react/jsx-runtime';
 import { TimeIcon } from '@chakra-ui/icons';
 import { Center, Divider, Flex, Icon, Text, useBreakpointValue } from '@chakra-ui/react';
 import { BiDonateHeart, BiMoney } from 'react-icons/bi';
+
 import { Notification } from '../../types/notification';
-import { Fragment } from 'react/jsx-runtime';
 
 interface BusinessTotalsProps {
   donationData: any;

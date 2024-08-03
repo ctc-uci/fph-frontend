@@ -1,20 +1,24 @@
-import { useBackend } from '../../contexts/BackendContext';
-import { useState, useEffect } from 'react';
-import DonationSite from './DonationSite';
-import { Tabs, TabList, Tab, Button, Box, IconButton, Input, useToast } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
 import {
   ArrowDownIcon,
-  ChevronRightIcon,
-  ChevronLeftIcon,
   ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
 } from '@chakra-ui/icons';
+import { Box, Button, IconButton, Input, Tab, TabList, Tabs, useToast } from '@chakra-ui/react';
+
+import { useBackend } from '../../contexts/BackendContext';
+import DonationSite from './DonationSite';
+
 import './DonationTrackingTable.module.css';
-import { Table, Thead, Tbody, Tr, Th, TableContainer, Checkbox, Text } from '@chakra-ui/react';
-import classes from './DonationTrackingTable.module.css';
-import DownloadCSV from '../../utils/downloadCSV';
+
+import { Checkbox, Table, TableContainer, Tbody, Text, Th, Thead, Tr } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+
 import { useAuth } from '../../contexts/AuthContext';
+import DownloadCSV from '../../utils/downloadCSV';
 import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer';
+import classes from './DonationTrackingTable.module.css';
 
 const DonationTrackingTable = () => {
   const navigate = useNavigate();
@@ -58,7 +62,7 @@ const DonationTrackingTable = () => {
     setPageLimit(Math.ceil(donationNumResponse.data[0]['count'] / 10));
   };
 
-  const changeTab = async tab => {
+  const changeTab = async (tab) => {
     setCurrentTab(tab);
     setCurrentPageNum(1);
     setCheckedSet(new Set());
@@ -82,11 +86,10 @@ const DonationTrackingTable = () => {
     };
 
     const getNotifications = async () => {
-      try{
+      try {
         const notificationResponse = await backend.get(`/notification/0`);
         setNotifications(notificationResponse.data);
-      }
-      catch (error) {
+      } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
@@ -101,7 +104,7 @@ const DonationTrackingTable = () => {
 
     checkIsAdmin();
     getData();
-    if (notifications.length == 0){
+    if (notifications.length == 0) {
       getNotifications();
     }
   }, [currentTab, currentPageNum, searchTerm]);
@@ -124,7 +127,9 @@ const DonationTrackingTable = () => {
     const newCheckboxValue = !topCheckBox;
     setTopCheckBox(newCheckboxValue);
     if (newCheckboxValue) {
-      const newCheckedSet = new Set(donationTrackingTableData.map(element => element.donation_id));
+      const newCheckedSet = new Set(
+        donationTrackingTableData.map((element) => element.donation_id),
+      );
       setCheckedSet(newCheckedSet);
     } else {
       const newCheckedSet = new Set();
@@ -138,7 +143,7 @@ const DonationTrackingTable = () => {
       if (ids.length === 0) {
         toast({
           title: 'Downloaded CSV',
-          description: "Select a business first",
+          description: 'Select a business first',
           status: 'error',
           duration: 3000,
           isClosable: true,
@@ -165,7 +170,7 @@ const DonationTrackingTable = () => {
     }
   };
 
-  const handleSearch = event => {
+  const handleSearch = (event) => {
     setSearchTerm(event.target.value.split(' ').join('+'));
     setCurrentPageNum(1);
   };

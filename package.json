@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
-    "add": "^2.0.6",
     "boxicons": "^2.1.4",
     "lint-staged": "^14.0.1",
     "react": "^18.2.0",
@@ -58,6 +57,7 @@
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
+    "@ianvs/prettier-plugin-sort-imports": "^4.3.1",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@vitejs/plugin-react": "^4.0.3",

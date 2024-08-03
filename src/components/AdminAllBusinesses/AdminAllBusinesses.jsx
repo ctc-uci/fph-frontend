@@ -1,10 +1,10 @@
-import PendingBusinessTable from '../PendingBusinessTable/PendingBusinessTable';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext.jsx';
 import { Button, Text } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
+import { useAuth } from '../../contexts/AuthContext.jsx';
 import BusinessForm from '../BusinessForm/BusinessForm';
+import PendingBusinessTable from '../PendingBusinessTable/PendingBusinessTable';
 
 const AdminAllBusinesses = () => {
   const [pendingFlag, setPendingFlag] = useState(false);
@@ -74,7 +74,7 @@ const AdminAllBusinesses = () => {
             </Link>{' '}
             &gt; Pending Applications
           </Text>
-          <PendingBusinessTable goToBusinessForm={item => goToBusinessForm(item)} />
+          <PendingBusinessTable goToBusinessForm={(item) => goToBusinessForm(item)} />
         </>
       )}
     </div>

@@ -1,16 +1,17 @@
-import propTypes from 'prop-types';
 import {
   Box,
-  FormControl,
-  FormLabel,
-  Input,
   Button,
   Flex,
-  Text,
-  Image,
+  FormControl,
+  FormLabel,
   HStack,
+  Image,
+  Input,
   SimpleGrid,
+  Text,
 } from '@chakra-ui/react';
+import propTypes from 'prop-types';
+
 import FPH_LOGO from './fph_logo.png';
 
 const FirstForm = ({ formData, handleChange, nextStep }) => {
@@ -35,7 +36,7 @@ const FirstForm = ({ formData, handleChange, nextStep }) => {
               name="businessName"
               type="text"
               value={formData['businessName']}
-              onChange={e => {
+              onChange={(e) => {
                 handleChange(e);
               }}
             />
@@ -53,7 +54,7 @@ const FirstForm = ({ formData, handleChange, nextStep }) => {
                   name="personFirstName"
                   type="text"
                   value={formData['personFirstName']}
-                  onChange={e => {
+                  onChange={(e) => {
                     handleChange(e);
                   }}
                 />
@@ -66,7 +67,7 @@ const FirstForm = ({ formData, handleChange, nextStep }) => {
                   name="personLastName"
                   type="text"
                   value={formData['personLastName']}
-                  onChange={e => {
+                  onChange={(e) => {
                     handleChange(e);
                   }}
                 />
@@ -79,7 +80,7 @@ const FirstForm = ({ formData, handleChange, nextStep }) => {
                   name="personEmail"
                   type="text"
                   value={formData['personEmail']}
-                  onChange={e => {
+                  onChange={(e) => {
                     handleChange(e);
                   }}
                 />
@@ -92,7 +93,7 @@ const FirstForm = ({ formData, handleChange, nextStep }) => {
                   name="personPosition"
                   type="text"
                   value={formData['personPosition']}
-                  onChange={e => {
+                  onChange={(e) => {
                     handleChange(e);
                   }}
                 />
@@ -106,7 +107,7 @@ const FirstForm = ({ formData, handleChange, nextStep }) => {
               name="website"
               type="text"
               value={formData['website']}
-              onChange={e => {
+              onChange={(e) => {
                 handleChange(e);
               }}
             />

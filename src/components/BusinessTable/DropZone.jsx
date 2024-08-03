@@ -1,8 +1,11 @@
-import { useDropzone } from 'react-dropzone';
 import { useState } from 'react';
-import { Flex, Text, Input, Button, Box } from '@chakra-ui/react';
+import { Box, Button, Flex, Input, Text } from '@chakra-ui/react';
+import { useDropzone } from 'react-dropzone';
+
 import UploadCSV from '../../utils/uploadCSV';
+
 import 'boxicons';
+
 import { PropTypes } from 'prop-types';
 
 const DropZone = ({ onClose }) => {

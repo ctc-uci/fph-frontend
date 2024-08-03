@@ -1,35 +1,36 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useBackend } from '../../contexts/BackendContext';
-import DonationsModal from './DonationsModal.jsx';
-import DonationsDeleteConfirmationModal from './DonationsDeleteConfirmationModal.jsx';
-import { ChevronRightIcon, ChevronLeftIcon, DeleteIcon, EditIcon, AddIcon } from '@chakra-ui/icons';
-import PropTypes from 'prop-types';
-import classes from './DonationItemsTable.module.css';
-import { useAuth } from '../../contexts/AuthContext.jsx';
-import FemalePettingDog from '../../assets/FemalePettingDog.png';
-import MalePettingDog from '../../assets/MalePettingDog.png';
+import { AddIcon, ChevronLeftIcon, ChevronRightIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import {
-  Table,
-  TableContainer,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Tabs,
-  TabList,
-  Tab,
-  TabPanels,
-  TabPanel,
   Box,
+  Button,
   IconButton,
   Image,
-  Button,
+  Tab,
+  Table,
+  TableContainer,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Tbody,
+  Td,
   Text,
+  Th,
+  Thead,
+  Tr,
   useDisclosure,
 } from '@chakra-ui/react';
+import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
+
+import FemalePettingDog from '../../assets/FemalePettingDog.png';
+import MalePettingDog from '../../assets/MalePettingDog.png';
+import { useAuth } from '../../contexts/AuthContext.jsx';
+import { useBackend } from '../../contexts/BackendContext';
 import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer.jsx';
+import classes from './DonationItemsTable.module.css';
+import DonationsDeleteConfirmationModal from './DonationsDeleteConfirmationModal.jsx';
+import DonationsModal from './DonationsModal.jsx';
 
 const DonationItemsTable = () => {
   const { isAdmin } = useAuth();
@@ -49,7 +50,7 @@ const DonationItemsTable = () => {
     const fetchNotifications = async () => {
       const response = await backend.get('/notification/0');
       setNotification(response.data);
-    }
+    };
     checkIsAdmin();
     fetchNotifications();
   }, [backend]);
@@ -69,7 +70,7 @@ const DonationItemsTable = () => {
                 <Tab>Misc.</Tab>
               </TabList>
             </div>
-            <TabPanels >
+            <TabPanels>
               <TabPanel padding="0">
                 <DonationItems category="all" />
               </TabPanel>
@@ -128,12 +129,12 @@ const DonationItems = ({ category }) => {
     setPageLimit(Math.ceil(itemsNumResponse.data[0]['count'] / 10));
   };
 
-  const openDeleteModal = async item => {
+  const openDeleteModal = async (item) => {
     setSelectedItem(item);
     deleteModalOnOpen();
   };
 
-  const setEditModal = isEdit => {
+  const setEditModal = (isEdit) => {
     setIsEdit(isEdit);
   };
 
@@ -184,7 +185,7 @@ const DonationItems = ({ category }) => {
           <Tbody>
             {data.map((item, index) => (
               <Tr key={index}>
-                {Object.keys(item).map(key => (
+                {Object.keys(item).map((key) => (
                   <Td key={key}>
                     {typeof item[key] === 'boolean' ? (item[key] ? 'True' : 'False') : item[key]}
                   </Td>
@@ -206,10 +207,7 @@ const DonationItems = ({ category }) => {
                       openDeleteModal(item);
                     }}
                   >
-                    {index >= 4 ?
-                    <DeleteIcon color="red" />
-                    : null }
-
+                    {index >= 4 ? <DeleteIcon color="red" /> : null}
                   </Button>
                 </Td>
               </Tr>

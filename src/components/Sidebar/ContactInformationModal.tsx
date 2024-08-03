@@ -1,18 +1,18 @@
+import React from 'react';
 import {
-  Flex,
   Box,
-  Text,
+  Flex,
+  Icon,
   Modal,
-  ModalOverlay,
+  ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalHeader,
-  ModalCloseButton,
-  ModalBody,
+  ModalOverlay,
   Spacer,
-  Icon,
+  Text,
   VStack,
 } from '@chakra-ui/react';
-import React from 'react';
 import { BiBuildingHouse, BiEnvelope, BiPhone } from 'react-icons/bi';
 
 export const ContactInformationModal = ({ isOpen, onClose }) => {

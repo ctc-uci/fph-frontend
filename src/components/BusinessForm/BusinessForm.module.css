@@ -3,7 +3,7 @@ Input {
 }
 
 .titleText {
-  color: var(--gray-700, #2D3748);
+  color: var(--gray-700, #2d3748);
   font-family: Inter;
   font-size: 24px;
   font-style: normal;

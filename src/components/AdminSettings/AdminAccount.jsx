@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react';
-import { useBackend } from '../../contexts/BackendContext';
-import { useAuth } from '../../contexts/AuthContext.jsx';
+import { ArrowForwardIcon } from '@chakra-ui/icons';
 import {
-  HStack,
   Box,
   Button,
+  Card,
   FormControl,
   FormLabel,
-  Card,
+  HStack,
   Input,
   useToast,
 } from '@chakra-ui/react';
-import { ArrowForwardIcon } from '@chakra-ui/icons';
+
+import { useAuth } from '../../contexts/AuthContext.jsx';
+import { useBackend } from '../../contexts/BackendContext';
 
 // duplicated from EditContactInformation
 const formLabelStyles = {
@@ -37,7 +38,7 @@ const AdminAccount = () => {
         const response = await backend.get(`/adminuser/${currentUser.email}`);
         const newName = response.data[0].name;
         const [firstName, lastName] = newName.split(' ');
-        setAdminContactInfo(prevState => ({
+        setAdminContactInfo((prevState) => ({
           ...prevState,
           firstName: firstName,
           lastName: lastName,
@@ -94,10 +95,10 @@ const AdminAccount = () => {
     }
   };
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     const name = event.target.name;
     var value = event.target.value;
-    setAdminContactInfo(prevState => ({ ...prevState, [name]: value }));
+    setAdminContactInfo((prevState) => ({ ...prevState, [name]: value }));
   };
 
   return (

@@ -1,32 +1,31 @@
 import { useEffect, useState } from 'react';
-import { useBackend } from '../../contexts/BackendContext';
-import { useAuth } from '../../contexts/AuthContext';
-import { SearchIcon, PlusSquareIcon, BellIcon, HamburgerIcon } from '@chakra-ui/icons';
+import { BellIcon, HamburgerIcon, PlusSquareIcon, SearchIcon } from '@chakra-ui/icons';
 import {
-  Text,
+  Button,
+  Icon,
+  Input,
   InputGroup,
   InputLeftElement,
-  Icon,
   Menu,
   MenuButton,
-  Button,
-  Input,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-} from '@chakra-ui/react';
-import {
   Modal,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
   useDisclosure,
 } from '@chakra-ui/react';
+
+import { useAuth } from '../../contexts/AuthContext';
+import { useBackend } from '../../contexts/BackendContext';
 
 const App = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -50,7 +49,7 @@ const App = () => {
     getData();
   }, []);
 
-  const getDate = val => {
+  const getDate = (val) => {
     const timestamp = new Date(val);
     return `${timestamp.toLocaleString('default', { month: 'long' })} ${timestamp.getDay()}`;
   };

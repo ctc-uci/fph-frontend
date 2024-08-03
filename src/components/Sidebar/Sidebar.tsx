@@ -1,33 +1,33 @@
-import { Link, useNavigate } from 'react-router-dom';
-import {
-  Button,
-  VStack,
-  Divider,
-  Flex,
-  Image,
-  Box,
-  Text,
-  HStack,
-  useDisclosure,
-  Icon,
-  IconButton,
-} from '@chakra-ui/react';
-
-import fphLogo from '/fph_logo.png';
-import { useAuth } from '../../contexts/AuthContext';
-import { useBackend } from '../../contexts/BackendContext';
 import { useEffect, useState } from 'react';
 import {
-  BiLogOut,
-  BiPackage,
-  BiHeartCircle,
-  BiHomeSmile,
-  BiUser,
-  BiHelpCircle,
+  Box,
+  Button,
+  Divider,
+  Flex,
+  HStack,
+  Icon,
+  IconButton,
+  Image,
+  Text,
+  useDisclosure,
+  VStack,
+} from '@chakra-ui/react';
+import {
   BiBuildingHouse,
   BiCog,
+  BiHeartCircle,
+  BiHelpCircle,
+  BiHomeSmile,
+  BiLogOut,
+  BiPackage,
+  BiUser,
 } from 'react-icons/bi';
+import { Link, useNavigate } from 'react-router-dom';
+
+import { useAuth } from '../../contexts/AuthContext';
+import { useBackend } from '../../contexts/BackendContext';
 import { ContactInformationModal } from './ContactInformationModal';
+import fphLogo from '/fph_logo.png';
 
 export const Sidebar = () => {
   const { backend } = useBackend();
@@ -115,7 +115,7 @@ export const Sidebar = () => {
             <Divider borderWidth="1px" my="24px" borderColor={'#CAC6BE'} />
 
             <VStack>
-              {navList.map(item => {
+              {navList.map((item) => {
                 return (
                   <Link to={item.path} key={item.name} style={{ width: '100%', display: 'block' }}>
                     <Button width="full" justifyContent="flex-start" variant="ghost" gap={2}>

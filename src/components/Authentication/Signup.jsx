@@ -1,19 +1,20 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
   FormControl,
   FormLabel,
-  Input,
-  VStack,
   Heading,
-  Text,
+  Input,
   Link,
+  Text,
   useToast,
+  VStack,
 } from '@chakra-ui/react';
-import { useAuth } from '../../contexts/AuthContext';
 import PropTypes from 'prop-types'; // Import PropTypes
+import { useNavigate } from 'react-router-dom';
+
+import { useAuth } from '../../contexts/AuthContext';
 
 const Signup = ({ isAdmin }) => {
   // React states for input fields
@@ -38,7 +39,7 @@ const Signup = ({ isAdmin }) => {
     });
   }, [error]);
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
@@ -69,21 +70,21 @@ const Signup = ({ isAdmin }) => {
         )}
         <FormControl id="email">
           <FormLabel>Email</FormLabel>
-          <Input type="email" value={email} onChange={e => setEmail(e.target.value)} />
+          <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
         </FormControl>
         <FormControl id="password">
           <FormLabel>Password</FormLabel>
-          <Input type="password" value={password} onChange={e => setPassword(e.target.value)} />
+          <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </FormControl>
         <FormControl id="confirm-password">
           <FormLabel>Confirm Password</FormLabel>
           <Input
             type="password"
             value={confirmPassword}
-            onChange={e => setConfirmPassword(e.target.value)}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </FormControl>
-        <Button colorScheme="blue" w="full" disabled={loading} onClick={e => handleSubmit(e)}>
+        <Button colorScheme="blue" w="full" disabled={loading} onClick={(e) => handleSubmit(e)}>
           Create Account
         </Button>
 

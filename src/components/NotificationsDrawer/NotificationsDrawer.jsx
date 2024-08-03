@@ -1,33 +1,35 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
+import { ArrowForwardIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import {
+  Badge,
+  Box,
+  Button,
   Drawer,
   DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
-  useDisclosure,
-  IconButton,
-  Button,
-  Box,
-  Text,
-  VStack,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  Badge,
   Flex,
   Heading,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Text,
+  useDisclosure,
   useToast,
+  VStack,
 } from '@chakra-ui/react';
-import { ChevronDownIcon, ArrowForwardIcon } from '@chakra-ui/icons';
-import { useState } from 'react';
-import DownloadCSV from '../../utils/downloadCSV';
+import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
+
+import DownloadCSV from '../../utils/downloadCSV';
+
 import 'boxicons';
+
 import { useBackend } from '../../contexts/BackendContext';
 
 const NotificationsDrawer = ({ notificationsData }) => {
@@ -57,7 +59,7 @@ const NotificationsDrawer = ({ notificationsData }) => {
     'Edited Information': 'View Information',
   };
 
-  const handleDownloadCSV = ids => {
+  const handleDownloadCSV = (ids) => {
     DownloadCSV(ids);
   };
 
@@ -91,7 +93,7 @@ const NotificationsDrawer = ({ notificationsData }) => {
     }
   };
 
-  const getNotifBadge = type => {
+  const getNotifBadge = (type) => {
     return (
       <Flex>
         <Badge borderRadius="full" px="2" bgColor="#359797" width="26px" height={'26px'}>
@@ -120,31 +122,21 @@ const NotificationsDrawer = ({ notificationsData }) => {
   const getSortState = () => {
     switch (sortState) {
       case 'New Application':
-        return (
-          <Text>New application</Text>
-        );
+        return <Text>New application</Text>;
       case 'Not Submitted':
-        return (
-          <Text>Send reminder</Text>
-        );
+        return <Text>Send reminder</Text>;
       case 'Submitted Form':
-        return (
-          <Text>Submitted form</Text>
-        );
+        return <Text>Submitted form</Text>;
       case 'Supply Request':
-        return (
-          <Text>Supply request</Text>
-        );
+        return <Text>Supply request</Text>;
       case 'Edited Information':
-        return (
-          <Text>Edited information</Text>
-        );
+        return <Text>Edited information</Text>;
       default:
         return <></>;
     }
   };
 
-  const getNotificationText = type => {
+  const getNotificationText = (type) => {
     if (type === 'New Application') {
       return 'Sent a business application.';
     }
@@ -250,7 +242,13 @@ const NotificationsDrawer = ({ notificationsData }) => {
             <Flex marginLeft={'-24px'} width={'200px'} marginRight={'-24px'}>
               {sortState === '' || (
                 <Badge width={'100%'} height={'100%'} borderRadius={4}>
-                  <Flex justifyContent={'space-between'} alignItems={'center'} height={'100%'} marginLeft={2} gap={1}>
+                  <Flex
+                    justifyContent={'space-between'}
+                    alignItems={'center'}
+                    height={'100%'}
+                    marginLeft={2}
+                    gap={1}
+                  >
                     {getNotifBadge(sortState)}
                     {getSortState()}
                     <IconButton
@@ -268,20 +266,20 @@ const NotificationsDrawer = ({ notificationsData }) => {
           <DrawerBody marginTop={2}>
             <VStack spacing={4} align="stretch">
               {notificationsData
-                .filter(notification => sortState === '' || notification.type === sortState)
+                .filter((notification) => sortState === '' || notification.type === sortState)
                 .map((notification, index) => (
                   <Box key={index} p={5} shadow="md" borderWidth="1px">
                     <Flex alignItems={'center'} justifyContent={'space-between'} gap={4}>
                       {getNotifBadge(notification.type)}
                       <Flex flexDirection={'column'} width={'75%'}>
-                        <Heading size='sm'>{notification.business_name}</Heading>
+                        <Heading size="sm">{notification.business_name}</Heading>
                         <Text>{getNotificationText(notification.type)}</Text>
                         <Text fontSize="sm">
                           {new Date(notification.timestamp).toLocaleDateString('en-US', {
                             timeZone: 'America/Los_Angeles',
                             year: 'numeric',
                             month: 'long',
-                            day: 'numeric'
+                            day: 'numeric',
                           })}
                         </Text>
                       </Flex>

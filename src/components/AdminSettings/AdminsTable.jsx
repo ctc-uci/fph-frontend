@@ -1,27 +1,28 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
-import { useBackend } from '../../contexts/BackendContext';
-import { AdminModal } from './AdminModal.jsx';
-import { DeleteAdminModal } from './DeleteAdminModal.jsx';
+import { AddIcon, ChevronLeftIcon, ChevronRightIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import {
   Box,
+  Button,
   Flex,
   IconButton,
-  Table,
-  Text,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-  useDisclosure,
   Input,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+  useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import { EditIcon, AddIcon, DeleteIcon, ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
-import { Button } from '@chakra-ui/react';
+
+import { useBackend } from '../../contexts/BackendContext';
+import { AdminModal } from './AdminModal.jsx';
 import classes from './AdminSettings.module.css';
+import { DeleteAdminModal } from './DeleteAdminModal.jsx';
 
 const AdminsTable = () => {
   const { backend } = useBackend();
@@ -62,17 +63,17 @@ const AdminsTable = () => {
     setPageLimit(Math.ceil(itemsNumResponse.data[0]['count'] / 10));
   };
 
-  const formatDate = dateString => {
+  const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString('en-US', options);
   };
 
-  const handleSearch = event => {
+  const handleSearch = (event) => {
     setSearchTerm(event.target.value.split(' ').join('+'));
     setCurrentPageNum(1);
   };
 
-  const openDeleteModal = async admin => {
+  const openDeleteModal = async (admin) => {
     setSelectedAdmin(admin);
     deleteModalOnOpen();
   };

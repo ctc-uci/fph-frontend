@@ -1,9 +1,11 @@
 import './AdminFilterBusinesses.module.css';
-import BusinessTable from '../BusinessTable/BusinessTable.jsx';
-import { useBackend } from '../../contexts/BackendContext';
+
 import { useEffect, useState } from 'react';
-import { Box, IconButton, Tabs, TabList, Tab } from '@chakra-ui/react';
-import { ChevronRightIcon, ChevronLeftIcon } from '@chakra-ui/icons';
+import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
+import { Box, IconButton, Tab, TabList, Tabs } from '@chakra-ui/react';
+
+import { useBackend } from '../../contexts/BackendContext';
+import BusinessTable from '../BusinessTable/BusinessTable.jsx';
 
 const AdminFilterBusinesses = () => {
   // Created the use states
@@ -23,7 +25,7 @@ const AdminFilterBusinesses = () => {
     }
   }, [currentTab, currentPageNum, searchTerm]);
 
-  const changeTab = async tab => {
+  const changeTab = async (tab) => {
     setCurrentTab(tab);
     setCurrentPageNum(1);
     setSearchTerm('');
