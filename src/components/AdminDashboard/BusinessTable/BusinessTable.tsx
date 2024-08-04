@@ -8,6 +8,7 @@ import {
   Checkbox,
   Flex,
   Heading,
+  HStack,
   IconButton,
   Input,
   Modal,
@@ -37,6 +38,16 @@ import { useBackend } from '../../../contexts/BackendContext';
 import DownloadCSV from '../../../utils/downloadCSV';
 import DropZone from './DropZone';
 
+const TABLE_HEADERS = ['Business Name', 'Location', 'Email', 'Form Status', 'Last Submitted'];
+
+const PENDING_HEADERS = [
+  'Business Name',
+  'Location',
+  'Email',
+  'Residential Status',
+  'Application Sent',
+];
+
 export const BusinessTable = () => {
   const navigate = useNavigate();
   const { backend } = useBackend();
@@ -50,19 +61,9 @@ export const BusinessTable = () => {
   const [selectedBusinessIds, setSelectedBusinessIds] = useState<Set<string>>(new Set());
   const toast = useToast();
 
-  const TABLE_HEADERS = ['Business Name', 'Location', 'Email', 'Form Status', 'Last Submitted'];
-
-  const PENDING_HEADERS = [
-    'Business Name',
-    'Location',
-    'Email',
-    'Residential Status',
-    'Application Sent',
-  ];
-
   const [headers, setHeaders] = useState(TABLE_HEADERS);
 
-  const changeTab = async (tab) => {
+  const changeTab = async (tab: string) => {
     setCurrentTab(tab);
     setSelectedBusinessIds(new Set());
     setCurrentPageNum(1);
@@ -153,8 +154,8 @@ export const BusinessTable = () => {
   };
 
   const handleSendReminders = async () => {
-    // ! FIX ME
     for (const businessId of selectedBusinessIds) {
+      // ! FIX ME
       try {
         const requestData = {
           businessId: businessId,
@@ -241,17 +242,21 @@ export const BusinessTable = () => {
       try {
         const searchTerm = search.replace(' ', '+');
         const businessResponse = await backend.get(
-          `/business/filter/${currentTab}?pageLimit=10&pageNum=${currentPageNum}&searchTerm=${searchTerm}`,
+          `/business/filter/search/?currentTab=${currentTab}&pageLimit=10&pageNum=${currentPageNum}&searchTerm=${searchTerm}`,
         );
+
         const businessCountResponse = await backend.get(
-          `/business/totalBusinesses?tab=${currentTab}&searchTerm=${searchTerm}`,
+          `/business/filter/searchCount?currentTab=${currentTab}&searchTerm=${searchTerm}`,
         );
+
+        console.log(businessResponse);
         if (currentTab === 'All' && search === '' && businessCountResponse.data[0]['count'] === 0) {
           onOpen();
         }
         setPageLimit(Math.ceil(businessCountResponse.data[0]['count'] / 10));
         setCurrentBusinessNum(businessCountResponse.data[0]['count']);
         setData(businessResponse.data);
+
         if (currentTab === 'Pending') {
           setHeaders(PENDING_HEADERS);
         }
@@ -259,6 +264,7 @@ export const BusinessTable = () => {
         console.error('Error fetching data:', error);
       }
     };
+
     getData();
   }, [search, currentTab, currentPageNum, backend]);
 
@@ -300,6 +306,7 @@ export const BusinessTable = () => {
           </Tab>
         </TabList>
       </Tabs>
+
       <Box>
         <Box style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
           <Box>
@@ -324,6 +331,7 @@ export const BusinessTable = () => {
               Add business
             </Button>
           </Box>
+
           <Box>
             <Button
               colorScheme={currentTab === 'Submitted' ? 'gray' : 'teal'}
@@ -352,6 +360,7 @@ export const BusinessTable = () => {
             </Button>
           </Box>
         </Box>
+
         <Card mb="20px" mt="20px">
           <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
@@ -430,7 +439,8 @@ export const BusinessTable = () => {
             </Tbody>
           </Table>
         </Card>
-        <Flex gap={4} justifyContent={'flex-end'} alignItems={'center'}>
+
+        <HStack justifyContent={'flex-end'}>
           <Box>
             {(currentPageNum - 1) * 10 + 1} to {Math.min(currentPageNum * 10, currentBusinessNum)}{' '}
             of {currentBusinessNum}
@@ -449,7 +459,7 @@ export const BusinessTable = () => {
             icon={<ChevronRightIcon />}
             onClick={() => setCurrentPageNum(currentPageNum + 1)}
           />
-        </Flex>
+        </HStack>
       </Box>
     </Box>
   );
