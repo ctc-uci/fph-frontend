@@ -9,7 +9,6 @@ import { BusinessDashboard } from './components/BusinessDashboard/BusinessDashbo
 import { BusinessDonationHistory } from './components/BusinessDonationHistory/BusinessDonationHistory';
 import ViewDonationHistory from './components/BusinessDonationHistory/ViewDonationHistory/ViewDonationHistory.jsx';
 import { AddBusinessForm, BusinessForm } from './components/BusinessForm/BusinessForm.jsx';
-import BusinessNotificationCenter from './components/BusinessNotificationCenter/BusinessNotificationCenter.jsx';
 import { BusinessSetupPage } from './components/BusinessSetup/BusinessSetupPage';
 import CatchAll from './components/CatchAll';
 import Congrats from './components/DonationForm/Congrats.jsx';
@@ -86,10 +85,6 @@ const App = () => {
               <Route
                 path="/BusinessDonationHistory"
                 element={<ProtectedRoute Component={BusinessDonationHistory} />}
-              ></Route>
-              <Route
-                path="/BusinessNotificationCenter"
-                element={<ProtectedRoute Component={BusinessNotificationCenter} />}
               ></Route>
               <Route
                 path="/EditContactInformation"
