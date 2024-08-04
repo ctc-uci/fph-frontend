@@ -19,7 +19,7 @@ import { EditContactInformation } from './components/EditContactInformation';
 import BusinessFormMaster from './components/OnBoarding/BusinessFormMaster.jsx';
 import { Sidebar } from './components/Sidebar/Sidebar';
 import { SupplyRequestsPage } from './components/SupplyRequests/SupplyRequestsPage';
-import ViewBusiness from './components/ViewBusiness/ViewBusiness.jsx';
+import { ViewBusiness } from './components/ViewBusiness/ViewBusiness';
 import ViewDonation from './components/ViewDonation/ViewDonation.jsx';
 import ViewRequest from './components/ViewRequest/ViewRequest.jsx';
 import { AuthProvider } from './contexts/AuthContext.jsx';
