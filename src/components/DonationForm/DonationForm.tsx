@@ -249,6 +249,7 @@ export const DonationForm = () => {
               </Flex>
             </Flex>
 
+            {/* TODO: ACTUALLY UPLOAD FILES */}
             <Flex>
               <FormLabel htmlFor="photos" fontSize="12px" width="160px" fontWeight="700">
                 <VStack alignItems={'flex-start'}>
