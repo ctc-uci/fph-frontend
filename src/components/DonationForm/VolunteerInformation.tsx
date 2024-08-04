@@ -1,5 +1,5 @@
 import { ChangeEvent } from 'react';
-import { Box, Flex, FormLabel, Heading, Input, Text } from '@chakra-ui/react';
+import { Box, Flex, FormControl, FormLabel, Heading, Input, Text } from '@chakra-ui/react';
 
 export const VolunteerInformation = ({
   handleChange,
@@ -17,58 +17,65 @@ export const VolunteerInformation = ({
 
       <Flex direction="column" gap={4}>
         <Flex alignItems="center">
-          <Text width={70} fontWeight={'bold'}>
-            NAME
-          </Text>
-          <FormLabel htmlFor="personFirstName personLastName" />
-          <Flex alignItems="center" gap={4} width={'100%'}>
-            <Input
-              id="personFirstName"
-              placeholder="First Name"
-              name="personFirstName"
-              onChange={handleChange}
-              isRequired={true}
-            />
-            <Input
-              id="personLastName"
-              placeholder="Last Name"
-              name="personLastName"
-              onChange={handleChange}
-              isRequired={true}
-            />
-          </Flex>
+          <FormControl isRequired display={'flex'}>
+            <Text width={70} fontWeight={'bold'}>
+              NAME
+            </Text>
+            <FormLabel htmlFor="personFirstName personLastName" />
+            <Flex alignItems="center" gap={4} width={'100%'}>
+              <Input
+                id="personFirstName"
+                placeholder="First Name"
+                name="personFirstName"
+                onChange={handleChange}
+                isRequired={true}
+              />
+              <Input
+                id="personLastName"
+                placeholder="Last Name"
+                name="personLastName"
+                onChange={handleChange}
+                isRequired={true}
+              />
+            </Flex>
+          </FormControl>
+        </Flex>
+
+        <Flex alignItems="center">
+          <FormControl isRequired display={'flex'}>
+            <Text width={70} fontWeight={'bold'}>
+              EMAIL
+            </Text>
+            <FormLabel htmlFor="email" />
+            <Flex alignItems="center" gap={4} width={'100%'}>
+              <Input
+                id="email"
+                placeholder="Email"
+                name="email"
+                width={'100%'}
+                onChange={handleChange}
+                isRequired={true}
+              />
+            </Flex>
+          </FormControl>
         </Flex>
         <Flex alignItems="center">
-          <Text width={70} fontWeight={'bold'}>
-            EMAIL
-          </Text>
-          <FormLabel htmlFor="email" />
-          <Flex alignItems="center" gap={4} width={'100%'}>
-            <Input
-              id="email"
-              placeholder="Email"
-              name="email"
-              width={'100%'}
-              onChange={handleChange}
-              isRequired={true}
-            />
-          </Flex>
-        </Flex>
-        <Flex alignItems="center">
-          <Text width={70} fontWeight={'bold'}>
-            HOURS
-          </Text>
-          <FormLabel htmlFor="volunteer_hours" />
-          <Flex alignItems="center" gap={4} width={'100%'}>
-            <Input
-              id="volunteer_hours"
-              placeholder="Number of Hours Worked"
-              name="volunteer_hours"
-              width={'100%'}
-              onChange={handleChange}
-              isRequired={true}
-            />
-          </Flex>
+          <FormControl isRequired display={'flex'}>
+            <Text width={70} fontWeight={'bold'}>
+              HOURS
+            </Text>
+            <FormLabel htmlFor="volunteer_hours" />
+            <Flex alignItems="center" gap={4} width={'100%'}>
+              <Input
+                id="volunteer_hours"
+                placeholder="Number of Hours Worked"
+                name="volunteer_hours"
+                width={'100%'}
+                onChange={handleChange}
+                isRequired={true}
+              />
+            </Flex>
+          </FormControl>
         </Flex>
       </Flex>
     </Flex>

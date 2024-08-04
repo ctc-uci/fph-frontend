@@ -1,5 +1,4 @@
-import { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
-import { CloseIcon, DownloadIcon } from '@chakra-ui/icons';
+import { ChangeEvent, Dispatch, MouseEvent, SetStateAction, useEffect, useState } from 'react';
 import {
   Box,
   Breadcrumb,
@@ -10,9 +9,10 @@ import {
   CheckboxGroup,
   Divider,
   Flex,
-  FormControl,
   FormLabel,
   Heading,
+  Icon,
+  IconButton,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -22,8 +22,10 @@ import {
   Stack,
   Text,
   Textarea,
+  Tooltip,
   VStack,
 } from '@chakra-ui/react';
+import { BiDownload, BiX } from 'react-icons/bi';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../contexts/AuthContext';
@@ -175,8 +177,9 @@ export const DonationForm = () => {
       <Heading sx={pageTitleStyle}>Donation Form</Heading>
 
       <Box bg="white" borderRadius="lg">
-        <FormControl sx={{ padding: 6, display: 'flex', flexDirection: 'column', gap: 4 }}>
+        <Box sx={{ padding: 6, display: 'flex', flexDirection: 'column', gap: 4 }}>
           <VolunteerInformation handleChange={handleChange} />
+
           <Divider />
 
           <Flex sx={{ flexDirection: 'column', gap: 4 }}>
@@ -274,7 +277,7 @@ export const DonationForm = () => {
                         bgColor="white"
                         borderColor="teal.200"
                         borderWidth="2px"
-                        leftIcon={<DownloadIcon color="gray.300" />}
+                        leftIcon={<Icon color="gray.300" as={BiDownload} />}
                       >
                         Upload File
                       </Button>
@@ -289,11 +292,23 @@ export const DonationForm = () => {
             <Button type="button" onClick={handleCancelClick}>
               Cancel
             </Button>
-            <Button type="button" colorScheme="teal" onClick={submitForm}>
-              Submit
-            </Button>
+            <Tooltip label="Name, Email, and Volunteer Hours are required" placement={'left'}>
+              <Button
+                type="button"
+                colorScheme="teal"
+                onClick={submitForm}
+                isDisabled={
+                  !formData.email ||
+                  !formData.volunteer_hours ||
+                  !formData.personFirstName ||
+                  !formData.personLastName
+                }
+              >
+                Submit
+              </Button>
+            </Tooltip>
           </Flex>
-        </FormControl>
+        </Box>
       </Box>
     </Flex>
   );
@@ -309,8 +324,8 @@ function CustomBox({
   setFormData,
 }: {
   itemName: string;
-  formData;
-  setFormData;
+  formData: Record<string, string | any>;
+  setFormData: Dispatch<SetStateAction<Record<string, string | any>>>;
 }) {
   return (
     <Box
@@ -347,9 +362,11 @@ function CustomBox({
         <Text marginRight={2} marginBottom={1}>
           ea
         </Text>
-        <CloseIcon
+        <IconButton
+          icon={<BiX />}
+          aria-label="set item to 0"
+          variant={'ghost'}
           color="red.500"
-          boxSize={3}
           marginRight={4}
           cursor="pointer"
           onClick={() => {
