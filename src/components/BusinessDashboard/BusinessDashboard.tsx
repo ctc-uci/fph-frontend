@@ -44,18 +44,17 @@ import { BusinessTotals } from './BusinessTotals';
 // However, none of the current code anywhere does this, and the type for all notifications is null by default. Either that has to be fixed
 // or this will need to be changed so that it doesn't rely on a notification having a type.
 export const BusinessDashboard = () => {
-  const [userName, setUserName] = useState('');
   const { backend } = useBackend();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
+
+  const [userName, setUserName] = useState('');
   const [donationData, setDonationData] = useState([]);
   const [notifClicked, setNotifClicked] = useState(null);
   const [currentQuarter, setCurrentQuarter] = useState<string>();
-  const {
-    isOpen: requestDrawerIsOpen,
-    onOpen: requestDrawerOnOpen,
-    onClose: requestDrawerOnClose,
-  } = useDisclosure();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const buttonPath = {
     'Donation Form Confirmation': `/BusinessDonationHistory`,
     'Submitted Form': `/BusinessDonationHistory`,
@@ -64,6 +63,7 @@ export const BusinessDashboard = () => {
     // 'Supply Request Shipped': '/',
     // 'Supply Request Received': '/',
   };
+
   const buttonText = {
     'Donation Form Confirmation': 'View Form',
     'Submitted Form': 'View Form',
@@ -105,21 +105,6 @@ export const BusinessDashboard = () => {
     'Homeless Card 2',
   ];
 
-  // const formatDate = timestamp => {
-  //   const parsedTimestamp = Number(timestamp);
-  //   const date = new Date(isNaN(parsedTimestamp) ? timestamp : parsedTimestamp * 1000);
-
-  //   if (!isNaN(date.getTime())) {
-  //     return date.toLocaleDateString('en-US', {
-  //       year: 'numeric',
-  //       month: 'long',
-  //       day: 'numeric',
-  //     });
-  //   } else {
-  //     return 'Invalid Date';
-  //   }
-  // };
-
   useEffect(() => {
     const getData = async () => {
       try {
@@ -128,19 +113,25 @@ export const BusinessDashboard = () => {
         // in the future will have to change (add parameter to component)
         // so that we can display the dashboard for various businesses
         // ***********************************************************************
+
         const businessIdResponse = await backend.get(`/businessUser/${currentUser.uid}`);
         const businessId = businessIdResponse.data[0].id;
 
-        const donationResponse = await backend.get(`/donation/business/totals/${businessId}`);
+        console.log(businessId);
+
+        const [donationResponse, businessResponse, priceResponse, reminderResponse] =
+          await Promise.all([
+            backend.get(`/donation/business/totals/${businessId}`),
+            backend.get(`/business/${businessId}`),
+            backend.get('/value'),
+            backend.get(`/notification/${businessId}`),
+          ]);
+
+        console.log(donationResponse, businessResponse, priceResponse, reminderResponse);
+
         setDonationData(donationResponse.data[0]);
-
-        const businessResponse = await backend.get(`/business/${businessId}`);
         setUserName(businessResponse.data[0]['contact_name']);
-
-        const priceResponse = await backend.get('/value');
         setPriceData(priceResponse.data);
-
-        const reminderResponse = await backend.get(`/notification/${businessId}`);
         setReminderData(reminderResponse.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -235,12 +226,7 @@ export const BusinessDashboard = () => {
 
   return !notifClicked ? (
     <Flex sx={pageStyle}>
-      <Drawer
-        isOpen={requestDrawerIsOpen}
-        placement="right"
-        onClose={requestDrawerOnClose}
-        size="sm"
-      >
+      <Drawer isOpen={isOpen} placement="right" onClose={onClose} size="sm">
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
@@ -315,9 +301,7 @@ export const BusinessDashboard = () => {
       <Table bg="#FFFFFF">
         <Thead>
           <Tr>
-            <Th color="#2D3748" fontSize={16}>
-              Notifications
-            </Th>
+            <Th>Notifications</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -376,7 +360,7 @@ export const BusinessDashboard = () => {
                             ].includes(reminder['type'])
                           ) {
                             parseSupplyRequestData(reminder['message']);
-                            requestDrawerOnOpen();
+                            onOpen();
                           } else {
                             navigate(buttonPath[reminder['type']]);
                           }

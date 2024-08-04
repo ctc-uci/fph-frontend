@@ -12,7 +12,7 @@ import { AddBusinessForm, BusinessForm } from './components/BusinessForm/Busines
 import { BusinessSetupPage } from './components/BusinessSetup/BusinessSetupPage';
 import CatchAll from './components/CatchAll';
 import Congrats from './components/DonationForm/Congrats.jsx';
-import DonationForm from './components/DonationForm/DonationForm.jsx';
+import { DonationForm } from './components/DonationForm/DonationForm';
 import { DonationItemsTable } from './components/DonationItemsTable/DonationItemsTable';
 import { DonationTrackingTable } from './components/DonationTrackingTable/DonationTrackingTable';
 import { EditContactInformation } from './components/EditContactInformation';

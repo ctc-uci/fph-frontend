@@ -15,12 +15,12 @@ import {
   TabPanels,
   Tabs,
   useToast,
-  VStack,
 } from '@chakra-ui/react';
 
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { useBackend } from '../contexts/BackendContext.jsx';
 import { pageStyle, pageTitleStyle } from '../styles/sharedStyles.js';
+import { CreateNotificationArgs } from '../types/notification.js';
 import { ReferenceGuide } from './ReferenceGuide';
 
 const formLabelStyles = {
@@ -92,7 +92,8 @@ export const EditContactInformation = () => {
     try {
       const formattedPhoneNumber = businessContactInfo.phoneNumber.replace(/-/g, '');
       setInitialBusinessContactInfo(businessContactInfo);
-      await backend.put(`/business/${businessId}`, {
+
+      const updatePromise = backend.put(`/business/${businessId}`, {
         name: businessContactInfo.businessName,
         contact_name: `${businessContactInfo.firstName} ${businessContactInfo.lastName}`,
         primary_phone: formattedPhoneNumber,
@@ -105,15 +106,17 @@ export const EditContactInformation = () => {
         business_hours: businessContactInfo.business_hours,
       });
 
-      const notificationData = {
+      const notification: CreateNotificationArgs = {
         businessId: FPH_ID,
+        senderId: businessId,
         message: 'Edited their business information.',
         type: 'Edited Information',
-        senderId: businessId,
         businessName: businessContactInfo.businessName,
         donationId: null,
       };
-      await backend.post('/notification', notificationData);
+      const notificationPromise = backend.post('/notification', notification);
+
+      await Promise.all([updatePromise, notificationPromise]);
 
       return toast({
         title: 'Saved Changes',
@@ -125,6 +128,14 @@ export const EditContactInformation = () => {
       });
     } catch (error) {
       console.error('Error updating data:', error);
+
+      toast({
+        title: 'Error',
+        description: 'There was an error updating your changes. Please try again.',
+        status: 'error',
+        duration: 9000,
+        position: 'bottom-right',
+      });
     }
   };
 
