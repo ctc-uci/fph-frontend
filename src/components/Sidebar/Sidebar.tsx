@@ -88,15 +88,15 @@ export const Sidebar = () => {
     <>
       <Flex
         sx={{
-          width: '275px',
-          minWidth: '275px',
+          width: '250px',
+          minWidth: '250px',
           paddingX: '16px',
           paddingTop: '32px',
           paddingBottom: '24px',
           overflowY: 'scroll',
         }}
       >
-        <VStack justifyContent={'space-between'} minHeight={500}>
+        <VStack justifyContent={'space-between'} minHeight={500} width="100%">
           <Flex flexDirection="column">
             <HStack>
               <Image
