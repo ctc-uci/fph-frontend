@@ -9,17 +9,18 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../contexts/AuthContext';
 import { useBackend } from '../../contexts/BackendContext';
 import { pageStyle, pageTitleStyle } from '../../styles/sharedStyles';
-import { ConfirmationDialog } from './ConfirmationDialog';
 import { SupplyRequests } from './SupplyRequests';
 
 export const SupplyRequestsPage = () => {
   const { backend } = useBackend();
   const { currentUser } = useAuth();
   const toast = useToast();
+  const navigate = useNavigate();
 
   const confirmationDisclosure = useDisclosure();
 
@@ -91,6 +92,16 @@ export const SupplyRequestsPage = () => {
       ]);
 
       confirmationDisclosure.onOpen();
+
+      toast({
+        title: 'Supply Request Sent!',
+        description: 'Your supplies will be shipped in 5-7 business days.',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+
+      navigate('/BusinessDashboard');
     } catch (error) {
       toast({
         title: 'An error occurred.',
@@ -148,12 +159,6 @@ export const SupplyRequestsPage = () => {
           </Button>
         </HStack>
       </Card>
-
-      <ConfirmationDialog
-        isOpen={confirmationDisclosure.isOpen}
-        onClose={confirmationDisclosure.onClose}
-        onCancel={handleCancelButtonClick}
-      />
     </Flex>
   );
 };

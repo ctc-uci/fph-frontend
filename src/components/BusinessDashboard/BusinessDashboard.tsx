@@ -90,7 +90,7 @@ export const BusinessDashboard = () => {
   const [priceData, setPriceData] = useState([]);
   const [reminderData, setReminderData] = useState<Notification[]>([]);
   const [supplyRequest, setSupplyRequest] = useState([0, 0, 0, 0, 0, 0, 0]);
-  const [notes, setNotes] = useState('');
+  const [note, setNote] = useState('');
   const supplyRequestItems = [
     'Pet Food Decal',
     'Decal',
@@ -114,8 +114,6 @@ export const BusinessDashboard = () => {
         const businessIdResponse = await backend.get(`/businessUser/${currentUser.uid}`);
         const businessId = businessIdResponse.data[0].id;
 
-        console.log(businessId);
-
         const [donationResponse, businessResponse, priceResponse, reminderResponse] =
           await Promise.all([
             backend.get(`/donation/business/totals/${businessId}`),
@@ -123,8 +121,6 @@ export const BusinessDashboard = () => {
             backend.get('/value'),
             backend.get(`/notification/${businessId}`),
           ]);
-
-        console.log(donationResponse, businessResponse, priceResponse, reminderResponse);
 
         setDonationData(donationResponse.data[0]);
         setUserName(businessResponse.data[0]['contact_name']);
@@ -174,7 +170,7 @@ export const BusinessDashboard = () => {
     });
 
     setSupplyRequest(numbersList);
-    setNotes(notes);
+    setNote(notes);
   };
 
   const isUrgentNotif = () => {
@@ -223,58 +219,6 @@ export const BusinessDashboard = () => {
 
   return !notifClicked ? (
     <Flex sx={pageStyle}>
-      <Drawer isOpen={isOpen} placement="right" onClose={onClose} size="sm">
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerHeader mt={2}>
-            <Flex justifyContent="start" alignItems="center">
-              <BiPackage size={30} />
-              <Text fontSize={20} marginLeft={2}>
-                Supply Request
-              </Text>
-            </Flex>
-          </DrawerHeader>
-
-          <DrawerBody p={2}>
-            <Box border="2px" borderColor="gray.200" borderRadius="lg" overflow="hidden">
-              <Table
-                variant="simple"
-                colorScheme="gray"
-                size="md"
-                borderRadius="sm"
-                overflow="hidden"
-              >
-                <Thead>
-                  <Tr>
-                    <Th color="black" fontWeight={900}>
-                      Item
-                    </Th>
-                    <Th color="black" fontWeight={900}>
-                      Amount
-                    </Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {supplyRequestItems.map((item, index) => (
-                    <Tr key={index}>
-                      <Td>{item}</Td>
-                      <Td>{supplyRequest[index]}</Td>
-                    </Tr>
-                  ))}
-                </Tbody>
-              </Table>
-            </Box>
-
-            <Flex flexDirection="column" alignItems="flex-start" marginLeft={5} marginTop={5}>
-              <Text fontWeight={700}>Notes</Text>
-              {/* CHANGE THIS TO PARSED NOTES */}
-              <Text>{notes}</Text>
-            </Flex>
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
-
       <Flex justifyContent="space-between" alignItems="center" paddingY={4}>
         <Heading color="teal" fontWeight="bold">
           Welcome Back, {userName === '' ? '...' : userName}
@@ -370,8 +314,91 @@ export const BusinessDashboard = () => {
           ))}
         </Tbody>
       </Table>
+
+      <SupplyRequestDrawer
+        isOpen={isOpen}
+        onClose={onClose}
+        supplyRequestItems={supplyRequestItems}
+        supplyRequest={supplyRequest}
+        note={note}
+      />
     </Flex>
   ) : (
     <ViewDonationHistory />
+  );
+};
+
+const SupplyRequestDrawer = ({
+  isOpen,
+  onClose,
+  supplyRequestItems,
+  supplyRequest,
+  note,
+}: {
+  isOpen: boolean;
+  onClose: () => unknown;
+  supplyRequestItems: string[];
+  supplyRequest: number[];
+  note: string;
+}) => {
+  return (
+    <Drawer isOpen={isOpen} placement="right" onClose={onClose} size="sm">
+      <DrawerOverlay />
+      <DrawerContent>
+        <DrawerCloseButton />
+        <DrawerHeader mt={2}>
+          <Flex justifyContent="start" alignItems="center">
+            <BiPackage size={30} />
+            <Text fontSize={20} marginLeft={2}>
+              Supply Request
+            </Text>
+          </Flex>
+        </DrawerHeader>
+
+        <DrawerBody sx={{ padding: 4, display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <Box border="2px" borderColor="gray.200" borderRadius="lg" overflowY="scroll">
+            <Table
+              variant="simple"
+              colorScheme="gray"
+              size="md"
+              borderRadius="sm"
+              overflow="hidden"
+            >
+              <Thead>
+                <Tr>
+                  <Th color="black" fontWeight={900}>
+                    Item
+                  </Th>
+                  <Th color="black" fontWeight={900}>
+                    Amount
+                  </Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {supplyRequestItems.map((item, index) => (
+                  <Tr key={index}>
+                    <Td>{item}</Td>
+                    <Td>{supplyRequest[index]}</Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
+          </Box>
+
+          <Flex flexDirection="column" alignItems="flex-start">
+            <Text fontWeight={700}>Notes:</Text>
+            <Text
+              flexWrap={'wrap'}
+              wordBreak={'break-all'}
+              maxHeight={400}
+              width={'100%'}
+              overflowY={'scroll'}
+            >
+              {note}
+            </Text>
+          </Flex>
+        </DrawerBody>
+      </DrawerContent>
+    </Drawer>
   );
 };
