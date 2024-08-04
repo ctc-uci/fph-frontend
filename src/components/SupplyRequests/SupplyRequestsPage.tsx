@@ -5,7 +5,6 @@ import {
   Flex,
   Heading,
   HStack,
-  Text,
   Textarea,
   useDisclosure,
   useToast,
@@ -129,7 +128,6 @@ export const SupplyRequestsPage = () => {
       <Heading sx={pageTitleStyle}>Supply Request</Heading>
 
       <Card variant={'outline'} sx={{ padding: 4, gap: 4 }}>
-        <Text sx={{ fontSize: 20, fontWeight: 'medium' }}>Select supplies needed</Text>
         <SupplyRequests handleChange={handleNumInputChange} />
         <Textarea
           sx={{ height: 150, marginTop: 4 }}

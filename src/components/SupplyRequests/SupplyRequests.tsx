@@ -1,5 +1,4 @@
 import {
-  Box,
   HStack,
   Image,
   NumberDecrementStepper,
@@ -8,7 +7,6 @@ import {
   NumberInputField,
   NumberInputStepper,
   SimpleGrid,
-  Stack,
   Text,
   VStack,
 } from '@chakra-ui/react';
@@ -77,7 +75,7 @@ export const SupplyRequests = ({ handleChange }: SupplyRequestProps) => {
   return (
     <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={4} spacingY={10}>
       {SUPPLIES.map((supply, index) => (
-        <HStack key={index} align="start" spacing="2">
+        <HStack key={index} align="start" spacing="4">
           <Image
             width={150}
             height={150}
