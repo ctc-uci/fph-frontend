@@ -11,7 +11,7 @@ import ViewDonationHistory from './components/BusinessDonationHistory/ViewDonati
 import { AddBusinessForm, BusinessForm } from './components/BusinessForm/BusinessForm.jsx';
 import { BusinessSetupPage } from './components/BusinessSetup/BusinessSetupPage';
 import CatchAll from './components/CatchAll';
-import Congrats from './components/DonationForm/Congrats.jsx';
+import { Congrats } from './components/DonationForm/Congrats';
 import { DonationForm } from './components/DonationForm/DonationForm';
 import { DonationItemsTable } from './components/DonationItemsTable/DonationItemsTable';
 import { DonationTrackingTable } from './components/DonationTrackingTable/DonationTrackingTable';

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import Congratulations from '../../../public/congratulations.png';
 import { pageStyle } from '../../styles/sharedStyles';
 
-const Congrats = () => {
+export const Congrats = () => {
   return (
     <Flex sx={{ ...pageStyle, position: 'relative', minHeight: '100vh' }}>
       <Link to="/BusinessDashboard">
@@ -58,5 +58,3 @@ const Congrats = () => {
     </Flex>
   );
 };
-
-export default Congrats;
