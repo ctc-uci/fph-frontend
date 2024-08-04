@@ -14,15 +14,16 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { useBackend } from '../../../contexts/BackendContext';
 import { pageStyle, pageTitleStyle } from '../../../styles/sharedStyles';
 import { Donation } from '../../../types/donation';
 
-export const ViewDonationHistory = () => {
+export const ViewBusinessDonationHistory = () => {
   const { id } = useParams();
   const { backend } = useBackend();
+  const navigate = useNavigate();
 
   const [data, setData] = useState<Donation | undefined>();
 
@@ -58,7 +59,7 @@ export const ViewDonationHistory = () => {
     <Flex sx={pageStyle}>
       <Breadcrumb spacing="2">
         <BreadcrumbItem>
-          <BreadcrumbLink color="#245F61" href="/BusinessDonationHistory">
+          <BreadcrumbLink color="#245F61" onClick={() => navigate('/BusinessDonationHistory')}>
             Donation History
           </BreadcrumbLink>
         </BreadcrumbItem>

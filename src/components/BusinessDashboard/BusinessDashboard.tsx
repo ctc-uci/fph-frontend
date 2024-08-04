@@ -30,8 +30,36 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useBackend } from '../../contexts/BackendContext';
 import { pageStyle } from '../../styles/sharedStyles';
 import type { Notification } from '../../types/notification';
-import { ViewDonationHistory } from '../BusinessDonationHistory/ViewDonationHistory/ViewDonationHistory';
 import { BusinessTotals } from './BusinessTotals';
+
+const BUTTON_PATH = {
+  'Donation Form Confirmation': `/BusinessDonationHistory`,
+  'Submitted Form': `/BusinessDonationHistory`,
+  'Donation Form Reminder': '/BusinessDonationTrackingForm',
+  'Not Submitted': '/BusinessDonationTrackingForm',
+  // 'Supply Request Shipped': '/',
+  // 'Supply Request Received': '/',
+};
+
+const BUTTON_TEXT = {
+  'Donation Form Confirmation': 'View Form',
+  'Submitted Form': 'View Form',
+  'Not Submitted': 'Submit Form',
+  'Donation Form Reminder': 'Submit Form',
+  'Supply Request': 'View Request',
+  'Supply Request Shipped': 'View Request',
+  'Supply Request Received': 'View Request',
+};
+
+const BUTTON_ICON = {
+  'Donation Form Confirmation': CheckCircleIcon,
+  'Submitted Form': CheckCircleIcon,
+  'Donation Form Reminder': WarningIcon,
+  'Not Submitted': WarningIcon,
+  'Supply Request Shipped': EmailIcon,
+  'Supply Request Received': EmailIcon,
+  'Supply Request': EmailIcon,
+};
 
 // Currently, this whole component depends on each notification having its correct 'type' when created. We defined 4 types:
 // 1. Donation Form Confirmation
@@ -47,39 +75,9 @@ export const BusinessDashboard = () => {
 
   const [userName, setUserName] = useState('');
   const [donationData, setDonationData] = useState([]);
-  const [notifClicked, setNotifClicked] = useState(null);
   const [currentQuarter, setCurrentQuarter] = useState<string>();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const buttonPath = {
-    'Donation Form Confirmation': `/BusinessDonationHistory`,
-    'Submitted Form': `/BusinessDonationHistory`,
-    'Donation Form Reminder': '/BusinessDonationTrackingForm',
-    'Not Submitted': '/BusinessDonationTrackingForm',
-    // 'Supply Request Shipped': '/',
-    // 'Supply Request Received': '/',
-  };
-
-  const buttonText = {
-    'Donation Form Confirmation': 'View Form',
-    'Submitted Form': 'View Form',
-    'Not Submitted': 'Submit Form',
-    'Donation Form Reminder': 'Submit Form',
-    'Supply Request': 'View Request',
-    'Supply Request Shipped': 'View Request',
-    'Supply Request Received': 'View Request',
-  };
-
-  const buttonIcon = {
-    'Donation Form Confirmation': CheckCircleIcon,
-    'Submitted Form': CheckCircleIcon,
-    'Donation Form Reminder': WarningIcon,
-    'Not Submitted': WarningIcon,
-    'Supply Request Shipped': EmailIcon,
-    'Supply Request Received': EmailIcon,
-    'Supply Request': EmailIcon,
-  };
 
   // *************************************************************************
   // CHANGE LATER: right now just making one big request for all of the
@@ -210,14 +208,14 @@ export const BusinessDashboard = () => {
       'Donation Form Reminder': 'Please submit your donation form by the due date!',
       'Not Submitted': 'Please submit your donation form by the due date!',
       'Supply Request Shipped': `Supply request submitted from ${formattedDate} has been shipped.`,
-      'Supply Request Received': 'Supplies will be shipped in 3-5 business days.',
-      'Supply Request': 'Supplies will be shipped in 3-5 business days.',
+      'Supply Request Received': 'Supplies will be shipped in 5-7 business days.',
+      'Supply Request': 'Supplies will be shipped in 5-7 business days.',
     };
 
     return notifText[reminder['type']];
   };
 
-  return !notifClicked ? (
+  return (
     <Flex sx={pageStyle}>
       <Flex justifyContent="space-between" alignItems="center" paddingY={4}>
         <Heading color="teal" fontWeight="bold">
@@ -239,7 +237,7 @@ export const BusinessDashboard = () => {
         priceData={priceData}
       />
 
-      <Table bg="white">
+      <Table sx={{ backgroundColor: 'white' }}>
         <Thead>
           <Tr>
             <Th>Notifications</Th>
@@ -258,7 +256,7 @@ export const BusinessDashboard = () => {
                     <Box>
                       <HStack spacing={4}>
                         <Icon
-                          as={buttonIcon[reminder['type']]}
+                          as={BUTTON_ICON[reminder['type']]}
                           color={isRedNotif(reminder) ? '#E53E3E' : 'teal'}
                         />
 
@@ -287,8 +285,7 @@ export const BusinessDashboard = () => {
                               reminder['type'],
                             )
                           ) {
-                            setNotifClicked(reminder['notification_id']);
-                            navigate(`${buttonPath[reminder['type']]}/${reminder.donation_id}`);
+                            navigate(`${BUTTON_PATH[reminder['type']]}/${reminder.donation_id}`);
                           } else if (
                             [
                               'Supply Request Shipped',
@@ -299,12 +296,12 @@ export const BusinessDashboard = () => {
                             parseSupplyRequestData(reminder['message']);
                             onOpen();
                           } else {
-                            navigate(buttonPath[reminder['type']]);
+                            navigate(BUTTON_PATH[reminder['type']]);
                           }
                         }}
                         rightIcon={<ArrowForwardIcon />}
                       >
-                        {buttonText[reminder['type']]}
+                        {BUTTON_TEXT[reminder['type']]}
                       </Button>
                     </Box>
                   </HStack>
@@ -323,8 +320,6 @@ export const BusinessDashboard = () => {
         note={note}
       />
     </Flex>
-  ) : (
-    <ViewDonationHistory />
   );
 };
 

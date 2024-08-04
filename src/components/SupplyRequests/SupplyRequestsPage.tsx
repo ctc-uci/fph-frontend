@@ -138,7 +138,10 @@ export const SupplyRequestsPage = () => {
     <Flex sx={pageStyle}>
       <Heading sx={pageTitleStyle}>Supply Request</Heading>
 
-      <Card variant={'outline'} sx={{ padding: 4, gap: 4 }}>
+      <Card
+        variant={'outline'}
+        sx={{ padding: 4, gap: 4, overflowY: 'scroll', maxHeight: 'calc(100vh - 150px)' }}
+      >
         <SupplyRequests handleChange={handleNumInputChange} />
         <Textarea
           sx={{ height: 150, marginTop: 4 }}
