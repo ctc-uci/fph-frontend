@@ -1,15 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowDownIcon } from '@chakra-ui/icons';
-import { BiEnvelope } from 'react-icons/bi';
-import { FaPlus } from 'react-icons/fa6';
-import { useNavigate } from 'react-router-dom';
-
-import { useBackend } from '../../contexts/BackendContext';
-import DownloadCSV from '../../utils/downloadCSV';
-
-import 'boxicons';
-
-import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
+import { ArrowDownIcon, ChevronLeftIcon, ChevronRightIcon, Icon } from '@chakra-ui/icons';
 import {
   Badge,
   Box,
@@ -40,10 +30,14 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
+import { BiCheck, BiEnvelope, BiPlus, BiTimeFive, BiX } from 'react-icons/bi';
+import { useNavigate } from 'react-router-dom';
 
-import DropZone from '../BusinessTable/DropZone';
+import { useBackend } from '../../../contexts/BackendContext';
+import DownloadCSV from '../../../utils/downloadCSV';
+import DropZone from './DropZone';
 
-const BusinessTable = () => {
+export const BusinessTable = () => {
   const navigate = useNavigate();
   const { backend } = useBackend();
   const [data, setData] = useState([]);
@@ -53,7 +47,7 @@ const BusinessTable = () => {
   const [currentBusinessNum, setCurrentBusinessNum] = useState(0);
   const [currentPageNum, setCurrentPageNum] = useState(1);
   const [currentTab, setCurrentTab] = useState('All');
-  const [selectedBusinessIds, setSelectedBusinessIds] = useState(new Set());
+  const [selectedBusinessIds, setSelectedBusinessIds] = useState<Set<string>>(new Set());
   const toast = useToast();
 
   const TABLE_HEADERS = ['Business Name', 'Location', 'Email', 'Form Status', 'Last Submitted'];
@@ -75,13 +69,14 @@ const BusinessTable = () => {
     setSearch('');
   };
 
-  function formatDateDFH(dateTimeString) {
+  function formatDateDFH(dateTimeString: string) {
     const date = new Date(dateTimeString);
-    const options = {
+    const options: Intl.DateTimeFormatOptions = {
       year: 'numeric',
       month: 'short',
       day: '2-digit',
     };
+
     return date.toLocaleDateString('en-US', options);
   }
 
@@ -89,7 +84,7 @@ const BusinessTable = () => {
     if (status === 'Pending') {
       return (
         <Badge colorScheme="yellow" px="2">
-          <box-icon type="regular" name="time-five" size="xs" mr="10px"></box-icon>
+          <Icon as={BiTimeFive} />
           Pending
         </Badge>
       );
@@ -98,7 +93,7 @@ const BusinessTable = () => {
       return (
         <Badge colorScheme="green" px="2">
           <Flex gap={1}>
-            <box-icon type="regular" name="check" size="xs" color="green"></box-icon>
+            <Icon as={BiCheck} />
             <Text>Submitted</Text>
           </Flex>
         </Badge>
@@ -108,7 +103,7 @@ const BusinessTable = () => {
       return (
         <Badge colorScheme="yellow" px="2">
           <Flex gap={1}>
-            <box-icon type="regular" name="time-five" size="xs"></box-icon>
+            <Icon as={BiTimeFive} />
             <Text>Reminder Sent</Text>
           </Flex>
         </Badge>
@@ -117,7 +112,7 @@ const BusinessTable = () => {
     return (
       <Badge colorScheme="gray" px="2">
         <Flex gap={1}>
-          <box-icon type="regular" name="x" size="xs"></box-icon>
+          <Icon as={BiX} />
           <Text>Not Submitted</Text>
         </Flex>
       </Badge>
@@ -158,6 +153,7 @@ const BusinessTable = () => {
   };
 
   const handleSendReminders = async () => {
+    // ! FIX ME
     for (const businessId of selectedBusinessIds) {
       try {
         const requestData = {
@@ -271,7 +267,7 @@ const BusinessTable = () => {
   };
 
   return (
-    <Box mr="20px" ml="20px" mb="30px">
+    <Box>
       <Tabs colorScheme="teal" sx={{ width: 'fit-content' }}>
         <TabList>
           <Tab
@@ -322,7 +318,7 @@ const BusinessTable = () => {
               height="40px"
               colorScheme="teal"
               variant="outline"
-              leftIcon={<FaPlus />}
+              leftIcon={<BiPlus />}
               onClick={handleClick}
             >
               Add business
@@ -458,5 +454,3 @@ const BusinessTable = () => {
     </Box>
   );
 };
-
-export default BusinessTable;

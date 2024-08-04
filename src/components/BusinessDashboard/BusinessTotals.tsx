@@ -71,7 +71,7 @@ export const BusinessTotals = ({ donationData, reminderData, priceData }: Busine
       p={4}
       borderWidth={1}
       borderColor="gray.200"
-      bg="#FFFFFF"
+      bg="white"
     >
       {stats.map((stat, index) => (
         <Fragment key={index}>

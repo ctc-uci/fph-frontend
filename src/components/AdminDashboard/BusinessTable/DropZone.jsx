@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Box, Button, Flex, Input, Text } from '@chakra-ui/react';
 import { useDropzone } from 'react-dropzone';
 
-import UploadCSV from '../../utils/uploadCSV';
+import UploadCSV from '../../../utils/uploadCSV';
 
 import 'boxicons';
 

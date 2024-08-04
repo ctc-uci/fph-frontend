@@ -1,18 +1,15 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import {
-  Box,
   Button,
   Card,
   Flex,
+  Heading,
   HStack,
-  SimpleGrid,
-  Stack,
   Text,
   Textarea,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../contexts/AuthContext';
 import { useBackend } from '../../contexts/BackendContext';
@@ -23,7 +20,6 @@ import { SupplyRequests } from './SupplyRequests';
 export const SupplyRequestsPage = () => {
   const { backend } = useBackend();
   const { currentUser } = useAuth();
-  const navigate = useNavigate();
   const toast = useToast();
 
   const confirmationDisclosure = useDisclosure();
@@ -130,7 +126,7 @@ export const SupplyRequestsPage = () => {
 
   return (
     <Flex sx={pageStyle}>
-      <Text sx={pageTitleStyle}>Supply Request</Text>
+      <Heading sx={pageTitleStyle}>Supply Request</Heading>
 
       <Card variant={'outline'} sx={{ padding: 4, gap: 4 }}>
         <Text sx={{ fontSize: 20, fontWeight: 'medium' }}>Select supplies needed</Text>

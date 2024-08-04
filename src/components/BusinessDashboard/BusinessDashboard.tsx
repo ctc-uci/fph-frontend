@@ -30,6 +30,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../contexts/AuthContext';
 import { useBackend } from '../../contexts/BackendContext';
+import { pageStyle } from '../../styles/sharedStyles';
 import type { Notification } from '../../types/notification';
 import ViewDonationHistory from '../BusinessDonationHistory/ViewDonationHistory/ViewDonationHistory';
 import classes from './BusinessDashboard.module.css';
@@ -233,7 +234,7 @@ export const BusinessDashboard = () => {
   };
 
   return !notifClicked ? (
-    <Flex sx={{ flexDirection: 'column', gap: 4, padding: 8 }}>
+    <Flex sx={pageStyle}>
       <Drawer
         isOpen={requestDrawerIsOpen}
         placement="right"
@@ -293,7 +294,7 @@ export const BusinessDashboard = () => {
 
       <Flex justifyContent="space-between" alignItems="center" paddingY={4}>
         <Heading color="teal" fontWeight="bold">
-          Welcome Back, {userName}
+          Welcome Back, {userName === '' ? '...' : userName}
         </Heading>
 
         <Button

@@ -1,16 +1,13 @@
-/* eslint-disable react/prop-types */
-
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { ArrowForwardIcon, ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
   Flex,
   Heading,
+  HStack,
   IconButton,
   Input,
-  InputGroup,
-  Spacer,
   Table,
   TableContainer,
   Tbody,
@@ -23,25 +20,22 @@ import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../contexts/AuthContext';
 import { useBackend } from '../../contexts/BackendContext';
-import classes from './BusinessDonationHistory.module.css';
+import { pageStyle, pageTitleStyle } from '../../styles/sharedStyles';
 
-const BusinessDonationHistory = () => {
+const PAGINATION_NUMBER = 10;
+
+export const BusinessDonationHistory = () => {
   const { backend } = useBackend();
   const { currentUser } = useAuth();
   const [data, setData] = useState([]);
   const [selectedDonationId, setSelectedDonationId] = useState(null);
   const navigate = useNavigate();
 
-  // for pagination
   const [currentTotalDonationNum, setCurrentTotalDonationNum] = useState(0);
   const [currentPageNum, setCurrentPageNum] = useState(1);
   const [pageLimit, setPageLimit] = useState(1);
 
-  // for search
   const [searchInput, setSearchInput] = useState('');
-
-  // eslint-disable-next-line no-unused-vars
-  const [paginationNumber, setPaginationNumber] = useState(10);
 
   useEffect(() => {
     const getData = async () => {
@@ -49,20 +43,20 @@ const BusinessDonationHistory = () => {
         // Fetch business ID from backend
         const businessIdResponse = await backend.get(`/businessUser/${currentUser.uid}`);
         const response = await backend.get(
-          `/donation/filter/search/?businessId=${businessIdResponse.data[0].id}&searchTerm=${searchInput}&donationsLimit=${paginationNumber}&pageNum=${currentPageNum}`,
+          `/donation/filter/search/?businessId=${businessIdResponse.data[0].id}&searchTerm=${searchInput}&donationsLimit=${PAGINATION_NUMBER}&pageNum=${currentPageNum}`,
         );
         setData(response.data);
         const donationNumResponse = await backend.get(
           `/donation/filter/searchCount/?businessId=${businessIdResponse.data[0].id}&searchTerm=${searchInput}`,
         );
         setCurrentTotalDonationNum(donationNumResponse.data[0]['count']);
-        setPageLimit(Math.ceil(donationNumResponse.data[0]['count'] / paginationNumber));
+        setPageLimit(Math.ceil(donationNumResponse.data[0]['count'] / PAGINATION_NUMBER));
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
     getData();
-  }, [backend, currentPageNum, searchInput, paginationNumber]);
+  }, [backend, currentPageNum, searchInput, PAGINATION_NUMBER]);
 
   const handleButtonClick = async (id) => {
     try {
@@ -77,34 +71,33 @@ const BusinessDonationHistory = () => {
     navigate(`/BusinessDonationHistory/${selectedDonationId}`);
   }
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchInput(e.target.value);
     setCurrentPageNum(1);
   };
 
   return (
-    <Box margin="0px 32px 0px 32px">
-      <Flex alignItems="center" margin="48px 0px 37px 0px">
-        <Heading size="md"> Donation Tracking </Heading>
-        <Spacer></Spacer>
-        <InputGroup size="sm" margin="auto" width="222px" height="32px">
-          <Input
-            type="text"
-            placeholder="Search"
-            size="sm"
-            value={searchInput}
-            onChange={(e) => handleSearch(e)}
-            height="40px"
-            borderRadius="md"
-          />
-        </InputGroup>
-      </Flex>
+    <Flex sx={pageStyle} gap={4}>
+      <HStack sx={{ width: 'full', justifyContent: 'space-between' }}>
+        <Heading sx={pageTitleStyle}>Donation Tracking</Heading>
+        <Input
+          type="text"
+          placeholder="Search"
+          size="md"
+          width={300}
+          value={searchInput}
+          onChange={handleSearch}
+        />
+      </HStack>
+
       <TableContainer
-        border="1px"
-        borderRadius="12px"
-        borderColor="#E2E8F0"
-        width="100%"
-        className={classes.roundedTable}
+        sx={{
+          padding: 3,
+          borderWidth: 1,
+          borderRadius: 'md',
+          overflowX: 'auto',
+          background: 'white',
+        }}
       >
         <Table>
           <Thead>
@@ -151,19 +144,20 @@ const BusinessDonationHistory = () => {
           </Tbody>
         </Table>
       </TableContainer>
-      <Flex justifyContent="flex-end" alignItems="center" marginTop="10px">
-        <Box padding="4px 16px 4px 16px" h="28px" fontSize="14px" position="relative">
-          {(currentPageNum - 1) * paginationNumber + 1} -{' '}
-          {Math.min(currentPageNum * paginationNumber, currentTotalDonationNum)} of{' '}
+
+      <Flex justifyContent="flex-end" alignItems="center">
+        <Box padding={2} position="relative">
+          {(currentPageNum - 1) * PAGINATION_NUMBER + 1} -{' '}
+          {Math.min(currentPageNum * PAGINATION_NUMBER, currentTotalDonationNum)} of{' '}
           {currentTotalDonationNum}
         </Box>
+
         <IconButton
           variant="ghost"
           aria-label="Back button"
           isDisabled={currentPageNum <= 1}
           icon={<ChevronLeftIcon />}
           onClick={() => setCurrentPageNum(currentPageNum - 1)}
-          position="relative"
         />
         <IconButton
           variant="ghost"
@@ -171,11 +165,8 @@ const BusinessDonationHistory = () => {
           isDisabled={currentPageNum >= pageLimit}
           icon={<ChevronRightIcon />}
           onClick={() => setCurrentPageNum(currentPageNum + 1)}
-          position="relative"
         />
       </Flex>
-    </Box>
+    </Flex>
   );
 };
-
-export default BusinessDonationHistory;

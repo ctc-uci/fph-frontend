@@ -116,8 +116,7 @@ const AdminsTable = () => {
           display: 'flex',
           flexWrap: 'wrap',
           justifyContent: 'space-between',
-          marginY: 3,
-          gap: 2,
+          marginY: 4,
         }}
       >
         <Input

@@ -8,5 +8,6 @@ export const pageStyle: SystemStyleObject = {
 
 export const pageTitleStyle: SystemStyleObject = {
   fontSize: 32,
+  paddingY: 4,
   fontWeight: 'semibold',
 };

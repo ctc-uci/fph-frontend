@@ -5,22 +5,42 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from '@chakra-ui/icons';
-import { Box, Button, IconButton, Input, Tab, TabList, Tabs, useToast } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Checkbox,
+  Flex,
+  Heading,
+  HStack,
+  IconButton,
+  Input,
+  Tab,
+  Table,
+  TableContainer,
+  TabList,
+  Tabs,
+  Tbody,
+  Text,
+  Th,
+  Thead,
+  Tr,
+  useToast,
+} from '@chakra-ui/react';
 
 import { useBackend } from '../../contexts/BackendContext';
 import DonationSite from './DonationSite';
 
 import './DonationTrackingTable.module.css';
 
-import { Checkbox, Table, TableContainer, Tbody, Text, Th, Thead, Tr } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../contexts/AuthContext';
+import { pageStyle, pageTitleStyle } from '../../styles/sharedStyles';
 import DownloadCSV from '../../utils/downloadCSV';
 import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer';
 import classes from './DonationTrackingTable.module.css';
 
-const DonationTrackingTable = () => {
+export const DonationTrackingTable = () => {
   const navigate = useNavigate();
   const { backend } = useBackend();
   const { isAdmin } = useAuth();
@@ -79,7 +99,7 @@ const DonationTrackingTable = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        loadInfo(currentTab);
+        loadInfo();
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -178,33 +198,26 @@ const DonationTrackingTable = () => {
   return (
     <>
       {isAdminUser && (
-        <div className={classes.container}>
-          <div className={classes.dttTitleContainer}>
-            <Text>Donation Tracking</Text>
+        <Flex sx={pageStyle}>
+          <HStack sx={{ width: 'full', justifyContent: 'space-between' }}>
+            <Heading sx={pageTitleStyle}>Donation Tracking</Heading>
             <NotificationsDrawer notificationsData={notifications} />
-          </div>
-          <div className={classes.tabs}>
-            <Tabs isFitted="true" colorScheme="teal">
-              <TabList>
-                {tabHeaders.map((header, index) => {
-                  if (header != 'all')
-                    return (
-                      <Tab onClick={() => changeTab(header)} key={index}>
-                        This {header.substring(0, 1).toUpperCase() + header.substring(1)}
-                      </Tab>
-                    );
-                  else {
-                    return (
-                      <Tab onClick={() => changeTab('all')} key={index}>
-                        All
-                      </Tab>
-                    );
-                  }
-                })}
-              </TabList>
-            </Tabs>
-          </div>
-          <div className={classes.searchAndCSVContainer}>
+          </HStack>
+
+          <Tabs width={'fit-content'} isFitted={true} colorScheme="teal">
+            <TabList>
+              {tabHeaders.map((header) => (
+                <Tab onClick={() => changeTab(header)} key={header} sx={{ whiteSpace: 'nowrap' }}>
+                  <Text>This&nbsp;</Text>
+                  <Text sx={{ textTransform: 'capitalize' }}>{header}</Text>
+                </Tab>
+              ))}
+
+              <Tab onClick={() => changeTab('all')}>All</Tab>
+            </TabList>
+          </Tabs>
+
+          <Flex sx={{ justifyContent: 'space-between' }}>
             <Input
               placeholder="Search"
               onChange={handleSearch}
@@ -214,7 +227,8 @@ const DonationTrackingTable = () => {
               <ArrowDownIcon sx={{ marginRight: '5px' }} />
               Download CSV
             </Button>
-          </div>
+          </Flex>
+
           <TableContainer className={classes.roundedTable}>
             <Table style={{ borderCollapse: 'collapse' }}>
               <Thead>
@@ -231,6 +245,7 @@ const DonationTrackingTable = () => {
               <Tbody>{renderDonationTrackingTableData()}</Tbody>
             </Table>
           </TableContainer>
+
           <div className={classes.resultNavigation}>
             <Box sx={{ marginRight: '50px' }}>
               {currentDonationsNum > 0 ? (currentPageNum - 1) * 10 + 1 : 0} to{' '}
@@ -249,10 +264,8 @@ const DonationTrackingTable = () => {
               onClick={() => setCurrentPageNum(currentPageNum + 1)}
             />
           </div>
-        </div>
+        </Flex>
       )}
     </>
   );
 };
-
-export default DonationTrackingTable;

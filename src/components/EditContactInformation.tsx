@@ -20,6 +20,7 @@ import {
 
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { useBackend } from '../contexts/BackendContext.jsx';
+import { pageStyle, pageTitleStyle } from '../styles/sharedStyles.js';
 import { ReferenceGuide } from './ReferenceGuide';
 
 const formLabelStyles = {
@@ -185,176 +186,168 @@ export const EditContactInformation = () => {
   }, [backend]);
 
   return (
-    <>
-      <Flex sx={{ paddingY: 12, paddingX: 8 }}>
-        <VStack alignItems={'left'} width={'100%'}>
-          <Box>
-            <Heading fontSize="3xl" textAlign={'left'}>
-              Settings
-            </Heading>
-          </Box>
+    <Flex sx={pageStyle}>
+      <Heading sx={pageTitleStyle}>Settings</Heading>
 
-          <Tabs colorScheme="teal">
-            <TabList width={'250px'} marginBottom={6}>
-              <Tab>Business</Tab>
-              <Tab>Reference Guide</Tab>
-            </TabList>
+      <Tabs colorScheme="teal">
+        <TabList width={'250px'} marginBottom={6}>
+          <Tab>Business</Tab>
+          <Tab>Reference Guide</Tab>
+        </TabList>
 
-            <TabPanels>
-              <TabPanel display={'flex'} flexDirection={'column'} padding={0} gap={4}>
-                <Card paddingX={6} paddingY={4}>
-                  <FormControl sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                    <HStack>
-                      <FormLabel sx={formLabelStyles}>BUSINESS NAME</FormLabel>
-                      <Input
-                        type="text"
-                        placeholder="Enter Business Name"
-                        value={businessContactInfo.businessName}
-                        onChange={(e) => {
-                          setBusinessContactInfo({
-                            ...businessContactInfo,
-                            businessName: e.target.value,
-                          });
-                          showToast();
-                        }}
-                      />
-                    </HStack>
-                    <HStack>
-                      <FormLabel sx={formLabelStyles}>NAME</FormLabel>
-                      <Input
-                        type="text"
-                        placeholder="Enter First Name"
-                        value={businessContactInfo.firstName}
-                        name="firstName"
-                        onChange={handleChange}
-                      />
-                      <Input
-                        type="text"
-                        placeholder="Enter Last Name"
-                        value={businessContactInfo.lastName}
-                        name="lastName"
-                        onChange={handleChange}
-                      />
-                    </HStack>
-                    <HStack>
-                      <FormLabel sx={formLabelStyles}>EMAIL</FormLabel>
-                      <Input
-                        type="text"
-                        placeholder="example@email.com"
-                        value={businessContactInfo.email}
-                        name="email"
-                        onChange={handleChange}
-                      />
-                    </HStack>
-                    <HStack>
-                      <FormLabel sx={formLabelStyles}>WEBSITE</FormLabel>
-                      <Input
-                        type="text"
-                        placeholder="example.com"
-                        value={businessContactInfo.website}
-                        name="website"
-                        onChange={handleChange}
-                      />
-                    </HStack>
-                    <HStack>
-                      <FormLabel sx={formLabelStyles}>LOCATION</FormLabel>
-                      <Input
-                        type="text"
-                        placeholder="123 Address Lane"
-                        value={businessContactInfo.street}
-                        name="street"
-                        onChange={handleChange}
-                      />
-                    </HStack>
-                    <HStack>
-                      <FormLabel sx={formLabelStyles}>CITY</FormLabel>
-                      <Input
-                        type="text"
-                        placeholder="City"
-                        value={businessContactInfo.city}
-                        onChange={(e) => {
-                          setBusinessContactInfo({
-                            ...businessContactInfo,
-                            city: e.target.value,
-                          });
-                          showToast();
-                        }}
-                      />
-                      <Input
-                        type="text"
-                        placeholder="State"
-                        value={businessContactInfo.state}
-                        onChange={(e) => {
-                          setBusinessContactInfo({
-                            ...businessContactInfo,
-                            state: e.target.value,
-                          });
-                          showToast();
-                        }}
-                      />
-                      <Input
-                        type="text"
-                        placeholder="Zip Code"
-                        value={businessContactInfo.zip}
-                        onChange={(e) => {
-                          setBusinessContactInfo({ ...businessContactInfo, zip: e.target.value });
-                          showToast();
-                        }}
-                      />
-                    </HStack>
-                    <HStack>
-                      <FormLabel sx={formLabelStyles}>PHONE</FormLabel>
-                      <Input
-                        type="text"
-                        placeholder="(xxx) xxx-xxxx"
-                        value={businessContactInfo.phoneNumber}
-                        name="phoneNumber"
-                        onChange={handleChange}
-                      />
-                    </HStack>
-                    <HStack>
-                      <FormLabel sx={formLabelStyles}>BUSINESS HOURS</FormLabel>
-                      <Input
-                        type="text"
-                        placeholder="M-F 8:00 am - 10:00 pm"
-                        value={businessContactInfo.business_hours}
-                        onChange={(e) => {
-                          setBusinessContactInfo({
-                            ...businessContactInfo,
-                            business_hours: e.target.value,
-                          });
-                          showToast();
-                        }}
-                      />
-                    </HStack>
-                  </FormControl>
-                </Card>
+        <TabPanels>
+          <TabPanel display={'flex'} flexDirection={'column'} padding={0} gap={4}>
+            <Card paddingX={6} paddingY={4}>
+              <FormControl sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <HStack>
+                  <FormLabel sx={formLabelStyles}>BUSINESS NAME</FormLabel>
+                  <Input
+                    type="text"
+                    placeholder="Enter Business Name"
+                    value={businessContactInfo.businessName}
+                    onChange={(e) => {
+                      setBusinessContactInfo({
+                        ...businessContactInfo,
+                        businessName: e.target.value,
+                      });
+                      showToast();
+                    }}
+                  />
+                </HStack>
+                <HStack>
+                  <FormLabel sx={formLabelStyles}>NAME</FormLabel>
+                  <Input
+                    type="text"
+                    placeholder="Enter First Name"
+                    value={businessContactInfo.firstName}
+                    name="firstName"
+                    onChange={handleChange}
+                  />
+                  <Input
+                    type="text"
+                    placeholder="Enter Last Name"
+                    value={businessContactInfo.lastName}
+                    name="lastName"
+                    onChange={handleChange}
+                  />
+                </HStack>
+                <HStack>
+                  <FormLabel sx={formLabelStyles}>EMAIL</FormLabel>
+                  <Input
+                    type="text"
+                    placeholder="example@email.com"
+                    value={businessContactInfo.email}
+                    name="email"
+                    onChange={handleChange}
+                  />
+                </HStack>
+                <HStack>
+                  <FormLabel sx={formLabelStyles}>WEBSITE</FormLabel>
+                  <Input
+                    type="text"
+                    placeholder="example.com"
+                    value={businessContactInfo.website}
+                    name="website"
+                    onChange={handleChange}
+                  />
+                </HStack>
+                <HStack>
+                  <FormLabel sx={formLabelStyles}>LOCATION</FormLabel>
+                  <Input
+                    type="text"
+                    placeholder="123 Address Lane"
+                    value={businessContactInfo.street}
+                    name="street"
+                    onChange={handleChange}
+                  />
+                </HStack>
+                <HStack>
+                  <FormLabel sx={formLabelStyles}>CITY</FormLabel>
+                  <Input
+                    type="text"
+                    placeholder="City"
+                    value={businessContactInfo.city}
+                    onChange={(e) => {
+                      setBusinessContactInfo({
+                        ...businessContactInfo,
+                        city: e.target.value,
+                      });
+                      showToast();
+                    }}
+                  />
+                  <Input
+                    type="text"
+                    placeholder="State"
+                    value={businessContactInfo.state}
+                    onChange={(e) => {
+                      setBusinessContactInfo({
+                        ...businessContactInfo,
+                        state: e.target.value,
+                      });
+                      showToast();
+                    }}
+                  />
+                  <Input
+                    type="text"
+                    placeholder="Zip Code"
+                    value={businessContactInfo.zip}
+                    onChange={(e) => {
+                      setBusinessContactInfo({ ...businessContactInfo, zip: e.target.value });
+                      showToast();
+                    }}
+                  />
+                </HStack>
+                <HStack>
+                  <FormLabel sx={formLabelStyles}>PHONE</FormLabel>
+                  <Input
+                    type="text"
+                    placeholder="(xxx) xxx-xxxx"
+                    value={businessContactInfo.phoneNumber}
+                    name="phoneNumber"
+                    onChange={handleChange}
+                  />
+                </HStack>
+                <HStack>
+                  <FormLabel sx={formLabelStyles}>BUSINESS HOURS</FormLabel>
+                  <Input
+                    type="text"
+                    placeholder="M-F 8:00 am - 10:00 pm"
+                    value={businessContactInfo.business_hours}
+                    onChange={(e) => {
+                      setBusinessContactInfo({
+                        ...businessContactInfo,
+                        business_hours: e.target.value,
+                      });
+                      showToast();
+                    }}
+                  />
+                </HStack>
+              </FormControl>
+            </Card>
 
-                <Box alignContent={'left'}>
-                  <HStack alignItems={'left'}>
-                    <Button
-                      color="black"
-                      bg="gray.100"
-                      variant="solid"
-                      onClick={() => setBusinessContactInfo(initialBusinessContactInfo)}
-                    >
-                      Undo Changes
-                    </Button>
+            <Box alignContent={'left'}>
+              <HStack alignItems={'left'}>
+                <Button
+                  color="black"
+                  bg="gray.100"
+                  variant="solid"
+                  onClick={() => setBusinessContactInfo(initialBusinessContactInfo)}
+                >
+                  Undo Changes
+                </Button>
 
-                    <Button colorScheme="teal" variant="solid" onClick={updateContactInfo}>
-                      Save
-                    </Button>
-                  </HStack>
-                </Box>
-              </TabPanel>
+                <Button colorScheme="teal" variant="solid" onClick={updateContactInfo}>
+                  Save
+                </Button>
+              </HStack>
+            </Box>
+          </TabPanel>
 
-              <TabPanel padding={0}>
-                <ReferenceGuide />
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
-        </VStack>
-      </Flex>
-    </>
+          <TabPanel padding={0}>
+            <ReferenceGuide />
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
+    </Flex>
   );
 };

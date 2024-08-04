@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react';
-import { Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react';
+import { Flex, Heading, HStack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import { useBackend } from '../../contexts/BackendContext.jsx';
+import { pageStyle, pageTitleStyle } from '../../styles/sharedStyles.js';
 import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer.jsx';
 import AdminAccount from './AdminAccount.jsx';
-import classes from './AdminSettings.module.css';
 import AdminsTable from './AdminsTable.jsx';
 
 export const AdminSettingsMaster = () => {
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
-  const [notification, setNotification] = useState([]);
+  const [notifications, setNotifications] = useState([]);
   const { backend } = useBackend();
 
   useEffect(() => {
@@ -21,21 +21,24 @@ export const AdminSettingsMaster = () => {
         navigate('/BusinessDashboard');
       }
     };
-    checkIsAdmin();
+
     const fetchNotifications = async () => {
       const response = await backend.get('/notification/0');
-      setNotification(response.data);
+      setNotifications(response.data);
     };
+
+    checkIsAdmin();
     fetchNotifications();
   }, [isAdmin, navigate]);
 
   return (
-    <div className={classes.container}>
-      <div className={classes.ditTitleContainer}>
-        <Text>Settings</Text>
-        <NotificationsDrawer notificationsData={notification} />
-      </div>
-      <Tabs className={classes.tabs} colorScheme="teal">
+    <Flex sx={pageStyle}>
+      <HStack sx={{ width: 'full', justifyContent: 'space-between' }}>
+        <Heading sx={pageTitleStyle}>Settings</Heading>
+        <NotificationsDrawer notificationsData={notifications} />
+      </HStack>
+
+      <Tabs colorScheme="teal">
         <TabList display="inline-flex">
           <Tab>Admins</Tab>
           <Tab>Account</Tab>
@@ -50,6 +53,6 @@ export const AdminSettingsMaster = () => {
           </TabPanel>
         </TabPanels>
       </Tabs>
-    </div>
+    </Flex>
   );
 };

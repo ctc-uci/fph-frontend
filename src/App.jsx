@@ -1,12 +1,12 @@
 import { Box, Flex } from '@chakra-ui/react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 
-import AdminDashboard from './components/AdminDashboard/AdminDashboard.jsx';
-import { AdminSettingsMaster } from './components/AdminSettings/AdminSettingsMaster.jsx';
+import { AdminDashboard } from './components/AdminDashboard/AdminDashboard';
+import { AdminSettingsMaster } from './components/AdminSettings/AdminSettingsMaster';
 import ForgotPassword from './components/Authentication/ForgotPassword.jsx';
 import Login from './components/Authentication/Login.jsx';
 import { BusinessDashboard } from './components/BusinessDashboard/BusinessDashboard';
-import BusinessDonationHistory from './components/BusinessDonationHistory/BusinessDonationHistory.jsx';
+import { BusinessDonationHistory } from './components/BusinessDonationHistory/BusinessDonationHistory';
 import ViewDonationHistory from './components/BusinessDonationHistory/ViewDonationHistory/ViewDonationHistory.jsx';
 import { AddBusinessForm, BusinessForm } from './components/BusinessForm/BusinessForm.jsx';
 import BusinessNotificationCenter from './components/BusinessNotificationCenter/BusinessNotificationCenter.jsx';
@@ -14,8 +14,8 @@ import { BusinessSetupPage } from './components/BusinessSetup/BusinessSetupPage'
 import CatchAll from './components/CatchAll';
 import Congrats from './components/DonationForm/Congrats.jsx';
 import DonationForm from './components/DonationForm/DonationForm.jsx';
-import DonationItemsTable from './components/DonationItemsTable/DonationItemsTable.jsx';
-import DonationTrackingTable from './components/DonationTrackingTable/DonationTrackingTable.jsx';
+import { DonationItemsTable } from './components/DonationItemsTable/DonationItemsTable';
+import { DonationTrackingTable } from './components/DonationTrackingTable/DonationTrackingTable';
 import { EditContactInformation } from './components/EditContactInformation';
 import BusinessFormMaster from './components/OnBoarding/BusinessFormMaster.jsx';
 import { Sidebar } from './components/Sidebar/Sidebar';
