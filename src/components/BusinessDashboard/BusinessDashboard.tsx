@@ -30,7 +30,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useBackend } from '../../contexts/BackendContext';
 import { pageStyle } from '../../styles/sharedStyles';
 import type { Notification } from '../../types/notification';
-import ViewDonationHistory from '../BusinessDonationHistory/ViewDonationHistory/ViewDonationHistory';
+import { ViewDonationHistory } from '../BusinessDonationHistory/ViewDonationHistory/ViewDonationHistory';
 import { BusinessTotals } from './BusinessTotals';
 
 // Currently, this whole component depends on each notification having its correct 'type' when created. We defined 4 types:

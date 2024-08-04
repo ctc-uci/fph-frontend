@@ -1,8 +1,0 @@
-.roundedTable {
-  margin-top: var(--chakra-space-5);
-  padding: var(--chakra-space-3);
-  border-width: 1px;
-  border-radius: 12px;
-  overflow-x: auto;
-  background: var(--white, #fff);
-}

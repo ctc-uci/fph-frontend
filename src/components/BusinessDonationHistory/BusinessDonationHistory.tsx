@@ -40,14 +40,16 @@ export const BusinessDonationHistory = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        // Fetch business ID from backend
         const businessIdResponse = await backend.get(`/businessUser/${currentUser.uid}`);
+        const businessId = businessIdResponse.data[0].id;
+
         const response = await backend.get(
-          `/donation/filter/search/?businessId=${businessIdResponse.data[0].id}&searchTerm=${searchInput}&donationsLimit=${PAGINATION_NUMBER}&pageNum=${currentPageNum}`,
+          `/donation/filter/search/?businessId=${businessId}&searchTerm=${searchInput}&donationsLimit=${PAGINATION_NUMBER}&pageNum=${currentPageNum}`,
         );
         setData(response.data);
+
         const donationNumResponse = await backend.get(
-          `/donation/filter/searchCount/?businessId=${businessIdResponse.data[0].id}&searchTerm=${searchInput}`,
+          `/donation/filter/searchCount/?businessId=${businessId}&searchTerm=${searchInput}`,
         );
         setCurrentTotalDonationNum(donationNumResponse.data[0]['count']);
         setPageLimit(Math.ceil(donationNumResponse.data[0]['count'] / PAGINATION_NUMBER));
@@ -79,7 +81,7 @@ export const BusinessDonationHistory = () => {
   return (
     <Flex sx={pageStyle} gap={4}>
       <HStack sx={{ width: 'full', justifyContent: 'space-between' }}>
-        <Heading sx={pageTitleStyle}>Donation Tracking</Heading>
+        <Heading sx={pageTitleStyle}>Donation History</Heading>
         <Input
           type="text"
           placeholder="Search"

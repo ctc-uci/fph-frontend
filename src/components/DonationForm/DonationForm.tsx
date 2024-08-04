@@ -61,8 +61,8 @@ export const DonationForm = () => {
     date: null,
     dry_cat_food_quantity: null,
     dry_dog_food_quantity: null,
-    email: 'NULL',
-    food_bank_donation: 'NULL',
+    email: null,
+    food_bank_donation: businessName,
     misc_items: null,
     reporter: null,
     volunteer_hours: null,
@@ -93,12 +93,14 @@ export const DonationForm = () => {
         try {
           const businessIdResponse = await backend.get(`/businessUser/${currentUser.uid}`);
           const businessId = businessIdResponse.data[0].id;
-
           setBusinessId(businessId);
           setFormData((prevState) => ({ ...prevState, business_id: businessId }));
 
           const businessResponse = await backend.get(`/business/${businessId}`);
-          setBusinessName(businessResponse.name);
+          const businessName = businessResponse.data[0].name;
+
+          setBusinessName(businessName);
+          setFormData((prev) => ({ ...prev, food_bank_donation: businessName }));
         } catch (error) {
           console.error('Error fetching business ID:', error);
         }
@@ -337,8 +339,7 @@ export const DonationForm = () => {
   );
 };
 
-// Note that unit of measure, food bank donation, volunteer description, photo upload, and volunteer name is NOT tracked in the backend database, however it is detailed in the Figma design.
-// Unused data points: business_id, donation_id, email, food_bank_donation
+// Note that unit of measure, photo upload is NOT tracked in the backend database, however it is detailed in the Figma design.
 // Quantities look discrete in the backend, however it seems from the design that they are measured in ounces, cups, and grams. I'm not sure how to handle this discrepency. Will keep as an int to stay consistent w/ backend for now.
 
 function CustomBox({

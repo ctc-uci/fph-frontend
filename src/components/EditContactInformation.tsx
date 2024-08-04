@@ -121,6 +121,8 @@ export const EditContactInformation = () => {
 
       await Promise.all([updatePromise, notificationPromise]);
 
+      setToastOpen(false);
+
       return toast({
         title: 'Saved Changes',
         description: 'Your changes have been saved',

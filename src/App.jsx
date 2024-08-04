@@ -7,7 +7,7 @@ import ForgotPassword from './components/Authentication/ForgotPassword.jsx';
 import Login from './components/Authentication/Login.jsx';
 import { BusinessDashboard } from './components/BusinessDashboard/BusinessDashboard';
 import { BusinessDonationHistory } from './components/BusinessDonationHistory/BusinessDonationHistory';
-import ViewDonationHistory from './components/BusinessDonationHistory/ViewDonationHistory/ViewDonationHistory.jsx';
+import { ViewDonationHistory } from './components/BusinessDonationHistory/ViewDonationHistory/ViewDonationHistory';
 import { AddBusinessForm, BusinessForm } from './components/BusinessForm/BusinessForm.jsx';
 import { BusinessSetupPage } from './components/BusinessSetup/BusinessSetupPage';
 import CatchAll from './components/CatchAll';
