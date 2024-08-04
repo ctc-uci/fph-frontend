@@ -52,6 +52,7 @@ export const VolunteerInformation = ({
                 id="email"
                 placeholder="Email"
                 name="email"
+                type="email"
                 width={'100%'}
                 onChange={handleChange}
                 isRequired={true}
@@ -73,6 +74,7 @@ export const VolunteerInformation = ({
                 width={'100%'}
                 onChange={handleChange}
                 isRequired={true}
+                type="numeric"
               />
             </Flex>
           </FormControl>

@@ -111,6 +111,9 @@ export const EditContactInformation = () => {
         senderId: businessId,
         message: 'Edited their business information.',
         type: 'Edited Information',
+        timestamp: new Date().toLocaleString('en-US', {
+          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        }),
         businessName: businessContactInfo.businessName,
         donationId: null,
       };

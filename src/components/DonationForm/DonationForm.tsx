@@ -23,6 +23,7 @@ import {
   Text,
   Textarea,
   Tooltip,
+  useToast,
   VStack,
 } from '@chakra-ui/react';
 import { BiDownload, BiX } from 'react-icons/bi';
@@ -31,6 +32,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useBackend } from '../../contexts/BackendContext';
 import { pageStyle, pageTitleStyle } from '../../styles/sharedStyles';
+import { CreateNotificationArgs } from '../../types/notification';
 import { VolunteerInformation } from './VolunteerInformation';
 
 const LABELS = {
@@ -44,12 +46,14 @@ export const DonationForm = () => {
   const { backend } = useBackend();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
+  const toast = useToast();
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const paramId = searchParams.get('id');
 
-  const [businessId, setBusinessId] = useState(null);
+  const [businessId, setBusinessId] = useState<number>();
+  const [businessName, setBusinessName] = useState<string>();
   const [formData, setFormData] = useState({
     business_id: businessId,
     canned_cat_food_quantity: null,
@@ -84,14 +88,17 @@ export const DonationForm = () => {
   useEffect(() => {
     const fetchBusinessId = async () => {
       if (paramId) {
-        setFormData((prevState) => ({ ...prevState, business_id: paramId }));
+        setFormData((prevState) => ({ ...prevState, business_id: Number(paramId) }));
       } else {
         try {
           const businessIdResponse = await backend.get(`/businessUser/${currentUser.uid}`);
-          const fetchedBusinessId = businessIdResponse.data[0].id;
+          const businessId = businessIdResponse.data[0].id;
 
-          setBusinessId(fetchedBusinessId);
-          setFormData((prevState) => ({ ...prevState, business_id: fetchedBusinessId }));
+          setBusinessId(businessId);
+          setFormData((prevState) => ({ ...prevState, business_id: businessId }));
+
+          const businessResponse = await backend.get(`/business/${businessId}`);
+          setBusinessName(businessResponse.name);
         } catch (error) {
           console.error('Error fetching business ID:', error);
         }
@@ -127,26 +134,36 @@ export const DonationForm = () => {
     // DO TYPE IN THE DATABASE/CODE HERE, BUT THE DATA ASE DOES NOT SUPPORT SOMEONE HELP, CURRENTLY SHOWS AS TYPE:null
 
     try {
-      await backend.post('/donation', formData);
-      console.log(formData);
+      const donation = await backend.post('/donation', formData);
 
-      const fphNotificationData = {
+      const notification: CreateNotificationArgs = {
         businessId: businessId,
+        senderId: businessId,
         message: `Business ID: ${businessId} Donation Form Submission`,
         timestamp: new Date().toLocaleString('en-US', {
           timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         }),
-        been_dismissed: false,
         type: 'Submitted Form',
+        businessName: businessName,
+        donationId: donation.data[0].donation_id,
       };
-      await backend.post('/notification', fphNotificationData);
+      await backend.post('/notification', notification);
+
+      if (!paramId) {
+        navigate('/Congrats');
+      } else {
+        navigate(`/ViewBusiness/${paramId}`);
+      }
     } catch (error) {
       console.error('Form submission failed:', error);
-    }
-    if (!paramId) {
-      navigate('/Congrats');
-    } else {
-      navigate(`/ViewBusiness/${paramId}`);
+
+      toast({
+        title: 'Error',
+        description: 'There was an error updating your changes. Please try again.',
+        status: 'error',
+        duration: 9000,
+        position: 'bottom-right',
+      });
     }
   };
 
@@ -159,6 +176,12 @@ export const DonationForm = () => {
     }
     setFormData((prevState) => ({ ...prevState, [name]: value }));
   };
+
+  const isFormInvalid =
+    !formData.email ||
+    !formData.volunteer_hours ||
+    !formData.personFirstName ||
+    !formData.personLastName;
 
   return (
     <Flex sx={pageStyle}>
@@ -293,17 +316,16 @@ export const DonationForm = () => {
             <Button type="button" onClick={handleCancelClick}>
               Cancel
             </Button>
-            <Tooltip label="Name, Email, and Volunteer Hours are required" placement={'left'}>
+            <Tooltip
+              label="Name, Email, and Volunteer Hours are required"
+              placement={'left'}
+              isDisabled={!isFormInvalid}
+            >
               <Button
                 type="button"
                 colorScheme="teal"
                 onClick={submitForm}
-                isDisabled={
-                  !formData.email ||
-                  !formData.volunteer_hours ||
-                  !formData.personFirstName ||
-                  !formData.personLastName
-                }
+                isDisabled={isFormInvalid}
               >
                 Submit
               </Button>

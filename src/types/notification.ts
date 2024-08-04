@@ -1,17 +1,18 @@
 export type Notification = {
-  businessId: number;
-  notificationId: number;
+  business_id: number;
+  business_name: string;
+  donation_id: number;
   message: string;
-  timestamp: Date;
+  notification_id: number;
+  sender_id: number;
+  timestamp: string;
   type: string;
-  senderId: number;
-  businessName: string;
-  donationId: number;
 };
 
 export type CreateNotificationArgs = {
   businessId: number;
   message: string;
+  timestamp: string;
   type: string;
   senderId: number;
   businessName: string;

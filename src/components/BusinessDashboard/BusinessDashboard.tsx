@@ -1,5 +1,3 @@
-import './BusinessDashboard.module.css';
-
 import { useEffect, useState } from 'react';
 import { ArrowForwardIcon, CheckCircleIcon, EmailIcon, WarningIcon } from '@chakra-ui/icons';
 import {
@@ -33,7 +31,6 @@ import { useBackend } from '../../contexts/BackendContext';
 import { pageStyle } from '../../styles/sharedStyles';
 import type { Notification } from '../../types/notification';
 import ViewDonationHistory from '../BusinessDonationHistory/ViewDonationHistory/ViewDonationHistory';
-import classes from './BusinessDashboard.module.css';
 import { BusinessTotals } from './BusinessTotals';
 
 // Currently, this whole component depends on each notification having its correct 'type' when created. We defined 4 types:
@@ -298,7 +295,7 @@ export const BusinessDashboard = () => {
         priceData={priceData}
       />
 
-      <Table bg="#FFFFFF">
+      <Table bg="white">
         <Thead>
           <Tr>
             <Th>Notifications</Th>
@@ -309,24 +306,19 @@ export const BusinessDashboard = () => {
             <Tr key={index}>
               <Td>
                 <Box
-                  borderWidth="1px"
-                  borderRadius="5px"
+                  sx={{ borderWidth: 1, borderRadius: 'lg', paddingX: 4, paddingY: 2 }}
                   borderColor={isRedNotif(reminder) ? '#F56565' : '#359797'}
                   backgroundColor={isRedNotif(reminder) ? '#FED7D7' : ''}
-                  className={isRedNotif(reminder) ? classes.warningNotif : ''}
                 >
                   <HStack justifyContent={'space-between'}>
                     <Box>
-                      <HStack>
-                        <Box color={'#359797'}>
-                          {' '}
-                          <Icon
-                            as={buttonIcon[reminder['type']]}
-                            color={isRedNotif(reminder) ? '#E53E3E' : undefined}
-                          />
-                        </Box>
+                      <HStack spacing={4}>
+                        <Icon
+                          as={buttonIcon[reminder['type']]}
+                          color={isRedNotif(reminder) ? '#E53E3E' : 'teal'}
+                        />
 
-                        <Stack spacing={0.3}>
+                        <Stack spacing={0.25}>
                           <Text fontWeight="bold">{reminder['type']}</Text>
                           <Text>
                             {new Date(reminder['timestamp']).toLocaleDateString('en-us', {
@@ -340,10 +332,11 @@ export const BusinessDashboard = () => {
                         </Stack>
                       </HStack>
                     </Box>
+
                     <Box display="flex" alignItems="center" justifyContent="center">
                       <Button
                         variant="link"
-                        color="#2D3748"
+                        color="gray.800"
                         onClick={() => {
                           if (
                             ['Donation Form Confirmation', 'Submitted Form'].includes(
@@ -351,7 +344,7 @@ export const BusinessDashboard = () => {
                             )
                           ) {
                             setNotifClicked(reminder['notification_id']);
-                            navigate(buttonPath[reminder['type']]);
+                            navigate(`${buttonPath[reminder['type']]}/${reminder.donation_id}`);
                           } else if (
                             [
                               'Supply Request Shipped',
