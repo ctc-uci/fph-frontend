@@ -3,7 +3,7 @@ import { Button, Text } from '@chakra-ui/react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../contexts/AuthContext.jsx';
-import BusinessForm from '../BusinessForm/BusinessForm';
+import { BusinessForm } from '../BusinessForm/BusinessForm.1.js';
 import PendingBusinessTable from '../PendingBusinessTable/PendingBusinessTable';
 
 const AdminAllBusinesses = () => {

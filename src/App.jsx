@@ -8,7 +8,7 @@ import Login from './components/Authentication/Login.jsx';
 import { BusinessDashboard } from './components/BusinessDashboard/BusinessDashboard';
 import { BusinessDonationHistory } from './components/BusinessDonationHistory/BusinessDonationHistory';
 import { ViewBusinessDonationHistory } from './components/BusinessDonationHistory/ViewBusinessDonationHistory/ViewBusinessDonationHistory';
-import { AddBusinessForm, BusinessForm } from './components/BusinessForm/BusinessForm.jsx';
+import { AddBusinessForm, BusinessForm } from './components/BusinessForm/BusinessForm';
 import { BusinessSetupPage } from './components/BusinessSetup/BusinessSetupPage';
 import CatchAll from './components/CatchAll';
 import { Congrats } from './components/DonationForm/Congrats';

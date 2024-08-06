@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useBackend } from '../../contexts/BackendContext';
 import DownloadCSV from '../../utils/downloadCSV';
-import { BusinessForm } from '../BusinessForm/BusinessForm';
+import { BusinessForm } from '../BusinessForm/BusinessForm.1';
 import ViewBusiness from '../ViewBusiness/ViewBusiness';
 
 const BusinessTablePending = (businessData) => {
