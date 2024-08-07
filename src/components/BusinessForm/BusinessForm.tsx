@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import {
-  Box,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -11,6 +10,9 @@ import {
   CardHeader,
   Checkbox,
   Flex,
+  FormControl,
+  FormLabel,
+  GridItem,
   Heading,
   HStack,
   IconButton,
@@ -37,12 +39,19 @@ import {
   useDisclosure,
   UseDisclosureReturn,
 } from '@chakra-ui/react';
-import { BiPencil, BiTrash } from 'react-icons/bi';
+import { BiTrash } from 'react-icons/bi';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useAuth } from '../../contexts/AuthContext';
 import { useBackend } from '../../contexts/BackendContext';
 import { pageStyle, pageTitleStyle } from '../../styles/sharedStyles';
+
+const formLabelStyles = {
+  minWidth: '150px',
+  fontSize: '16px',
+  fontWeight: 'bold',
+  alignItems: 'center',
+};
 
 const ADDITIONAL_INFO_ITEMS = [
   'Pet Food Provider Site',
@@ -82,7 +91,6 @@ export const BusinessForm = ({ edit = true }) => {
   const [state, setState] = useState('');
   const [zip, setZip] = useState('');
   const [website, setWebsite] = useState('');
-  const [countrycode, setCountryCode] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [howHeard, setHowHeard] = useState('');
@@ -276,133 +284,37 @@ export const BusinessForm = ({ edit = true }) => {
     setTermsAndConditionsAccepted(!termsAndConditionsAccepted);
   };
 
-  const formFields = [
-    {
-      label: 'NAME OF BUSINESS',
-      input: (
-        <Input
-          value={businessName}
-          onChange={(e) => setBusinessName(e.target.value)}
-          placeholder="Business"
-        />
-      ),
-    },
-    {
-      label: 'NAME',
-      input: (
-        <Flex gap={4}>
-          <Input
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            placeholder="First Name"
-          />
-          <Input
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            placeholder="Last Name"
-          />
-        </Flex>
-      ),
-    },
-    {
-      label: 'EMAIL',
-      input: <Input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" />,
-    },
-    {
-      label: 'WEBSITE',
-      input: (
-        <Input value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="Website" />
-      ),
-    },
-    {
-      label: 'LOCATION',
-      input: (
-        <Flex flexFlow={'row wrap'} gap={2}>
-          <Flex gap={4}>
-            <Input
-              value={addressLine1}
-              onChange={(e) => setAddressLine1(e.target.value)}
-              w="42vw"
-              placeholder="Street"
-            />
-            <Input
-              value={addressLine2}
-              onChange={(e) => setAddressLine2(e.target.value)}
-              placeholder="Unit or Apartment Number"
-            />
-          </Flex>
-          <Flex gap={4}>
-            <Flex gap={4}>
-              <Input value={city} onChange={(e) => setCity(e.target.value)} placeholder="City" />
-              <Input value={state} onChange={(e) => setState(e.target.value)} placeholder="State" />
-            </Flex>
-            <Flex>
-              <Input
-                value={zip}
-                onChange={(e) => setZip(e.target.value)}
-                placeholder="Zip/Postal"
-              />
-            </Flex>
-          </Flex>
-        </Flex>
-      ),
-    },
-    {
-      label: 'NUMBER OF CONTACT',
-      input: (
-        <Flex gap={4}>
-          <Input
-            flex={'1 0 15%'}
-            value={countrycode}
-            onChange={(e) => setCountryCode(e.target.value)}
-            placeholder="+1"
-          />
-          <Input
-            flex={'1 0 80%'}
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="000-000-0000"
-          />
-        </Flex>
-      ),
-    },
-    {
-      label: 'BUSINESS HOURS',
-      input: (
-        <Input
-          value={businessHours}
-          onChange={(e) => setBusinessHours(e.target.value)}
-          placeholder="Business Hours"
-        />
-      ),
-    },
-    {
-      label: 'HOW DID THIS BUSINESS HEAR OF US?',
-      input: (
-        <Input
-          value={howHeard}
-          onChange={(e) => setHowHeard(e.target.value)}
-          placeholder="LinkedIn, Google, etc."
-        />
-      ),
-    },
-  ];
-
   return (
     <Flex sx={pageStyle}>
       <Breadcrumb spacing="2">
         <BreadcrumbItem>
-          <BreadcrumbLink color="#245F61" onClick={() => navigate(`/AdminDashboard`)}>
+          <BreadcrumbLink
+            color="teal"
+            onClick={() => navigate(`/AdminDashboard`)}
+            href={`/AdminDashboard`}
+          >
             Home
           </BreadcrumbLink>
         </BreadcrumbItem>
 
-        <BreadcrumbItem isCurrentPage>
-          <BreadcrumbLink href="#">{edit ? businessName : 'Add Business'}</BreadcrumbLink>
+        <BreadcrumbItem>
+          <BreadcrumbLink
+            color="teal"
+            onClick={() => navigate(`/ViewBusiness/${id}`)}
+            href={`/ViewBusiness/${id}`}
+          >
+            {edit ? businessName || '...' : 'Add Business'}
+          </BreadcrumbLink>
         </BreadcrumbItem>
+
+        {edit ? (
+          <BreadcrumbItem isCurrentPage>
+            <BreadcrumbLink href="#">Edit Business</BreadcrumbLink>
+          </BreadcrumbItem>
+        ) : null}
       </Breadcrumb>
 
-      <Heading sx={pageTitleStyle}>Add Business Form</Heading>
+      <Heading sx={pageTitleStyle}>{edit ? 'Edit' : 'Add'} Business Form</Heading>
 
       <Card>
         <CardHeader>
@@ -417,48 +329,136 @@ export const BusinessForm = ({ edit = true }) => {
             </Stack>
 
             {edit && (
-              <Flex>
-                <IconButton
-                  variant="ghost"
-                  colorScheme="gray"
-                  aria-label="Edit menu"
-                  icon={<BiPencil />}
-                >
-                  Editing
-                </IconButton>
-                <IconButton
-                  variant="regular"
-                  colorScheme="red"
-                  aria-label="Delete menu"
-                  icon={<BiTrash />}
-                  onClick={deleteDisclosure.onOpen}
-                />
-              </Flex>
+              <IconButton
+                variant="regular"
+                colorScheme="red"
+                aria-label="Delete menu"
+                icon={<BiTrash />}
+                onClick={deleteDisclosure.onOpen}
+              />
             )}
           </Flex>
         </CardHeader>
 
+        {/* There's a TON of code duplication between this and `EditContactInformation.tsx`*/}
         <CardBody>
           <Stack spacing={4}>
-            <Card>
-              <Flex alignItems="left">
-                <TableContainer>
-                  <Table variant="unstyled">
-                    <Tbody>
-                      {formFields.map(({ label, input }) => (
-                        <Tr key={label}>
-                          <Td>
-                            <Text fontSize="xs" color="500" as="b">
-                              {label}
-                            </Text>
-                          </Td>
-                          <Td>{input}</Td>
-                        </Tr>
-                      ))}
-                    </Tbody>
-                  </Table>
-                </TableContainer>
-              </Flex>
+            <Card paddingX={6} paddingY={4}>
+              <FormControl
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 4,
+                  overflowX: 'scroll',
+                }}
+              >
+                <HStack sx={{ minWidth: '500px' }}>
+                  <FormLabel sx={formLabelStyles}>BUSINESS NAME</FormLabel>
+                  <Input
+                    value={businessName}
+                    onChange={(e) => setBusinessName(e.target.value)}
+                    placeholder="Business Name"
+                  />
+                </HStack>
+                <HStack sx={{ minWidth: '500px' }}>
+                  <FormLabel sx={formLabelStyles}>NAME</FormLabel>
+                  <Flex gap={4}>
+                    <Input
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      placeholder="First Name"
+                    />
+                    <Input
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      placeholder="Last Name"
+                    />
+                  </Flex>
+                </HStack>
+                <HStack sx={{ minWidth: '500px' }}>
+                  <FormLabel sx={formLabelStyles}>EMAIL</FormLabel>
+                  <Input
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="example@email.com"
+                  />
+                </HStack>
+                <HStack sx={{ minWidth: '500px' }}>
+                  <FormLabel sx={formLabelStyles}>WEBSITE</FormLabel>
+                  <Input
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
+                    placeholder="example.com"
+                  />
+                </HStack>
+                <HStack sx={{ minWidth: '500px' }}>
+                  <FormLabel sx={formLabelStyles}>LOCATION</FormLabel>
+                  <SimpleGrid columns={3} spacing={2} width="100%">
+                    <GridItem colSpan={2}>
+                      <Input
+                        value={addressLine1}
+                        onChange={(e) => setAddressLine1(e.target.value)}
+                        placeholder="Street"
+                      />
+                    </GridItem>
+                    <GridItem colSpan={1}>
+                      <Input
+                        value={addressLine2}
+                        onChange={(e) => setAddressLine2(e.target.value)}
+                        placeholder="Unit or Apartment Number"
+                      />
+                    </GridItem>
+                    <GridItem colSpan={1}>
+                      <Input
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
+                        placeholder="City"
+                      />
+                    </GridItem>
+                    <GridItem colSpan={1}>
+                      <Input
+                        value={state}
+                        onChange={(e) => setState(e.target.value)}
+                        placeholder="State"
+                      />
+                    </GridItem>
+                    <GridItem colSpan={1}>
+                      <Input
+                        value={zip}
+                        onChange={(e) => setZip(e.target.value)}
+                        placeholder="Zip/Postal"
+                      />
+                    </GridItem>
+                  </SimpleGrid>
+                </HStack>
+                <HStack sx={{ minWidth: '500px' }}>
+                  <FormLabel sx={formLabelStyles}>PHONE</FormLabel>
+
+                  <Input
+                    type="text"
+                    placeholder="(xxx) xxx-xxxx"
+                    value={phone}
+                    name="phoneNumber"
+                    onChange={(e) => setPhone(e.target.value)}
+                  />
+                </HStack>
+                <HStack sx={{ minWidth: '500px' }}>
+                  <FormLabel sx={formLabelStyles}>BUSINESS HOURS</FormLabel>
+                  <Input
+                    value={businessHours}
+                    onChange={(e) => setBusinessHours(e.target.value)}
+                    placeholder="M-F 8:00 am - 10:00 pm"
+                  />
+                </HStack>
+                <HStack sx={{ minWidth: '500px' }}>
+                  <FormLabel sx={formLabelStyles}>SOURCE</FormLabel>
+                  <Input
+                    value={howHeard}
+                    onChange={(e) => setHowHeard(e.target.value)}
+                    placeholder="LinkedIn, Google, etc."
+                  />
+                </HStack>
+              </FormControl>
             </Card>
 
             <Card>
@@ -466,14 +466,6 @@ export const BusinessForm = ({ edit = true }) => {
                 <Table>
                   <Thead />
                   <Tbody>
-                    {/* <Tr>
-                      <Td width={300}>
-                        <Text fontSize="xs" color="500" fontWeight={'semibold'}>
-                          Additional Information
-                        </Text>
-                      </Td>
-                    </Tr> */}
-
                     <Tr>
                       <Td colSpan={2}>
                         <Stack>

@@ -6,9 +6,11 @@ import {
   Flex,
   FormControl,
   FormLabel,
+  GridItem,
   Heading,
   HStack,
   Input,
+  SimpleGrid,
   Tab,
   TabList,
   TabPanel,
@@ -41,7 +43,8 @@ export const EditContactInformation = () => {
     phoneNumber: '',
     email: '',
     website: '',
-    street: '',
+    addressLine1: '',
+    addressLine2: '',
     firstName: '',
     lastName: '',
     zip: '',
@@ -55,7 +58,8 @@ export const EditContactInformation = () => {
     phoneNumber: '',
     email: '',
     website: '',
-    street: '',
+    addressLine1: '',
+    addressLine2: '',
     firstName: '',
     lastName: '',
     zip: '',
@@ -99,7 +103,7 @@ export const EditContactInformation = () => {
         primary_phone: formattedPhoneNumber,
         primary_email: businessContactInfo.email,
         website: businessContactInfo.website,
-        street: businessContactInfo.street,
+        street: businessContactInfo.addressLine1 + ' ' + businessContactInfo.addressLine2,
         zip_code: businessContactInfo.zip,
         city: businessContactInfo.city,
         state: businessContactInfo.state,
@@ -151,48 +155,50 @@ export const EditContactInformation = () => {
         const fetchedBusinessId = businessIdResponse.data[0].id;
         setBusinessId(fetchedBusinessId);
 
-        const businessContactResponse = await backend.get(`/business/${fetchedBusinessId}`);
-        const businessContact = businessContactResponse.data[0];
-        const name = businessContact.contact_name.split(' ');
+        const businessResponse = await backend.get(`/business/${fetchedBusinessId}`);
+        const business = businessResponse.data[0];
+        const name = business.contact_name.split(' ');
         const firstName = name[0];
         const lastName = name[1];
 
         let formattedPhoneNumber = '';
-        if (businessContact.primary_phone !== '') {
+        if (business.primary_phone !== '') {
           formattedPhoneNumber =
-            businessContact.primary_phone.slice(0, 3) +
+            business.primary_phone.slice(0, 3) +
             '-' +
-            businessContact.primary_phone.slice(3, 6) +
+            business.primary_phone.slice(3, 6) +
             '-' +
-            businessContact.primary_phone.slice(6);
+            business.primary_phone.slice(6);
         }
 
         setBusinessContactInfo({
-          businessName: businessContact.name,
+          businessName: business.name,
           phoneNumber: formattedPhoneNumber,
-          email: businessContact.primary_email,
-          website: businessContact.website,
-          street: businessContact.street,
+          email: business.primary_email,
+          website: business.website,
           firstName: firstName,
           lastName: lastName,
-          city: businessContact.city,
-          state: businessContact.state,
-          zip: businessContact.zip_code,
-          business_hours: businessContact.business_hours,
+          addressLine1: business.addressLine1,
+          addressLine2: business.addressLine2,
+          city: business.city,
+          state: business.state,
+          zip: business.zip_code,
+          business_hours: business.business_hours,
         });
 
         setInitialBusinessContactInfo({
-          businessName: businessContact.name,
+          businessName: business.name,
           phoneNumber: formattedPhoneNumber,
-          email: businessContact.primary_email,
-          website: businessContact.website,
-          street: businessContact.street,
+          email: business.primary_email,
+          website: business.website,
+          addressLine1: business.addressLine1,
+          addressLine2: business.addressLine2,
           firstName: firstName,
           lastName: lastName,
-          city: businessContact.city,
-          state: businessContact.state,
-          zip: businessContact.zip_code,
-          business_hours: businessContact.business_hours,
+          city: business.city,
+          state: business.state,
+          zip: business.zip_code,
+          business_hours: business.business_hours,
         });
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -203,7 +209,7 @@ export const EditContactInformation = () => {
 
   return (
     <Flex sx={pageStyle}>
-      <Heading sx={pageTitleStyle}>Settings</Heading>
+      <Heading sx={pageTitleStyle}>Contact Information</Heading>
 
       <Tabs colorScheme="teal">
         <TabList width={'250px'} marginBottom={6}>
@@ -214,12 +220,14 @@ export const EditContactInformation = () => {
         <TabPanels>
           <TabPanel display={'flex'} flexDirection={'column'} padding={0} gap={4}>
             <Card paddingX={6} paddingY={4}>
-              <FormControl sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                <HStack>
+              <FormControl
+                sx={{ display: 'flex', flexDirection: 'column', gap: 4, overflowX: 'scroll' }}
+              >
+                <HStack minWidth={500}>
                   <FormLabel sx={formLabelStyles}>BUSINESS NAME</FormLabel>
                   <Input
                     type="text"
-                    placeholder="Enter Business Name"
+                    placeholder="Business Name"
                     value={businessContactInfo.businessName}
                     onChange={(e) => {
                       setBusinessContactInfo({
@@ -230,24 +238,24 @@ export const EditContactInformation = () => {
                     }}
                   />
                 </HStack>
-                <HStack>
+                <HStack minWidth={500}>
                   <FormLabel sx={formLabelStyles}>NAME</FormLabel>
                   <Input
                     type="text"
-                    placeholder="Enter First Name"
+                    placeholder="First Name"
                     value={businessContactInfo.firstName}
                     name="firstName"
                     onChange={handleChange}
                   />
                   <Input
                     type="text"
-                    placeholder="Enter Last Name"
+                    placeholder="Last Name"
                     value={businessContactInfo.lastName}
                     name="lastName"
                     onChange={handleChange}
                   />
                 </HStack>
-                <HStack>
+                <HStack minWidth={500}>
                   <FormLabel sx={formLabelStyles}>EMAIL</FormLabel>
                   <Input
                     type="text"
@@ -257,7 +265,7 @@ export const EditContactInformation = () => {
                     onChange={handleChange}
                   />
                 </HStack>
-                <HStack>
+                <HStack minWidth={500}>
                   <FormLabel sx={formLabelStyles}>WEBSITE</FormLabel>
                   <Input
                     type="text"
@@ -267,53 +275,77 @@ export const EditContactInformation = () => {
                     onChange={handleChange}
                   />
                 </HStack>
-                <HStack>
+                <HStack sx={{ minWidth: '500px' }}>
                   <FormLabel sx={formLabelStyles}>LOCATION</FormLabel>
-                  <Input
-                    type="text"
-                    placeholder="123 Address Lane"
-                    value={businessContactInfo.street}
-                    name="street"
-                    onChange={handleChange}
-                  />
+                  <SimpleGrid columns={3} spacing={2} width="100%">
+                    <GridItem colSpan={2}>
+                      <Input
+                        value={businessContactInfo.addressLine1}
+                        onChange={(e) => {
+                          setBusinessContactInfo({
+                            ...businessContactInfo,
+                            addressLine1: e.target.value,
+                          });
+                          showToast();
+                        }}
+                        placeholder="Street"
+                      />
+                    </GridItem>
+                    <GridItem colSpan={1}>
+                      <Input
+                        value={businessContactInfo.addressLine2}
+                        onChange={(e) => {
+                          setBusinessContactInfo({
+                            ...businessContactInfo,
+                            addressLine2: e.target.value,
+                          });
+                          showToast();
+                        }}
+                        placeholder="Unit or Apartment Number"
+                      />
+                    </GridItem>
+                    <GridItem colSpan={1}>
+                      <Input
+                        value={businessContactInfo.city}
+                        onChange={(e) => {
+                          setBusinessContactInfo({
+                            ...businessContactInfo,
+                            state: e.target.value,
+                          });
+                          showToast();
+                        }}
+                        placeholder="City"
+                      />
+                    </GridItem>
+                    <GridItem colSpan={1}>
+                      <Input
+                        value={businessContactInfo.state}
+                        onChange={(e) => {
+                          setBusinessContactInfo({
+                            ...businessContactInfo,
+                            state: e.target.value,
+                          });
+                          showToast();
+                        }}
+                        placeholder="State"
+                      />
+                    </GridItem>
+                    <GridItem colSpan={1}>
+                      <Input
+                        value={businessContactInfo.zip}
+                        onChange={(e) => {
+                          setBusinessContactInfo({
+                            ...businessContactInfo,
+                            zip: e.target.value,
+                          });
+                          showToast();
+                        }}
+                        placeholder="Zip/Postal"
+                      />
+                    </GridItem>
+                  </SimpleGrid>
                 </HStack>
-                <HStack>
-                  <FormLabel sx={formLabelStyles}>CITY</FormLabel>
-                  <Input
-                    type="text"
-                    placeholder="City"
-                    value={businessContactInfo.city}
-                    onChange={(e) => {
-                      setBusinessContactInfo({
-                        ...businessContactInfo,
-                        city: e.target.value,
-                      });
-                      showToast();
-                    }}
-                  />
-                  <Input
-                    type="text"
-                    placeholder="State"
-                    value={businessContactInfo.state}
-                    onChange={(e) => {
-                      setBusinessContactInfo({
-                        ...businessContactInfo,
-                        state: e.target.value,
-                      });
-                      showToast();
-                    }}
-                  />
-                  <Input
-                    type="text"
-                    placeholder="Zip Code"
-                    value={businessContactInfo.zip}
-                    onChange={(e) => {
-                      setBusinessContactInfo({ ...businessContactInfo, zip: e.target.value });
-                      showToast();
-                    }}
-                  />
-                </HStack>
-                <HStack>
+                <HStack minWidth={500}>
                   <FormLabel sx={formLabelStyles}>PHONE</FormLabel>
                   <Input
                     type="text"
@@ -323,7 +355,7 @@ export const EditContactInformation = () => {
                     onChange={handleChange}
                   />
                 </HStack>
-                <HStack>
+                <HStack minWidth={500}>
                   <FormLabel sx={formLabelStyles}>BUSINESS HOURS</FormLabel>
                   <Input
                     type="text"
