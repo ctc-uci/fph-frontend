@@ -29,6 +29,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useBackend } from '../../contexts/BackendContext';
 import { pageStyle } from '../../styles/sharedStyles';
+import { Donation } from '../../types/donation';
 import type { Notification } from '../../types/notification';
 import { BusinessTotals } from './BusinessTotals';
 
@@ -74,7 +75,7 @@ export const BusinessDashboard = () => {
   const navigate = useNavigate();
 
   const [userName, setUserName] = useState('');
-  const [donationData, setDonationData] = useState([]);
+  const [donationData, setDonationData] = useState<Donation[]>([]);
   const [currentQuarter, setCurrentQuarter] = useState<string>();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -103,12 +104,6 @@ export const BusinessDashboard = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        // ***********************************************************************
-        // CHANGE LATER: right now business is hardcoded to be business with id 1
-        // in the future will have to change (add parameter to component)
-        // so that we can display the dashboard for various businesses
-        // ***********************************************************************
-
         const businessIdResponse = await backend.get(`/businessUser/${currentUser.uid}`);
         const businessId = businessIdResponse.data[0].id;
 
@@ -128,6 +123,7 @@ export const BusinessDashboard = () => {
         console.error('Error fetching data:', error);
       }
     };
+
     getData();
   }, []);
 
@@ -143,7 +139,7 @@ export const BusinessDashboard = () => {
     } else {
       setCurrentQuarter('Q4');
     }
-  }, [setCurrentQuarter]);
+  }, []);
 
   const parseSupplyRequestData = async (message) => {
     const lines = message.split(',');
@@ -178,16 +174,12 @@ export const BusinessDashboard = () => {
 
     if (currentTime.getMonth() <= 2) {
       dueDate = new Date(currentYear, 3, 1);
-      setCurrentQuarter('Q1');
     } else if (currentTime.getMonth() <= 5) {
       dueDate = new Date(currentYear, 4, 9);
-      setCurrentQuarter('Q2');
     } else if (currentTime.getMonth() <= 8) {
       dueDate = new Date(currentYear, 9, 1);
-      setCurrentQuarter('Q3');
     } else {
       dueDate = new Date(currentYear, 0, 1);
-      setCurrentQuarter('Q4');
     }
 
     const timeDifference = Math.abs(currentTime.getTime() - dueDate.getTime());
