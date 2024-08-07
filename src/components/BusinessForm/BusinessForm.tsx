@@ -277,7 +277,7 @@ export const BusinessForm = ({ edit = true }) => {
   };
 
   const handleCancel = () => {
-    navigate(`/ViewBusiness/${id}`);
+    navigate(edit ? `/ViewBusiness/${id}` : `/AdminDashboard`);
   };
 
   const handleToggleTerms = () => {
@@ -288,30 +288,22 @@ export const BusinessForm = ({ edit = true }) => {
     <Flex sx={pageStyle}>
       <Breadcrumb spacing="2">
         <BreadcrumbItem>
-          <BreadcrumbLink
-            color="teal"
-            onClick={() => navigate(`/AdminDashboard`)}
-            href={`/AdminDashboard`}
-          >
+          <BreadcrumbLink color="teal" onClick={() => navigate(`/AdminDashboard`)}>
             Home
           </BreadcrumbLink>
         </BreadcrumbItem>
 
-        <BreadcrumbItem>
-          <BreadcrumbLink
-            color="teal"
-            onClick={() => navigate(`/ViewBusiness/${id}`)}
-            href={`/ViewBusiness/${id}`}
-          >
-            {edit ? businessName || '...' : 'Add Business'}
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-
         {edit ? (
-          <BreadcrumbItem isCurrentPage>
-            <BreadcrumbLink href="#">Edit Business</BreadcrumbLink>
+          <BreadcrumbItem>
+            <BreadcrumbLink color="teal" onClick={() => navigate(`/ViewBusiness/${id}`)}>
+              {businessName || '...'}
+            </BreadcrumbLink>
           </BreadcrumbItem>
         ) : null}
+
+        <BreadcrumbItem isCurrentPage>
+          <BreadcrumbLink href="#">{edit ? 'Edit Business' : 'Add Business'}</BreadcrumbLink>
+        </BreadcrumbItem>
       </Breadcrumb>
 
       <Heading sx={pageTitleStyle}>{edit ? 'Edit' : 'Add'} Business Form</Heading>
@@ -598,8 +590,8 @@ const DeleteBusinessModal = ({
         <ModalHeader>Delete business</ModalHeader>
         <ModalCloseButton />
         <ModalBody>Are you sure? You can't undo this action afterwards.</ModalBody>
-        <ModalFooter>
-          <Button colorScheme="gray" mr={3} onClick={deleteDisclosure.onClose}>
+        <ModalFooter gap={2}>
+          <Button colorScheme="gray" onClick={deleteDisclosure.onClose}>
             Cancel
           </Button>
           <Button colorScheme="red" onClick={handleDelete}>
