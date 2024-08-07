@@ -28,7 +28,7 @@ import { useBackend } from '../../contexts/BackendContext';
 import { pageStyle, pageTitleStyle } from '../../styles/sharedStyles';
 import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer.jsx';
 import DonationsDeleteConfirmationModal from './DonationsDeleteConfirmationModal.jsx';
-import DonationsModal from './DonationsModal.jsx';
+import { DonationsModal } from './DonationsModal';
 
 export const DonationItemsTable = () => {
   const { isAdmin } = useAuth();

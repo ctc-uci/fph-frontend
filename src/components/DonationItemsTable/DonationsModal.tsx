@@ -1,28 +1,27 @@
 import { useEffect, useState } from 'react';
-import { CloseIcon } from '@chakra-ui/icons';
 import {
   Alert,
   AlertDescription,
   AlertTitle,
   Button,
-  IconButton,
   Input,
   Modal,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
   Select,
+  Stack,
   Text,
   useToast,
 } from '@chakra-ui/react';
-import PropTypes from 'prop-types';
 
 import { useBackend } from '../../contexts/BackendContext';
 
 // TODO: Refactor states such that its a nested state
-const DonationsModal = ({ isOpen, onClose, data, setCurrentPageNum, loadInfo, isEdit }) => {
+export const DonationsModal = ({ isOpen, onClose, data, setCurrentPageNum, loadInfo, isEdit }) => {
   const { backend } = useBackend();
   const toast = useToast();
   const [categoryData, setCategoryData] = useState('Food');
@@ -67,10 +66,9 @@ const DonationsModal = ({ isOpen, onClose, data, setCurrentPageNum, loadInfo, is
     event.preventDefault();
 
     const cleanedValue = price.replace(/[^\d.]/g, '');
-    let floatValue = parseFloat(cleanedValue);
-    floatValue = floatValue.toFixed(2);
-    console.log(floatValue);
-    setPriceData(floatValue);
+    const floatValue = parseFloat(cleanedValue);
+    const floatValueString = floatValue.toFixed(2);
+    setPriceData(floatValueString);
 
     const body = {
       itemName: typeData,
@@ -79,7 +77,7 @@ const DonationsModal = ({ isOpen, onClose, data, setCurrentPageNum, loadInfo, is
       category: categoryData,
     };
 
-    if (typeData == '' || weightData == '' || floatValue == '' || categoryData == '') {
+    if (typeData == '' || weightData == '' || floatValueString == '' || categoryData == '') {
       setAlertVisible(true);
       return;
     } else {
@@ -113,56 +111,60 @@ const DonationsModal = ({ isOpen, onClose, data, setCurrentPageNum, loadInfo, is
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={closeAndReset} size={'md'}>
+    <Modal isOpen={isOpen} onClose={closeAndReset}>
       <ModalOverlay>
         <ModalContent>
-          <ModalHeader display="flex" justifyContent="space-between">
-            {isEdit ? 'Edit Item' : 'Add Item'}
-            <IconButton aria-label="Close" icon={<CloseIcon />} onClick={closeAndReset} />
-          </ModalHeader>
-          <ModalBody>
-            <Text>Type</Text>
-            <Input
-              id="type"
-              value={typeData}
-              placeholder="Type"
-              size="lg"
-              name="reporter"
-              onChange={(e) => setTypeData(e.target.value)}
-              mb={4}
-            />
-            <Text>Price</Text>
-            <Input
-              id="price"
-              value={priceData}
-              placeholder="Price"
-              size="lg"
-              name="reporter"
-              onChange={(e) => setPriceData(e.target.value)}
-              mb={4}
-            />
-            <Text>Category</Text>
-            <Select
-              id="category"
-              value={categoryData}
-              size="lg"
-              onChange={(e) => setCategoryData(e.target.value)}
-              mb={4}
-            >
-              <option value="Food">Food</option>
-              <option value="Misc.">Misc.</option>
-            </Select>
-            <Text>Weight Type</Text>
-            <Select
-              id="weight"
-              value={weightData}
-              size="lg"
-              onChange={(e) => setWeightData(e.target.value)}
-              mb={4}
-            >
-              <option value="lbs">Pounds (lbs)</option>
-              <option value="ea">Each (ea)</option>
-            </Select>
+          <ModalCloseButton onClick={closeAndReset} />
+
+          <ModalHeader>{isEdit ? 'Edit Item' : 'Add Item'}</ModalHeader>
+
+          <ModalBody sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <Stack>
+              <Text>Type</Text>
+              <Input
+                id="type"
+                value={typeData}
+                placeholder="Type"
+                size="lg"
+                name="reporter"
+                onChange={(e) => setTypeData(e.target.value)}
+              />
+            </Stack>
+            <Stack>
+              <Text>Price</Text>
+              <Input
+                id="price"
+                value={priceData}
+                placeholder="Price"
+                size="lg"
+                name="reporter"
+                onChange={(e) => setPriceData(e.target.value)}
+              />
+            </Stack>
+            <Stack>
+              <Text>Category</Text>
+              <Select
+                id="category"
+                value={categoryData}
+                size="lg"
+                onChange={(e) => setCategoryData(e.target.value)}
+              >
+                <option value="Food">Food</option>
+                <option value="Misc.">Misc.</option>
+              </Select>
+            </Stack>
+            <Stack>
+              <Text>Weight Type</Text>
+              <Select
+                id="weight"
+                value={weightData}
+                size="lg"
+                onChange={(e) => setWeightData(e.target.value)}
+              >
+                <option value="lbs">Pounds (lbs)</option>
+                <option value="ea">Each (ea)</option>
+              </Select>
+            </Stack>
           </ModalBody>
           {alertVisible && (
             <Alert>
@@ -186,15 +188,3 @@ const DonationsModal = ({ isOpen, onClose, data, setCurrentPageNum, loadInfo, is
     </Modal>
   );
 };
-
-DonationsModal.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  data: PropTypes.object,
-  setData: PropTypes.func,
-  setCurrentPageNum: PropTypes.func,
-  loadInfo: PropTypes.func,
-  isEdit: PropTypes.bool.isRequired,
-};
-
-export default DonationsModal;
