@@ -7,10 +7,12 @@ import {
   Button,
   Card,
   CardBody,
+  CardFooter,
   CardHeader,
   Checkbox,
   Flex,
   Heading,
+  HStack,
   IconButton,
   Input,
   Modal,
@@ -21,7 +23,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
-  Spacer,
+  SimpleGrid,
   Stack,
   Table,
   TableContainer,
@@ -30,6 +32,7 @@ import {
   Text,
   Textarea,
   Thead,
+  Tooltip,
   Tr,
   useDisclosure,
   UseDisclosureReturn,
@@ -436,133 +439,143 @@ export const BusinessForm = ({ edit = true }) => {
         </CardHeader>
 
         <CardBody>
-          <Flex direction="row">
-            <Box flex="4" w="100">
-              <Card>
-                <Flex alignItems="left">
-                  <TableContainer>
-                    <Table variant="unstyled">
-                      <Tbody>
-                        {formFields.map(({ label, input }) => (
-                          <Tr key={label}>
-                            <Td>
-                              <Text fontSize="xs" color="500" as="b">
-                                {label}
-                              </Text>
-                            </Td>
-                            <Td>{input}</Td>
-                          </Tr>
-                        ))}
-                      </Tbody>
-                    </Table>
-                  </TableContainer>
-                </Flex>
-              </Card>
-              <Card marginTop="6">
-                <Flex alignItems="left">
-                  <TableContainer flex="1" mr="3">
-                    <Table variant="unstyled">
-                      <Tbody>
-                        <Tr>
+          <Stack spacing={4}>
+            <Card>
+              <Flex alignItems="left">
+                <TableContainer>
+                  <Table variant="unstyled">
+                    <Tbody>
+                      {formFields.map(({ label, input }) => (
+                        <Tr key={label}>
                           <Td>
                             <Text fontSize="xs" color="500" as="b">
-                              ADDITIONAL INFORMATION
+                              {label}
                             </Text>
                           </Td>
+                          <Td>{input}</Td>
                         </Tr>
-                        <Tr>
-                          <Td colSpan={2}>
-                            <Flex flexDirection={'row'} flexWrap={'wrap'} gap={2}>
-                              {ADDITIONAL_INFO_ITEMS.map((item, index) => (
-                                <Flex
-                                  key={index}
-                                  justifyContent={'space-between'}
-                                  flex={'1 0 34%'}
-                                  maxWidth={'49%'}
-                                >
-                                  <Text>{item}</Text>
-                                  <Checkbox
-                                    name={item}
-                                    isChecked={checkedAddedInfo[item] || false}
-                                    onChange={handleCheckboxChange}
-                                  />
-                                </Flex>
-                              ))}
-                            </Flex>
-                          </Td>
-                        </Tr>
-                        <Tr>
-                          <Flex alignItems="center">
-                            <Td>
-                              <Text fontSize="xs" color="500" as="b">
-                                TYPE
-                              </Text>
-                              <Select
-                                placeholder="Type"
-                                value={vendorType}
-                                onChange={(e) => setVendorType(e.target.value)}
-                                w="20vw"
-                              >
-                                <option value={'School'}>School</option>
-                                <option value={'hospitHospitalal'}>Hospital</option>
-                                <option value={'Grocery store'}>Grocery Store</option>
-                                <option value={'Private institution'}>Private Institution</option>
-                                <option value={'Other'}>Other</option>
-                              </Select>
-                            </Td>
-                            <Td>
-                              <Flex gap={10} mt={2}>
-                                <Text>Valid for Service Request</Text>
+                      ))}
+                    </Tbody>
+                  </Table>
+                </TableContainer>
+              </Flex>
+            </Card>
+
+            <Card>
+              <TableContainer>
+                <Table>
+                  <Thead />
+                  <Tbody>
+                    {/* <Tr>
+                      <Td width={300}>
+                        <Text fontSize="xs" color="500" fontWeight={'semibold'}>
+                          Additional Information
+                        </Text>
+                      </Td>
+                    </Tr> */}
+
+                    <Tr>
+                      <Td colSpan={2}>
+                        <Stack>
+                          <Text fontSize="xs" color="500" fontWeight={'semibold'}>
+                            Additional Information
+                          </Text>
+
+                          <SimpleGrid columns={{ base: 1, lg: 2 }} spacingY={2} spacingX={8}>
+                            {ADDITIONAL_INFO_ITEMS.map((item, index) => (
+                              <Flex key={index} justifyContent={'space-between'}>
+                                <Text>{item}</Text>
                                 <Checkbox
-                                  isChecked={serviceRequest}
-                                  onChange={() => setServiceRequest(!serviceRequest)}
-                                ></Checkbox>
+                                  name={item}
+                                  isChecked={checkedAddedInfo[item] || false}
+                                  onChange={handleCheckboxChange}
+                                />
                               </Flex>
-                            </Td>
-                          </Flex>
-                        </Tr>
-                        <Tr>
-                          <Td>
-                            <Text fontSize="xs" color="500" as="b" whiteSpace="normal">
-                              Internal Notes
-                            </Text>
-                            <Textarea
-                              value={internalNotes}
-                              onChange={(e) => {
-                                setInternalNotes(e.target.value);
-                              }}
-                              placeholder="Internal Notes"
-                            />
-                          </Td>
-                        </Tr>
-                      </Tbody>
-                    </Table>
-                  </TableContainer>
-                </Flex>
-              </Card>
-            </Box>
-          </Flex>
+                            ))}
+                          </SimpleGrid>
+                        </Stack>
+                      </Td>
+                    </Tr>
+
+                    <Tr>
+                      <Td>
+                        <Stack>
+                          <Text fontSize="xs" color="500" fontWeight={'semibold'}>
+                            Type
+                          </Text>
+                          <Select
+                            placeholder="Type"
+                            value={vendorType}
+                            onChange={(e) => setVendorType(e.target.value)}
+                          >
+                            <option value={'School'}>School</option>
+                            <option value={'hospitHospitalal'}>Hospital</option>
+                            <option value={'Grocery store'}>Grocery Store</option>
+                            <option value={'Private institution'}>Private Institution</option>
+                            <option value={'Other'}>Other</option>
+                          </Select>
+                        </Stack>
+                      </Td>
+                      <Td>
+                        <Stack spacing={2} display={'flex'} flexDirection={'row'}>
+                          <Text>Valid for Service Request?</Text>
+                          <Checkbox
+                            isChecked={serviceRequest}
+                            onChange={() => setServiceRequest(!serviceRequest)}
+                          />
+                        </Stack>
+                      </Td>
+                    </Tr>
+
+                    <Tr>
+                      <Td colSpan={2}>
+                        <Stack>
+                          <Text fontSize="xs" color="500" fontWeight={'semibold'}>
+                            Internal Notes
+                          </Text>
+                          <Textarea
+                            value={internalNotes}
+                            onChange={(e) => {
+                              setInternalNotes(e.target.value);
+                            }}
+                            placeholder="... write some notes"
+                          />
+                        </Stack>
+                      </Td>
+                    </Tr>
+                  </Tbody>
+                </Table>
+              </TableContainer>
+            </Card>
+
+            <Flex gap={2} marginX={6}>
+              <Checkbox isChecked={termsAndConditionsAccepted} onChange={handleToggleTerms} />
+              <Flex gap={1}>
+                <Text>Accepted the</Text>
+                <Text textDecoration="underline" cursor="pointer" onClick={tcDisclosure.onOpen}>
+                  Terms and Conditions
+                </Text>
+              </Flex>
+            </Flex>
+          </Stack>
         </CardBody>
 
-        <Flex gap={2}>
-          <Checkbox isChecked={termsAndConditionsAccepted} onChange={handleToggleTerms} />
-          <Flex gap={1}>
-            <Text>Accepted the</Text>
-            <Text textDecoration="underline" cursor="pointer" onClick={tcDisclosure.onOpen}>
-              Terms and Conditions
-            </Text>
-          </Flex>
-        </Flex>
-        <Flex gap={4} ml="auto">
+        <CardFooter gap={4} justifyContent={'flex-end'}>
           <Button onClick={handleCancel}>Cancel</Button>
-          <Button
-            onClick={handleSubmit}
-            colorScheme="teal"
-            isDisabled={!termsAndConditionsAccepted}
+          <Tooltip
+            label={'Terms and Conditions must be accepted'}
+            isDisabled={termsAndConditionsAccepted}
+            placement={'left'}
           >
-            Save
-          </Button>
-        </Flex>
+            <Button
+              onClick={handleSubmit}
+              colorScheme="teal"
+              isDisabled={!termsAndConditionsAccepted}
+            >
+              Save
+            </Button>
+          </Tooltip>
+        </CardFooter>
       </Card>
 
       <DeleteBusinessModal
@@ -608,20 +621,18 @@ const DeleteBusinessModal = ({
 
 const TermsAndConditionsModal = ({ tcDisclosure }: { tcDisclosure: UseDisclosureReturn }) => {
   return (
-    <Modal isOpen={tcDisclosure.isOpen} onClose={tcDisclosure.onClose} isCentered>
+    <Modal isOpen={tcDisclosure.isOpen} onClose={tcDisclosure.onClose} size={'2xl'}>
       <ModalOverlay>
-        <ModalContent width="80%" maxWidth="800px" top="5vw">
+        <ModalContent>
+          <ModalCloseButton onClick={tcDisclosure.onClose} />
           <ModalHeader>
-            &nbsp;
             <Stack direction="row" justifyContent="space-between">
               <Text fontWeight="bold" fontSize="2xl">
-                Terms and Conditions&nbsp;
+                Terms and Conditions
               </Text>
-
-              <ModalCloseButton onClick={tcDisclosure.onClose} />
             </Stack>
           </ModalHeader>
-          <ModalBody alignItems="center" overflow={'scroll'}>
+          <ModalBody alignItems="center">
             <Text fontSize="xl">
               I hereby acknowledge and agree to serve as a member/volunteer for Feeding Pets of the
               Homeless, 710 West Washington Street, Carson City, NV 89703. I give my consent and
@@ -649,12 +660,14 @@ const TermsAndConditionsModal = ({ tcDisclosure }: { tcDisclosure: UseDisclosure
               <br />I acknowledge that I am not authorized to speak to the media. I agree to refer
               all media inquiries to Headquarters, 775-841-7463.
             </Text>
-            <Text fontSize="sm" marginTop="5vh">
+          </ModalBody>
+          <ModalFooter>
+            <Text fontSize="sm">
               By checking the &quot;I Accept the Terms and Conditions&quot; box and clicking the
               &quot;Save&quot; button on this page, you acknowledge you have read and agree to the
               above.
             </Text>
-          </ModalBody>
+          </ModalFooter>
         </ModalContent>
       </ModalOverlay>
     </Modal>
