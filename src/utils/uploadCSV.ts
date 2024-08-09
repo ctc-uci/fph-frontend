@@ -1,12 +1,16 @@
-async function UploadCSV(file) {
-  const businessData = csvToArray(file);
+const DUMMY_STRING = '';
+const DUMMY_INT = 0;
+const DUMMY_BOOL = false;
+
+export async function uploadCSV({ contents, backend }: { contents: string; backend: any }) {
+  const businessData = csvToArray(contents);
+
   const DUMMY_DATE = new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' });
+
   for (const business of businessData) {
     if (!business['name']) continue;
+
     try {
-      const DUMMY_STRING = '';
-      const DUMMY_INT = 0;
-      const DUMMY_BOOL = false;
       const data = {
         name: business['name'] || DUMMY_STRING,
         contactName: business['contact_name'] || DUMMY_STRING,
@@ -43,38 +47,34 @@ async function UploadCSV(file) {
         inactive: true,
         finalCheck: DUMMY_BOOL,
       };
-      //console.log(data);
-      console.log(JSON.stringify(data));
-      await fetch(`http://localhost:3001/business/`, {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8',
-        },
-      });
+
+      await backend.post('/business', JSON.stringify(data));
     } catch (error) {
       console.error('Error uploading business:', error);
     }
   }
 }
 
-function csvToArray(csv) {
+function csvToArray(csv: string) {
   const csvToDB = {
     Customer: 'name',
     State: 'state',
     City: 'city',
     Zip: 'zip_code',
   };
+
   const [header, ...lines] = csv.split('\n');
   const headers = header.split(',');
-  console.log(headers);
-  var businesses = [];
+
+  const businesses = [];
   for (const line of lines) {
-    var business = {};
+    const business = {};
     const values = line.split(',');
-    for (const [i, value] of values.entries()) {
-      if (!headers[i]) continue;
-      if (value == '') continue;
+
+    values.forEach((value, i) => {
+      if (!headers[i]) return;
+      if (value == '') return;
+
       if (headers[i].replace(' ', '_') in csvToDB) {
         business[csvToDB[headers[i]]] = value;
       } else if (headers[i] == 'First Name') {
@@ -84,10 +84,8 @@ function csvToArray(csv) {
       } else if (headers[i] == 'Main Phone') {
         business['primary_phone'] = value.replace(/\D/g, '');
       } else if (headers[i] == 'Street1') {
-        console.log(value);
         business['street'] = value;
       } else if (headers[i] == 'Street2') {
-        console.log(value);
         business['street'] = value || business['street'];
       } else if (headers[i] == 'Date Joined') {
         business['join_date'] = value.split(/[^0-9]/).join('-');
@@ -98,10 +96,9 @@ function csvToArray(csv) {
       } else if (headers[i] == 'Customer Type') {
         business['type'] = value;
       }
-    }
+    });
+
     businesses.push(business);
   }
   return businesses;
 }
-
-export default UploadCSV;

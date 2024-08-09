@@ -7,17 +7,9 @@ import {
   Card,
   Checkbox,
   Flex,
-  Heading,
   HStack,
   IconButton,
   Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Stack,
   Tab,
   Table,
@@ -38,7 +30,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useBackend } from '../../../contexts/BackendContext';
 import DownloadCSV from '../../../utils/downloadCSV';
-import DropZone from './DropZone';
+import BusinessTableModal from './BusinessTableModal';
 
 const TABLE_HEADERS = ['Business Name', 'Location', 'Email', 'Form Status', 'Last Submitted'];
 
@@ -253,9 +245,14 @@ export const BusinessTable = () => {
         );
 
         console.log(businessResponse);
-        if (currentTab === 'All' && search === '' && businessCountResponse.data[0]['count'] === 0) {
+
+        if (
+          true ||
+          (currentTab === 'All' && search === '' && businessCountResponse.data[0]['count'] === 0)
+        ) {
           onOpen();
         }
+
         setPageLimit(Math.ceil(businessCountResponse.data[0]['count'] / 10));
         setCurrentBusinessNum(businessCountResponse.data[0]['count']);
         setData(businessResponse.data);
@@ -278,7 +275,7 @@ export const BusinessTable = () => {
   };
 
   return (
-    <Box>
+    <>
       <Tabs colorScheme="teal" sx={{ width: 'fit-content' }}>
         <TabList>
           <Tab onClick={() => changeTab('All')}>All</Tab>
@@ -343,21 +340,6 @@ export const BusinessTable = () => {
         </Box>
 
         <Card>
-          <Modal isOpen={isOpen} onClose={onClose}>
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader marginBottom={0}>
-                <Heading size={'md'}>Upload existing data</Heading>
-              </ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                <Text>Transfer all business information into your new portal.</Text>
-                <DropZone onClose={onClose} />
-              </ModalBody>
-              <ModalFooter></ModalFooter>
-            </ModalContent>
-          </Modal>
-
           <Table>
             <Thead>
               <Tr>
@@ -441,6 +423,8 @@ export const BusinessTable = () => {
           />
         </HStack>
       </Stack>
-    </Box>
+
+      <BusinessTableModal isOpen={isOpen} onClose={onClose} />
+    </>
   );
 };
