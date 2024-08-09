@@ -26,7 +26,7 @@ import {
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 
-import DownloadCSV from '../../utils/downloadCSV';
+import downloadCSV from '../../utils/downloadCSV';
 
 import 'boxicons';
 
@@ -60,7 +60,7 @@ const NotificationsDrawer = ({ notificationsData }) => {
   };
 
   const handleDownloadCSV = (ids) => {
-    DownloadCSV(ids);
+    downloadCSV(ids);
   };
 
   const handleSendReminder = async (businessId, businessName) => {

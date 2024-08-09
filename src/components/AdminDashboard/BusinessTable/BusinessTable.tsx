@@ -29,7 +29,7 @@ import { BiCheck, BiEnvelope, BiPlus, BiTimeFive, BiX } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
 
 import { useBackend } from '../../../contexts/BackendContext';
-import DownloadCSV from '../../../utils/downloadCSV';
+import downloadCSV from '../../../utils/downloadCSV';
 import BusinessTableModal from './BusinessTableModal';
 
 const TABLE_HEADERS = ['Business Name', 'Location', 'Email', 'Form Status', 'Last Submitted'];
@@ -149,8 +149,7 @@ export const BusinessTable = () => {
   };
 
   const handleSendReminders = async () => {
-    for (const businessId of selectedBusinessIds) {
-      // ! FIX ME
+    selectedBusinessIds.forEach(async (businessId) => {
       try {
         const requestData = {
           businessId: businessId,
@@ -164,7 +163,8 @@ export const BusinessTable = () => {
       } catch (error) {
         console.error('Error sending reminders:', error);
       }
-    }
+    });
+
     const message = `To ${selectedBusinessIds.size} ${
       selectedBusinessIds.size > 1 ? `businesses` : ` business`
     }.`;
@@ -184,7 +184,7 @@ export const BusinessTable = () => {
       headers.push(TABLE_HEADERS[i].toLowerCase().replace(' ', '_'));
     }
     try {
-      DownloadCSV(ids);
+      downloadCSV(ids);
       const message = `For ${ids.length} ${ids.length > 1 ? `businesses` : ` business`}.`;
       toast({
         title: 'Downloaded CSV',
@@ -246,10 +246,7 @@ export const BusinessTable = () => {
 
         console.log(businessResponse);
 
-        if (
-          true ||
-          (currentTab === 'All' && search === '' && businessCountResponse.data[0]['count'] === 0)
-        ) {
+        if (currentTab === 'All' && search === '' && businessCountResponse.data[0]['count'] === 0) {
           onOpen();
         }
 

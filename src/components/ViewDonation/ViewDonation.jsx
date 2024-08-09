@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useBackend } from '../../contexts/BackendContext';
-import DownloadCSV from '../../utils/downloadCSV';
+import downloadCSV from '../../utils/downloadCSV';
 import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer';
 import classes from './ViewDonation.module.css';
 
@@ -34,7 +34,7 @@ const ViewDonation = () => {
 
   const handleDownloadCSV = () => {
     try {
-      DownloadCSV([id], true);
+      downloadCSV([id], true);
       toast({
         title: 'Downloaded CSV',
         description: `for ${businessName}`,

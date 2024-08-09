@@ -1,6 +1,6 @@
-// DownloadCSV.js
+// downloadCSV.js
 
-async function DownloadCSV(ids, isDonation = false) {
+async function downloadCSV(ids, isDonation = false, backend) {
   const headers = {
     'Business Name': 'name',
     'Business Phone': 'primary_phone',
@@ -15,26 +15,21 @@ async function DownloadCSV(ids, isDonation = false) {
     'Miscellaneous Items': 'miscellaneous_items',
     'Volunteer Hours': 'volunteer_hours',
   };
+
   try {
     let response;
     if (isDonation) {
-      response = await fetch(
-        `http://localhost:3001/donation/selectByIdsDonation?ids=${ids.join(',')}`,
-        {
-          method: 'GET',
-        },
-      );
+      response = await backend.get(`/donation/donation_tracking/selectByIds?ids=${ids.join(',')}`);
+      console.log('RESPONSE:', response);
     } else {
-      response = await fetch(`http://localhost:3001/donation/selectByIds?ids=${ids.join(',')}`, {
-        method: 'GET',
-      });
+      response = await backend.get(`/donation/selectByIds?ids=${ids.join(',')}`);
     }
 
-    if (!response.ok) {
+    if (!response.statusText === 'OK') {
       throw new Error('Failed to fetch data from the server');
     }
 
-    const data = await response.json();
+    const data = await response.data;
 
     // Create CSV string
     const csvRows = [];
@@ -62,9 +57,11 @@ async function DownloadCSV(ids, isDonation = false) {
     document.body.appendChild(link); // Required for Firefox
     link.click();
     document.body.removeChild(link); // Clean up
+
+    return true; // TODO: fix me )= (error handling etc)
   } catch (error) {
-    console.error('Error downloading CSV:', error);
+    console.error(error);
   }
 }
 
-export default DownloadCSV;
+export default downloadCSV;

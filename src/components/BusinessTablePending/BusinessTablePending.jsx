@@ -18,7 +18,7 @@ import { FaPlus } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
 
 import { useBackend } from '../../contexts/BackendContext';
-import DownloadCSV from '../../utils/downloadCSV';
+import downloadCSV from '../../utils/downloadCSV';
 import { BusinessForm } from '../BusinessForm/BusinessForm.1';
 import ViewBusiness from '../ViewBusiness/ViewBusiness';
 
@@ -120,7 +120,7 @@ const BusinessTablePending = (businessData) => {
     for (var i = 0; i < TABLE_HEADERS.length; i++) {
       headers.push(TABLE_HEADERS[i].toLowerCase().replace(' ', '_'));
     }
-    DownloadCSV(headers, ids, 'business');
+    downloadCSV(headers, ids, 'business');
   };
 
   const handleSendReminders = async () => {
