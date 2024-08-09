@@ -11,8 +11,9 @@ import { BusinessTable } from './BusinessTable/BusinessTable';
 
 export const AdminDashboard = () => {
   const { backend } = useBackend();
-  const { isAdmin } = useAuth();
+  const { isAdmin, currentUser } = useAuth();
   const navigate = useNavigate();
+
   const [businesses, setBusinesses] = useState([]);
   const [pendingBusinesses, setPendingBusinesses] = useState([]);
   const [notification, setNotifications] = useState([]);
@@ -47,7 +48,7 @@ export const AdminDashboard = () => {
     <Flex sx={pageStyle}>
       <Stack flexDirection={'row'} justifyContent={'space-between'} paddingY={4}>
         <Heading color="teal" fontWeight="bold">
-          Welcome Back, jits
+          Welcome Back{currentUser.displayName ? `,${currentUser.displayName}` : '!'}
         </Heading>
         <NotificationsDrawer notificationsData={notification} />
       </Stack>

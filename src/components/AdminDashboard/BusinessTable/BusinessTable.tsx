@@ -18,6 +18,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Stack,
   Tab,
   Table,
   TabList,
@@ -27,6 +28,7 @@ import {
   Text,
   Th,
   Thead,
+  Tooltip,
   Tr,
   useDisclosure,
   useToast,
@@ -50,16 +52,17 @@ const PENDING_HEADERS = [
 
 export const BusinessTable = () => {
   const navigate = useNavigate();
+  const toast = useToast();
   const { backend } = useBackend();
-  const [data, setData] = useState([]);
+
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [data, setData] = useState([]);
   const [search, setSearch] = useState('');
   const [pageLimit, setPageLimit] = useState(1);
   const [currentBusinessNum, setCurrentBusinessNum] = useState(0);
   const [currentPageNum, setCurrentPageNum] = useState(1);
   const [currentTab, setCurrentTab] = useState('All');
   const [selectedBusinessIds, setSelectedBusinessIds] = useState<Set<string>>(new Set());
-  const toast = useToast();
 
   const [headers, setHeaders] = useState(TABLE_HEADERS);
 
@@ -259,6 +262,8 @@ export const BusinessTable = () => {
 
         if (currentTab === 'Pending') {
           setHeaders(PENDING_HEADERS);
+        } else {
+          setHeaders(TABLE_HEADERS);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -268,7 +273,7 @@ export const BusinessTable = () => {
     getData();
   }, [search, currentTab, currentPageNum, backend]);
 
-  const handleRowClick = async (id) => {
+  const handleRowClick = async (id: string) => {
     navigate(`/ViewBusiness/${id}`);
   };
 
@@ -276,92 +281,68 @@ export const BusinessTable = () => {
     <Box>
       <Tabs colorScheme="teal" sx={{ width: 'fit-content' }}>
         <TabList>
-          <Tab
-            onClick={() => {
-              changeTab('All');
-            }}
-          >
-            All
-          </Tab>
-          <Tab
-            onClick={() => {
-              changeTab('Submitted');
-            }}
-          >
-            Submitted
-          </Tab>
-          <Tab
-            onClick={() => {
-              changeTab('NotSubmitted');
-            }}
-          >
-            Not Submitted
-          </Tab>
-          <Tab
-            onClick={() => {
-              changeTab('Pending');
-            }}
-          >
-            Pending Application
-          </Tab>
+          <Tab onClick={() => changeTab('All')}>All</Tab>
+          <Tab onClick={() => changeTab('Submitted')}>Submitted</Tab>
+          <Tab onClick={() => changeTab('NotSubmitted')}>Not Submitted</Tab>
+          <Tab onClick={() => changeTab('Pending')}>Pending Application</Tab>
         </TabList>
       </Tabs>
 
-      <Box>
-        <Box style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
-          <Box>
+      <Stack spacing={4}>
+        <Box style={{ display: 'flex', justifyContent: 'space-between', marginTop: 16 }}>
+          <HStack>
             <Input
-              width="222px"
-              height="40px"
-              size="sm"
               placeholder="Search"
               backgroundColor="white"
-              marginRight={4}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-            <Button
-              width="161px"
-              height="40px"
-              colorScheme="teal"
-              variant="outline"
-              leftIcon={<BiPlus />}
-              onClick={handleClick}
-            >
-              Add business
-            </Button>
-          </Box>
 
-          <Box>
-            <Button
-              colorScheme={currentTab === 'Submitted' ? 'gray' : 'teal'}
-              onClick={handleSendReminders}
-              marginRight={4}
-              fontSize={'0.9rem'}
-              sx={{ width: '172px' }}
-              isDisabled={currentTab === 'Submitted' || selectedBusinessIds.size === 0}
-            >
-              <Flex w={'100%'} justifyContent={'space-evenly'} alignItems={'center'}>
-                <BiEnvelope style={{ marginRight: '5px' }} />
-                <Text>Send reminder</Text>
-              </Flex>
-            </Button>
-            <Button
-              colorScheme={currentTab === 'NotSubmitted' ? 'gray' : 'teal'}
-              onClick={handleDownloadCSV}
-              sx={{ width: '172px' }}
-              fontSize={'0.9rem'}
-              isDisabled={currentTab === 'NotSubmitted' || selectedBusinessIds.size === 0}
-            >
-              <Flex w={'100%'} justifyContent={'space-evenly'} alignItems={'center'}>
-                <ArrowDownIcon sx={{ marginRight: '5px' }} />
-                <Text>Download CSV</Text>
-              </Flex>
-            </Button>
-          </Box>
+            <Tooltip label="Add Business" display={{ base: 'flex', xl: 'none' }}>
+              <Button
+                colorScheme="teal"
+                variant="outline"
+                onClick={handleClick}
+                sx={{ minWidth: 'fit-content' }}
+              >
+                <HStack spacing={2}>
+                  <Icon as={BiPlus} />
+                  <Text display={{ base: 'none', xl: 'flex' }}>Add Business</Text>
+                </HStack>
+              </Button>
+            </Tooltip>
+          </HStack>
+
+          <HStack>
+            <Tooltip label="Send Reminder" display={{ base: 'flex', xl: 'none' }}>
+              <Button
+                colorScheme={currentTab === 'Submitted' ? 'gray' : 'teal'}
+                onClick={handleSendReminders}
+                isDisabled={currentTab === 'Submitted' || selectedBusinessIds.size === 0}
+              >
+                <HStack spacing={2}>
+                  <Icon as={BiEnvelope} />
+                  <Text display={{ base: 'none', xl: 'flex' }}>Send reminder</Text>
+                </HStack>
+              </Button>
+            </Tooltip>
+
+            <Tooltip label="Download CSV" display={{ base: 'flex', xl: 'none' }}>
+              <Button
+                colorScheme={currentTab === 'NotSubmitted' ? 'gray' : 'teal'}
+                onClick={handleDownloadCSV}
+                isDisabled={currentTab === 'NotSubmitted' || selectedBusinessIds.size === 0}
+              >
+                <HStack spacing={2}>
+                  <Icon as={ArrowDownIcon} />
+                  <Text display={{ base: 'none', xl: 'flex' }}>Download CSV</Text>
+                </HStack>
+              </Button>
+            </Tooltip>
+          </HStack>
         </Box>
 
-        <Card mb="20px" mt="20px">
+        <Card>
           <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
@@ -370,24 +351,23 @@ export const BusinessTable = () => {
               </ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <Text fontFamily={'Inter'}>
-                  Transfer all business information into your new portal.
-                </Text>
+                <Text>Transfer all business information into your new portal.</Text>
                 <DropZone onClose={onClose} />
               </ModalBody>
               <ModalFooter></ModalFooter>
             </ModalContent>
           </Modal>
-          <Table variant="simple" colorScheme="facebook">
+
+          <Table>
             <Thead>
               <Tr>
-                <Th key="checkbox" w={'5%'}>
+                <Th key="checkbox">
                   <Checkbox
                     isChecked={
                       selectedBusinessIds.size > 0 && selectedBusinessIds.size === data.length
                     }
                     onChange={handleSelectAllChange}
-                  ></Checkbox>
+                  />
                 </Th>
                 {headers.map((header, index) => (
                   <Th key={index} w={'19%'}>
@@ -460,7 +440,7 @@ export const BusinessTable = () => {
             onClick={() => setCurrentPageNum(currentPageNum + 1)}
           />
         </HStack>
-      </Box>
+      </Stack>
     </Box>
   );
 };

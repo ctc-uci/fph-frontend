@@ -47,7 +47,14 @@ export const AdminTotals = ({ businesses, pendingBusinesses }) => {
   ];
 
   return (
-    <Flex justifyContent="space-around" p={4} borderWidth={1} borderColor="gray.200" bg="white">
+    <Flex
+      justifyContent="space-around"
+      borderRadius={'lg'}
+      p={4}
+      borderWidth={1}
+      borderColor="gray.200"
+      bg="white"
+    >
       {stats.map((stat, index) => (
         <Fragment key={index}>
           <Flex justifyContent="center" alignItems="center" gap={4}>
