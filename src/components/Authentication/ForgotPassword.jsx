@@ -34,7 +34,7 @@ const ForgotPassword = () => {
       setMessage('');
       setError('');
       setLoading(true);
-      await resetPassword(email);
+      await resetPassword({ email });
       setMessage('Check your inbox for further instructions');
     } catch {
       toast({

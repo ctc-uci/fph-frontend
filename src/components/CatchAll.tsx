@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../contexts/AuthContext';
 
-const CatchAll = () => {
+export const CatchAll = () => {
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
 
@@ -21,5 +21,3 @@ const CatchAll = () => {
 
   return <p>Route not found... redirecting...</p>;
 };
-
-export default CatchAll;

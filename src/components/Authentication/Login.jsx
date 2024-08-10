@@ -36,7 +36,7 @@ const Login = ({ isAdmin }) => {
     try {
       setError('');
       setLoading(true);
-      await login(email, password);
+      await login({ email, password });
       if (isAdmin) {
         navigate('/AdminDashboard');
       } else {

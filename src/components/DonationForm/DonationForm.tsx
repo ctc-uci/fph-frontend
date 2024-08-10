@@ -35,7 +35,7 @@ import { pageStyle, pageTitleStyle } from '../../styles/sharedStyles';
 import { CreateNotificationArgs } from '../../types/notification';
 import { VolunteerInformation } from './VolunteerInformation';
 
-const LABELS = {
+const LABELS: Record<string, string> = {
   'Canned Cat Food': 'canned_cat_food_quantity',
   'Dry Cat Food': 'dry_cat_food_quantity',
   'Canned Dog Food': 'canned_dog_food_quantity',
@@ -54,7 +54,7 @@ export const DonationForm = () => {
 
   const [businessId, setBusinessId] = useState<number>();
   const [businessName, setBusinessName] = useState<string>();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Record<string, unknown>>({
     business_id: businessId,
     canned_cat_food_quantity: null,
     canned_dog_food_quantity: null,

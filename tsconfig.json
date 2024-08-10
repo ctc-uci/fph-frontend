@@ -4,6 +4,6 @@
     "noUnusedParameters": true,
     "noUnusedLocals": true,
     "allowJs": true,
-    "noEmit": true
+    "noImplicitAny": true
   }
 }

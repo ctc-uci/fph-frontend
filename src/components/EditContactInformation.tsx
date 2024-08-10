@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -19,8 +19,8 @@ import {
   useToast,
 } from '@chakra-ui/react';
 
-import { useAuth } from '../contexts/AuthContext.jsx';
-import { useBackend } from '../contexts/BackendContext.jsx';
+import { useAuth } from '../contexts/AuthContext';
+import { useBackend } from '../contexts/BackendContext';
 import { pageStyle, pageTitleStyle } from '../styles/sharedStyles.js';
 import { CreateNotificationArgs } from '../types/notification.js';
 import { ReferenceGuide } from './ReferenceGuide';
@@ -85,7 +85,7 @@ export const EditContactInformation = () => {
     }
   }
 
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const name = event.target.name;
     var value = event.target.value;
     setBusinessContactInfo((prevState) => ({ ...prevState, [name]: value }));

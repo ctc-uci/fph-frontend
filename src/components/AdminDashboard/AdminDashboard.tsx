@@ -1,18 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Flex, Heading, Stack } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
 
-import { useAuth } from '../../contexts/AuthContext.jsx';
-import { useBackend } from '../../contexts/BackendContext.jsx';
+import { useAuth } from '../../contexts/AuthContext';
+import { useBackend } from '../../contexts/BackendContext';
 import { pageStyle } from '../../styles/sharedStyles';
-import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer.jsx';
+import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer';
 import { AdminTotals } from './AdminTotals.js';
 import { BusinessTable } from './BusinessTable/BusinessTable';
 
 export const AdminDashboard = () => {
   const { backend } = useBackend();
-  const { isAdmin, currentUser } = useAuth();
-  const navigate = useNavigate();
+  const { currentUser } = useAuth();
 
   const [businesses, setBusinesses] = useState([]);
   const [pendingBusinesses, setPendingBusinesses] = useState([]);
@@ -34,13 +32,6 @@ export const AdminDashboard = () => {
       }
     };
 
-    const checkIsAdmin = async () => {
-      if (!(await isAdmin())) {
-        navigate('/BusinessDashboard');
-      }
-    };
-
-    checkIsAdmin();
     getData();
   }, []);
 

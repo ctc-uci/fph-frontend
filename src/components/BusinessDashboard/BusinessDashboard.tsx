@@ -3,6 +3,7 @@ import { ArrowForwardIcon, CheckCircleIcon, EmailIcon, WarningIcon } from '@chak
 import {
   Box,
   Button,
+  ComponentWithAs,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -13,6 +14,7 @@ import {
   Heading,
   HStack,
   Icon,
+  IconProps,
   Stack,
   Table,
   Tbody,
@@ -33,7 +35,7 @@ import { Donation } from '../../types/donation';
 import type { Notification } from '../../types/notification';
 import { BusinessTotals } from './BusinessTotals';
 
-const BUTTON_PATH = {
+const BUTTON_PATH: Record<string, string> = {
   'Donation Form Confirmation': `/BusinessDonationHistory`,
   'Submitted Form': `/BusinessDonationHistory`,
   'Donation Form Reminder': '/BusinessDonationTrackingForm',
@@ -42,7 +44,7 @@ const BUTTON_PATH = {
   // 'Supply Request Received': '/',
 };
 
-const BUTTON_TEXT = {
+const BUTTON_TEXT: Record<string, string> = {
   'Donation Form Confirmation': 'View Form',
   'Submitted Form': 'View Form',
   'Not Submitted': 'Submit Form',
@@ -52,7 +54,7 @@ const BUTTON_TEXT = {
   'Supply Request Received': 'View Request',
 };
 
-const BUTTON_ICON = {
+const BUTTON_ICON: Record<string, ComponentWithAs<'svg', IconProps>> = {
   'Donation Form Confirmation': CheckCircleIcon,
   'Submitted Form': CheckCircleIcon,
   'Donation Form Reminder': WarningIcon,
@@ -141,7 +143,7 @@ export const BusinessDashboard = () => {
     }
   }, []);
 
-  const parseSupplyRequestData = async (message) => {
+  const parseSupplyRequestData = async (message: string) => {
     const lines = message.split(',');
     const numbersList: number[] = [];
     let notes = '';
@@ -194,7 +196,7 @@ export const BusinessDashboard = () => {
   const getNotifText = (reminder: Notification) => {
     const notifDate = new Date(reminder['timestamp']);
     const formattedDate = notifDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
-    const notifText = {
+    const notifText: Record<string, string> = {
       'Donation Form Confirmation': `Donation form has been submitted for ${currentQuarter}. Thank you!`,
       'Submitted Form': `Donation form has been submitted for ${currentQuarter}. Thank you!`,
       'Donation Form Reminder': 'Please submit your donation form by the due date!',

@@ -11,7 +11,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 
-import { useAuth } from '../../contexts/AuthContext.jsx';
+import { useAuth } from '../../contexts/AuthContext';
 import { useBackend } from '../../contexts/BackendContext';
 
 // duplicated from EditContactInformation
@@ -77,7 +77,7 @@ const AdminAccount = () => {
 
   const changePassword = async () => {
     try {
-      await resetPassword(adminContactInfo.email);
+      await resetPassword({ email: adminContactInfo.email });
       toast({
         title: 'Password reset email sent successfully',
         status: 'success',

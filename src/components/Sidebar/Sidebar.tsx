@@ -29,10 +29,25 @@ import { useBackend } from '../../contexts/BackendContext';
 import { ContactInformationModal } from './ContactInformationModal';
 import fphLogo from '/fph_logo.png';
 
+const BUSINESS_SIDEBAR = [
+  { name: 'Home', path: '/BusinessDashboard', icon: BiHomeSmile },
+  { name: 'Donation History', path: '/BusinessDonationHistory', icon: BiHeartCircle },
+  { name: 'Supply Request', path: '/ContactUs', icon: BiPackage },
+  { name: 'Account', path: '/EditContactInformation', icon: BiUser },
+];
+
+const ADMIN_SIDEBAR = [
+  { name: 'Home', path: '/AdminDashboard', icon: BiHomeSmile },
+  { name: 'Donation Tracking', path: '/DonationTrackingTable', icon: BiBuildingHouse },
+  { name: 'Donation Items', path: '/DonationItemsTable', icon: BiHeartCircle },
+  { name: 'Settings', path: '/AdminSettings', icon: BiCog },
+];
+
 export const Sidebar = () => {
   const { backend } = useBackend();
+
   const [isAdminUser, setIsAdminUser] = useState(false);
-  const { isOpen, onOpen, onClose } = useDisclosure(); // State management for modal
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     const checkIsAdmin = async () => {
@@ -47,20 +62,6 @@ export const Sidebar = () => {
   useEffect(() => {
     getBusinessName();
   }, [backend]);
-
-  const businessList = [
-    { name: 'Home', path: '/BusinessDashboard', icon: BiHomeSmile },
-    { name: 'Donation History', path: '/BusinessDonationHistory', icon: BiHeartCircle },
-    { name: 'Supply Request', path: '/ContactUs', icon: BiPackage },
-    { name: 'Account', path: '/EditContactInformation', icon: BiUser },
-  ];
-
-  const adminList = [
-    { name: 'Home', path: '/AdminDashboard', icon: BiHomeSmile },
-    { name: 'Donation Tracking', path: '/DonationTrackingTable', icon: BiBuildingHouse },
-    { name: 'Donation Items', path: '/DonationItemsTable', icon: BiHeartCircle },
-    { name: 'Settings', path: '/AdminSettings', icon: BiCog },
-  ];
 
   const navigate = useNavigate();
   const { logout, isAdmin, currentUser } = useAuth();
@@ -82,7 +83,7 @@ export const Sidebar = () => {
     }
   };
 
-  const navList = isAdminUser ? adminList : businessList;
+  const navList = isAdminUser ? ADMIN_SIDEBAR : BUSINESS_SIDEBAR;
 
   return (
     <>
