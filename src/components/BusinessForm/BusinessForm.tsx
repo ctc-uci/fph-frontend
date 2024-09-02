@@ -189,9 +189,11 @@ export const BusinessForm = ({ edit = true }) => {
         updatedDateTime: new Date(),
         updatedBy: updatedBy,
       };
+
       if (edit) {
         await backend.put(`/business/${id}`, data);
       } else {
+        data.createdBy = updatedBy;
         await backend.post('/business', data);
       }
 

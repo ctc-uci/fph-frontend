@@ -149,7 +149,7 @@ export const ViewBusiness = () => {
     navigate(`/AdminDashboard`);
   };
 
-  const handleFormClick = (id) => {
+  const handleFormClick = (id: number) => {
     navigate(`/ViewDonation/${id}`);
   };
 
@@ -165,7 +165,7 @@ export const ViewBusiness = () => {
     navigate(`/BusinessDonationTrackingForm?id=${id}`);
   };
 
-  const handleSupplyStatusChange = async (status) => {
+  const handleSupplyStatusChange = async (status: string | string[]) => {
     setSelectedSupplyStatus(status);
     await backend.put(`business/${id}`, { supplyRequestStatus: status });
     if (status === 'Sent') {
@@ -197,7 +197,7 @@ export const ViewBusiness = () => {
         senderId: 0,
         message: 'Please submit your donation form by the due date!',
         type: 'Not Submitted',
-        donationId: null,
+        donationId: null as unknown,
       };
       await backend.post('/notification', requestData);
       toast({
@@ -244,6 +244,8 @@ export const ViewBusiness = () => {
   if (businessData.status === 'Pending') {
     return <PendingBusiness data={businessData} handleHome={handleClickHome} />;
   }
+
+  console.log(businessData);
 
   const businessTable = [
     { label: 'NAME', value: businessData.contact_name },
@@ -302,6 +304,7 @@ export const ViewBusiness = () => {
       .join(' | ');
   };
 
+  console.log(businessData);
   const additionalInformation = [
     {
       title: 'Internal Notes',
