@@ -13,11 +13,12 @@ import { useBackend } from './BackendContext';
 
 interface AuthContextType {
   currentUser?: User | null;
+  isAdmin: boolean;
   signup: (credentials: EmailPassword) => Promise<UserCredential>;
   login: (credentials: EmailPassword) => Promise<UserCredential>;
   logout: () => Promise<void>;
   resetPassword: (email: { email: string }) => Promise<void>;
-  isAdmin: (user?: User | null) => Promise<boolean | undefined>;
+  getIsAdmin: () => Promise<boolean | undefined>;
 }
 
 type EmailPassword = {
@@ -38,8 +39,9 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [currentUser, setCurrentUser] = useState<User>();
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState<boolean | undefined>(undefined);
 
   const { backend } = useBackend();
 
@@ -66,22 +68,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return sendPasswordResetEmail(auth, email);
   };
 
-  const isAdmin = async (user = currentUser) => {
+  const getIsAdmin = async (user = currentUser) => {
     if (user !== null) {
       try {
         const response = await backend.get(`/adminUser/${user.email}`);
-
         return response.data.length > 0;
       } catch (error) {
         console.error('Error checking isAdmin', error);
         return false;
       }
     }
+    return false;
   };
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
       setCurrentUser(user);
+      if (user) {
+        const adminStatus = await getIsAdmin(user);
+        setIsAdmin(adminStatus);
+      } else {
+        setIsAdmin(false);
+      }
       setLoading(false);
     });
 
@@ -90,11 +98,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const value: AuthContextType = {
     currentUser,
+    isAdmin,
     signup,
     login,
     logout,
     resetPassword,
-    isAdmin,
+    getIsAdmin,
   };
 
   return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;

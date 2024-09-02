@@ -76,7 +76,7 @@ const ADDITIONAL_INFO_ITEMS = [
 export const BusinessForm = ({ edit = true }) => {
   const { id } = useParams();
   const { backend } = useBackend();
-  const { isAdmin, currentUser } = useAuth();
+  const { currentUser } = useAuth();
   const navigate = useNavigate();
 
   const deleteDisclosure = useDisclosure();
@@ -108,14 +108,6 @@ export const BusinessForm = ({ edit = true }) => {
   const [notification, setNotification] = useState([]);
 
   useEffect(() => {
-    const checkIsAdmin = async () => {
-      if (!(await isAdmin())) {
-        navigate('/BusinessDashboard');
-      }
-    };
-
-    checkIsAdmin();
-
     const fetchNotifications = async () => {
       const response = await backend.get('/notification/0');
       setNotification(response.data);

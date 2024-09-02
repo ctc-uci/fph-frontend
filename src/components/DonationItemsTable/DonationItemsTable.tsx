@@ -21,9 +21,7 @@ import {
   Tr,
   useDisclosure,
 } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
 
-import { useAuth } from '../../contexts/AuthContext';
 import { useBackend } from '../../contexts/BackendContext';
 import { pageStyle, pageTitleStyle } from '../../styles/sharedStyles';
 import { Donation } from '../../types/donation';
@@ -32,24 +30,15 @@ import DonationsDeleteConfirmationModal from './DonationsDeleteConfirmationModal
 import { DonationsModal } from './DonationsModal';
 
 export const DonationItemsTable = () => {
-  const { isAdmin } = useAuth();
   const [notifications, setNotifications] = useState([]);
   const { backend } = useBackend();
-  const navigate = useNavigate();
 
   useEffect(() => {
-    const checkIsAdmin = async () => {
-      if (!(await isAdmin())) {
-        navigate('/BusinessDashboard');
-      }
-    };
-
     const fetchNotifications = async () => {
       const response = await backend.get('/notification/0');
       setNotifications(response.data);
     };
 
-    checkIsAdmin();
     fetchNotifications();
   }, [backend]);
 

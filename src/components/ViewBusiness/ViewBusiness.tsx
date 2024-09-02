@@ -47,7 +47,6 @@ import {
 import { BiEnvelope, BiPackage, BiPencil, BiTrash } from 'react-icons/bi';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { useAuth } from '../../contexts/AuthContext';
 import { useBackend } from '../../contexts/BackendContext';
 import { pageStyle, pageTitleStyle } from '../../styles/sharedStyles';
 import { Business } from '../../types/business';
@@ -75,7 +74,6 @@ const formatCreatedBy = (createdBy: string) => {
 };
 
 export const ViewBusiness = () => {
-  const { isAdmin } = useAuth();
   const { backend } = useBackend();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -220,14 +218,6 @@ export const ViewBusiness = () => {
   };
 
   useEffect(() => {
-    const checkIsAdmin = async () => {
-      if (!(await isAdmin())) {
-        navigate('/BusinessDashboard');
-      }
-    };
-
-    checkIsAdmin();
-
     if (id) {
       fetchBusiness();
     }

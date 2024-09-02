@@ -46,18 +46,7 @@ const ADMIN_SIDEBAR = [
 export const Sidebar = () => {
   const { backend } = useBackend();
 
-  const [isAdminUser, setIsAdminUser] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  useEffect(() => {
-    const checkIsAdmin = async () => {
-      if (await isAdmin()) {
-        setIsAdminUser(true);
-      }
-    };
-
-    checkIsAdmin();
-  }, []);
 
   useEffect(() => {
     getBusinessName();
@@ -83,7 +72,7 @@ export const Sidebar = () => {
     }
   };
 
-  const navList = isAdminUser ? ADMIN_SIDEBAR : BUSINESS_SIDEBAR;
+  const navList = isAdmin ? ADMIN_SIDEBAR : BUSINESS_SIDEBAR;
 
   return (
     <>
@@ -109,7 +98,7 @@ export const Sidebar = () => {
 
               {/* fix me */}
               <Text color="teal" fontWeight="bold">
-                {isAdminUser ? 'Feeding Pets of the Homeless' : businessName}
+                {isAdmin ? 'Feeding Pets of the Homeless' : businessName}
               </Text>
             </HStack>
 
@@ -131,7 +120,7 @@ export const Sidebar = () => {
 
           <Flex flexDirection="column" w="100%">
             <VStack>
-              {!isAdminUser && (
+              {!isAdmin && (
                 <Button
                   onClick={onOpen}
                   width="full"

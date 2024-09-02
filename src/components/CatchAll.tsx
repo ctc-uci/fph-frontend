@@ -8,15 +8,11 @@ export const CatchAll = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkIsAdmin = async () => {
-      if (await isAdmin()) {
-        navigate('/AdminDashboard');
-      } else {
-        navigate('/BusinessDashboard');
-      }
-    };
-
-    checkIsAdmin();
+    if (isAdmin) {
+      navigate('/AdminDashboard');
+    } else {
+      navigate('/BusinessDashboard');
+    }
   }, []);
 
   return <p>Route not found... redirecting...</p>;

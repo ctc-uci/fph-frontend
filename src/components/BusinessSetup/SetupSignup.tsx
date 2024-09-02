@@ -74,7 +74,7 @@ export const SetupSignup = ({ admin, nextStep }: SetUpFirstFormProps) => {
       setLoading(true);
 
       if (admin) {
-        if (await isAdmin()) {
+        if (isAdmin) {
           await signup({ email, password });
           navigate('/AdminDashboard');
         } else {

@@ -22,9 +22,7 @@ import {
   Tr,
   useToast,
 } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
 
-import { useAuth } from '../../contexts/AuthContext';
 import { useBackend } from '../../contexts/BackendContext';
 import { pageStyle, pageTitleStyle } from '../../styles/sharedStyles';
 import { Donation } from '../../types/donation';
@@ -51,9 +49,7 @@ const TAB_HEADERS = ['month', 'quarter', 'year', 'all'];
 
 export const DonationTrackingTable = () => {
   const { backend } = useBackend();
-  const { isAdmin } = useAuth();
   const toast = useToast();
-  const navigate = useNavigate();
 
   const [donationTrackingTableData, setDonationTrackingTableData] = useState<Donation[]>([]);
   const [checkedSet, setCheckedSet] = useState<Set<number>>(new Set());
@@ -74,12 +70,6 @@ export const DonationTrackingTable = () => {
   };
 
   useEffect(() => {
-    const checkIsAdmin = async () => {
-      if (!(await isAdmin())) {
-        navigate('/BusinessDashboard');
-      }
-    };
-
     const getNotifications = async () => {
       try {
         const notificationResponse = await backend.get(`/notification/0`);
@@ -88,8 +78,6 @@ export const DonationTrackingTable = () => {
         console.error('Error fetching data:', error);
       }
     };
-
-    checkIsAdmin();
 
     try {
       getNotifications();
