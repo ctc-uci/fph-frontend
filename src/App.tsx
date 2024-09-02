@@ -3,28 +3,28 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 
 import { AdminDashboard } from './components/AdminDashboard/AdminDashboard';
 import { AdminSettingsMaster } from './components/AdminSettings/AdminSettingsMaster';
-import ForgotPassword from './components/Authentication/ForgotPassword.jsx';
-import Login from './components/Authentication/Login.jsx';
+import ForgotPassword from './components/Authentication/ForgotPassword';
+import Login from './components/Authentication/Login';
 import { BusinessDashboard } from './components/BusinessDashboard/BusinessDashboard';
 import { BusinessDonationHistory } from './components/BusinessDonationHistory/BusinessDonationHistory';
 import { ViewBusinessDonationHistory } from './components/BusinessDonationHistory/ViewBusinessDonationHistory/ViewBusinessDonationHistory';
 import { AddBusinessForm, BusinessForm } from './components/BusinessForm/BusinessForm';
 import { BusinessSetupPage } from './components/BusinessSetup/BusinessSetupPage';
-import CatchAll from './components/CatchAll';
+import { CatchAll } from './components/CatchAll';
 import { Congrats } from './components/DonationForm/Congrats';
 import { DonationForm } from './components/DonationForm/DonationForm';
 import { DonationItemsTable } from './components/DonationItemsTable/DonationItemsTable';
 import { DonationTrackingTable } from './components/DonationTrackingTable/DonationTrackingTable';
 import { EditContactInformation } from './components/EditContactInformation';
-import BusinessFormMaster from './components/OnBoarding/BusinessFormMaster.jsx';
+import BusinessFormMaster from './components/OnBoarding/BusinessFormMaster';
 import { Sidebar } from './components/Sidebar/Sidebar';
 import { SupplyRequestsPage } from './components/SupplyRequests/SupplyRequestsPage';
 import { ViewBusiness } from './components/ViewBusiness/ViewBusiness';
-import ViewDonation from './components/ViewDonation/ViewDonation.jsx';
-import ViewRequest from './components/ViewRequest/ViewRequest.jsx';
-import { AuthProvider } from './contexts/AuthContext.jsx';
-import { BackendProvider } from './contexts/BackendContext.jsx';
-import ProtectedRoute from './utils/ProtectedRoute.jsx';
+import ViewDonation from './components/ViewDonation/ViewDonation';
+import ViewRequest from './components/ViewRequest/ViewRequest';
+import { AuthProvider } from './contexts/AuthContext';
+import { BackendProvider } from './contexts/BackendContext';
+import { ProtectedRoute } from './utils/ProtectedRoute';
 
 const App = () => {
   const location = useLocation();
@@ -64,11 +64,11 @@ const App = () => {
               <Route path="/Congrats" element={<ProtectedRoute Component={Congrats} />} />
               <Route
                 path="/AdminDashboard"
-                element={<ProtectedRoute Component={AdminDashboard} />}
+                element={<ProtectedRoute Component={AdminDashboard} isAdminRoute={true} />}
               />
               <Route
                 path="/AdminSettings"
-                element={<ProtectedRoute Component={AdminSettingsMaster} />}
+                element={<ProtectedRoute Component={AdminSettingsMaster} isAdminRoute={true} />}
               />
               <Route
                 path="/EditContactInformation"
@@ -85,11 +85,11 @@ const App = () => {
               <Route
                 path="/BusinessDonationHistory"
                 element={<ProtectedRoute Component={BusinessDonationHistory} />}
-              ></Route>
+              />
               <Route
                 path="/EditContactInformation"
                 element={<ProtectedRoute Component={EditContactInformation} />}
-              ></Route>
+              />
               <Route
                 path="/DonationItemsTable"
                 element={<ProtectedRoute Component={DonationItemsTable} />}

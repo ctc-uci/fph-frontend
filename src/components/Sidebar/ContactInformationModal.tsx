@@ -1,6 +1,4 @@
-import React from 'react';
 import {
-  Box,
   Flex,
   Icon,
   Modal,
@@ -15,7 +13,12 @@ import {
 } from '@chakra-ui/react';
 import { BiBuildingHouse, BiEnvelope, BiPhone } from 'react-icons/bi';
 
-export const ContactInformationModal = ({ isOpen, onClose }) => {
+interface ContactInformationModalProps {
+  isOpen: boolean;
+  onClose: () => unknown;
+}
+
+export const ContactInformationModal = ({ isOpen, onClose }: ContactInformationModalProps) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />

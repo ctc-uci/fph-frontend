@@ -20,9 +20,9 @@ import {
 } from '@chakra-ui/react';
 
 import { useBackend } from '../../contexts/BackendContext';
-import { AdminModal } from './AdminModal.jsx';
+import { AdminModal } from './AdminModal';
 import classes from './AdminSettings.module.css';
-import { DeleteAdminModal } from './DeleteAdminModal.jsx';
+import { DeleteAdminModal } from './DeleteAdminModal';
 
 const AdminsTable = () => {
   const { backend } = useBackend();

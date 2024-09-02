@@ -48,7 +48,7 @@ const Signup = ({ isAdmin }) => {
 
     try {
       setLoading(true);
-      await signup(email, password);
+      await signup({ email, password });
       if (isAdmin) {
         navigate('/AdminDashboard');
       } else {

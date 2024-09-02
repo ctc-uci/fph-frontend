@@ -76,19 +76,21 @@ export const BusinessTable = () => {
     return date.toLocaleDateString('en-US', options);
   }
 
-  function getStatusBadge(status, submitted, notified) {
+  function getStatusBadge(status: string, submitted: boolean, notified: boolean) {
     if (status === 'Pending') {
       return (
         <Badge colorScheme="yellow" px="2">
-          <Icon as={BiTimeFive} />
-          Pending
+          <Flex gap={1} sx={{ alignItems: 'center' }}>
+            <Icon as={BiTimeFive} />
+            Pending
+          </Flex>
         </Badge>
       );
     }
     if (submitted) {
       return (
         <Badge colorScheme="green" px="2">
-          <Flex gap={1}>
+          <Flex gap={1} sx={{ alignItems: 'center' }}>
             <Icon as={BiCheck} />
             <Text>Submitted</Text>
           </Flex>
@@ -98,7 +100,7 @@ export const BusinessTable = () => {
     if (notified) {
       return (
         <Badge colorScheme="yellow" px="2">
-          <Flex gap={1}>
+          <Flex gap={1} sx={{ alignItems: 'center' }}>
             <Icon as={BiTimeFive} />
             <Text>Reminder Sent</Text>
           </Flex>
@@ -107,7 +109,7 @@ export const BusinessTable = () => {
     }
     return (
       <Badge colorScheme="gray" px="2">
-        <Flex gap={1}>
+        <Flex gap={1} sx={{ alignItems: 'center' }}>
           <Icon as={BiX} />
           <Text>Not Submitted</Text>
         </Flex>
@@ -119,7 +121,7 @@ export const BusinessTable = () => {
     navigate('/AddBusiness');
   };
 
-  const handleCheckboxChange = (businessId) => {
+  const handleCheckboxChange = (businessId: string) => {
     setSelectedBusinessIds((prevSelectedIds) => {
       const newSelectedIds = new Set(prevSelectedIds);
       if (newSelectedIds.has(businessId)) {
@@ -204,7 +206,7 @@ export const BusinessTable = () => {
     }
   };
 
-  const getResidentialStatusBadge = (status) => {
+  const getResidentialStatusBadge = (status: string) => {
     if (status === 'Pending') {
       return (
         <Badge colorScheme="orange" px="2">
@@ -273,7 +275,7 @@ export const BusinessTable = () => {
 
   return (
     <>
-      <Tabs colorScheme="teal" sx={{ width: 'fit-content' }}>
+      <Tabs colorScheme="teal" sx={{ width: 'fit-content' }} isTruncated>
         <TabList>
           <Tab onClick={() => changeTab('All')}>All</Tab>
           <Tab onClick={() => changeTab('Submitted')}>Submitted</Tab>
@@ -336,67 +338,69 @@ export const BusinessTable = () => {
           </HStack>
         </Box>
 
-        <Card>
-          <Table>
-            <Thead>
-              <Tr>
-                <Th key="checkbox">
-                  <Checkbox
-                    isChecked={
-                      selectedBusinessIds.size > 0 && selectedBusinessIds.size === data.length
-                    }
-                    onChange={handleSelectAllChange}
-                  />
-                </Th>
-                {headers.map((header, index) => (
-                  <Th key={index} w={'19%'}>
-                    {header}
+        <Card sx={{ maxWidth: '100%' }}>
+          <Box sx={{ maxWidth: '100%', overflowX: 'scroll' }}>
+            <Table sx={{ overflowX: 'scroll', maxWidth: '100%' }}>
+              <Thead>
+                <Tr>
+                  <Th key="checkbox">
+                    <Checkbox
+                      isChecked={
+                        selectedBusinessIds.size > 0 && selectedBusinessIds.size === data.length
+                      }
+                      onChange={handleSelectAllChange}
+                    />
                   </Th>
-                ))}
-              </Tr>
-            </Thead>
-            <Tbody>
-              {data &&
-                data.map((item, index) => (
-                  <Tr key={index}>
-                    <Td key="checkbox">
-                      <Checkbox
-                        isChecked={selectedBusinessIds.has(item.id)}
-                        onChange={() => handleCheckboxChange(item.id)}
-                      ></Checkbox>
-                    </Td>
-                    <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
-                      {item.name}
-                    </Td>
-                    <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
-                      {item.city}, {item.state}
-                    </Td>
-                    <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
-                      {item.primary_email}
-                    </Td>
-                    {currentTab === 'Pending' ? (
-                      <>
-                        <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
-                          {getResidentialStatusBadge(item.residential)}
-                        </Td>
-                        <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
-                          {formatDateDFH(item.join_date)}
-                        </Td>
-                      </>
-                    ) : (
-                      <>
-                        <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
-                          {getStatusBadge(item.status, item.submitted, item.notified)}
-                        </Td>
-                        <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
-                          {formatDateDFH(item.max_date)}
-                        </Td>
-                      </>
-                    )}
-                  </Tr>
-                ))}
-            </Tbody>
-          </Table>
+                  {headers.map((header, index) => (
+                    <Th key={index} w={'19%'} isTruncated>
+                      {header}
+                    </Th>
+                  ))}
+                </Tr>
+              </Thead>
+              <Tbody>
+                {data &&
+                  data.map((item, index) => (
+                    <Tr key={index}>
+                      <Td key="checkbox">
+                        <Checkbox
+                          isChecked={selectedBusinessIds.has(item.id)}
+                          onChange={() => handleCheckboxChange(item.id)}
+                        />
+                      </Td>
+                      <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'} isTruncated>
+                        {item.name}
+                      </Td>
+                      <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
+                        {item.city}, {item.state}
+                      </Td>
+                      <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
+                        {item.primary_email}
+                      </Td>
+                      {currentTab === 'Pending' ? (
+                        <>
+                          <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
+                            {getResidentialStatusBadge(item.residential)}
+                          </Td>
+                          <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
+                            {formatDateDFH(item.join_date)}
+                          </Td>
+                        </>
+                      ) : (
+                        <>
+                          <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
+                            {getStatusBadge(item.status, item.submitted, item.notified)}
+                          </Td>
+                          <Td onClick={() => handleRowClick(item.id)} cursor={'pointer'}>
+                            {formatDateDFH(item.max_date)}
+                          </Td>
+                        </>
+                      )}
+                    </Tr>
+                  ))}
+              </Tbody>
+            </Table>
+          </Box>
         </Card>
 
         <HStack justifyContent={'flex-end'}>

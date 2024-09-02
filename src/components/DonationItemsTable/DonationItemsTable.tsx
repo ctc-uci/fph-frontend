@@ -23,11 +23,12 @@ import {
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
-import { useAuth } from '../../contexts/AuthContext.jsx';
+import { useAuth } from '../../contexts/AuthContext';
 import { useBackend } from '../../contexts/BackendContext';
 import { pageStyle, pageTitleStyle } from '../../styles/sharedStyles';
-import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer.jsx';
-import DonationsDeleteConfirmationModal from './DonationsDeleteConfirmationModal.jsx';
+import { Donation } from '../../types/donation';
+import NotificationsDrawer from '../NotificationsDrawer/NotificationsDrawer';
+import DonationsDeleteConfirmationModal from './DonationsDeleteConfirmationModal';
 import { DonationsModal } from './DonationsModal';
 
 export const DonationItemsTable = () => {
@@ -88,7 +89,7 @@ const DonationItems = ({ category }: { category: string }) => {
   const [currentItemNum, setCurrentItemNum] = useState(0);
   const [currentPageNum, setCurrentPageNum] = useState(1);
   const [pageLimit, setPageLimit] = useState(1);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItem, setSelectedItem] = useState<Donation | null>(null);
   const [isEdit, setIsEdit] = useState(false);
   const {
     isOpen: deleteModalIsOpen,
@@ -122,12 +123,12 @@ const DonationItems = ({ category }: { category: string }) => {
     }
   };
 
-  const openDeleteModal = async (item) => {
+  const openDeleteModal = async (item: Donation) => {
     setSelectedItem(item);
     deleteModalOnOpen();
   };
 
-  const setEditModal = (isEdit) => {
+  const setEditModal = (isEdit: boolean) => {
     setIsEdit(isEdit);
   };
 

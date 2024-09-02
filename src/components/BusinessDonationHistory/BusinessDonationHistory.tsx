@@ -21,14 +21,15 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useBackend } from '../../contexts/BackendContext';
 import { pageStyle, pageTitleStyle } from '../../styles/sharedStyles';
+import { Donation } from '../../types/donation';
 
 const PAGINATION_NUMBER = 10;
 
 export const BusinessDonationHistory = () => {
   const { backend } = useBackend();
   const { currentUser } = useAuth();
-  const [data, setData] = useState([]);
-  const [selectedDonationId, setSelectedDonationId] = useState(null);
+  const [data, setData] = useState<Donation[]>([]);
+  const [selectedDonationId, setSelectedDonationId] = useState<number | null>(null);
   const navigate = useNavigate();
 
   const [currentTotalDonationNum, setCurrentTotalDonationNum] = useState(0);
@@ -60,7 +61,7 @@ export const BusinessDonationHistory = () => {
     getData();
   }, [backend, currentPageNum, searchInput, PAGINATION_NUMBER]);
 
-  const handleButtonClick = async (id) => {
+  const handleButtonClick = async (id: number) => {
     try {
       setSelectedDonationId(id);
       await backend.get(`/donation/${id}`);

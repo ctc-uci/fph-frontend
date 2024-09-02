@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -64,7 +64,7 @@ export const SetupSignup = ({ admin, nextStep }: SetUpFirstFormProps) => {
     }
   }, [currentUser]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     try {
@@ -74,8 +74,8 @@ export const SetupSignup = ({ admin, nextStep }: SetUpFirstFormProps) => {
       setLoading(true);
 
       if (admin) {
-        if (await isAdmin({ email: email })) {
-          await signup(email, password);
+        if (await isAdmin()) {
+          await signup({ email, password });
           navigate('/AdminDashboard');
         } else {
           throw new Error(
@@ -84,7 +84,7 @@ export const SetupSignup = ({ admin, nextStep }: SetUpFirstFormProps) => {
         }
       } else {
         if (id) {
-          await signup(email, password);
+          await signup({ email, password });
         } else {
           toast({
             title: 'Business Not Found',
@@ -158,7 +158,7 @@ export const SetupSignup = ({ admin, nextStep }: SetUpFirstFormProps) => {
             variant="solid"
             w="full"
             disabled={loading}
-            onClick={(e) => handleSubmit(e)}
+            onClick={handleSubmit}
           >
             Create Account
           </Button>
