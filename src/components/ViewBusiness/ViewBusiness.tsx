@@ -136,8 +136,8 @@ export const ViewBusiness = () => {
     return formattedDate;
   };
 
-  const handleDeleteModalClick = () => {
-    backend.delete(`/business/${id}`);
+  const handleDeleteModalClick = async () => {
+    await backend.delete(`/business/${id}`);
     navigate('/AdminDashboard');
   };
 
