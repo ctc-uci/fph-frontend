@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { MouseEvent, useState } from 'react';
 import {
   Box,
   Button,
+  Link as ChakraLink,
   Flex,
   FormControl,
   FormLabel,
@@ -9,35 +10,36 @@ import {
   HStack,
   Image,
   Input,
-  Link,
   useToast,
   VStack,
 } from '@chakra-ui/react';
-import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../contexts/AuthContext';
+import { useBackend } from '../../contexts/BackendContext';
 import LOGO from './fph_logo.png';
 
-const Login = ({ isAdmin }) => {
+export const Login = () => {
   // React states for input fields
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login } = useAuth();
-  // TODO: Setup Error Alert
-  // eslint-disable-next-line no-unused-vars
-  const [error, setError] = useState('');
+  const { backend } = useBackend();
+
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const toast = useToast();
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      setError('');
       setLoading(true);
-      await login({ email, password });
-      if (isAdmin) {
+      const userCredential = await login({ email, password });
+
+      const response = await backend.get(`/adminUser/${userCredential.user.email}`);
+      const user = response.data.at(0);
+
+      if (user.name) {
         navigate('/AdminDashboard');
       } else {
         navigate('/BusinessDashboard');
@@ -81,14 +83,15 @@ const Login = ({ isAdmin }) => {
             <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
           </FormControl>
           <Flex flex={'row'} justifyContent={'flex-end'} w="100%">
-            <Link
+            <ChakraLink
               to={'/ForgotPassword'}
+              as={Link}
               color="black.500"
               textDecoration={'underline'}
               fontWeight="semibold"
             >
               Forgot Password?
-            </Link>
+            </ChakraLink>
           </Flex>
           <Button colorScheme="teal" w="full" disabled={loading} onClick={(e) => handleSubmit(e)}>
             Login
@@ -98,9 +101,3 @@ const Login = ({ isAdmin }) => {
     </HStack>
   );
 };
-
-Login.propTypes = {
-  isAdmin: PropTypes.bool.isRequired,
-};
-
-export default Login;

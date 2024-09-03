@@ -4,7 +4,7 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 import { AdminDashboard } from './components/AdminDashboard/AdminDashboard';
 import { AdminSettingsMaster } from './components/AdminSettings/AdminSettingsMaster';
 import ForgotPassword from './components/Authentication/ForgotPassword';
-import Login from './components/Authentication/Login';
+import { Login } from './components/Authentication/Login';
 import { BusinessDashboard } from './components/BusinessDashboard/BusinessDashboard';
 import { BusinessDonationHistory } from './components/BusinessDonationHistory/BusinessDonationHistory';
 import { ViewBusinessDonationHistory } from './components/BusinessDonationHistory/ViewBusinessDonationHistory/ViewBusinessDonationHistory';
@@ -55,7 +55,7 @@ const App = () => {
               <Route path="/Onboarding" element={<BusinessFormMaster />} />
               <Route path="/SignupAdmin" element={<BusinessSetupPage isAdmin={true} />} />
               <Route path="/SignupBusiness" element={<BusinessSetupPage isAdmin={false} />} />
-              <Route path="/Login" element={<Login isAdmin={true} />} />
+              <Route path="/Login" element={<Login />} />
               <Route path="/ForgotPassword" element={<ForgotPassword />} />
               <Route
                 path="/ContactUs"
