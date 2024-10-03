@@ -10,6 +10,7 @@ import {
   HStack,
   Image,
   Input,
+  Text,
   useToast,
   VStack,
 } from '@chakra-ui/react';
@@ -39,7 +40,7 @@ export const Login = () => {
       const response = await backend.get(`/adminUser/${userCredential.user.email}`);
       const user = response.data.at(0);
 
-      if (user.name) {
+      if (user?.name) {
         navigate('/AdminDashboard');
       } else {
         navigate('/BusinessDashboard');
@@ -93,9 +94,21 @@ export const Login = () => {
               Forgot Password?
             </ChakraLink>
           </Flex>
+
           <Button colorScheme="teal" w="full" disabled={loading} onClick={(e) => handleSubmit(e)}>
             Login
           </Button>
+
+          <Text mt={4}>
+            Don't have an account? Sign up as an&nbsp;
+            <ChakraLink as={Link} to={'/signupadmin'} color="blue.500" fontWeight="semibold">
+              Admin
+            </ChakraLink>
+            &nbsp;or as a&nbsp;
+            <ChakraLink as={Link} to={'/signupbusiness'} color="blue.500" fontWeight="semibold">
+              Business
+            </ChakraLink>
+          </Text>
         </VStack>
       </Box>
     </HStack>

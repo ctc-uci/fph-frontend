@@ -74,8 +74,12 @@ export const SetupSignup = ({ admin, nextStep }: SetUpFirstFormProps) => {
       setLoading(true);
 
       if (admin) {
-        if (isAdmin) {
+        const response = await backend.get(`/adminUser/${email}`);
+        const user = response.data.at(0);
+
+        if (user) {
           await signup({ email, password });
+
           navigate('/AdminDashboard');
         } else {
           throw new Error(

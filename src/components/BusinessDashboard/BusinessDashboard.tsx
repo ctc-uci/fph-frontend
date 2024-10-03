@@ -213,7 +213,7 @@ export const BusinessDashboard = () => {
     <Flex sx={pageStyle}>
       <Flex justifyContent="space-between" alignItems="center" paddingY={4}>
         <Heading color="teal" fontWeight="bold">
-          Welcome Back, {userName === '' ? '...' : userName}
+          Welcome Back{userName === '' ? '!' : `, ${userName}`}
         </Heading>
 
         <Button

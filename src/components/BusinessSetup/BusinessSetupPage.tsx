@@ -8,7 +8,7 @@ import { SetupSignup } from './SetupSignup';
 import { Tips } from './Tips';
 import { Welcome } from './Welcome';
 
-export const BusinessSetupPage = ({ isAdmin }) => {
+export const BusinessSetupPage = ({ isAdmin }: { isAdmin: boolean }) => {
   const navigate = useNavigate();
   const steps = [
     { title: 'First', description: 'Contact Info' },

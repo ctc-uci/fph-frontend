@@ -3,9 +3,11 @@ import { CloseIcon } from '@chakra-ui/icons';
 import {
   Alert,
   AlertDescription,
+  AlertIcon,
   AlertTitle,
   Button,
   Flex,
+  HStack,
   IconButton,
   Input,
   Modal,
@@ -14,16 +16,19 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Stack,
   Text,
 } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
-import { renderEmail } from 'react-html-email';
+
+// import { renderEmail } from 'react-html-email';
 
 import { useBackend } from '../../contexts/BackendContext';
-import {
-  approvedEmailTemplateAdmin,
-  editedEmailTemplateAdmin,
-} from './AdminSettingsEmailTemplates';
+
+// import {
+//   approvedEmailTemplateAdmin,
+//   editedEmailTemplateAdmin,
+// } from './AdminSettingsEmailTemplates';
 
 // TODO: Refactor states such that its a nested state
 const AdminModal = ({ isOpen, onClose, data, loadInfo, toast }) => {
@@ -46,7 +51,7 @@ const AdminModal = ({ isOpen, onClose, data, loadInfo, toast }) => {
       }
     };
     getData();
-  }, [isOpen]);
+  }, [data, isOpen]);
 
   const closeAndReset = () => {
     setNameData('');
@@ -69,16 +74,16 @@ const AdminModal = ({ isOpen, onClose, data, loadInfo, toast }) => {
       setAlertVisible(true);
       return;
     } else {
-      const emailSubject =
-        data == null ? `FPH Has Added You As A User` : `FPH Has Edited Your Account`;
       try {
-        const emailInfo = {
-          email: emailData,
-          messageHtml: renderEmail(
-            data == null ? approvedEmailTemplateAdmin : editedEmailTemplateAdmin,
-          ),
-          subject: emailSubject,
-        };
+        // const emailSubject =
+        //   data == null ? `FPH Has Added You As A User` : `FPH Has Edited Your Account`;
+        // const emailInfo = {
+        //   email: emailData,
+        //   messageHtml: renderEmail(
+        //     data == null ? approvedEmailTemplateAdmin : editedEmailTemplateAdmin,
+        //   ),
+        //   subject: emailSubject,
+        // };
 
         if (data == null) {
           await backend.post(`/adminUser`, body);
@@ -99,7 +104,9 @@ const AdminModal = ({ isOpen, onClose, data, loadInfo, toast }) => {
             isClosable: true,
           });
         }
-        await backend.post('/email/send', emailInfo);
+
+        // ! not implemented
+        // await backend.post('/email/send', emailInfo);
       } catch (error) {
         console.error(error);
         toast({
@@ -111,48 +118,67 @@ const AdminModal = ({ isOpen, onClose, data, loadInfo, toast }) => {
         });
       }
     }
+
     closeAndReset();
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={closeAndReset}>
+    <Modal isOpen={isOpen} onClose={closeAndReset} size={'xl'}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
           <Flex justifyContent="space-between">
             {data ? 'Edit Admin' : 'Add Admin'}
-            <IconButton aria-label="Close" icon={<CloseIcon />} onClick={closeAndReset} />
+
+            <IconButton
+              variant={'ghost'}
+              aria-label="Close"
+              icon={<CloseIcon />}
+              onClick={closeAndReset}
+            />
           </Flex>
         </ModalHeader>
+
         <ModalBody>
-          <Text> First and Last Name </Text>
-          <Input
-            type="text"
-            name="name"
-            value={nameData}
-            onChange={(e) => setNameData(e.target.value)}
-          />
-          <Text> Email </Text>
-          <Input
-            type="text"
-            name="email"
-            value={emailData}
-            onChange={(e) => setEmailData(e.target.value)}
-          />
+          <Stack spacing={2}>
+            <Stack spacing={1}>
+              <Text> First and Last Name </Text>
+              <Input
+                type="text"
+                name="name"
+                value={nameData}
+                onChange={(e) => setNameData(e.target.value)}
+              />
+            </Stack>
+            <Stack spacing={1}>
+              <Text> Email </Text>
+              <Input
+                type="text"
+                name="email"
+                value={emailData}
+                onChange={(e) => setEmailData(e.target.value)}
+              />
+            </Stack>
+          </Stack>
+
+          {alertVisible && (
+            <Alert mt={4}>
+              <AlertIcon />
+              <Stack spacing={0}>
+                <AlertTitle>Missing necessary data!</AlertTitle>
+                <AlertDescription>Please make sure all textboxes are filed out</AlertDescription>
+              </Stack>
+            </Alert>
+          )}
         </ModalBody>
-        {alertVisible && (
-          <Alert>
-            <AlertTitle>Missing necessary data!</AlertTitle>
-            <AlertDescription>Please make sure all textboxes are filed out</AlertDescription>
-          </Alert>
-        )}
+
         <ModalFooter>
-          <Button mr={3} onClick={closeAndReset}>
-            Cancel
-          </Button>
-          <Button colorScheme="teal" mr={3} onClick={(e) => submitForm(e)}>
-            Submit
-          </Button>
+          <HStack spacing={3}>
+            <Button onClick={closeAndReset}>Cancel</Button>
+            <Button colorScheme="teal" onClick={(e) => submitForm(e)}>
+              Submit
+            </Button>
+          </HStack>
         </ModalFooter>
       </ModalContent>
     </Modal>

@@ -22,8 +22,7 @@ const Signup = ({ isAdmin }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const { signup } = useAuth();
-  // TODO: Setup Error Alert
-  // eslint-disable-next-line no-unused-vars
+
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const toast = useToast();
@@ -37,7 +36,7 @@ const Signup = ({ isAdmin }) => {
       duration: 3000,
       isClosable: true,
     });
-  }, [error]);
+  }, [error, toast]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
