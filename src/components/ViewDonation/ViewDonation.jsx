@@ -139,8 +139,8 @@ const ViewDonation = () => {
         <Card width={'75%'}>
           <CardBody>
             <Stack divider={<StackDivider />} spacing="4">
-              <CustomRow title="Donation Site" info={donationData.donation_id} />
-              <CustomRow title="Food Bank" info={donationData.food_bank_donation} />
+              <CustomRow title="Donation ID" info={donationData.donation_id} />
+              <CustomRow title="Donation Site" info={donationData.food_bank_donation} />
               <CustomRow title="Person Reporting" info={donationData.reporter} />
               <CustomRow title="Email" info={donationData.email} />
               <CustomRow

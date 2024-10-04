@@ -9,10 +9,12 @@ import {
   CheckboxGroup,
   Divider,
   Flex,
+  FormControl,
   FormLabel,
   Heading,
   Icon,
   IconButton,
+  Input,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -62,7 +64,7 @@ export const DonationForm = () => {
     dry_cat_food_quantity: null,
     dry_dog_food_quantity: null,
     email: null,
-    food_bank_donation: businessName,
+    food_bank_donation: null,
     misc_items: null,
     reporter: null,
     volunteer_hours: null,
@@ -100,7 +102,6 @@ export const DonationForm = () => {
           const businessName = businessResponse.data[0].name;
 
           setBusinessName(businessName);
-          setFormData((prev) => ({ ...prev, food_bank_donation: businessName }));
         } catch (error) {
           console.error('Error fetching business ID:', error);
         }
@@ -123,6 +124,7 @@ export const DonationForm = () => {
 
     formData.reporter = formData.personFirstName + ' ' + formData.personLastName;
     formData.date = new Date().toLocaleString('en-US');
+    formData.food_bank_donation = formData.food_bank_donation ? formData.food_bank_donation : 'N/A';
     delete formData.personFirstName;
     delete formData.personLastName;
 
@@ -218,6 +220,26 @@ export const DonationForm = () => {
             </Box>
 
             <Flex sx={{ flexDirection: 'column', gap: 2 }}>
+              <Flex alignItems="center">
+                <FormControl display={'flex'}>
+                  <Text minWidth={'fit-content'} fontWeight={'bold'}>
+                    FOOD BANK
+                  </Text>
+                  <FormLabel htmlFor="food_bank_donation" />
+                  <Flex alignItems="center" gap={4} width={'100%'}>
+                    <Input
+                      id="food_bank_donation"
+                      placeholder="Food Bank"
+                      name="food_bank_donation"
+                      width={'100%'}
+                      onChange={handleChange}
+                      isRequired={true}
+                      type="numeric"
+                    />
+                  </Flex>
+                </FormControl>
+              </Flex>
+
               <Text>Donated Item(s)</Text>
               <Flex direction={{ base: 'column', xl: 'row' }} gap={4}>
                 <CheckboxGroup>
