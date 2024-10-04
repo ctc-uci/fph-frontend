@@ -40,6 +40,8 @@ export const Login = () => {
       const response = await backend.get(`/adminUser/${userCredential.user.email}`);
       const user = response.data.at(0);
 
+      console.log(response);
+
       if (user?.name) {
         navigate('/AdminDashboard');
       } else {

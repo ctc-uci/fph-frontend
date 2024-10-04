@@ -14,6 +14,7 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Link as ChakraLink,
   Divider,
   Flex,
   Heading,
@@ -39,6 +40,7 @@ import {
   Td,
   Text,
   Thead,
+  Tooltip,
   Tr,
   useDisclosure,
   UseDisclosureReturn,
@@ -240,6 +242,7 @@ export const ViewBusiness = () => {
   const businessTable = [
     { label: 'NAME', value: businessData.contact_name },
     { label: 'EMAIL', value: businessData.primary_email },
+    { label: 'BUSINESS ID', value: businessData.id },
     { label: 'WEBSITE', value: businessData.website },
     {
       label: 'LOCATION',
@@ -383,7 +386,38 @@ export const ViewBusiness = () => {
                               </Text>
                             </Td>
                             <Td>
-                              <Text color="500">{item.value}</Text>
+                              {item.label === 'BUSINESS ID' ? (
+                                // <ChakraLink as={Link} to={`/signupbusiness?id=${item.value}`}>
+                                <Tooltip
+                                  label="Copy Business Signup Link to Clipboard"
+                                  width={'fit-content'}
+                                >
+                                  <Text
+                                    color="500"
+                                    fontWeight={'semibold'}
+                                    textDecoration={'underline'}
+                                    cursor="pointer"
+                                    width={'fit-content'}
+                                    onClick={() => {
+                                      const link = `${window.location.origin}/signupbusiness?id=${item.value}`;
+                                      navigator.clipboard.writeText(link);
+
+                                      toast({
+                                        title: 'Business signup link copied!',
+                                        description: `Copied to clipboard: ${link}`,
+                                        status: 'success',
+                                        duration: 3000,
+                                        isClosable: true,
+                                      });
+                                    }}
+                                  >
+                                    {item.value}
+                                  </Text>
+                                </Tooltip>
+                              ) : (
+                                // </ChakraLink>
+                                <Text color="500">{item.value}</Text>
+                              )}
                             </Td>
                           </Tr>
                         ))}

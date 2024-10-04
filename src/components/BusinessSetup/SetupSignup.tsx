@@ -26,7 +26,7 @@ interface SetUpFirstFormProps {
 }
 
 export const SetupSignup = ({ admin, nextStep }: SetUpFirstFormProps) => {
-  const { isAdmin, currentUser, signup, logout } = useAuth();
+  const { currentUser, signup, logout } = useAuth();
   const { backend } = useBackend();
   const navigate = useNavigate();
   const toast = useToast();
@@ -43,7 +43,7 @@ export const SetupSignup = ({ admin, nextStep }: SetUpFirstFormProps) => {
       const idFromUrl = urlParams.get('id');
 
       setId(idFromUrl ?? '');
-      await logout();
+      await logout(); // ! this is frankly incredible terrible code
     };
 
     setUp();
