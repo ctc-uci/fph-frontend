@@ -297,7 +297,7 @@ export const DonationForm = () => {
             </Flex>
 
             {/* TODO: ACTUALLY UPLOAD FILES */}
-            <Flex>
+            {/* <Flex>
               <FormLabel htmlFor="photos" fontSize="12px" width="160px" fontWeight="700">
                 <VStack alignItems={'flex-start'}>
                   <Divider />
@@ -333,7 +333,7 @@ export const DonationForm = () => {
                   </Box>
                 </Box>
               </Flex>
-            </Flex>
+            </Flex> */}
           </Flex>
 
           <Flex justifyContent={'flex-end'} gap={2}>
