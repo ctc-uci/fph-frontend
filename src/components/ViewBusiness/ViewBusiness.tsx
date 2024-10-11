@@ -389,7 +389,7 @@ export const ViewBusiness = () => {
                               {item.label === 'BUSINESS ID' ? (
                                 // <ChakraLink as={Link} to={`/signupbusiness?id=${item.value}`}>
                                 <Tooltip
-                                  label="Copy Business Signup Link to Clipboard"
+                                  label={`Copy Business Signup Link to Clipboard: ${window.location.origin}/signupbusiness?id=${item.value}`}
                                   width={'fit-content'}
                                 >
                                   <Text
