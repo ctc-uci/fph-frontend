@@ -79,29 +79,56 @@ export const SetupSignup = ({ admin, nextStep }: SetUpFirstFormProps) => {
 
         if (user) {
           await signup({ email, password });
-
           navigate('/AdminDashboard');
+          return;
         } else {
           throw new Error(
             'Email has not been added as an admin yet. Please contact the site owner.',
           );
         }
-      } else {
-        if (id) {
-          await signup({ email, password });
-        } else {
-          toast({
-            title: 'Business Not Found',
-            description: 'You need to apply to become a donation site on the FPH website first!',
-            status: 'error',
-            duration: 5000, // Duration of the toast
-            isClosable: true, // Allow the user to close the toast manually
-          });
-        }
       }
+
+      if (!admin && id) {
+        try {
+          const business = await backend.post(`/business/${id}`);
+
+          if (!business) {
+            toast({
+              title: 'Business ID could not be validated',
+              description: 'The provided business ID was not valid',
+              status: 'error',
+              duration: 5000,
+              isClosable: true,
+            });
+          }
+        } catch (error) {
+          console.error('Error validating business id:', error);
+
+          toast({
+            title: 'Business ID could not be validated',
+            description: 'The provided business ID was not valid',
+            status: 'error',
+            duration: 5000,
+            isClosable: true,
+          });
+
+          throw Error(`Error validating business id: ${error}`);
+        }
+
+        await signup({ email, password });
+      }
+
+      toast({
+        title: 'Business Not Found',
+        description: 'You need to apply to become a donation site on the FPH website first!',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
     } catch (err) {
       console.log(err);
-      var message = '';
+
+      let message = '';
       if (err.message == 'Firebase: Error (auth/invalid-email).') {
         message = 'Invalid Email';
       } else if (err.message == 'Password should be at least 6 characters (auth/weak-password).') {
@@ -111,6 +138,7 @@ export const SetupSignup = ({ admin, nextStep }: SetUpFirstFormProps) => {
       } else {
         message = err.message;
       }
+
       toast({
         title: 'Create Account Failed',
         description: message,
@@ -118,9 +146,9 @@ export const SetupSignup = ({ admin, nextStep }: SetUpFirstFormProps) => {
         duration: 3000,
         isClosable: true,
       });
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
