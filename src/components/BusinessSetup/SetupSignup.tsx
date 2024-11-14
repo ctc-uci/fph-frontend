@@ -71,6 +71,7 @@ export const SetupSignup = ({ admin, nextStep }: SetUpFirstFormProps) => {
       if (password !== confirmPassword) {
         throw new Error('Passwords do not match');
       }
+
       setLoading(true);
 
       if (admin) {
@@ -86,6 +87,16 @@ export const SetupSignup = ({ admin, nextStep }: SetUpFirstFormProps) => {
             'Email has not been added as an admin yet. Please contact the site owner.',
           );
         }
+      }
+
+      if (!admin && !id) {
+        toast({
+          title: 'Business Not Found',
+          description: 'You need to apply to become a donation site on the FPH website first!',
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
       }
 
       if (!admin && id) {
@@ -117,14 +128,6 @@ export const SetupSignup = ({ admin, nextStep }: SetUpFirstFormProps) => {
 
         await signup({ email, password });
       }
-
-      toast({
-        title: 'Business Not Found',
-        description: 'You need to apply to become a donation site on the FPH website first!',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
     } catch (err) {
       console.log(err);
 
