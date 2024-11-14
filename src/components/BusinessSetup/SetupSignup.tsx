@@ -90,7 +90,7 @@ export const SetupSignup = ({ admin, nextStep }: SetUpFirstFormProps) => {
 
       if (!admin && id) {
         try {
-          const business = await backend.post(`/business/${id}`);
+          const business = await backend.get(`/business/${id}`);
 
           if (!business) {
             toast({
