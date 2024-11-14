@@ -118,7 +118,7 @@ export const BusinessDashboard = () => {
           ]);
 
         setDonationData(donationResponse.data[0]);
-        setUserName(businessResponse.data[0]['contact_name']);
+        // setUserName(businessResponse.data[0]['contact_name']);
         setPriceData(priceResponse.data);
         setReminderData(reminderResponse.data);
       } catch (error) {
