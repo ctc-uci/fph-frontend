@@ -1,4 +1,4 @@
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, useCallback, useState } from 'react';
 import {
   Box,
   Button,
@@ -31,8 +31,10 @@ export const Login = () => {
 
   const navigate = useNavigate();
   const toast = useToast();
-  const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
+
+  const handleSubmit = async (e: React.KeyboardEvent | MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
     try {
       setLoading(true);
       const userCredential = await login({ email, password });
@@ -67,6 +69,15 @@ export const Login = () => {
     setLoading(false);
   };
 
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        handleSubmit(e);
+      }
+    },
+    [handleSubmit],
+  );
+
   return (
     <HStack spacing={0} h="100vh">
       <Flex justifyContent="center" alignItems="center" w="50%" bg="#F9F8F7">
@@ -83,7 +94,12 @@ export const Login = () => {
           </FormControl>
           <FormControl id="password">
             <FormLabel>Password</FormLabel>
-            <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <Input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
           </FormControl>
           <Flex flex={'row'} justifyContent={'flex-end'} w="100%">
             <ChakraLink

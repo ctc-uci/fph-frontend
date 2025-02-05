@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -38,26 +38,38 @@ const Signup = ({ isAdmin }) => {
     });
   }, [error, toast]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
 
-    if (password !== confirmPassword) {
-      return setError('Passwords do not match');
-    }
-
-    try {
-      setLoading(true);
-      await signup({ email, password });
-      if (isAdmin) {
-        navigate('/AdminDashboard');
-      } else {
-        navigate('/BusinessDashboard');
+      if (password !== confirmPassword) {
+        return setError('Passwords do not match');
       }
-    } catch (err) {
-      setError(err.message);
-    }
-    setLoading(false);
-  };
+
+      try {
+        setLoading(true);
+        await signup({ email, password });
+        if (isAdmin) {
+          navigate('/AdminDashboard');
+        } else {
+          navigate('/BusinessDashboard');
+        }
+      } catch (err) {
+        setError(err.message);
+      }
+      setLoading(false);
+    },
+    [confirmPassword, email, isAdmin, navigate, password, signup],
+  );
+
+  const handleKeyDown = useCallback(
+    (e) => {
+      if (e.key === 'Enter') {
+        handleSubmit(e);
+      }
+    },
+    [handleSubmit],
+  );
 
   return (
     <Box p={8}>
@@ -81,6 +93,7 @@ const Signup = ({ isAdmin }) => {
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
         </FormControl>
         <Button colorScheme="blue" w="full" disabled={loading} onClick={(e) => handleSubmit(e)}>
