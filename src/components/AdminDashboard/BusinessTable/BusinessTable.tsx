@@ -161,7 +161,28 @@ export const BusinessTable = () => {
           type: 'Not Submitted',
         };
 
-        await backend.post('/notification', requestData);
+        console.log(data);
+
+        const business = data.find((business) => business.id === businessId);
+
+        const emailData = {
+          email: business?.primary_email,
+          subject: 'Reminder To Submit Donation Form',
+          messageHtml: `
+            <div>
+              <h3>This is a friendly reminder to submit your donation form for your business${business?.name ? `: ${business.name}` : ''}!</h3>
+
+              <p>Feeding Pets of the Homeless</p>
+            </div>
+          `,
+        };
+
+        const notificationPromise = backend.post('/notification', requestData);
+        const emailPromise = emailData.email
+          ? backend.post('/email/send', emailData)
+          : Promise.resolve();
+
+        await Promise.all([notificationPromise, emailPromise]);
       } catch (error) {
         console.error('Error sending reminders:', error);
       }
