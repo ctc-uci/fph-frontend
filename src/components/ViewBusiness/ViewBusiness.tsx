@@ -386,7 +386,7 @@ export const ViewBusiness = () => {
                               {item.label === 'BUSINESS ID' ? (
                                 // <ChakraLink as={Link} to={`/signupbusiness?id=${item.value}`}>
                                 <Tooltip
-                                  label={`Copy Business Signup Link to Clipboard: ${window.location.origin}/signupbusiness?id=${item.value}`}
+                                  label={`Copy Business Signup Link to Clipboard: ${window.location.href}/signupbusiness?id=${item.value}`}
                                   width={'fit-content'}
                                 >
                                   <Text
@@ -396,7 +396,7 @@ export const ViewBusiness = () => {
                                     cursor="pointer"
                                     width={'fit-content'}
                                     onClick={() => {
-                                      const link = `${window.location.origin}/signupbusiness?id=${item.value}`;
+                                      const link = `${window.location.href}/signupbusiness?id=${item.value}`;
                                       navigator.clipboard.writeText(link);
 
                                       toast({
