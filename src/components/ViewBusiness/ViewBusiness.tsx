@@ -237,8 +237,6 @@ export const ViewBusiness = () => {
     return <PendingBusiness data={businessData} handleHome={handleClickHome} />;
   }
 
-  console.log(businessData);
-
   const businessTable = [
     { label: 'NAME', value: businessData.contact_name },
     { label: 'EMAIL', value: businessData.primary_email },
@@ -297,7 +295,6 @@ export const ViewBusiness = () => {
       .join(' | ');
   };
 
-  console.log(businessData);
   const additionalInformation = [
     {
       title: 'Internal Notes',

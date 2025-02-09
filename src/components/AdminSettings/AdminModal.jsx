@@ -20,15 +20,13 @@ import {
   Text,
 } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
-
-// import { renderEmail } from 'react-html-email';
+import { renderEmail } from 'react-html-email';
 
 import { useBackend } from '../../contexts/BackendContext';
-
-// import {
-//   approvedEmailTemplateAdmin,
-//   editedEmailTemplateAdmin,
-// } from './AdminSettingsEmailTemplates';
+import {
+  approvedEmailTemplateAdmin,
+  editedEmailTemplateAdmin,
+} from './AdminSettingsEmailTemplates';
 
 // TODO: Refactor states such that its a nested state
 const AdminModal = ({ isOpen, onClose, data, loadInfo, toast }) => {
@@ -75,15 +73,15 @@ const AdminModal = ({ isOpen, onClose, data, loadInfo, toast }) => {
       return;
     } else {
       try {
-        // const emailSubject =
-        //   data == null ? `FPH Has Added You As A User` : `FPH Has Edited Your Account`;
-        // const emailInfo = {
-        //   email: emailData,
-        //   messageHtml: renderEmail(
-        //     data == null ? approvedEmailTemplateAdmin : editedEmailTemplateAdmin,
-        //   ),
-        //   subject: emailSubject,
-        // };
+        const emailSubject =
+          data == null ? `FPH Has Added You As A User` : `FPH Has Edited Your Account`;
+        const emailInfo = {
+          email: emailData,
+          messageHtml: renderEmail(
+            data == null ? approvedEmailTemplateAdmin : editedEmailTemplateAdmin,
+          ),
+          subject: emailSubject,
+        };
 
         if (data == null) {
           await backend.post(`/adminUser`, body);
@@ -105,8 +103,7 @@ const AdminModal = ({ isOpen, onClose, data, loadInfo, toast }) => {
           });
         }
 
-        // ! not implemented
-        // await backend.post('/email/send', emailInfo);
+        await backend.post('/email/send', emailInfo);
       } catch (error) {
         console.error(error);
         toast({

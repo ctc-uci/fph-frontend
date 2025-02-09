@@ -161,8 +161,6 @@ export const BusinessTable = () => {
           type: 'Not Submitted',
         };
 
-        console.log(data);
-
         const business = data.find((business) => business.id === businessId);
 
         const emailData = {

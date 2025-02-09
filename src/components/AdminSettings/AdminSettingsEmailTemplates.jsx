@@ -5,9 +5,8 @@ export const approvedEmailTemplateAdmin = (
     <Item align="center">
       <Span fontSize={20}>
         You have been approved by FPH follow this link to sign up with our website!
-        <A href={`http://localhost:3000/SignupAdmin`}>FPH Login</A>.
-        <A href="https://github.com/chromakode/react-html-email">react-html-email</A>.
       </Span>
+      <A href={`http://localhost:3000/SignupAdmin`}>FPH Login</A>.
     </Item>
   </Email>
 );
@@ -18,7 +17,6 @@ export const editedEmailTemplateAdmin = (
       <Span fontSize={20}>
         Your information has been updated by FPH. If this was not authrorized, immediately contact
         FPH. Otherwise, you do not need to do anything.
-        <A href="https://github.com/chromakode/react-html-email">react-html-email</A>.
       </Span>
     </Item>
   </Email>

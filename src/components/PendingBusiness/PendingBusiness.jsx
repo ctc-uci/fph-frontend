@@ -53,7 +53,7 @@ const PendingBusiness = ({ data, handleHome }) => {
       }
     };
     getResidentialStatus();
-  }, []);
+  }, [backend, data.id]);
 
   const showToast = () => {
     toast({
@@ -68,7 +68,7 @@ const PendingBusiness = ({ data, handleHome }) => {
   const handleApproveDeny = async (action) => {
     const emailSubject =
       action === 'Active' ? `FPH Has Approved Your Application` : `FPH Has Denied Your Application`;
-    console.log(data);
+
     const emailData = {
       email: data.primary_email,
       messageHtml: renderEmail(
@@ -269,7 +269,7 @@ const PendingBusiness = ({ data, handleHome }) => {
                                   </Td>
                                 </Flex>
                               </Tr>
-                              <Tr>
+                              {/* <Tr>
                                 <Button
                                   size="md"
                                   height="6vh"
@@ -281,7 +281,7 @@ const PendingBusiness = ({ data, handleHome }) => {
                                 >
                                   Notify of Resedential Status
                                 </Button>
-                              </Tr>
+                              </Tr> */}
                               <Tr>
                                 <Flex flexDirection="column">
                                   <Td mb={-6}>
@@ -309,11 +309,16 @@ const PendingBusiness = ({ data, handleHome }) => {
                 >
                   Deny
                 </Button>
+
                 <ButtonGroup>
                   <Button variant="outline" colorScheme="teal" onClick={handleSave}>
                     Save
                   </Button>
-                  <Button colorScheme="teal" onClick={() => handleApproveDeny('Active')}>
+                  <Button
+                    colorScheme="teal"
+                    onClick={() => handleApproveDeny('Active')}
+                    isDisabled={residentialStatus === 'PENDING'}
+                  >
                     Approve
                   </Button>
                 </ButtonGroup>
