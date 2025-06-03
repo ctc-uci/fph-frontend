@@ -25,10 +25,12 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
+import { renderEmail } from 'react-html-email';
 import { BiCheck, BiEnvelope, BiPlus, BiTimeFive, BiX } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
 
 import { useBackend } from '../../../contexts/BackendContext';
+import { ReminderTemplate } from '../../../templates/ReminderTemplate';
 import downloadCSV from '../../../utils/downloadCSV';
 import BusinessTableModal from './BusinessTableModal';
 
@@ -166,13 +168,7 @@ export const BusinessTable = () => {
         const emailData = {
           email: business?.primary_email,
           subject: 'Reminder To Submit Donation Form',
-          messageHtml: `
-            <div>
-              <h3>This is a friendly reminder to submit your donation form for your business${business?.name ? `: ${business.name}` : ''}!</h3>
-
-              <p>Feeding Pets of the Homeless</p>
-            </div>
-          `,
+          messageHtml: renderEmail(ReminderTemplate()),
         };
 
         const notificationPromise = backend.post('/notification', requestData);

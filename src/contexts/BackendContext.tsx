@@ -1,7 +1,6 @@
 import { createContext, useContext } from 'react';
 import axios from 'axios';
 
-// @ts-expect-error trust me bro
 const baseURL = import.meta.env.VITE_BACKEND_HOSTNAME;
 
 const BackendContext = createContext(null);

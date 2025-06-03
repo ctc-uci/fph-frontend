@@ -6,7 +6,7 @@ export const approvedEmailTemplateAdmin = (
       <Span fontSize={20}>
         You have been approved by FPH follow this link to sign up with our website!
       </Span>
-      <A href={`${window.location.href}/SignupAdmin`}>FPH Login</A>.
+      <A href={`${import.meta.env.BASE_URL}/SignupAdmin`}>FPH Login</A>.
     </Item>
   </Email>
 );

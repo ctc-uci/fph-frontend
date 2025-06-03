@@ -46,11 +46,13 @@ import {
   UseDisclosureReturn,
   useToast,
 } from '@chakra-ui/react';
+import { renderEmail } from 'react-html-email';
 import { BiEnvelope, BiPackage, BiPencil, BiTrash } from 'react-icons/bi';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useBackend } from '../../contexts/BackendContext';
 import { pageStyle, pageTitleStyle } from '../../styles/sharedStyles';
+import { ReminderTemplate } from '../../templates/ReminderTemplate';
 import { Business } from '../../types/business';
 import { Donation } from '../../types/donation';
 import PendingBusiness from '../PendingBusiness/PendingBusiness';
@@ -199,7 +201,20 @@ export const ViewBusiness = () => {
         type: 'Not Submitted',
         donationId: null as unknown,
       };
-      await backend.post('/notification', requestData);
+
+      const emailData = {
+        email: businessData.primary_email,
+        subject: 'Reminder To Submit Donation Form',
+        messageHtml: renderEmail(ReminderTemplate()),
+      };
+
+      const notificationPromise = backend.post('/notification', requestData);
+      const emailPromise = emailData.email
+        ? backend.post('/email/send', emailData)
+        : Promise.resolve();
+
+      await Promise.all([notificationPromise, emailPromise]);
+
       toast({
         title: 'Success',
         description: `Reminder sent to ${businessData.name}`,
