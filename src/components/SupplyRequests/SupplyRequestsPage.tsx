@@ -34,7 +34,6 @@ export const SupplyRequestsPage = () => {
   const [businessName, setBusinessName] = useState('');
 
   useEffect(() => {
-    // Define an async function inside useEffect since useEffect cannot be asynchronous directly
     const fetchBusinessId = async () => {
       try {
         // Fetch business ID from backend
@@ -52,7 +51,7 @@ export const SupplyRequestsPage = () => {
     };
 
     fetchBusinessId();
-  }, []);
+  }, [backend, currentUser.uid]);
 
   const handleSubmit = async () => {
     const msg = {
@@ -66,7 +65,9 @@ export const SupplyRequestsPage = () => {
       'Homeless Card 2': checkedItems[7],
       Notes: text,
     };
+
     const message = JSON.stringify(msg);
+
     const updatedFormData = {
       businessId: FPH_ID,
       message: message,
@@ -75,6 +76,7 @@ export const SupplyRequestsPage = () => {
       businessName: businessName,
       donationId: null,
     };
+
     const confirmationNotification = {
       businessId: businessId,
       message: message,

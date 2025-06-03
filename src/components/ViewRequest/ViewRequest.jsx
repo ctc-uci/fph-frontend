@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Card,
-  ChakraProvider,
   Flex,
   Heading,
   Table,
@@ -55,39 +54,53 @@ const ViewRequest = () => {
     return date.toLocaleDateString('en-US', options);
   }
 
-  const fetchRequest = async () => {
-    try {
-      const response = await backend.get(`/notification/request/${id}`);
-      const message = response.data[0].message;
-      setItemAmounts(JSON.parse(message));
-      setDateRequested(formatDate(response.data[0].timestamp));
-
-      const businessNameResponse = await backend.get(`/business/${response.data[0].sender_id}`);
-      setBusinessName(businessNameResponse.data[0].name);
-    } catch (error) {
-      console.error(error);
-    }
-  };
   useEffect(() => {
+    const fetchRequest = async () => {
+      try {
+        const response = await backend.get(`/notification/request/${id}`);
+        const message = response.data[0].message;
+        setItemAmounts(JSON.parse(message));
+        setDateRequested(formatDate(response.data[0].timestamp));
+
+        const businessNameResponse = await backend.get(`/business/${id}`);
+        setBusinessName(businessNameResponse.data[0].name);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     fetchRequest();
-  }, [id]);
+  }, [backend, id]);
 
   const handleClick = () => {
     navigate(`/ViewBusiness/${id}`);
   };
 
   return (
-    <ChakraProvider>
-      <Box marginLeft={'10%'} marginTop={10}>
-        <Flex gap={4} flexDirection={'column'}>
-          <Heading size="lg">{businessName}&apos;s Supply Request</Heading>
-          <Button onClick={handleClick} colorScheme={'teal'} maxW={200}>
-            View business details
-          </Button>
-        </Flex>
-      </Box>
-      <Card marginLeft={'10%'} marginTop={10} width={'60%'}>
-        <Table variant={'unstyled'} width={'80%'} marginLeft={'10%'} marginTop={4} marginBottom={4}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: 8,
+        gap: 4,
+      }}
+    >
+      <Flex
+        gap={4}
+        marginBottom={4}
+        width={'100%'}
+        flexDirection={'row'}
+        justifyContent={'space-between'}
+      >
+        <Heading size="lg">{businessName}&apos;s Supply Request</Heading>
+        <Button onClick={handleClick} colorScheme={'teal'} maxW={200}>
+          View business details
+        </Button>
+      </Flex>
+
+      <Card width={'100%'}>
+        <Table variant={'unstyled'}>
           <Thead>
             <Tr>
               <Th>Date Requested</Th>
@@ -98,42 +111,44 @@ const ViewRequest = () => {
             <Tr>
               <Td>{dateRequested}</Td>
               {/* <Td>
-                            <Select
-                                value={status}
-                                onChange={e => handleStatusChange(e)}
-                                bg={status ? 'teal' : 'orange'}
-                              >
-                                <option value={true}>Sent</option>
-                                <option value={false}>Pending</option>
-                              </Select>
-                            </Td> */}
+                              <Select
+                                  value={status}
+                                  onChange={e => handleStatusChange(e)}
+                                  bg={status ? 'teal' : 'orange'}
+                                >
+                                  <option value={true}>Sent</option>
+                                  <option value={false}>Pending</option>
+                                </Select>
+                              </Td> */}
             </Tr>
           </Tbody>
         </Table>
       </Card>
-      <Card width={'60%'} marginLeft={'10%'} marginTop={10}>
-        <Card width={'80%'} margin={'auto'} marginTop={10}>
-          <Table>
-            <Thead>
-              <Tr>
-                <Th>Item</Th>
-                <Th>Amount</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {supplyItems.map(
-                (item, index) =>
-                  itemAmounts[items[index]] != 0 && (
-                    <Tr key={index}>
-                      <Td>{item}</Td>
-                      <Td>{itemAmounts[items[index]]}</Td>
-                    </Tr>
-                  ),
-              )}
-            </Tbody>
-          </Table>
-        </Card>
-        <Flex width={'80%'} margin={'auto'} marginTop={4} flexDirection={'column'}>
+
+      <Card width={'100%'}>
+        <Table>
+          <Thead>
+            <Tr>
+              <Th>Item</Th>
+              <Th>Amount</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {supplyItems.map(
+              (item, index) =>
+                itemAmounts[items[index]] != 0 && (
+                  <Tr key={index}>
+                    <Td>{item}</Td>
+                    <Td>{itemAmounts[items[index]]}</Td>
+                  </Tr>
+                ),
+            )}
+          </Tbody>
+        </Table>
+      </Card>
+
+      <Card width={'100%'}>
+        <Flex marginTop={4} flexDirection={'column'}>
           <Table variant={'unstyled'}>
             <Thead>
               <Tr>
@@ -148,7 +163,7 @@ const ViewRequest = () => {
           </Table>
         </Flex>
       </Card>
-    </ChakraProvider>
+    </Box>
   );
 };
 

@@ -104,7 +104,7 @@ const BusinessFormMaster = () => {
         const businessId = businessResponse.data[0].id;
         const businessName = businessResponse.data[0].name;
         const notification_data = {
-          businessId: businessId,
+          businessId: 0,
           message: `New Donation Site Application from ${formData['businessName']}`,
           timestamp: new Date().toLocaleString('en-US', {
             timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
