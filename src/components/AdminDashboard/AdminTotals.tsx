@@ -16,7 +16,7 @@ export const AdminTotals = ({ businesses, pendingBusinesses }) => {
   };
 
   const calculateTotalDonationSites = () => {
-    return Object.keys(businesses).length;
+    return Object.keys(businesses).length - 1;
   };
 
   const calculatePendingBusinesses = () => {
