@@ -20,29 +20,8 @@ const ViewRequest = () => {
   const { backend } = useBackend();
   const { id } = useParams();
   const navigate = useNavigate();
-  const supplyItems = [
-    'Get Pet Food Decal',
-    'Decal',
-    '"Homeless?" Card',
-    'Business Card',
-    'Donation Site Decal',
-    'Donation Site Bin Decal',
-    'Donation Envelopes',
-    '"Homeless?" Card 2',
-  ];
-  const items = [
-    'Get Pet Food Decal',
-    'Decal',
-    'Homeless Card',
-    'Business Card',
-    'Donation Site Decal',
-    'Donation Site Bin Decals',
-    'Donation Envelopes',
-    'Homeless Card 2',
-  ];
-  const [itemAmounts, setItemAmounts] = useState({});
+  const [requests, setRequests] = useState([]);
   const [businessName, setBusinessName] = useState('');
-  const [dateRequested, setDateRequested] = useState('');
 
   function formatDate(dateTimeString) {
     const date = new Date(dateTimeString);
@@ -58,9 +37,11 @@ const ViewRequest = () => {
     const fetchRequest = async () => {
       try {
         const response = await backend.get(`/notification/request/${id}`);
-        const message = response.data[0].message;
-        setItemAmounts(JSON.parse(message));
-        setDateRequested(formatDate(response.data[0].timestamp));
+        const formattedRequests = response.data.map((request) => ({
+          items: JSON.parse(request.message),
+          date: formatDate(request.timestamp),
+        }));
+        setRequests(formattedRequests);
 
         const businessNameResponse = await backend.get(`/business/${id}`);
         setBusinessName(businessNameResponse.data[0].name);
@@ -93,76 +74,90 @@ const ViewRequest = () => {
         flexDirection={'row'}
         justifyContent={'space-between'}
       >
-        <Heading size="lg">{businessName}&apos;s Supply Request</Heading>
+        <Heading size="lg">{businessName}&apos;s Supply Requests</Heading>
         <Button onClick={handleClick} colorScheme={'teal'} maxW={200}>
           View business details
         </Button>
       </Flex>
 
-      <Card width={'100%'}>
-        <Table variant={'unstyled'}>
-          <Thead>
-            <Tr>
-              <Th>Date Requested</Th>
-              {/* <Th>Status</Th> */}
-            </Tr>
-          </Thead>
-          <Tbody>
-            <Tr>
-              <Td>{dateRequested}</Td>
-              {/* <Td>
-                              <Select
-                                  value={status}
-                                  onChange={e => handleStatusChange(e)}
-                                  bg={status ? 'teal' : 'orange'}
-                                >
-                                  <option value={true}>Sent</option>
-                                  <option value={false}>Pending</option>
-                                </Select>
-                              </Td> */}
-            </Tr>
-          </Tbody>
-        </Table>
-      </Card>
+      {requests.map((request, requestIndex) => (
+        <Card
+          key={requestIndex}
+          width={'100%'}
+          display="flex"
+          flexDirection="column"
+          gap={4}
+          padding={4}
+        >
+          <Card width={'100%'}>
+            <Table variant={'unstyled'}>
+              <Thead>
+                <Tr>
+                  <Th>Date Requested</Th>
+                  {/* <Th>Status</Th> */}
+                </Tr>
+              </Thead>
+              <Tbody>
+                <Tr>
+                  <Td>{request.date}</Td>
+                  {/* <Td>
+                                  <Select
+                                      value={status}
+                                      onChange={e => handleStatusChange(e)}
+                                      bg={status ? 'teal' : 'orange'}
+                                    >
+                                      <option value={true}>Sent</option>
+                                      <option value={false}>Pending</option>
+                                    </Select>
+                                  </Td> */}
+                </Tr>
+              </Tbody>
+            </Table>
+          </Card>
 
-      <Card width={'100%'}>
-        <Table>
-          <Thead>
-            <Tr>
-              <Th>Item</Th>
-              <Th>Amount</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {supplyItems.map(
-              (item, index) =>
-                itemAmounts[items[index]] != 0 && (
-                  <Tr key={index}>
-                    <Td>{item}</Td>
-                    <Td>{itemAmounts[items[index]]}</Td>
-                  </Tr>
-                ),
-            )}
-          </Tbody>
-        </Table>
-      </Card>
+          <Card width={'100%'}>
+            <Table>
+              <Thead>
+                <Tr>
+                  <Th width="50%">Item</Th>
+                  <Th width="50%">Amount</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {Object.entries(request.items).map(
+                  ([item, amount]) =>
+                    item !== 'Notes' &&
+                    amount !== 0 && (
+                      <Tr key={item}>
+                        <Td width="50%">{item}</Td>
+                        <Td width="50%">{amount}</Td>
+                      </Tr>
+                    ),
+                )}
+              </Tbody>
+            </Table>
+          </Card>
 
-      <Card width={'100%'}>
-        <Flex marginTop={4} flexDirection={'column'}>
-          <Table variant={'unstyled'}>
-            <Thead>
-              <Tr>
-                <Th>Notes:</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              <Tr>
-                <Td>{itemAmounts['Notes']}</Td>
-              </Tr>
-            </Tbody>
-          </Table>
-        </Flex>
-      </Card>
+          {request.items['Notes'] && (
+            <Card width={'100%'}>
+              <Flex marginTop={4} flexDirection={'column'}>
+                <Table variant={'unstyled'}>
+                  <Thead>
+                    <Tr>
+                      <Th>Notes:</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    <Tr>
+                      <Td>{request.items['Notes']}</Td>
+                    </Tr>
+                  </Tbody>
+                </Table>
+              </Flex>
+            </Card>
+          )}
+        </Card>
+      ))}
     </Box>
   );
 };
